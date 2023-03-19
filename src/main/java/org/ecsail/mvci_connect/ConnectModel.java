@@ -3,6 +3,7 @@ package org.ecsail.mvci_connect;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.layout.HBox;
 
 public class ConnectModel {
 
@@ -20,14 +21,37 @@ public class ConnectModel {
     private final DoubleProperty centerPaneHeight = new SimpleDoubleProperty();
     private final BooleanProperty editMode = new SimpleBooleanProperty(false);
     private final BooleanProperty newMode = new SimpleBooleanProperty(false);
+    private final ObjectProperty<HBox> containerBox = new SimpleObjectProperty<>();
+    private final ObjectProperty<HBox> buttonBox = new SimpleObjectProperty<>();
 
 
 
 
 
 
+    public HBox getButtonBox() {
+        return buttonBox.get();
+    }
 
+    public ObjectProperty<HBox> buttonBoxProperty() {
+        return buttonBox;
+    }
 
+    public void setButtonBox(HBox buttonBox) {
+        this.buttonBox.set(buttonBox);
+    }
+
+    public HBox getContainerBox() {
+        return containerBox.get();
+    }
+
+    public ObjectProperty<HBox> containerBoxProperty() {
+        return containerBox;
+    }
+
+    public void setContainerBox(HBox containerBox) {
+        this.containerBox.set(containerBox);
+    }
 
     public boolean isNewMode() {
         return newMode.get();
@@ -77,16 +101,18 @@ public class ConnectModel {
         this.bottomPaneHeight.set(bottomPaneHeight);
     }
 
+    public boolean isRotateShipWheel() {
+        return rotateShipWheel.get();
+    }
 
+    public BooleanProperty rotateShipWheelProperty() {
+        return rotateShipWheel;
+    }
 
+    public void setRotateShipWheel(boolean rotateShipWheel) {
+        this.rotateShipWheel.set(rotateShipWheel);
+    }
 
-
-
-
-
-    public boolean isRotateShipWheel() { return rotateShipWheel.get();}
-    public BooleanProperty rotateShipWheelProperty() { return rotateShipWheel; }
-    public void setRotateShipWheel(boolean rotateShipWheel) { this.rotateShipWheel.set(rotateShipWheel);}
     public double getTitleBarHeight() { return titleBarHeight.get(); }
     public DoubleProperty titleBarHeightProperty() { return titleBarHeight; }
     public void setTitleBarHeight(double titleBarHeight) { this.titleBarHeight.set(titleBarHeight); }

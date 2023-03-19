@@ -2,6 +2,7 @@ package org.ecsail.mvci_connect;
 
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
+import javafx.beans.property.BooleanProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -87,13 +88,14 @@ public class ConnectView implements Builder<Region> {
     }
 
     private Node ButtonBox() { // 8
-        HBox hBox = HBoxFx.hBoxOf(new Insets(15,5,20,5));
+        HBox hBox = HBoxFx.boundBoxOf(new Insets(15,5,20,5), connectModel.buttonBoxProperty());
+        HBox containerBox = HBoxFx.boundBoxOf(connectModel.containerBoxProperty());
         HBox buttonBox1 = HBoxFx.hBoxOf(new Insets(0,0,0,35),10);
         HBox addBox = HBoxFx.hBoxOf(Pos.CENTER_LEFT,15, 15);
         Text newConnectText = TextFx.linkTextOf("New");
         Text editConnectText = TextFx.linkTextOf("Edit");
-        editConnectText.setOnMouseClicked(event -> { connectModel.setEditMode(true); });
-        newConnectText.setOnMouseClicked(event -> { connectModel.setNewMode(true); });
+        editConnectText.setOnMouseClicked(event -> setEditMode(true));
+        newConnectText.setOnMouseClicked(event ->  setNewMode(true));
         Button loginButton = new Button("Login");
         loginButton.setOnAction((event) -> {
             connectModel.setRotateShipWheel(true);
@@ -104,7 +106,16 @@ public class ConnectView implements Builder<Region> {
         addBox.getChildren().addAll(newConnectText,editConnectText);
         buttonBox1.getChildren().addAll(loginButton,cancelButton1);
         hBox.getChildren().addAll(addBox, buttonBox1);
-        return hBox;
+        containerBox.getChildren().add(hBox);
+        return containerBox;
+    }
+
+    private void setNewMode(Boolean mode) {
+        connectModel.setNewMode(mode);
+    }
+
+    private void setEditMode(Boolean mode) {
+        connectModel.setEditMode(mode);
     }
 
     /**
@@ -113,32 +124,25 @@ public class ConnectView implements Builder<Region> {
      */
     private Node createBottomBox() {
         VBox vBox = VBoxFx.vBoxOf(new Insets(0,0,0,15), connectModel.bottomPaneHeightProperty());
-        setBottomBoxForNewListener(vBox);
-        setBottomBoxForEditListener(vBox);
+        setModeChangeListener(vBox, connectModel.editModeProperty(),true);
+        setModeChangeListener(vBox, connectModel.newModeProperty(),false);
         return vBox;
     }
 
-    private void setBottomBoxForNewListener(VBox vBox) {
-        connectModel.newModeProperty().addListener(observable -> {
-            if(connectModel.isNewMode()) {
-                vBox.getChildren().addAll(createPortBox(),createUseSshBox(),createSshUserBox(), createKnownHostsBox(),
+    private void setModeChangeListener(VBox vBox, BooleanProperty modeChangeProperty, Boolean isEdit) {
+        modeChangeProperty.addListener((observable, oldValue, newValue) -> {
+            if(newValue) { // we are changing the mode
+                vBox.getChildren().addAll(createSqlPortBox(),createUseSshBox(),createSshUserBox(), createKnownHostsBox(),
                         createEditButtonsBox(), HBoxFx.spacerOf(15));
-            } else
+                connectModel.containerBoxProperty().get().getChildren().clear();
+            } else {
                 vBox.getChildren().clear();
+                connectModel.getContainerBox().getChildren().add(connectModel.getButtonBox());
+            }
         });
     }
 
-    private void setBottomBoxForEditListener(VBox vBox) {
-        connectModel.editModeProperty().addListener(observable -> {
-            if(connectModel.isEditMode()) {
-                vBox.getChildren().addAll(createPortBox(),createUseSshBox(),createSshUserBox(), createKnownHostsBox(),
-                        createEditButtonsBox(), HBoxFx.spacerOf(15));
-            } else
-                vBox.getChildren().clear();
-        });
-    }
-
-    private Node createPortBox() { // 4
+    private Node createSqlPortBox() { // 4
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER_LEFT);
         TextField localSqlPortText = TextFieldFx.textFieldOf(60, connectModel.localSqlPortProperty());

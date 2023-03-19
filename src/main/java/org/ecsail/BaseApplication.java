@@ -19,6 +19,14 @@ public class BaseApplication extends Application {
     public void start(Stage stage) {
         primaryStage = stage;
         primaryStage.setScene(new Scene(new MainController().getView()));
+        primaryStage.getScene().getStylesheets().addAll(
+                "css/dark/dark.css",
+                "css/dark/tabpane.css",
+                "css/dark/tableview.css",
+                "css/dark/chart.css",
+                "css/dark/bod.css",
+                "css/dark/table_changes.css",
+                "css/dark/invoice.css");
         primaryStage.show();
     }
 

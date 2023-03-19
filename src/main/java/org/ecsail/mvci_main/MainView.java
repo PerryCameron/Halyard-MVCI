@@ -3,10 +3,7 @@ package org.ecsail.mvci_main;
 
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.ToolBar;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
@@ -42,33 +39,6 @@ public class MainView implements Builder<Region> {
         Image mainIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/title_bar_icon.png")));
         BaseApplication.primaryStage.getIcons().add(mainIcon);
         BaseApplication.primaryStage.setTitle("Halyard");
-
-//        for (Plugin plugin : plugins) {
-//            try {
-//                plugin.setup(stage, tabPane, toolbar, this, menuBar);
-//            } catch (Exception e) {
-//                logger.error("Unable to start plugin");
-//                logger.error(plugin.getClass().getName());
-//                e.printStackTrace();
-//            }
-//        }
-
-
-        //put window to front to avoid it to being hidden behind another.
-//        stage.setAlwaysOnTop(true);
-//        stage.requestFocus();
-//        stage.toFront();
-//        stage.setAlwaysOnTop(false);
-//        connect = new ConnectDatabase(stage);
-
-//        BaseApplication.getMainStage().getScene().getStylesheets().addAll(
-//                "css/dark/dark.css",
-//                "css/dark/tabpane.css",
-//                "css/dark/tableview.css",
-//                "css/dark/chart.css",
-//                "css/dark/bod.css",
-//                "css/dark/table_changes.css",
-//                "css/dark/invoice.css");
         return borderPane;
     }
 
@@ -83,6 +53,7 @@ public class MainView implements Builder<Region> {
 
     private Node setUpCenterPane() {
         TabPane tabPane = new TabPane();
+        tabPane.getTabs().add(new Tab("Log in"));
         return tabPane;
     }
 

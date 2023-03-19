@@ -1,12 +1,25 @@
 package org.ecsail.widgetfx;
 
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
 
 public class HBoxFx {
+
+    public static HBox boundBoxOf(ObjectProperty<HBox> objectProperty) {
+        HBox hBox = new HBox();
+        objectProperty.bindBidirectional(new SimpleObjectProperty<>(hBox));
+        return hBox;
+    }
+    public static HBox boundBoxOf(Insets insets, ObjectProperty<HBox> objectProperty) {
+        HBox hBox = new HBox();
+        hBox.setPadding(insets);
+        objectProperty.bindBidirectional(new SimpleObjectProperty<>(hBox));
+        return hBox;
+    }
     public static HBox hBoxOf(Pos alignment, Insets padding) {
         HBox box = new HBox();
         box.setAlignment(alignment);
