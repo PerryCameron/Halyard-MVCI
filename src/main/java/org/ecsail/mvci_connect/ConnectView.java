@@ -10,12 +10,19 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Builder;
 import javafx.util.Duration;
-import org.ecsail.widgetfx.*;
+import org.ecsail.dto.LoginDTO;
+import org.ecsail.widgetfx.HBoxFx;
+import org.ecsail.widgetfx.TextFieldFx;
+import org.ecsail.widgetfx.TextFx;
+import org.ecsail.widgetfx.VBoxFx;
 
 import java.util.Objects;
 
@@ -58,7 +65,7 @@ public class ConnectView implements Builder<Region> {
         HBox hboxUserText = new HBox();
         hboxUserLabel.getChildren().add(new Label("Username:"));
         TextField userName = TextFieldFx.textFieldOf(200,"Username");
-        userName.textProperty().bindBidirectional(connectModel.userProperty());
+        userName.textProperty().bindBidirectional(connectModel.getSelectedLogin().userProperty());
         hboxUserText.getChildren().add(userName);
         hBox.getChildren().addAll(hboxUserLabel, hboxUserText);
         return hBox;
@@ -67,6 +74,7 @@ public class ConnectView implements Builder<Region> {
     private Node PassBox() { // 2
         HBox hBox = HBoxFx.hBoxOf(new Insets(5));
         PasswordField passwordField = TextFieldFx.passwordFieldOf(200,"Password");
+        passwordField.textProperty().bindBidirectional(connectModel.getSelectedLogin().passwdProperty());
         HBox hboxPassLabel = HBoxFx.hBoxOf(Pos.CENTER_LEFT, 90);
         HBox hboxPassText = new HBox();
         hboxPassLabel.getChildren().add(new Label("Password:"));
@@ -80,10 +88,23 @@ public class ConnectView implements Builder<Region> {
         HBox hboxHostLabel = HBoxFx.hBoxOf(Pos.CENTER_LEFT, 90);
         hboxHostLabel.getChildren().add(new Label("Hostname:"));
         HBox hboxHostText = new HBox();
-        ComboBox<String> hostName = ComboBoxFx.comboBoxOf(200, connectModel.getChoices());
+        ComboBox<LoginDTO> hostName = CreateComboBox(200);
         hboxHostText.getChildren().add(hostName);
         hBox.getChildren().addAll(hboxHostLabel,hboxHostText);
+//        hostName.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
+//            mainModel.setCurrentLogon(mainModel.getLogins().get(FileIO.getSelectedHost(options.getValue(),mainModel.getLogins())));
+//            populateFields();
+//        });
         return hBox;
+    }
+
+    private ComboBox<LoginDTO> CreateComboBox(double width) {
+        ComboBox<LoginDTO> comboBox = new ComboBox<>();
+        comboBox.setItems(connectModel.getLoginDTOS());
+        comboBox.setPrefWidth(width);
+        comboBox.setValue(connectModel.getLoginDTOS().stream()
+                .filter(loginDTO -> loginDTO.isDefault()== true).findFirst().orElse(null));
+        return comboBox;
     }
 
     private Node ButtonBox() { // 8
@@ -140,8 +161,7 @@ public class ConnectView implements Builder<Region> {
     private Node createSqlPortBox() { // 4
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER_LEFT);
-        TextField localSqlPortText = TextFieldFx.textFieldOf(60, connectModel.localSqlPortProperty());
-        connectModel.setLocalSqlPort("3306"); // shouldn't be a string
+        TextField localSqlPortText = TextFieldFx.textFieldOf(60, connectModel.getSelectedLogin().localSqlPortProperty());
         HBox hboxPortLabel = HBoxFx.hBoxOf(Pos.CENTER_LEFT, 90, new Insets(5));
         hboxPortLabel.getChildren().add(new Label("SQL Port:"));
         HBox hboxPortText = HBoxFx.hBoxOf(Pos.CENTER_LEFT,200,new Insets(5),20);
@@ -156,6 +176,7 @@ public class ConnectView implements Builder<Region> {
         useSshTunnelLabel.getChildren().add(new Label("ssh tunnel:"));
         CheckBox checkBox = new CheckBox();
         HBox useSshTunnel = HBoxFx.hBoxOf(Pos.CENTER_LEFT,200,new Insets(5,5,5,5),20);
+        checkBox.selectedProperty().bindBidirectional(connectModel.getSelectedLogin().sshForwardProperty());
         useSshTunnel.getChildren().add(checkBox);
         hBox.getChildren().addAll(useSshTunnelLabel, useSshTunnel);
         return hBox;
@@ -166,7 +187,7 @@ public class ConnectView implements Builder<Region> {
         HBox hboxSshUserLabel = HBoxFx.hBoxOf(Pos.CENTER_LEFT, 90, new Insets(5,5,5,5));
         hboxSshUserLabel.getChildren().add(new Label("ssh user:"));
         HBox hboxSshUserText = HBoxFx.hBoxOf(new Insets(5));
-        TextField sshUser = TextFieldFx.textFieldOf(200,"");
+        TextField sshUser = TextFieldFx.textFieldOf(200,connectModel.getSelectedLogin().sshUserProperty());
         hboxSshUserText.getChildren().add(sshUser);
         hBox.getChildren().addAll(hboxSshUserLabel,hboxSshUserText);
         return hBox;
@@ -174,7 +195,7 @@ public class ConnectView implements Builder<Region> {
 
     private Node createKnownHostsBox() { // 7
         HBox hBox = new HBox();
-        TextField knownHost = TextFieldFx.textFieldOf(200, connectModel.knownHostProperty());
+        TextField knownHost = TextFieldFx.textFieldOf(200, connectModel.getSelectedLogin().getKnownHostsFile());
         HBox knownHostLabel = HBoxFx.hBoxOf(Pos.CENTER_LEFT, 90, new Insets(5,5,5,5));
         knownHostLabel.getChildren().add(new Label("knownhosts:"));
         HBox knownHostText = HBoxFx.hBoxOf(new Insets(5));
@@ -223,6 +244,5 @@ public class ConnectView implements Builder<Region> {
                     + connectModel.getTitleBarHeight()
                     + connectModel.getCenterPaneHeight());
         });
-
     }
 }

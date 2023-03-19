@@ -7,8 +7,11 @@ public class ConnectController {
     ConnectModel connectModel = new ConnectModel();
     ConnectView connectView;
 
+    ConnectInteractor connectInteractor;
+
     public ConnectController(MainController mainController) {
         this.mainController = mainController;
+        connectInteractor = new ConnectInteractor(connectModel);
         connectView = new ConnectView(connectModel);
     }
 
