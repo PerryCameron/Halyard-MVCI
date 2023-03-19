@@ -3,7 +3,7 @@ package org.ecsail;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.ecsail.MvciMain.MainController;
+import org.ecsail.mvci_main.MainController;
 
 
 public class BaseApplication extends Application {

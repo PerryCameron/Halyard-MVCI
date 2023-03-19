@@ -1,10 +1,9 @@
-package org.ecsail.MvciMain;
+package org.ecsail.mvci_main;
 
 
-import javafx.scene.Scene;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
-import org.ecsail.MvciConnect.ConnectController;
+import org.ecsail.mvci_connect.ConnectController;
 
 public class MainController {
 

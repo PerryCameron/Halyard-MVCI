@@ -1,12 +1,10 @@
-package org.ecsail.MvciMain;
+package org.ecsail.mvci_main;
 
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainModel {
     private Connection sqlConnection;

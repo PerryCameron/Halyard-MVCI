@@ -3,6 +3,7 @@ package org.ecsail.widgetfx;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
 public class HBoxFx {
@@ -16,6 +17,14 @@ public class HBoxFx {
     public static HBox hBoxOf(Pos alignment, double prefWidth) {
         HBox box = new HBox();
         box.setAlignment(alignment);
+        box.setPrefWidth(prefWidth);
+        return box;
+    }
+
+    public static HBox hBoxOf(Pos alignment, double prefWidth, double spacing) {
+        HBox box = new HBox();
+        box.setAlignment(alignment);
+        box.setSpacing(spacing);
         box.setPrefWidth(prefWidth);
         return box;
     }
@@ -49,9 +58,11 @@ public class HBoxFx {
         return box;
     }
 
-    public static HBox hBoxOf(double top, double right, double bottom, double left) {
+    public static HBox spacerOf(double height) {
         HBox hBox = new HBox();
-        hBox.setPadding(new Insets(top,right,bottom,left));
+        Region region = new Region();
+        region.setPrefHeight(height);
+        hBox.getChildren().add(region);
         return hBox;
     }
 

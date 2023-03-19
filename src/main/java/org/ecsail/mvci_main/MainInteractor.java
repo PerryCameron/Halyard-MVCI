@@ -1,4 +1,4 @@
-package org.ecsail.MvciMain;
+package org.ecsail.mvci_main;
 
 public class MainInteractor {
 
