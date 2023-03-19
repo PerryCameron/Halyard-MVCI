@@ -11,7 +11,6 @@ public class BaseApplication extends Application {
     public static Stage primaryStage;
 
     public static void main(String[] args) {
-//        setUpForFirstTime();
         launch(args);
     }
 

@@ -30,7 +30,6 @@ public class ConnectView implements Builder<Region> {
     @Override
     public Region build() {
         BorderPane pane = new BorderPane();
-        pane.setPrefSize(200,300);
         pane.setCenter(createRightBox());
         pane.setLeft(createLeftBox());
         pane.setBottom(createBottomBox());
@@ -88,10 +87,10 @@ public class ConnectView implements Builder<Region> {
     }
 
     private Node ButtonBox() { // 8
-        HBox hBox = HBoxFx.boundBoxOf(new Insets(15,5,20,5), connectModel.buttonBoxProperty());
         HBox containerBox = HBoxFx.boundBoxOf(connectModel.containerBoxProperty());
-        HBox buttonBox1 = HBoxFx.hBoxOf(new Insets(0,0,0,35),10);
-        HBox addBox = HBoxFx.hBoxOf(Pos.CENTER_LEFT,15, 15);
+        HBox hBox = HBoxFx.boundBoxOf(new Insets(15,5,20,5), connectModel.buttonBoxProperty());
+        HBox buttonBox = HBoxFx.hBoxOf(new Insets(0,0,0,35),10);
+        HBox TextBox = HBoxFx.hBoxOf(Pos.CENTER_LEFT,15, 15);
         Text newConnectText = TextFx.linkTextOf("New");
         Text editConnectText = TextFx.linkTextOf("Edit");
         editConnectText.setOnMouseClicked(event -> setEditMode(true));
@@ -103,9 +102,9 @@ public class ConnectView implements Builder<Region> {
         });
         Button cancelButton1 = new Button("Cancel");
         cancelButton1.setOnAction((event) -> System.exit(0));
-        addBox.getChildren().addAll(newConnectText,editConnectText);
-        buttonBox1.getChildren().addAll(loginButton,cancelButton1);
-        hBox.getChildren().addAll(addBox, buttonBox1);
+        TextBox.getChildren().addAll(newConnectText,editConnectText);
+        buttonBox.getChildren().addAll(loginButton,cancelButton1);
+        hBox.getChildren().addAll(TextBox, buttonBox);
         containerBox.getChildren().add(hBox);
         return containerBox;
     }
@@ -118,10 +117,6 @@ public class ConnectView implements Builder<Region> {
         connectModel.setEditMode(mode);
     }
 
-    /**
-     * \
-     *         Bottom Pane
-     */
     private Node createBottomBox() {
         VBox vBox = VBoxFx.vBoxOf(new Insets(0,0,0,15), connectModel.bottomPaneHeightProperty());
         setModeChangeListener(vBox, connectModel.editModeProperty(),true);
@@ -189,7 +184,7 @@ public class ConnectView implements Builder<Region> {
     }
 
     private Node createEditButtonsBox() {
-        HBox hBox = HBoxFx.hBoxOf(new Insets(20,0,0,60),10);
+        HBox hBox = HBoxFx.hBoxOf(Pos.CENTER, new Insets(20,0,0,0),10);
         Button buttonSave = new Button("Save");
         Button buttonDelete = new Button("Delete");
         Button buttonCancel = new Button("Cancel");
@@ -211,13 +206,13 @@ public class ConnectView implements Builder<Region> {
 
     public void createStage(Region region) {
         loginStage = new Stage();
-        loginStage.setScene(new Scene(region,500,200));
+        loginStage.setScene(new Scene(region));
         loginStage.getScene().getStylesheets().add("css/dark/dark.css");
         loginStage.show();
         loginStage.setAlwaysOnTop(true);
         loginStage.requestFocus();
         loginStage.toFront();
-        loginStage.setResizable(true);
+        loginStage.setResizable(false);
         setStageHeightListener();
     }
 
@@ -225,8 +220,8 @@ public class ConnectView implements Builder<Region> {
         connectModel.bottomPaneHeightProperty().addListener((observable) -> {
             connectModel.setTitleBarHeight(loginStage.getHeight() - loginStage.getScene().getHeight());
             loginStage.setHeight(connectModel.getBottomPaneHeight()
-                    + connectModel.titleBarHeightProperty().get()
-                    + connectModel.centerPaneHeightProperty().get());
+                    + connectModel.getTitleBarHeight()
+                    + connectModel.getCenterPaneHeight());
         });
 
     }
