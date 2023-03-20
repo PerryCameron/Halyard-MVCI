@@ -3,12 +3,16 @@ package org.ecsail.mvci_connect;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import javafx.scene.layout.HBox;
 import org.ecsail.dto.LoginDTO;
 
 public class ConnectModel {
 
     private ObservableList<LoginDTO> loginDTOS = FXCollections.observableArrayList();
+    // to keep things simple we will repopulate this everytime loginDTOs changes.
+    private ObservableList<String> comboBoxItems = FXCollections.observableArrayList();
+    private final IntegerProperty selectedIndex = new SimpleIntegerProperty(0);
     private final ObjectProperty<LoginDTO> selectedLogin = new SimpleObjectProperty<>();
     private final DoubleProperty titleBarHeight = new SimpleDoubleProperty();
     private final BooleanProperty rotateShipWheel = new SimpleBooleanProperty(false);
@@ -16,9 +20,129 @@ public class ConnectModel {
     private final DoubleProperty centerPaneHeight = new SimpleDoubleProperty();
     private final BooleanProperty editMode = new SimpleBooleanProperty(false);
     private final BooleanProperty newMode = new SimpleBooleanProperty(false);
-    private final ObjectProperty<HBox> containerBox = new SimpleObjectProperty<>();
-    private final ObjectProperty<HBox> buttonBox = new SimpleObjectProperty<>();
+    private final ObservableMap<String, HBox> observableMap = FXCollections.observableHashMap();
 
+    private StringProperty user = new SimpleStringProperty();
+    private StringProperty pass = new SimpleStringProperty();
+    private StringProperty host = new SimpleStringProperty();
+    private IntegerProperty localSqlPort = new SimpleIntegerProperty();
+    private BooleanProperty sshUsed = new SimpleBooleanProperty();
+    private StringProperty sshUser = new SimpleStringProperty();
+    private StringProperty knownHosts = new SimpleStringProperty();
+
+
+
+
+
+
+
+    public String getKnownHosts() {
+        return knownHosts.get();
+    }
+
+    public StringProperty knownHostsProperty() {
+        return knownHosts;
+    }
+
+    public void setKnownHosts(String knownHosts) {
+        this.knownHosts.set(knownHosts);
+    }
+
+    public String getSshUser() {
+        return sshUser.get();
+    }
+
+    public StringProperty sshUserProperty() {
+        return sshUser;
+    }
+
+    public void setSshUser(String sshUser) {
+        this.sshUser.set(sshUser);
+    }
+
+    public boolean isSshUsed() {
+        return sshUsed.get();
+    }
+
+    public BooleanProperty sshUsedProperty() {
+        return sshUsed;
+    }
+
+    public void setSshUsed(boolean sshUsed) {
+        this.sshUsed.set(sshUsed);
+    }
+
+    public String getUser() {
+        return user.get();
+    }
+
+    public StringProperty userProperty() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user.set(user);
+    }
+
+    public String getPass() {
+        return pass.get();
+    }
+
+    public StringProperty passProperty() {
+        return pass;
+    }
+
+    public void setPass(String pass) {
+        this.pass.set(pass);
+    }
+
+    public String getHost() {
+        return host.get();
+    }
+
+    public StringProperty hostProperty() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host.set(host);
+    }
+
+    public int getLocalSqlPort() {
+        return localSqlPort.get();
+    }
+
+    public IntegerProperty localSqlPortProperty() {
+        return localSqlPort;
+    }
+
+    public void setLocalSqlPort(int localSqlPort) {
+        this.localSqlPort.set(localSqlPort);
+    }
+
+    public ObservableList<String> getComboBoxItems() {
+        return comboBoxItems;
+    }
+
+    public void setComboBoxItems(ObservableList<String> comboBoxItems) {
+        this.comboBoxItems = comboBoxItems;
+    }
+
+    public int getSelectedIndex() {
+        return selectedIndex.get();
+    }
+
+    public IntegerProperty selectedIndexProperty() {
+        return selectedIndex;
+    }
+
+    public void setSelectedIndex(int selectedIndex) {
+        this.selectedIndex.set(selectedIndex);
+    }
+
+    public ObservableMap<String, HBox> getObservableMap() {
+        return observableMap;
+    }
 
     public ObservableList<LoginDTO> getLoginDTOS() {
         return loginDTOS;
@@ -110,29 +234,5 @@ public class ConnectModel {
 
     public void setNewMode(boolean newMode) {
         this.newMode.set(newMode);
-    }
-
-    public HBox getContainerBox() {
-        return containerBox.get();
-    }
-
-    public ObjectProperty<HBox> containerBoxProperty() {
-        return containerBox;
-    }
-
-    public void setContainerBox(HBox containerBox) {
-        this.containerBox.set(containerBox);
-    }
-
-    public HBox getButtonBox() {
-        return buttonBox.get();
-    }
-
-    public ObjectProperty<HBox> buttonBoxProperty() {
-        return buttonBox;
-    }
-
-    public void setButtonBox(HBox buttonBox) {
-        this.buttonBox.set(buttonBox);
     }
 }

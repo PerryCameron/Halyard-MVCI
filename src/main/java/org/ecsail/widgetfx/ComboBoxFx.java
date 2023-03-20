@@ -14,13 +14,6 @@ public class ComboBoxFx {
         comboBox.setItems(list);
         return comboBox;
     }
-
-
-
 }
 
-//    ComboBox<String> comboBox = new ComboBox<>();
-//    ObservableList<String> observableList = FXCollections.observableArrayList("Item 1", "Item 2", "Item 3");
-//
-//comboBox.itemsProperty().bind(observableList); // bind the ComboBox's items to the ObservableList
 

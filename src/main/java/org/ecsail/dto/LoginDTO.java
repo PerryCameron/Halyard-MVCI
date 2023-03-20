@@ -189,6 +189,6 @@ public class LoginDTO implements Serializable {
 
 	@Override
 	public String toString() {
-		return this.getHost();
+		return "LoginDTO: " + this.getHost();
 	}
 }
