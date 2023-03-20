@@ -4,6 +4,7 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
+import javafx.scene.control.ComboBox;
 import javafx.scene.layout.HBox;
 import org.ecsail.dto.LoginDTO;
 
@@ -14,6 +15,7 @@ public class ConnectModel {
     private ObservableList<String> comboBoxItems = FXCollections.observableArrayList();
     private final IntegerProperty selectedIndex = new SimpleIntegerProperty(0);
     private final ObjectProperty<LoginDTO> selectedLogin = new SimpleObjectProperty<>();
+    private final ObjectProperty<ComboBox<LoginDTO>> comboBox = new SimpleObjectProperty<>();
     private final DoubleProperty titleBarHeight = new SimpleDoubleProperty();
     private final BooleanProperty rotateShipWheel = new SimpleBooleanProperty(false);
     private final DoubleProperty bottomPaneHeight = new SimpleDoubleProperty();
@@ -21,7 +23,6 @@ public class ConnectModel {
     private final BooleanProperty editMode = new SimpleBooleanProperty(false);
     private final BooleanProperty newMode = new SimpleBooleanProperty(false);
     private final ObservableMap<String, HBox> observableMap = FXCollections.observableHashMap();
-
     private StringProperty user = new SimpleStringProperty();
     private StringProperty pass = new SimpleStringProperty();
     private StringProperty host = new SimpleStringProperty();
@@ -35,6 +36,17 @@ public class ConnectModel {
 
 
 
+    public ComboBox<LoginDTO> getComboBox() {
+        return comboBox.get();
+    }
+
+    public ObjectProperty<ComboBox<LoginDTO>> comboBoxProperty() {
+        return comboBox;
+    }
+
+    public void setComboBox(ComboBox<LoginDTO> comboBox) {
+        this.comboBox.set(comboBox);
+    }
 
     public String getKnownHosts() {
         return knownHosts.get();

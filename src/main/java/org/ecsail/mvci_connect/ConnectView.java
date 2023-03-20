@@ -28,8 +28,6 @@ import org.ecsail.widgetfx.VBoxFx;
 import java.util.Objects;
 
 public class ConnectView implements Builder<Region> {
-
-
     private final ConnectModel connectModel;
     public ConnectView(ConnectModel model) {
         this.connectModel = model;
@@ -107,14 +105,20 @@ public class ConnectView implements Builder<Region> {
 
     private HBox CreateComboBox(double width) {
         HBox hBox = new HBox();
-        ComboBox<String> comboBox = new ComboBox<>();
+//        ComboBox<String> comboBox = new ComboBox<>();
+        ComboBox<LoginDTO> comboBox = new ComboBox<>();
         refreshComboBox();
         comboBox.setPrefWidth(width);
-        comboBox.getItems().addAll(connectModel.getComboBoxItems());
-        comboBox.setValue(getSelectedComboBoxItem());
+        comboBox.getItems().addAll(connectModel.getLoginDTOS());
+        comboBox.setValue(connectModel.getSelectedLogin());
+        connectModel.setComboBox(comboBox);
         System.out.println(comboBox.getValue());
         hBox.getChildren().add(comboBox);
-        comboBox.valueProperty().addListener((Observable, oldValue, newValue) -> connectModel.setSelectedLogin(changeSelectedLoginDTO(newValue)));
+//        comboBox.valueProperty().addListener((Observable, oldValue, newValue) -> {
+//                connectModel.setSelectedLogin(changeSelectedLoginDTO(newValue));
+//            System.out.println("size of LoginDTO is: " + connectModel.getLoginDTOS().size());
+//            System.out.println("size of comboBox is: " + connectModel.getComboBoxItems().size());
+//        });
         return hBox;
     }
 
@@ -148,22 +152,6 @@ public class ConnectView implements Builder<Region> {
         setModeChangeListener(vBox, connectModel.editModeProperty());
         setModeChangeListener(vBox, connectModel.newModeProperty());
         return vBox;
-    }
-
-    private void setNewMode(Boolean mode) {
-        connectModel.setNewMode(mode);
-        // create a new login object put it in the list and select it as the new object
-        // might be best to put this in the setNewMode() ore setEditMode() methods
-    }
-
-    private void setEditMode(Boolean mode) {
-        connectModel.setEditMode(mode);
-    }
-    private void setModeChangeListener(VBox vBox, BooleanProperty modeChangeProperty) {
-        modeChangeProperty.addListener((observable, oldValue, isEditMode) -> {
-            if(isEditMode) editMode(vBox);
-            else standardMode(vBox);
-        });
     }
 
     private void standardMode(VBox vBox) {
@@ -236,11 +224,47 @@ public class ConnectView implements Builder<Region> {
     private Node createEditButtonsBox() {
         HBox hBox = HBoxFx.hBoxOf(Pos.CENTER, new Insets(20,0,20,0),10);
         Button buttonSave = new Button("Save");
+        buttonSave.setOnAction(event -> {
+            populateSelectedLoginFromControlProperties();
+            connectModel.setNewMode(false);
+            connectModel.setEditMode(false);
+        });
         Button buttonDelete = new Button("Delete");
+        buttonDelete.setOnAction(event -> {
+            deleteLoginDTO();
+        });
         Button buttonCancel = new Button("Cancel");
-        buttonCancel.setOnAction(event -> { connectModel.setNewMode(false); connectModel.setEditMode(false); });
+        buttonCancel.setOnAction(event -> {
+            connectModel.setNewMode(false);
+            connectModel.setEditMode(false);
+        });
         hBox.getChildren().addAll(buttonSave,buttonDelete,buttonCancel);
         return hBox;
+    }
+
+    private void deleteLoginDTO() {
+        clearControls();
+        int loginDtoIndex = connectModel.getLoginDTOS().indexOf(connectModel.getSelectedLogin());
+        int comboIndex = connectModel.getComboBoxItems().indexOf(connectModel.getSelectedLogin().getHost());
+//        connectModel.getLoginDTOS().remove(loginDtoIndex);
+//        if(connectModel.getLoginDTOS().size() > 1) connectModel.setSelectedLogin(connectModel.getLoginDTOS().get(0));
+////        connectModel.getComboBoxItems().remove(comboIndex);
+//        connectModel.getComboBox().getItems().clear();
+//        connectModel.getComboBox().setItems(connectModel.getComboBoxItems());
+        connectModel.setNewMode(false);
+        connectModel.setEditMode(false);
+        System.out.println("size of LoginDTO is: " + connectModel.getLoginDTOS().size());
+        System.out.println("size of comboBox is: " + connectModel.getComboBoxItems().size());
+    }
+
+    private void setNewMode(Boolean mode) {
+        connectModel.setNewMode(mode);
+        // create a new login object put it in the list and select it as the new object
+        // might be best to put this in the setNewMode() ore setEditMode() methods
+    }
+
+    private void setEditMode(Boolean mode) {
+        connectModel.setEditMode(mode);
     }
 
     private void createRotateShipsWheel(ImageView imageView) {
@@ -290,10 +314,27 @@ public class ConnectView implements Builder<Region> {
                 .stream().filter(dto -> host.equals(dto.getHost())).findFirst().orElse(null);
     }
 
+    private void setModeChangeListener(VBox vBox, BooleanProperty modeChangeProperty) {
+        modeChangeProperty.addListener((observable, oldValue, isEditMode) -> {
+            if(isEditMode) editMode(vBox);
+            else standardMode(vBox);
+        });
+    }
+
     private void setSelectedLoginDTOListener() {
         connectModel.selectedLoginProperty().addListener((observable, oldValue, newValue) -> {
             populatePropertiesFromSelectedLoginDTO(newValue);
         });
+    }
+
+    private void clearControls() {
+        connectModel.setUser("");
+        connectModel.setPass("");
+        connectModel.setHost("");
+        connectModel.setSshUsed(true);
+        connectModel.setLocalSqlPort(3306);
+        connectModel.setSshUser("");
+        connectModel.setKnownHosts("");
     }
 
     private void populatePropertiesFromSelectedLoginDTO(LoginDTO newValue) {
@@ -304,6 +345,16 @@ public class ConnectView implements Builder<Region> {
         connectModel.setLocalSqlPort(newValue.getLocalSqlPort());
         connectModel.setSshUser(newValue.getSshUser());
         connectModel.setKnownHosts(newValue.getKnownHostsFile());
+    }
+
+    private void populateSelectedLoginFromControlProperties() {
+        connectModel.getSelectedLogin().setUser(connectModel.getUser());
+        connectModel.getSelectedLogin().setPasswd(connectModel.getPass());
+        connectModel.getSelectedLogin().setHost(connectModel.getHost());
+        connectModel.getSelectedLogin().setSshForward(connectModel.isSshUsed());
+        connectModel.getSelectedLogin().setSshUser(connectModel.getSshUser());
+        connectModel.getSelectedLogin().setLocalSqlPort(connectModel.getLocalSqlPort());
+        connectModel.getSelectedLogin().setKnownHostsFile(connectModel.getKnownHosts());
     }
 
     private void setStageHeightListener() {
