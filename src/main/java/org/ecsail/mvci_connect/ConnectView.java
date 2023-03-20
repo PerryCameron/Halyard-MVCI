@@ -242,8 +242,8 @@ public class ConnectView implements Builder<Region> {
 
     private void setNewMode(Boolean mode) {
         connectModel.setNewMode(mode);
-        // create a new login object put it in the list and select it as the new object
-        // might be best to put this in the setNewMode() ore setEditMode() methods
+        connectModel.getComboBox().getItems().add(ObjectFx.createLoginDTO());
+        connectModel.getComboBox().getSelectionModel().select(connectModel.getComboBox().getItems().size() - 1);
     }
 
     private void setEditMode(Boolean mode) {

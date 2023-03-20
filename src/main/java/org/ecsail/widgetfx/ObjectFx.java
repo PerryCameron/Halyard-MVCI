@@ -5,7 +5,7 @@ import org.ecsail.dto.LoginDTO;
 public class ObjectFx {
 
     public static LoginDTO createLoginDTO() {
-        return  new LoginDTO(3306,3306, 22, "", "",
+        return  new LoginDTO(3306,3306, 22, "new host", "",
                 "", "",
                 "", System.getProperty("user.home") + "/.ssh/known_hosts",
                 System.getProperty("user.home") + "/.ssh/id_rsa", false, true);
