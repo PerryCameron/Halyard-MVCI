@@ -21,7 +21,7 @@ public class ConnectInteractor {
         if (FileIO.hostFileExists())
             FileIO.openLoginObjects(loginDTOS);
         else {
-            loginDTOS.add(ObjectFx.createLoginDTO()); // we are starting application for the first time
+            loginDTOS.add(ObjectFx.createLoginDTO4()); // we are starting application for the first time
             loginDTOS.add(ObjectFx.createLoginDTO2());
             loginDTOS.add(ObjectFx.createLoginDTO3());
         }

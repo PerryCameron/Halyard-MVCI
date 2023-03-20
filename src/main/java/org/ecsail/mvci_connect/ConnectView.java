@@ -20,10 +20,7 @@ import javafx.util.Builder;
 import javafx.util.Duration;
 import org.ecsail.BaseApplication;
 import org.ecsail.dto.LoginDTO;
-import org.ecsail.widgetfx.HBoxFx;
-import org.ecsail.widgetfx.TextFieldFx;
-import org.ecsail.widgetfx.TextFx;
-import org.ecsail.widgetfx.VBoxFx;
+import org.ecsail.widgetfx.*;
 
 import java.util.Objects;
 
@@ -110,10 +107,13 @@ public class ConnectView implements Builder<Region> {
         comboBox.getItems().addAll(connectModel.getLoginDTOS());
         comboBox.setValue(connectModel.getSelectedLogin());
         connectModel.setComboBox(comboBox);
-        System.out.println(comboBox.getValue());
         hBox.getChildren().add(comboBox);
         comboBox.valueProperty().addListener((Observable, oldValue, newValue) -> {
-                connectModel.setSelectedLogin(newValue);
+            if(newValue != null) connectModel.setSelectedLogin(newValue);
+            else {
+                comboBox.getItems().add(ObjectFx.createLoginDTO());
+                comboBox.setValue(connectModel.getSelectedLogin());
+            }
         });
         return hBox;
     }
@@ -227,7 +227,9 @@ public class ConnectView implements Builder<Region> {
         });
         Button buttonDelete = new Button("Delete");
         buttonDelete.setOnAction(event -> {
-            deleteLoginDTO();
+            connectModel.getComboBox().getItems().remove(connectModel.getSelectedLogin());
+            connectModel.setNewMode(false);
+            connectModel.setEditMode(false);
         });
         Button buttonCancel = new Button("Cancel");
         buttonCancel.setOnAction(event -> {
@@ -236,19 +238,6 @@ public class ConnectView implements Builder<Region> {
         });
         hBox.getChildren().addAll(buttonSave,buttonDelete,buttonCancel);
         return hBox;
-    }
-
-    private void deleteLoginDTO() {
-        clearControls();
-        int loginDtoIndex = connectModel.getLoginDTOS().indexOf(connectModel.getSelectedLogin());
-//        connectModel.getLoginDTOS().remove(loginDtoIndex);
-//        if(connectModel.getLoginDTOS().size() > 1) connectModel.setSelectedLogin(connectModel.getLoginDTOS().get(0));
-////        connectModel.getComboBoxItems().remove(comboIndex);
-//        connectModel.getComboBox().getItems().clear();
-//        connectModel.getComboBox().setItems(connectModel.getComboBoxItems());
-        connectModel.setNewMode(false);
-        connectModel.setEditMode(false);
-        System.out.println("size of LoginDTO is: " + connectModel.getLoginDTOS().size());
     }
 
     private void setNewMode(Boolean mode) {
@@ -302,7 +291,7 @@ public class ConnectView implements Builder<Region> {
 
     private void setSelectedLoginDTOListener() {
         connectModel.selectedLoginProperty().addListener((observable, oldValue, newValue) -> {
-            populatePropertiesFromSelectedLoginDTO(newValue);
+            if(newValue != null) populatePropertiesFromSelectedLoginDTO(newValue);
         });
     }
 

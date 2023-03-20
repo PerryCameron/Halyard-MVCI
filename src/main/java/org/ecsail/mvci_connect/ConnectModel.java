@@ -11,7 +11,6 @@ import org.ecsail.dto.LoginDTO;
 public class ConnectModel {
 
     private ObservableList<LoginDTO> loginDTOS = FXCollections.observableArrayList();
-    private final IntegerProperty selectedIndex = new SimpleIntegerProperty(0);
     private final ObjectProperty<LoginDTO> selectedLogin = new SimpleObjectProperty<>();
     private final ObjectProperty<ComboBox<LoginDTO>> comboBox = new SimpleObjectProperty<>();
     private final DoubleProperty titleBarHeight = new SimpleDoubleProperty();
@@ -21,13 +20,13 @@ public class ConnectModel {
     private final BooleanProperty editMode = new SimpleBooleanProperty(false);
     private final BooleanProperty newMode = new SimpleBooleanProperty(false);
     private final ObservableMap<String, HBox> observableMap = FXCollections.observableHashMap();
-    private StringProperty user = new SimpleStringProperty();
-    private StringProperty pass = new SimpleStringProperty();
-    private StringProperty host = new SimpleStringProperty();
-    private IntegerProperty localSqlPort = new SimpleIntegerProperty();
-    private BooleanProperty sshUsed = new SimpleBooleanProperty();
-    private StringProperty sshUser = new SimpleStringProperty();
-    private StringProperty knownHosts = new SimpleStringProperty();
+    private final StringProperty user = new SimpleStringProperty();
+    private final StringProperty pass = new SimpleStringProperty();
+    private final StringProperty host = new SimpleStringProperty();
+    private final IntegerProperty localSqlPort = new SimpleIntegerProperty();
+    private final BooleanProperty sshUsed = new SimpleBooleanProperty();
+    private final StringProperty sshUser = new SimpleStringProperty();
+    private final StringProperty knownHosts = new SimpleStringProperty();
 
 
 
@@ -129,20 +128,6 @@ public class ConnectModel {
     public void setLocalSqlPort(int localSqlPort) {
         this.localSqlPort.set(localSqlPort);
     }
-
-
-    public int getSelectedIndex() {
-        return selectedIndex.get();
-    }
-
-    public IntegerProperty selectedIndexProperty() {
-        return selectedIndex;
-    }
-
-    public void setSelectedIndex(int selectedIndex) {
-        this.selectedIndex.set(selectedIndex);
-    }
-
     public ObservableMap<String, HBox> getObservableMap() {
         return observableMap;
     }
