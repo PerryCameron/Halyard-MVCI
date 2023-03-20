@@ -105,20 +105,16 @@ public class ConnectView implements Builder<Region> {
 
     private HBox CreateComboBox(double width) {
         HBox hBox = new HBox();
-//        ComboBox<String> comboBox = new ComboBox<>();
-        ComboBox<LoginDTO> comboBox = new ComboBox<>();
-        refreshComboBox();
+        LogInComboBox comboBox = new LogInComboBox();
         comboBox.setPrefWidth(width);
         comboBox.getItems().addAll(connectModel.getLoginDTOS());
         comboBox.setValue(connectModel.getSelectedLogin());
         connectModel.setComboBox(comboBox);
         System.out.println(comboBox.getValue());
         hBox.getChildren().add(comboBox);
-//        comboBox.valueProperty().addListener((Observable, oldValue, newValue) -> {
-//                connectModel.setSelectedLogin(changeSelectedLoginDTO(newValue));
-//            System.out.println("size of LoginDTO is: " + connectModel.getLoginDTOS().size());
-//            System.out.println("size of comboBox is: " + connectModel.getComboBoxItems().size());
-//        });
+        comboBox.valueProperty().addListener((Observable, oldValue, newValue) -> {
+                connectModel.setSelectedLogin(newValue);
+        });
         return hBox;
     }
 
@@ -245,7 +241,6 @@ public class ConnectView implements Builder<Region> {
     private void deleteLoginDTO() {
         clearControls();
         int loginDtoIndex = connectModel.getLoginDTOS().indexOf(connectModel.getSelectedLogin());
-        int comboIndex = connectModel.getComboBoxItems().indexOf(connectModel.getSelectedLogin().getHost());
 //        connectModel.getLoginDTOS().remove(loginDtoIndex);
 //        if(connectModel.getLoginDTOS().size() > 1) connectModel.setSelectedLogin(connectModel.getLoginDTOS().get(0));
 ////        connectModel.getComboBoxItems().remove(comboIndex);
@@ -254,7 +249,6 @@ public class ConnectView implements Builder<Region> {
         connectModel.setNewMode(false);
         connectModel.setEditMode(false);
         System.out.println("size of LoginDTO is: " + connectModel.getLoginDTOS().size());
-        System.out.println("size of comboBox is: " + connectModel.getComboBoxItems().size());
     }
 
     private void setNewMode(Boolean mode) {
@@ -292,21 +286,6 @@ public class ConnectView implements Builder<Region> {
     private LoginDTO selectLoginDTO() {
         return connectModel.getLoginDTOS().stream()
                 .filter(LoginDTO::isDefault).findFirst().orElse(null);
-    }
-
-    private void refreshComboBox() {
-        connectModel.getComboBoxItems().clear();
-        connectModel.getLoginDTOS()
-                .stream()
-                .map(LoginDTO::getHost)
-                .forEach(connectModel.getComboBoxItems()::add);
-    }
-
-    private String getSelectedComboBoxItem() {
-        String defaultHost = connectModel.getLoginDTOS().stream().filter(LoginDTO::isDefault)
-                .map(LoginDTO::getHost).findFirst().orElse(null);
-        return connectModel.getComboBoxItems().stream()
-                .filter(string -> string.equals(defaultHost)).findFirst().orElse(null);
     }
 
     private LoginDTO changeSelectedLoginDTO(String host) {

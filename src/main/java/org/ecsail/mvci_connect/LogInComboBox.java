@@ -21,7 +21,6 @@ public class LogInComboBox extends ComboBox<LoginDTO> {
             @Override
             protected void updateItem(LoginDTO loginDTO, boolean empty) {
                 super.updateItem(loginDTO, empty);
-
                 if (loginDTO == null || empty) {
                     setGraphic(null);
                     setText("");

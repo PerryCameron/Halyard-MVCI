@@ -11,8 +11,6 @@ import org.ecsail.dto.LoginDTO;
 public class ConnectModel {
 
     private ObservableList<LoginDTO> loginDTOS = FXCollections.observableArrayList();
-    // to keep things simple we will repopulate this everytime loginDTOs changes.
-    private ObservableList<String> comboBoxItems = FXCollections.observableArrayList();
     private final IntegerProperty selectedIndex = new SimpleIntegerProperty(0);
     private final ObjectProperty<LoginDTO> selectedLogin = new SimpleObjectProperty<>();
     private final ObjectProperty<ComboBox<LoginDTO>> comboBox = new SimpleObjectProperty<>();
@@ -132,13 +130,6 @@ public class ConnectModel {
         this.localSqlPort.set(localSqlPort);
     }
 
-    public ObservableList<String> getComboBoxItems() {
-        return comboBoxItems;
-    }
-
-    public void setComboBoxItems(ObservableList<String> comboBoxItems) {
-        this.comboBoxItems = comboBoxItems;
-    }
 
     public int getSelectedIndex() {
         return selectedIndex.get();
