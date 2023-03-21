@@ -12,7 +12,7 @@ public class ConnectInteractor {
     private ConnectModel model;
     public ConnectInteractor(ConnectModel connectModel) {
         this.model = connectModel;
-        connectModel.getLoginDTOS().addAll(FXCollections.observableArrayList(setLogins()));
+        connectModel.getItems().addAll(FXCollections.observableArrayList(setLogins()));
         setDefaultLogin();
     }
 
@@ -30,7 +30,7 @@ public class ConnectInteractor {
     }
 
     public void setDefaultLogin() {
-        model.setSelectedLogin(model.getLoginDTOS().stream()
+        model.setSelectedLogin(model.getItems().stream()
                 .filter(loginDTO -> loginDTO.isDefault() == true).findFirst().orElse(null));
     }
 }

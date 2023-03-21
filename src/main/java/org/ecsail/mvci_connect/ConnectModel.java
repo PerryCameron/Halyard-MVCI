@@ -10,7 +10,7 @@ import org.ecsail.dto.LoginDTO;
 
 public class ConnectModel {
 
-    private ObservableList<LoginDTO> loginDTOS = FXCollections.observableArrayList();
+    private ObservableList<LoginDTO> items = FXCollections.observableArrayList();
     private final ObjectProperty<LoginDTO> selectedLogin = new SimpleObjectProperty<>();
     private final ObjectProperty<ComboBox<LoginDTO>> comboBox = new SimpleObjectProperty<>();
     private final DoubleProperty titleBarHeight = new SimpleDoubleProperty();
@@ -132,12 +132,12 @@ public class ConnectModel {
         return observableMap;
     }
 
-    public ObservableList<LoginDTO> getLoginDTOS() {
-        return loginDTOS;
+    public ObservableList<LoginDTO> getItems() {
+        return items;
     }
 
-    public void setLoginDTOS(ObservableList<LoginDTO> loginDTOS) {
-        this.loginDTOS = loginDTOS;
+    public void setItems(ObservableList<LoginDTO> items) {
+        this.items = items;
     }
 
     public LoginDTO getSelectedLogin() {
@@ -154,10 +154,6 @@ public class ConnectModel {
 
     public double getTitleBarHeight() {
         return titleBarHeight.get();
-    }
-
-    public DoubleProperty titleBarHeightProperty() {
-        return titleBarHeight;
     }
 
     public void setTitleBarHeight(double titleBarHeight) {
@@ -184,10 +180,6 @@ public class ConnectModel {
         return bottomPaneHeight;
     }
 
-    public void setBottomPaneHeight(double bottomPaneHeight) {
-        this.bottomPaneHeight.set(bottomPaneHeight);
-    }
-
     public double getCenterPaneHeight() {
         return centerPaneHeight.get();
     }
@@ -196,24 +188,12 @@ public class ConnectModel {
         return centerPaneHeight;
     }
 
-    public void setCenterPaneHeight(double centerPaneHeight) {
-        this.centerPaneHeight.set(centerPaneHeight);
-    }
-
-    public boolean isEditMode() {
-        return editMode.get();
-    }
-
     public BooleanProperty editModeProperty() {
         return editMode;
     }
 
     public void setEditMode(boolean editMode) {
         this.editMode.set(editMode);
-    }
-
-    public boolean isNewMode() {
-        return newMode.get();
     }
 
     public BooleanProperty newModeProperty() {
