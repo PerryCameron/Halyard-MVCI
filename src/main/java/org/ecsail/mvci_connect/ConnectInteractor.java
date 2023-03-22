@@ -14,12 +14,9 @@ public class ConnectInteractor {
     private ConnectModel connectModel;
     public ConnectInteractor(ConnectModel connectModel) {
         this.connectModel = connectModel;
-        connectModel.getItems().addAll(FXCollections.observableArrayList(setLogins()));
-        System.out.println(connectModel.getItems().size());
-        setDefaultLogin();
     }
 
-    public List<LoginDTO> setLogins() {
+    public List<LoginDTO> supplyLogins() {
         List<LoginDTO> loginDTOS = new ArrayList<>();
         if (FileIO.hostFileExists())
             openLoginObjects(loginDTOS);
@@ -69,8 +66,4 @@ public class ConnectInteractor {
 //        BaseApplication.logger.info(HalyardPaths.HOSTS + " saved");
     }
 
-    public void setDefaultLogin() {
-        connectModel.setSelectedLogin(connectModel.getItems().stream()
-                .filter(loginDTO -> loginDTO.isDefault() == true).findFirst().orElse(null));
-    }
 }

@@ -1,6 +1,9 @@
 package org.ecsail.mvci_connect;
 
+import org.ecsail.dto.LoginDTO;
 import org.ecsail.mvci_main.MainController;
+
+import java.util.ArrayList;
 
 public class ConnectController {
     MainController mainController;
@@ -11,11 +14,15 @@ public class ConnectController {
     public ConnectController(MainController mainController) {
         this.mainController = mainController;
         connectInteractor = new ConnectInteractor(connectModel);
-        connectView = new ConnectView(connectModel, this::saveLogins);
+        connectView = new ConnectView(connectModel, this::saveLogins, this::loginSupply);
     }
 
     private void saveLogins(Void unused) {
         connectInteractor.saveLoginObjects();
+    }
+
+    private ArrayList<LoginDTO> loginSupply () {
+        return new ArrayList<>(connectInteractor.supplyLogins());
     }
 
     public ConnectController getView() {

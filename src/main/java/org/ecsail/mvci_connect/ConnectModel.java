@@ -11,15 +11,11 @@ import org.ecsail.dto.LoginDTO;
 
 public class ConnectModel {
 
-    private ObservableList<LoginDTO> items = FXCollections.observableArrayList();
-    private final ObjectProperty<LoginDTO> selectedLogin = new SimpleObjectProperty<>();
     private final ObjectProperty<ComboBox<LoginDTO>> comboBox = new SimpleObjectProperty<>();
     private final DoubleProperty titleBarHeight = new SimpleDoubleProperty();
     private final BooleanProperty rotateShipWheel = new SimpleBooleanProperty(false);
     private final DoubleProperty bottomPaneHeight = new SimpleDoubleProperty();
     private final DoubleProperty centerPaneHeight = new SimpleDoubleProperty();
-//    private final BooleanProperty editMode = new SimpleBooleanProperty(false);
-//    private final BooleanProperty newMode = new SimpleBooleanProperty(false);
     private final ObservableMap<String, HBox> observableMap = FXCollections.observableHashMap();
     private final StringProperty user = new SimpleStringProperty();
     private final StringProperty pass = new SimpleStringProperty();
@@ -28,7 +24,6 @@ public class ConnectModel {
     private final BooleanProperty sshUsed = new SimpleBooleanProperty();
     private final StringProperty sshUser = new SimpleStringProperty();
     private final StringProperty knownHosts = new SimpleStringProperty();
-
     private final ObjectProperty<VBox> bottomBox = new SimpleObjectProperty();
 
 
@@ -143,26 +138,6 @@ public class ConnectModel {
         return observableMap;
     }
 
-    public ObservableList<LoginDTO> getItems() {
-        return items;
-    }
-
-    public void setItems(ObservableList<LoginDTO> items) {
-        this.items = items;
-    }
-
-    public LoginDTO getSelectedLogin() {
-        return selectedLogin.get();
-    }
-
-    public ObjectProperty<LoginDTO> selectedLoginProperty() {
-        return selectedLogin;
-    }
-
-    public void setSelectedLogin(LoginDTO selectedLogin) {
-        this.selectedLogin.set(selectedLogin);
-    }
-
     public double getTitleBarHeight() {
         return titleBarHeight.get();
     }
@@ -198,20 +173,4 @@ public class ConnectModel {
     public DoubleProperty centerPaneHeightProperty() {
         return centerPaneHeight;
     }
-
-//    public BooleanProperty editModeProperty() {
-//        return editMode;
-//    }
-//
-//    public void setEditMode(boolean editMode) {
-//        this.editMode.set(editMode);
-//    }
-//
-//    public BooleanProperty newModeProperty() {
-//        return newMode;
-//    }
-//
-//    public void setNewMode(boolean newMode) {
-//        this.newMode.set(newMode);
-//    }
 }

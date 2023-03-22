@@ -1,14 +1,15 @@
 package org.ecsail.mvci_connect;
 
-import javafx.beans.property.Property;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import org.ecsail.dto.LoginDTO;
 
+import java.util.ArrayList;
+
 public class LogInComboBox extends ComboBox<LoginDTO> {
 
-    public LogInComboBox(double width, ObservableList<LoginDTO> loginDTOS) {
+    public LogInComboBox(double width, ArrayList<LoginDTO> loginDTOS) {
         super();
         setPrefWidth(width);
         initialize();

@@ -19,6 +19,7 @@ import javafx.util.Builder;
 import javafx.util.Duration;
 import org.ecsail.BaseApplication;
 import org.ecsail.dto.LoginDTO;
+import org.ecsail.iface.LoginDTOListSupplier;
 import org.ecsail.iface.RunState;
 import org.ecsail.widgetfx.HBoxFx;
 import org.ecsail.widgetfx.TextFieldFx;
@@ -32,9 +33,11 @@ public class ConnectView implements Builder<Region> {
     private final ConnectModel connectModel;
     private final RunState runState;
     private final Consumer<Void> saveLogins;
-    public ConnectView(ConnectModel model, Consumer<Void> saveLogins) {
+    private final LoginDTOListSupplier loginSupplier;
+    public ConnectView(ConnectModel model, Consumer<Void> saveLogins, LoginDTOListSupplier loginSupplier) {
         this.connectModel = model;
         this.runState = new RunStateImpl(model);
+        this.loginSupplier = loginSupplier;
         this.saveLogins = saveLogins;
     }
 
@@ -44,9 +47,6 @@ public class ConnectView implements Builder<Region> {
         pane.setCenter(createRightBox());
         pane.setLeft(createLeftBox());
         pane.setBottom(createBottomBox());
-        setSelectedLoginDTOListener();
-        connectModel.setSelectedLogin(selectLoginDTO());
-        copySelectedLogOnToFields(selectLoginDTO());
         return pane;
     }
 
@@ -108,16 +108,15 @@ public class ConnectView implements Builder<Region> {
     private Node createComboBox() {
         HBox hBox = new HBox();
         connectModel.getObservableMap().put("host-combo-box",hBox);
-        LogInComboBox comboBox = new LogInComboBox(200, connectModel.getItems());
-        comboBox.setValue(connectModel.getSelectedLogin());
+        LogInComboBox comboBox = new LogInComboBox(200, loginSupplier.getLoginDTOs());
+        comboBox.setValue(comboBox.getItems().stream().filter(LoginDTO::isDefault).findFirst().orElse(null));
         connectModel.setComboBox(comboBox);
         hBox.getChildren().add(comboBox);
         comboBox.valueProperty().addListener((Observable, oldValue, newValue) -> {
-            if(newValue != null) connectModel.setSelectedLogin(newValue);
+            if(newValue != null) updateFields(newValue);
             else connectModel.getComboBox().getSelectionModel().select(connectModel.getComboBox().getItems().size() - 1);
             System.out.println(
-                   "We have " + connectModel.getItems().size() + " items in connectModel" +
-                    " and We have " + connectModel.getComboBox().getItems().size() + " items in comboBox"
+                    "We have " + connectModel.getComboBox().getItems().size() + " items in comboBox"
             );
         });
         return hBox;
@@ -212,13 +211,13 @@ public class ConnectView implements Builder<Region> {
         HBox hBox = HBoxFx.hBoxOf(Pos.CENTER, new Insets(20,0,20,0),10);
         Button buttonSave = new Button("Save");
         buttonSave.setOnAction(event -> {
-            copyFieldsToSelectedLogOn();
+            updateSelectedLogin();
             runState.setMode(RunState.Mode.NORMAL);
             saveLogins.accept(null);
         });
         Button buttonDelete = new Button("Delete");
         buttonDelete.setOnAction(event -> {
-            connectModel.getComboBox().getItems().remove(connectModel.getSelectedLogin());
+            connectModel.getComboBox().getItems().remove(connectModel.getComboBox().getValue());
             runState.setMode(RunState.Mode.NORMAL);
         });
         Button buttonCancel = new Button("Cancel");
@@ -238,18 +237,7 @@ public class ConnectView implements Builder<Region> {
             });
     }
 
-    private LoginDTO selectLoginDTO() {
-        return connectModel.getItems().stream()
-                .filter(LoginDTO::isDefault).findFirst().orElse(null);
-    }
-
-    private void setSelectedLoginDTOListener() {
-        connectModel.selectedLoginProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue != null) copySelectedLogOnToFields(newValue);
-        });
-    }
-
-    private void copySelectedLogOnToFields(LoginDTO newValue) {
+    private void updateFields(LoginDTO newValue) {
         connectModel.setUser(newValue.getUser());
         connectModel.setPass(newValue.getPasswd());
         connectModel.setHost(newValue.getHost());
@@ -259,14 +247,14 @@ public class ConnectView implements Builder<Region> {
         connectModel.setKnownHosts(newValue.getKnownHostsFile());
     }
 
-    private void copyFieldsToSelectedLogOn() {
-        connectModel.getSelectedLogin().setUser(connectModel.getUser());
-        connectModel.getSelectedLogin().setPasswd(connectModel.getPass());
-        connectModel.getSelectedLogin().setHost(connectModel.getHost());
-        connectModel.getSelectedLogin().setSshForward(connectModel.isSshUsed());
-        connectModel.getSelectedLogin().setSshUser(connectModel.getSshUser());
-        connectModel.getSelectedLogin().setLocalSqlPort(connectModel.getLocalSqlPort());
-        connectModel.getSelectedLogin().setKnownHostsFile(connectModel.getKnownHosts());
+    private void updateSelectedLogin() {
+        connectModel.getComboBox().getValue().setUser(connectModel.getUser());
+        connectModel.getComboBox().getValue().setPasswd(connectModel.getPass());
+        connectModel.getComboBox().getValue().setHost(connectModel.getHost());
+        connectModel.getComboBox().getValue().setSshForward(connectModel.isSshUsed());
+        connectModel.getComboBox().getValue().setSshUser(connectModel.getSshUser());
+        connectModel.getComboBox().getValue().setLocalSqlPort(connectModel.getLocalSqlPort());
+        connectModel.getComboBox().getValue().setKnownHostsFile(connectModel.getKnownHosts());
     }
 
     private void setStageHeightListener() {
