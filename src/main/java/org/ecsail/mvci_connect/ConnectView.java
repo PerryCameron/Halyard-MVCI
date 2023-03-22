@@ -31,7 +31,6 @@ import java.util.function.Consumer;
 public class ConnectView implements Builder<Region> {
     private final ConnectModel connectModel;
     private final RunState runState;
-
     private final Consumer<Void> saveLogins;
     public ConnectView(ConnectModel model, Consumer<Void> saveLogins) {
         this.connectModel = model;
@@ -117,7 +116,8 @@ public class ConnectView implements Builder<Region> {
             if(newValue != null) connectModel.setSelectedLogin(newValue);
             else connectModel.getComboBox().getSelectionModel().select(connectModel.getComboBox().getItems().size() - 1);
             System.out.println(
-                   "We have " + connectModel.getItems().size() + " items."
+                   "We have " + connectModel.getItems().size() + " items in connectModel" +
+                    " and We have " + connectModel.getComboBox().getItems().size() + " items in comboBox"
             );
         });
         return hBox;
@@ -158,23 +158,6 @@ public class ConnectView implements Builder<Region> {
         connectModel.getObservableMap().put("edit-buttons-box",createEditButtonsBox());
         return connectModel.getBottomBox();
     }
-
-
-
-//    private void editMode() {
-//        // add to bottom box
-//        connectModel.getBottomBox().getChildren().addAll(
-//        connectModel.getObservableMap().get("sql-port-box"),
-//        connectModel.getObservableMap().get("use-ssh-box"),
-//        connectModel.getObservableMap().get("ssh-usr-box"),
-//        connectModel.getObservableMap().get("known-host-box"),
-//        connectModel.getObservableMap().get("edit-buttons-box"));
-//        connectModel.getObservableMap().get("button-box-container").getChildren().clear();
-//        connectModel.getObservableMap().get("host-container").getChildren().clear();
-//        // add to host container
-//        connectModel.getObservableMap().get("host-container").getChildren()
-//                .add(connectModel.getObservableMap().get("host-text-field"));
-//    }
 
     private HBox createSqlPortBox() { // 4
         HBox hBox = new HBox();
@@ -258,12 +241,6 @@ public class ConnectView implements Builder<Region> {
     private LoginDTO selectLoginDTO() {
         return connectModel.getItems().stream()
                 .filter(LoginDTO::isDefault).findFirst().orElse(null);
-    }
-
-    public void setModeChangeListener() {
-        runState.ModeProperty().addListener((observable, oldValue, isEditMode) -> {
-
-        });
     }
 
     private void setSelectedLoginDTOListener() {

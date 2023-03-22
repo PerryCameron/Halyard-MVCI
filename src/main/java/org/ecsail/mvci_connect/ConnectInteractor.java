@@ -55,7 +55,8 @@ public class ConnectInteractor {
     public void saveLoginObjects() {  // saves user file to disk
         System.out.println("Saving to Disk");
         File g = new File(HalyardPaths.HOSTS);
-        List<LoginDTO> unwrappedList = new ArrayList<>(connectModel.getItems());
+        ArrayList<LoginDTO> unwrappedList = new ArrayList<>(connectModel.getComboBox().getItems());
+        System.out.println("unwrappedList has " + unwrappedList.size());
         try	{
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(g));
             out.writeObject(unwrappedList);

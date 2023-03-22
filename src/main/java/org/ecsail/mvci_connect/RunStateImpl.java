@@ -28,7 +28,7 @@ public class RunStateImpl implements RunState {
         }
         setModeProperty(mode);
     }
-
+    @Override
     public Mode getMode() {
         return modeProperty.get();
     }
@@ -66,4 +66,7 @@ public class RunStateImpl implements RunState {
                 .add(connectModel.getObservableMap().get("host-text-field"));
     }
 
+    private void printNumberOfItems(String place) {
+        System.out.println(place.toUpperCase() + ": There are " + connectModel.getComboBox().getItems().size() + " items");
+    }
 }

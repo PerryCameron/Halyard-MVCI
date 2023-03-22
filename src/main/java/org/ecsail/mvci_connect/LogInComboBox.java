@@ -1,5 +1,6 @@
 package org.ecsail.mvci_connect;
 
+import javafx.beans.property.Property;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;

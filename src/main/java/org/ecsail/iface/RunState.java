@@ -10,6 +10,6 @@ public interface RunState {
     }
 
     void setMode(Mode mode);
-
     ObjectProperty<Mode> ModeProperty();
+    Mode getMode();
 }
