@@ -232,6 +232,7 @@ public class ConnectView implements Builder<Region> {
         Button buttonDelete = new Button("Delete");
         buttonDelete.setOnAction(event -> {
             connectModel.getComboBox().getItems().remove(connectModel.getComboBox().getValue());
+            saveLogins.accept(null);
             runState.setMode(RunState.Mode.NORMAL);
         });
         Button buttonCancel = new Button("Cancel");

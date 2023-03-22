@@ -45,16 +45,8 @@ public class ConnectModel {
         return vBoxMap;
     }
 
-    public void setBottomPaneHeight(double bottomPaneHeight) {
-        this.bottomPaneHeight.set(bottomPaneHeight);
-    }
-
     public ComboBox<LoginDTO> getComboBox() {
         return comboBox.get();
-    }
-
-    public ObjectProperty<ComboBox<LoginDTO>> comboBoxProperty() {
-        return comboBox;
     }
 
     public void setComboBox(ComboBox<LoginDTO> comboBox) {
