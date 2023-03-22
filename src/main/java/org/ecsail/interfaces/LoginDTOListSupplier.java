@@ -1,4 +1,4 @@
-package org.ecsail.iface;
+package org.ecsail.interfaces;
 
 import org.ecsail.dto.LoginDTO;
 

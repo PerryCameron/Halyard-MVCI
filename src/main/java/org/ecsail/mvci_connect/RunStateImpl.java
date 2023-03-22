@@ -2,7 +2,7 @@ package org.ecsail.mvci_connect;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import org.ecsail.iface.RunState;
+import org.ecsail.interfaces.RunState;
 import org.ecsail.widgetfx.ObjectFx;
 
 public class RunStateImpl implements RunState {
@@ -43,30 +43,26 @@ public class RunStateImpl implements RunState {
     }
 
     private void switchToNormalMode() {
-        connectModel.getBottomBox().getChildren ().clear();
-        connectModel.getObservableMap().get("button-box-container").getChildren()
-                .add(connectModel.getObservableMap().get("button-box"));
-        connectModel.getObservableMap().get("host-container").getChildren().clear();
-        connectModel.getObservableMap().get("host-container").getChildren()
-                .add(connectModel.getObservableMap().get("host-combo-box"));
+        // remove all Nodes from the bottom box
+        connectModel.getVBoxMap().get("bottom-box").getChildren ().clear();
+        // supply relevant Nodes to the button control box
+        connectModel.getHBoxMap().get("button-container-box").getChildren()
+                .add(connectModel.getHBoxMap().get("button-box"));
+        // remove TextField from the host HBox, and replace with a ComboBox
+        connectModel.getHBoxMap().get("host-container-box").getChildren().clear();
+        connectModel.getHBoxMap().get("host-container-box").getChildren()
+                .add(connectModel.getHBoxMap().get("host-combo-box"));
     }
 
     private void switchToEditMode() {
-        // add to bottom box
-        connectModel.getBottomBox().getChildren().addAll(
-                connectModel.getObservableMap().get("sql-port-box"),
-                connectModel.getObservableMap().get("use-ssh-box"),
-                connectModel.getObservableMap().get("ssh-usr-box"),
-                connectModel.getObservableMap().get("known-host-box"),
-                connectModel.getObservableMap().get("edit-buttons-box"));
-        connectModel.getObservableMap().get("button-box-container").getChildren().clear();
-        connectModel.getObservableMap().get("host-container").getChildren().clear();
-        // add to host container
-        connectModel.getObservableMap().get("host-container").getChildren()
-                .add(connectModel.getObservableMap().get("host-text-field"));
-    }
-
-    private void printNumberOfItems(String place) {
-        System.out.println(place.toUpperCase() + ": There are " + connectModel.getComboBox().getItems().size() + " items");
+        // supply all relevant Nodes to bottom box
+        connectModel.getVBoxMap().get("bottom-box").getChildren()
+                .add(connectModel.getVBoxMap().get("bottom-container-box"));
+        // remove Nodes from button container box
+        connectModel.getHBoxMap().get("button-container-box").getChildren().clear();
+        // remove ComboBox from the host HBox and replace with TextField
+        connectModel.getHBoxMap().get("host-container-box").getChildren().clear();
+        connectModel.getHBoxMap().get("host-container-box").getChildren()
+                .add(connectModel.getHBoxMap().get("host-text-field"));
     }
 }

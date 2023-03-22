@@ -4,13 +4,14 @@ import javafx.collections.FXCollections;
 import org.ecsail.dto.LoginDTO;
 import org.ecsail.fileio.FileIO;
 import org.ecsail.fileio.HalyardPaths;
+import org.ecsail.interfaces.ConfigFilePaths;
 import org.ecsail.widgetfx.ObjectFx;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConnectInteractor {
+public class ConnectInteractor implements ConfigFilePaths {
     private ConnectModel connectModel;
     public ConnectInteractor(ConnectModel connectModel) {
         this.connectModel = connectModel;
@@ -18,7 +19,7 @@ public class ConnectInteractor {
 
     public List<LoginDTO> supplyLogins() {
         List<LoginDTO> loginDTOS = new ArrayList<>();
-        if (FileIO.hostFileExists())
+        if (FileIO.hostFileExists(LOGIN_FILE))
             openLoginObjects(loginDTOS);
         else {
             System.out.println("Starting application for first time");
@@ -64,6 +65,14 @@ public class ConnectInteractor {
             System.exit(0);
         }
 //        BaseApplication.logger.info(HalyardPaths.HOSTS + " saved");
+    }
+
+    public static boolean hostFileExists() {
+        boolean doesExist = false;
+        File g = new File(HalyardPaths.HOSTS);
+        if(g.exists())
+            doesExist = true;
+        return doesExist;
     }
 
 }

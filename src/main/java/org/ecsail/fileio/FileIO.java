@@ -1,79 +1,41 @@
 package org.ecsail.fileio;
 
-import org.ecsail.dto.LoginDTO;
+
+import org.ecsail.BaseApplication;
+import org.ecsail.interfaces.ConfigFilePaths;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 
 
-public class FileIO {
-	private static final String OUTPUT_FORMAT = "Path: %-30s -> File Extension: %s";
-	private static final String WINDOWS_FILE_SEPARATOR = "\\";
-	private static final String UNIX_FILE_SEPARATOR = "/";
-	private static final String FILE_EXTENSION = ".";
+
+public class FileIO implements ConfigFilePaths {
 
 
-	
-	public static void saveLoginObjects(List<LoginDTO> logins) {  // saves user file to disk
-		File g = new File(HalyardPaths.HOSTS);
-		try	{
-			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(g));
-			out.writeObject(logins);
-			out.close();
-		} catch (Exception e) {
-//			BaseApplication.logger.error(e.getMessage());
-			e.printStackTrace();
-			System.exit(0);
-		}
-//		BaseApplication.logger.info(HalyardPaths.HOSTS + " saved");
-	}
-
-	public static int getSelectedHost(String hostname, List<LoginDTO> logins) {
-		boolean error = true;
-		int count = 0;
-		int iterate = 0;
-		for(LoginDTO login: logins) {
-			if(login.getHost().equals(hostname)) {
-				count = iterate;
-				error = false;  // make sure at least one matches
-			}
-			iterate++;
-		}
-		if(error) count = -1;
-		return count;
-	}
-	
-
-	
-	public static boolean hostFileExists() {
+	public static boolean hostFileExists(String file) {
 		boolean doesExist = false;
-		File g = new File(HalyardPaths.HOSTS);
+		File g = new File(file);
 		if(g.exists())
 			doesExist = true;
 		return doesExist;
 	}
-	
-	public static int getDefaultLogon(List<LoginDTO> logins) {
-		int count = 0;
-		int iterate = 0;
-		for(LoginDTO login: logins) {
-			if(login.isDefault()) {
-				count = iterate;
-			}
-			iterate++;
+
+	public static void checkPath(String path) {
+		File recordsDir = new File(path);
+		if (!recordsDir.exists()) {
+//			BaseApplication.logger.info("Creating dir: " + path);
+			recordsDir.mkdirs();
 		}
-		return count;
 	}
 
-	public static void deleteFile(String path) {
-		File fileToDelete = new File(path);
-		if (fileToDelete.delete()) {
+
+//	public static void deleteFile(String path) {
+//		File fileToDelete = new File(path);
+//		if (fileToDelete.delete()) {
 //			BaseApplication.logger.info("Deleted the file: " + fileToDelete.getName());
-		} else {
+//		} else {
 //			BaseApplication.logger.info("Failed to delete the file: " + fileToDelete.getName());
-		}
-	}
+//		}
+//	}
 
 	public static void copyFile(File srcFile, File destFile) {
 		InputStream is = null;
@@ -101,9 +63,7 @@ public class FileIO {
 	}
 
 	public static String getFileExtension(String fileName) {
-		if (fileName == null) {
-			throw new IllegalArgumentException("fileName must not be null!");
-		}
+		if (fileName == null) throw new IllegalArgumentException("fileName must not be null!");
 		String extension = "";
 		int indexOfLastExtension = fileName.lastIndexOf(FILE_EXTENSION);
 		// check last file separator, windows and unix

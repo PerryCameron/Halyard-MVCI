@@ -2,7 +2,6 @@ package org.ecsail.mvci_connect;
 
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.HBox;
@@ -16,7 +15,8 @@ public class ConnectModel {
     private final BooleanProperty rotateShipWheel = new SimpleBooleanProperty(false);
     private final DoubleProperty bottomPaneHeight = new SimpleDoubleProperty();
     private final DoubleProperty centerPaneHeight = new SimpleDoubleProperty();
-    private final ObservableMap<String, HBox> observableMap = FXCollections.observableHashMap();
+    private final ObservableMap<String, HBox> hBoxMap = FXCollections.observableHashMap();
+    private final ObservableMap<String, VBox> vBoxMap = FXCollections.observableHashMap();
     private final StringProperty user = new SimpleStringProperty();
     private final StringProperty pass = new SimpleStringProperty();
     private final StringProperty host = new SimpleStringProperty();
@@ -24,20 +24,28 @@ public class ConnectModel {
     private final BooleanProperty sshUsed = new SimpleBooleanProperty();
     private final StringProperty sshUser = new SimpleStringProperty();
     private final StringProperty knownHosts = new SimpleStringProperty();
-    private final ObjectProperty<VBox> bottomBox = new SimpleObjectProperty();
+//    private final ObjectProperty<VBox> bottomContainerBox = new SimpleObjectProperty();
 
 
-    public VBox getBottomBox() {
-        return bottomBox.get();
+    public ObservableMap<String, VBox> getVBoxMap() {
+        return vBoxMap;
     }
 
-    public ObjectProperty<VBox> bottomBoxProperty() {
-        return bottomBox;
+    public void setBottomPaneHeight(double bottomPaneHeight) {
+        this.bottomPaneHeight.set(bottomPaneHeight);
     }
 
-    public void setBottomBox(VBox bottomBox) {
-        this.bottomBox.set(bottomBox);
-    }
+//    public VBox getBottomContainerBox() {
+//        return bottomContainerBox.get();
+//    }
+//
+//    public ObjectProperty<VBox> bottomContainerBoxProperty() {
+//        return bottomContainerBox;
+//    }
+//
+//    public void setBottomContainerBox(VBox bottomContainerBox) {
+//        this.bottomContainerBox.set(bottomContainerBox);
+//    }
 
     public ComboBox<LoginDTO> getComboBox() {
         return comboBox.get();
@@ -134,8 +142,8 @@ public class ConnectModel {
     public void setLocalSqlPort(int localSqlPort) {
         this.localSqlPort.set(localSqlPort);
     }
-    public ObservableMap<String, HBox> getObservableMap() {
-        return observableMap;
+    public ObservableMap<String, HBox> getHBoxMap() {
+        return hBoxMap;
     }
 
     public double getTitleBarHeight() {
