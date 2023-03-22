@@ -109,8 +109,9 @@ public class ConnectView implements Builder<Region> {
         HBox hBox = new HBox();
         connectModel.getHBoxMap().put("host-combo-box",hBox);
         LogInComboBox comboBox = new LogInComboBox(200, loginSupplier.getLoginDTOs());
-        comboBox.setValue(comboBox.getItems().stream().filter(LoginDTO::isDefault).findFirst().orElse(null));
         connectModel.setComboBox(comboBox);
+        comboBox.setValue(comboBox.getItems().stream().filter(LoginDTO::isDefault).findFirst().orElse(null));
+        updateFields();
         hBox.getChildren().add(comboBox);
         comboBox.valueProperty().addListener((Observable, oldValue, newValue) -> {
             if(newValue != null) updateFields();
@@ -164,10 +165,22 @@ public class ConnectView implements Builder<Region> {
         TextField localSqlPortText = TextFieldFx.textFieldOf(60, connectModel.localSqlPortProperty());
         HBox hboxPortLabel = HBoxFx.hBoxOf(Pos.CENTER_LEFT, 90, new Insets(5));
         hboxPortLabel.getChildren().add(new Label("SQL Port:"));
-        HBox hboxPortText = HBoxFx.hBoxOf(Pos.CENTER_LEFT,200,new Insets(5),20);
+        HBox hboxPortText = HBoxFx.hBoxOf(Pos.CENTER_LEFT,100,new Insets(5),20);
         hboxPortText.getChildren().add(localSqlPortText);
-        hBox.getChildren().addAll(hboxPortLabel, hboxPortText);
+        hBox.getChildren().addAll(hboxPortLabel, hboxPortText, setDefaultCheckBox());
         return hBox;
+    }
+
+    private Node setDefaultCheckBox() {
+        CheckBox checkBox = new CheckBox("Default login");
+        checkBox.selectedProperty().bindBidirectional(connectModel.defaultProperty());
+        checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue) {
+                connectModel.getComboBox().getItems().stream().forEach(loginDto -> loginDto.setDefault(false));
+                connectModel.getComboBox().getValue().setDefault(true);
+            }
+        });
+        return checkBox;
     }
 
     private Node createUseSshBox() {
@@ -200,7 +213,7 @@ public class ConnectView implements Builder<Region> {
         knownHostLabel.getChildren().add(new Label("knownhosts:"));
         HBox knownHostText = HBoxFx.hBoxOf(new Insets(5));
         knownHostText.getChildren().add(knownHost);
-        Button button = new Button("Create");
+        Button button = new Button("Select");
         HBox createKnownHost = HBoxFx.hBoxOf(new Insets(5));
         createKnownHost.getChildren().add(button);
         hBox.getChildren().addAll(knownHostLabel,knownHostText,createKnownHost);
@@ -214,6 +227,7 @@ public class ConnectView implements Builder<Region> {
             updateSelectedLogin();
             runState.setMode(RunState.Mode.NORMAL);
             saveLogins.accept(null);
+            updateFields();
         });
         Button buttonDelete = new Button("Delete");
         buttonDelete.setOnAction(event -> {
@@ -246,6 +260,7 @@ public class ConnectView implements Builder<Region> {
         connectModel.setLocalSqlPort(newValue.getLocalSqlPort());
         connectModel.setSshUser(newValue.getSshUser());
         connectModel.setKnownHosts(newValue.getKnownHostsFile());
+        connectModel.setDefault(newValue.isDefault());
     }
 
     private void updateSelectedLogin() {
@@ -256,6 +271,7 @@ public class ConnectView implements Builder<Region> {
         connectModel.getComboBox().getValue().setSshUser(connectModel.getSshUser());
         connectModel.getComboBox().getValue().setLocalSqlPort(connectModel.getLocalSqlPort());
         connectModel.getComboBox().getValue().setKnownHostsFile(connectModel.getKnownHosts());
+        connectModel.getComboBox().getValue().setDefault(connectModel.isDefault());
     }
 
     private void setStageHeightListener() {

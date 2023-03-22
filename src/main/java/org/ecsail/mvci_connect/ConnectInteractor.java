@@ -3,7 +3,6 @@ package org.ecsail.mvci_connect;
 import javafx.collections.FXCollections;
 import org.ecsail.dto.LoginDTO;
 import org.ecsail.fileio.FileIO;
-import org.ecsail.fileio.HalyardPaths;
 import org.ecsail.interfaces.ConfigFilePaths;
 import org.ecsail.widgetfx.ObjectFx;
 
@@ -25,11 +24,12 @@ public class ConnectInteractor implements ConfigFilePaths {
             System.out.println("Starting application for first time");
             loginDTOS.add(ObjectFx.createLoginDTO()); // we are starting application for the first time
         }
+        System.out.println(loginDTOS.size());
         return loginDTOS;
     }
 
     public static void openLoginObjects(List<LoginDTO> logins) {
-        File g = new File(HalyardPaths.HOSTS);
+        File g = new File(LOGIN_FILE);
         if (g.exists()) {
             try {
                 ObjectInputStream in = new ObjectInputStream(new FileInputStream(g));
@@ -52,7 +52,7 @@ public class ConnectInteractor implements ConfigFilePaths {
 
     public void saveLoginObjects() {  // saves user file to disk
         System.out.println("Saving to Disk");
-        File g = new File(HalyardPaths.HOSTS);
+        File g = new File(LOGIN_FILE);
         ArrayList<LoginDTO> unwrappedList = new ArrayList<>(connectModel.getComboBox().getItems());
         System.out.println("unwrappedList has " + unwrappedList.size());
         try	{
@@ -65,14 +65,6 @@ public class ConnectInteractor implements ConfigFilePaths {
             System.exit(0);
         }
 //        BaseApplication.logger.info(HalyardPaths.HOSTS + " saved");
-    }
-
-    public static boolean hostFileExists() {
-        boolean doesExist = false;
-        File g = new File(HalyardPaths.HOSTS);
-        if(g.exists())
-            doesExist = true;
-        return doesExist;
     }
 
 }

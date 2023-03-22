@@ -22,10 +22,24 @@ public class ConnectModel {
     private final StringProperty host = new SimpleStringProperty();
     private final IntegerProperty localSqlPort = new SimpleIntegerProperty();
     private final BooleanProperty sshUsed = new SimpleBooleanProperty();
+    private final BooleanProperty isDefault = new SimpleBooleanProperty();
     private final StringProperty sshUser = new SimpleStringProperty();
     private final StringProperty knownHosts = new SimpleStringProperty();
-//    private final ObjectProperty<VBox> bottomContainerBox = new SimpleObjectProperty();
 
+
+
+
+    public boolean isDefault() {
+        return isDefault.get();
+    }
+
+    public BooleanProperty defaultProperty() {
+        return isDefault;
+    }
+
+    public void setDefault(boolean isDefault) {
+        this.isDefault.set(isDefault);
+    }
 
     public ObservableMap<String, VBox> getVBoxMap() {
         return vBoxMap;
@@ -34,18 +48,6 @@ public class ConnectModel {
     public void setBottomPaneHeight(double bottomPaneHeight) {
         this.bottomPaneHeight.set(bottomPaneHeight);
     }
-
-//    public VBox getBottomContainerBox() {
-//        return bottomContainerBox.get();
-//    }
-//
-//    public ObjectProperty<VBox> bottomContainerBoxProperty() {
-//        return bottomContainerBox;
-//    }
-//
-//    public void setBottomContainerBox(VBox bottomContainerBox) {
-//        this.bottomContainerBox.set(bottomContainerBox);
-//    }
 
     public ComboBox<LoginDTO> getComboBox() {
         return comboBox.get();

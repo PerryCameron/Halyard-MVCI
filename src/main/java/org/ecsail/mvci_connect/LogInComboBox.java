@@ -1,11 +1,11 @@
 package org.ecsail.mvci_connect;
 
-import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import org.ecsail.dto.LoginDTO;
 
 import java.util.ArrayList;
+import java.util.stream.Collectors;
 
 public class LogInComboBox extends ComboBox<LoginDTO> {
 
@@ -35,5 +35,7 @@ public class LogInComboBox extends ComboBox<LoginDTO> {
             }
         };
     }
-
+    public void setItemsToNotDefault() {
+        getItems().stream().forEach(loginDto -> loginDto.setDefault(false));
+    }
 }
