@@ -44,27 +44,7 @@ public class FileIO {
 		return count;
 	}
 	
-	public static void openLoginObjects(List<LoginDTO> logins) {
-		File g = new File(HalyardPaths.HOSTS);
-		if (g.exists()) {
-			try {
-				ObjectInputStream in = new ObjectInputStream(new FileInputStream(g));
-				Object obj = in.readObject();
-				ArrayList<?> ar = (ArrayList<?>) obj;
-				logins.clear();
-				for (Object x : ar) {
-				    logins.add((LoginDTO) x);
-				}
-				in.close();
-			} catch (Exception e) {
-//				BaseApplication.logger.error("Error occurred during reading of " + HalyardPaths.HOSTS);
-//				BaseApplication.logger.error(e.getMessage());
-				e.printStackTrace();
-			}			  
-		} else {
-//			BaseApplication.logger.error("No such file exists: " + HalyardPaths.HOSTS);
-		}
-	}
+
 	
 	public static boolean hostFileExists() {
 		boolean doesExist = false;

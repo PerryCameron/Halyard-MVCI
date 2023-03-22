@@ -6,6 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import org.ecsail.dto.LoginDTO;
 
 public class ConnectModel {
@@ -17,8 +18,8 @@ public class ConnectModel {
     private final BooleanProperty rotateShipWheel = new SimpleBooleanProperty(false);
     private final DoubleProperty bottomPaneHeight = new SimpleDoubleProperty();
     private final DoubleProperty centerPaneHeight = new SimpleDoubleProperty();
-    private final BooleanProperty editMode = new SimpleBooleanProperty(false);
-    private final BooleanProperty newMode = new SimpleBooleanProperty(false);
+//    private final BooleanProperty editMode = new SimpleBooleanProperty(false);
+//    private final BooleanProperty newMode = new SimpleBooleanProperty(false);
     private final ObservableMap<String, HBox> observableMap = FXCollections.observableHashMap();
     private final StringProperty user = new SimpleStringProperty();
     private final StringProperty pass = new SimpleStringProperty();
@@ -28,10 +29,20 @@ public class ConnectModel {
     private final StringProperty sshUser = new SimpleStringProperty();
     private final StringProperty knownHosts = new SimpleStringProperty();
 
+    private final ObjectProperty<VBox> bottomBox = new SimpleObjectProperty();
 
 
+    public VBox getBottomBox() {
+        return bottomBox.get();
+    }
 
+    public ObjectProperty<VBox> bottomBoxProperty() {
+        return bottomBox;
+    }
 
+    public void setBottomBox(VBox bottomBox) {
+        this.bottomBox.set(bottomBox);
+    }
 
     public ComboBox<LoginDTO> getComboBox() {
         return comboBox.get();
@@ -188,19 +199,19 @@ public class ConnectModel {
         return centerPaneHeight;
     }
 
-    public BooleanProperty editModeProperty() {
-        return editMode;
-    }
-
-    public void setEditMode(boolean editMode) {
-        this.editMode.set(editMode);
-    }
-
-    public BooleanProperty newModeProperty() {
-        return newMode;
-    }
-
-    public void setNewMode(boolean newMode) {
-        this.newMode.set(newMode);
-    }
+//    public BooleanProperty editModeProperty() {
+//        return editMode;
+//    }
+//
+//    public void setEditMode(boolean editMode) {
+//        this.editMode.set(editMode);
+//    }
+//
+//    public BooleanProperty newModeProperty() {
+//        return newMode;
+//    }
+//
+//    public void setNewMode(boolean newMode) {
+//        this.newMode.set(newMode);
+//    }
 }

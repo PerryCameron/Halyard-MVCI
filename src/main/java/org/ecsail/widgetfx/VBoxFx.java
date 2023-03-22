@@ -26,4 +26,7 @@ public class VBoxFx {
         doubleProperty.bind(vBox.heightProperty());
         return vBox;
     }
+
+
+
 }

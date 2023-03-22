@@ -2,7 +2,6 @@ package org.ecsail.mvci_connect;
 
 import javafx.animation.Interpolator;
 import javafx.animation.RotateTransition;
-import javafx.beans.property.BooleanProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -20,14 +19,24 @@ import javafx.util.Builder;
 import javafx.util.Duration;
 import org.ecsail.BaseApplication;
 import org.ecsail.dto.LoginDTO;
-import org.ecsail.widgetfx.*;
+import org.ecsail.iface.RunState;
+import org.ecsail.widgetfx.HBoxFx;
+import org.ecsail.widgetfx.TextFieldFx;
+import org.ecsail.widgetfx.TextFx;
+import org.ecsail.widgetfx.VBoxFx;
 
 import java.util.Objects;
+import java.util.function.Consumer;
 
 public class ConnectView implements Builder<Region> {
     private final ConnectModel connectModel;
-    public ConnectView(ConnectModel model) {
+    private final RunState runState;
+
+    private final Consumer<Void> saveLogins;
+    public ConnectView(ConnectModel model, Consumer<Void> saveLogins) {
         this.connectModel = model;
+        this.runState = new RunStateImpl(model);
+        this.saveLogins = saveLogins;
     }
 
     @Override
@@ -38,7 +47,7 @@ public class ConnectView implements Builder<Region> {
         pane.setBottom(createBottomBox());
         setSelectedLoginDTOListener();
         connectModel.setSelectedLogin(selectLoginDTO());
-        populatePropertiesFromSelectedLoginDTO(selectLoginDTO());
+        copySelectedLogOnToFields(selectLoginDTO());
         return pane;
     }
 
@@ -85,7 +94,6 @@ public class ConnectView implements Builder<Region> {
         HBox hBox = HBoxFx.hBoxOf(new Insets(5));
         HBox hboxHostLabel = HBoxFx.hBoxOf(Pos.CENTER_LEFT, 90);
         HBox hBoxHostContainer = new HBox();
-        HBox hBoxHostComboBox = createComboBox();
         HBox hBoxHostTextField = new HBox();
         TextField hostName = TextFieldFx.textFieldOf(200,"Host");
         hBoxHostTextField.getChildren().add(hostName);
@@ -93,12 +101,12 @@ public class ConnectView implements Builder<Region> {
         connectModel.getObservableMap().put("host-text-field", hBoxHostTextField);
         hostName.textProperty().bindBidirectional(connectModel.hostProperty());
         hboxHostLabel.getChildren().add(new Label("Hostname:"));
-        hBoxHostContainer.getChildren().add(hBoxHostComboBox);
+        hBoxHostContainer.getChildren().add(createComboBox());
         hBox.getChildren().addAll(hboxHostLabel,hBoxHostContainer);
         return hBox;
     }
 
-    private HBox createComboBox() {
+    private Node createComboBox() {
         HBox hBox = new HBox();
         connectModel.getObservableMap().put("host-combo-box",hBox);
         LogInComboBox comboBox = new LogInComboBox(200, connectModel.getItems());
@@ -106,10 +114,11 @@ public class ConnectView implements Builder<Region> {
         connectModel.setComboBox(comboBox);
         hBox.getChildren().add(comboBox);
         comboBox.valueProperty().addListener((Observable, oldValue, newValue) -> {
-            System.out.println("****** ComboBox change *******");
             if(newValue != null) connectModel.setSelectedLogin(newValue);
-            // ok so this line works for both new and delete
             else connectModel.getComboBox().getSelectionModel().select(connectModel.getComboBox().getItems().size() - 1);
+            System.out.println(
+                   "We have " + connectModel.getItems().size() + " items."
+            );
         });
         return hBox;
     }
@@ -123,17 +132,17 @@ public class ConnectView implements Builder<Region> {
         HBox TextBox = HBoxFx.hBoxOf(Pos.CENTER_LEFT,15, 15);
         Text newConnectText = TextFx.linkTextOf("New");
         Text editConnectText = TextFx.linkTextOf("Edit");
-        editConnectText.setOnMouseClicked(event -> setMode("EDIT"));
-        newConnectText.setOnMouseClicked(event -> setMode("NEW"));
+        editConnectText.setOnMouseClicked(event -> runState.setMode(RunState.Mode.EDIT));
+        newConnectText.setOnMouseClicked(event -> runState.setMode(RunState.Mode.NEW));
         Button loginButton = new Button("Login");
         loginButton.setOnAction((event) -> {
             connectModel.setRotateShipWheel(true);
 //            connectToServer();
         });
-        Button cancelButton1 = new Button("Cancel");
-        cancelButton1.setOnAction((event) -> System.exit(0));
+        Button cancelButton = new Button("Cancel");
+        cancelButton.setOnAction((event) -> System.exit(0));
         TextBox.getChildren().addAll(newConnectText,editConnectText);
-        buttonBox.getChildren().addAll(loginButton,cancelButton1);
+        buttonBox.getChildren().addAll(loginButton,cancelButton);
         hBox.getChildren().addAll(TextBox, buttonBox);
         container.getChildren().add(hBox);
         return container;
@@ -141,30 +150,33 @@ public class ConnectView implements Builder<Region> {
 
     private Node createBottomBox() {
         VBox vBox = VBoxFx.vBoxOf(new Insets(0,0,0,15), connectModel.bottomPaneHeightProperty());
-        setModeChangeListener(vBox, connectModel.editModeProperty());
-        setModeChangeListener(vBox, connectModel.newModeProperty());
-        return vBox;
+        connectModel.setBottomBox(vBox);
+        connectModel.getObservableMap().put("sql-port-box",createSqlPortBox());
+        connectModel.getObservableMap().put("use-ssh-box",createUseSshBox());
+        connectModel.getObservableMap().put("ssh-usr-box",createSshUserBox());
+        connectModel.getObservableMap().put("known-host-box",createKnownHostsBox());
+        connectModel.getObservableMap().put("edit-buttons-box",createEditButtonsBox());
+        return connectModel.getBottomBox();
     }
 
-    private void standardMode(VBox vBox) {
-        vBox.getChildren().clear();
-        connectModel.getObservableMap().get("button-box-container").getChildren()
-                .add(connectModel.getObservableMap().get("button-box"));
-        connectModel.getObservableMap().get("host-container").getChildren().clear();
-        connectModel.getObservableMap().get("host-container").getChildren()
-                .add(connectModel.getObservableMap().get("host-combo-box"));
-    }
 
-    private void editMode(VBox vBox) {
-        vBox.getChildren().addAll(createSqlPortBox(),createUseSshBox(),createSshUserBox(), createKnownHostsBox(),
-                createEditButtonsBox());
-        connectModel.getObservableMap().get("button-box-container").getChildren().clear();
-        connectModel.getObservableMap().get("host-container").getChildren().clear();
-        connectModel.getObservableMap().get("host-container").getChildren()
-                .add(connectModel.getObservableMap().get("host-text-field"));
-    }
 
-    private Node createSqlPortBox() { // 4
+//    private void editMode() {
+//        // add to bottom box
+//        connectModel.getBottomBox().getChildren().addAll(
+//        connectModel.getObservableMap().get("sql-port-box"),
+//        connectModel.getObservableMap().get("use-ssh-box"),
+//        connectModel.getObservableMap().get("ssh-usr-box"),
+//        connectModel.getObservableMap().get("known-host-box"),
+//        connectModel.getObservableMap().get("edit-buttons-box"));
+//        connectModel.getObservableMap().get("button-box-container").getChildren().clear();
+//        connectModel.getObservableMap().get("host-container").getChildren().clear();
+//        // add to host container
+//        connectModel.getObservableMap().get("host-container").getChildren()
+//                .add(connectModel.getObservableMap().get("host-text-field"));
+//    }
+
+    private HBox createSqlPortBox() { // 4
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER_LEFT);
         TextField localSqlPortText = TextFieldFx.textFieldOf(60, connectModel.localSqlPortProperty());
@@ -176,7 +188,7 @@ public class ConnectView implements Builder<Region> {
         return hBox;
     }
 
-    private Node createUseSshBox() { // 5
+    private HBox createUseSshBox() { // 5
         HBox hBox = new HBox();
         HBox useSshTunnelLabel = HBoxFx.hBoxOf(Pos.CENTER_LEFT, 90, new Insets(5,5,5,5));
         useSshTunnelLabel.getChildren().add(new Label("ssh tunnel:"));
@@ -188,7 +200,7 @@ public class ConnectView implements Builder<Region> {
         return hBox;
     }
 
-    private Node createSshUserBox() { // 6
+    private HBox createSshUserBox() { // 6
         HBox hBox = new HBox();
         HBox hboxSshUserLabel = HBoxFx.hBoxOf(Pos.CENTER_LEFT, 90, new Insets(5,5,5,5));
         hboxSshUserLabel.getChildren().add(new Label("ssh user:"));
@@ -199,7 +211,7 @@ public class ConnectView implements Builder<Region> {
         return hBox;
     }
 
-    private Node createKnownHostsBox() { // 7
+    private HBox createKnownHostsBox() { // 7
         HBox hBox = new HBox();
         TextField knownHost = TextFieldFx.textFieldOf(200, connectModel.knownHostsProperty());
         HBox knownHostLabel = HBoxFx.hBoxOf(Pos.CENTER_LEFT, 90, new Insets(5,5,5,5));
@@ -213,35 +225,23 @@ public class ConnectView implements Builder<Region> {
         return hBox;
     }
 
-    private Node createEditButtonsBox() {
+    private HBox createEditButtonsBox() {
         HBox hBox = HBoxFx.hBoxOf(Pos.CENTER, new Insets(20,0,20,0),10);
         Button buttonSave = new Button("Save");
         buttonSave.setOnAction(event -> {
-            populateSelectedLoginFromControlProperties();
-            setToNormal();
+            copyFieldsToSelectedLogOn();
+            runState.setMode(RunState.Mode.NORMAL);
+            saveLogins.accept(null);
         });
         Button buttonDelete = new Button("Delete");
         buttonDelete.setOnAction(event -> {
             connectModel.getComboBox().getItems().remove(connectModel.getSelectedLogin());
-            setToNormal();
+            runState.setMode(RunState.Mode.NORMAL);
         });
         Button buttonCancel = new Button("Cancel");
-        buttonCancel.setOnAction(event -> setToNormal());
+        buttonCancel.setOnAction(event -> runState.setMode(RunState.Mode.NORMAL));
         hBox.getChildren().addAll(buttonSave,buttonDelete,buttonCancel);
         return hBox;
-    }
-
-    private void setToNormal() {
-        connectModel.setNewMode(false);
-        connectModel.setEditMode(false);
-    }
-
-    private void setMode(String editMode) {
-        if(editMode.equals("NEW")) {
-            connectModel.setNewMode(true);
-            connectModel.getComboBox().getItems().add(ObjectFx.createLoginDTO());
-            connectModel.getComboBox().getSelectionModel().select(connectModel.getComboBox().getItems().size() - 1);
-        }  else connectModel.setEditMode(true);
     }
 
     private void createRotateShipsWheel(ImageView imageView) {
@@ -255,36 +255,24 @@ public class ConnectView implements Builder<Region> {
             });
     }
 
-    public void createStage(Region region) {
-        BaseApplication.loginStage = new Stage();
-        BaseApplication.loginStage.setScene(new Scene(region));
-        BaseApplication.loginStage.getScene().getStylesheets().add("css/dark/dark.css");
-        BaseApplication.loginStage.setAlwaysOnTop(true);
-        BaseApplication.loginStage.requestFocus();
-        BaseApplication.loginStage.toFront();
-        BaseApplication.loginStage.setResizable(false);
-        setStageHeightListener();
-    }
-
     private LoginDTO selectLoginDTO() {
         return connectModel.getItems().stream()
                 .filter(LoginDTO::isDefault).findFirst().orElse(null);
     }
 
-    private void setModeChangeListener(VBox vBox, BooleanProperty modeChangeProperty) {
-        modeChangeProperty.addListener((observable, oldValue, isEditMode) -> {
-            if(isEditMode) editMode(vBox);
-            else standardMode(vBox);
+    public void setModeChangeListener() {
+        runState.ModeProperty().addListener((observable, oldValue, isEditMode) -> {
+
         });
     }
 
     private void setSelectedLoginDTOListener() {
         connectModel.selectedLoginProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue != null) populatePropertiesFromSelectedLoginDTO(newValue);
+            if(newValue != null) copySelectedLogOnToFields(newValue);
         });
     }
 
-    private void populatePropertiesFromSelectedLoginDTO(LoginDTO newValue) {
+    private void copySelectedLogOnToFields(LoginDTO newValue) {
         connectModel.setUser(newValue.getUser());
         connectModel.setPass(newValue.getPasswd());
         connectModel.setHost(newValue.getHost());
@@ -294,7 +282,7 @@ public class ConnectView implements Builder<Region> {
         connectModel.setKnownHosts(newValue.getKnownHostsFile());
     }
 
-    private void populateSelectedLoginFromControlProperties() {
+    private void copyFieldsToSelectedLogOn() {
         connectModel.getSelectedLogin().setUser(connectModel.getUser());
         connectModel.getSelectedLogin().setPasswd(connectModel.getPass());
         connectModel.getSelectedLogin().setHost(connectModel.getHost());
@@ -311,5 +299,16 @@ public class ConnectView implements Builder<Region> {
                     + connectModel.getTitleBarHeight()
                     + connectModel.getCenterPaneHeight());
         });
+    }
+
+    public void createStage(Region region) {
+        BaseApplication.loginStage = new Stage();
+        BaseApplication.loginStage.setScene(new Scene(region));
+        BaseApplication.loginStage.getScene().getStylesheets().add("css/dark/dark.css");
+        BaseApplication.loginStage.setAlwaysOnTop(true);
+        BaseApplication.loginStage.requestFocus();
+        BaseApplication.loginStage.toFront();
+        BaseApplication.loginStage.setResizable(false);
+        setStageHeightListener();
     }
 }

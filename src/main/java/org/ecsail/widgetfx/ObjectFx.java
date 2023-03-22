@@ -8,7 +8,7 @@ public class ObjectFx {
         return  new LoginDTO(3306,3306, 22, "new host", "",
                 "", "",
                 "", System.getProperty("user.home") + "/.ssh/known_hosts",
-                System.getProperty("user.home") + "/.ssh/id_rsa", false, true);
+                System.getProperty("user.home") + "/.ssh/id_rsa", true, true);
     }
 
     public static LoginDTO createLoginDTO2() {
