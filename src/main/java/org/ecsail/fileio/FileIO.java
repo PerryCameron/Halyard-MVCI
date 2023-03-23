@@ -3,6 +3,9 @@ package org.ecsail.fileio;
 
 import org.ecsail.BaseApplication;
 import org.ecsail.interfaces.ConfigFilePaths;
+import org.ecsail.mvci_connect.ConnectInteractor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 
@@ -10,6 +13,7 @@ import java.io.*;
 
 public class FileIO implements ConfigFilePaths {
 
+	private static final Logger logger = LoggerFactory.getLogger(FileIO.class);
 
 	public static boolean hostFileExists(String file) {
 		boolean doesExist = false;
@@ -22,20 +26,19 @@ public class FileIO implements ConfigFilePaths {
 	public static void checkPath(String path) {
 		File recordsDir = new File(path);
 		if (!recordsDir.exists()) {
-//			BaseApplication.logger.info("Creating dir: " + path);
+			logger.info("Creating dir: " + path);
 			recordsDir.mkdirs();
 		}
 	}
 
-
-//	public static void deleteFile(String path) {
-//		File fileToDelete = new File(path);
-//		if (fileToDelete.delete()) {
-//			BaseApplication.logger.info("Deleted the file: " + fileToDelete.getName());
-//		} else {
-//			BaseApplication.logger.info("Failed to delete the file: " + fileToDelete.getName());
-//		}
-//	}
+	public static void deleteFile(String path) {
+		File fileToDelete = new File(path);
+		if (fileToDelete.delete()) {
+			logger.info("Deleted the file: " + fileToDelete.getName());
+		} else {
+			logger.info("Failed to delete the file: " + fileToDelete.getName());
+		}
+	}
 
 	public static void copyFile(File srcFile, File destFile) {
 		InputStream is = null;
@@ -77,5 +80,4 @@ public class FileIO implements ConfigFilePaths {
 		}
 		return extension.toLowerCase();
 	}
-
 }

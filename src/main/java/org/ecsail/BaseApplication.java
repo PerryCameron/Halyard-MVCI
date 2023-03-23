@@ -12,10 +12,7 @@ public class BaseApplication extends Application {
 
     public static Stage primaryStage;
     public static Stage loginStage;
-
-    public static final Logger logger = LoggerFactory.getLogger(BaseApplication.class);
-
-
+    private static final Logger logger = LoggerFactory.getLogger(BaseApplication.class);
     public static void main(String[] args) {
         launch(args);
     }
@@ -31,6 +28,4 @@ public class BaseApplication extends Application {
         loginStage.setY(primaryStage.getY() + 300);
         loginStage.show();
     }
-
-//    public static Logger logger = LoggerFactory.getLogger(BaseApplication.class);
 }

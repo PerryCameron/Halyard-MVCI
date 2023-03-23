@@ -1,6 +1,5 @@
 package org.ecsail.mvci_connect;
 
-import org.ecsail.BaseApplication;
 import org.ecsail.dto.LoginDTO;
 import org.ecsail.fileio.FileIO;
 import org.ecsail.interfaces.ConfigFilePaths;
@@ -14,7 +13,7 @@ import java.util.List;
 
 public class ConnectInteractor implements ConfigFilePaths {
 
-    private static final Logger logger = LoggerFactory.getLogger(ConfigFilePaths.class);
+    private static final Logger logger = LoggerFactory.getLogger(ConnectInteractor.class);
     private final ConnectModel connectModel;
     public ConnectInteractor(ConnectModel connectModel) {
         this.connectModel = connectModel;
@@ -44,8 +43,8 @@ public class ConnectInteractor implements ConfigFilePaths {
                 }
                 in.close();
             } catch (Exception e) {
-//				BaseApplication.logger.error("Error occurred during reading of " + HalyardPaths.HOSTS);
-//				BaseApplication.logger.error(e.getMessage());
+				logger.error("Error occurred during reading of " + LOGIN_FILE);
+				logger.error(e.getMessage());
                 e.printStackTrace();
             }
     }
@@ -64,5 +63,4 @@ public class ConnectInteractor implements ConfigFilePaths {
         }
         logger.info(LOGIN_FILE + " saved");
     }
-
 }

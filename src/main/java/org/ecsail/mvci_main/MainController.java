@@ -4,12 +4,15 @@ package org.ecsail.mvci_main;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import org.ecsail.mvci_connect.ConnectController;
+import org.ecsail.mvci_connect.ConnectInteractor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MainController {
 
+    private static final Logger logger = LoggerFactory.getLogger(MainController.class);
     private final MainInteractor mainInteractor;
     private MainView mainView;
-
     private ConnectController connectController;
     private Stage loginStage = new Stage();
     public MainController() {
