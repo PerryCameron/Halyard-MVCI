@@ -1,15 +1,20 @@
 package org.ecsail.mvci_connect;
 
+import org.ecsail.BaseApplication;
 import org.ecsail.dto.LoginDTO;
 import org.ecsail.fileio.FileIO;
 import org.ecsail.interfaces.ConfigFilePaths;
 import org.ecsail.widgetfx.ObjectFx;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ConnectInteractor implements ConfigFilePaths {
+
+    private static final Logger logger = LoggerFactory.getLogger(ConfigFilePaths.class);
     private final ConnectModel connectModel;
     public ConnectInteractor(ConnectModel connectModel) {
         this.connectModel = connectModel;
@@ -46,20 +51,18 @@ public class ConnectInteractor implements ConfigFilePaths {
     }
 
     public void saveLoginObjects() {  // saves user file to disk
-        System.out.println("Saving to Disk");
         File g = new File(LOGIN_FILE);
         ArrayList<LoginDTO> unwrappedList = new ArrayList<>(connectModel.getComboBox().getItems());
-        System.out.println("unwrappedList has " + unwrappedList.size());
         try	{
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(g));
             out.writeObject(unwrappedList);
             out.close();
         } catch (Exception e) {
-//            BaseApplication.logger.error(e.getMessage());
+            logger.error(e.getMessage());
             e.printStackTrace();
             System.exit(0);
         }
-//        BaseApplication.logger.info(HalyardPaths.HOSTS + " saved");
+        logger.info(LOGIN_FILE + " saved");
     }
 
 }

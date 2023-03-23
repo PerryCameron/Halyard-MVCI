@@ -4,6 +4,8 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.ecsail.mvci_main.MainController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class BaseApplication extends Application {
@@ -11,12 +13,16 @@ public class BaseApplication extends Application {
     public static Stage primaryStage;
     public static Stage loginStage;
 
+    public static final Logger logger = LoggerFactory.getLogger(BaseApplication.class);
+
+
     public static void main(String[] args) {
         launch(args);
     }
 
     @Override
     public void start(Stage stage) {
+        logger.info("Starting application");
         primaryStage = stage;
         primaryStage.setScene(new Scene(new MainController().getView()));
         primaryStage.getScene().getStylesheets().addAll("css/dark/dark.css");
