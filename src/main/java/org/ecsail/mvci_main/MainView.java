@@ -5,15 +5,19 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Builder;
 import org.ecsail.BaseApplication;
+import org.ecsail.widgetfx.MenuFx;
 
 import java.util.Objects;
 import java.util.function.Consumer;
+
+import static java.lang.System.getProperty;
 
 public class MainView implements Builder<Region> {
     private final MainModel mainModel;
@@ -59,11 +63,32 @@ public class MainView implements Builder<Region> {
 
     private Node setUpTopPane() {
         VBox topElements = new VBox();
-        MenuBar menuBar = new MenuBar();
-        topElements.getChildren().add(menuBar);
+        topElements.getChildren().add(setUpMenuBar());
         ToolBar toolbar = new ToolBar();
         topElements.getChildren().add(toolbar);
         return topElements;
+    }
+
+    private Node setUpMenuBar() {
+        MenuBar menuBar = new MenuBar();
+        if(isMac()) menuBar.setUseSystemMenuBar(true);
+        menuBar.getMenus().addAll(createEditMenu());
+        return menuBar;
+    }
+    private Menu createEditMenu() {
+        Menu menu = new Menu("Edit");
+        MenuItem undo = MenuFx.menuItemOf("Undo", x -> System.out.println("undo"), KeyCode.Z);
+        MenuItem redo = MenuFx.menuItemOf("Redo", x -> System.out.println("Redo"), KeyCode.R);
+        SeparatorMenuItem editSeparator = new SeparatorMenuItem();
+        MenuItem cut = MenuFx.menuItemOf("Cut", x -> System.out.println("Cut"), KeyCode.X);
+        MenuItem copy = MenuFx.menuItemOf("Copy", x -> System.out.println("Copy"), KeyCode.C);
+        MenuItem paste = MenuFx.menuItemOf("Paste", x -> System.out.println("Paste"), KeyCode.V);
+        menu.getItems().addAll(undo, redo, editSeparator, cut, copy, paste);
+        return menu;
+    }
+
+    public static boolean isMac() {
+        return getProperty("os.name").contains("Mac");
     }
 
 

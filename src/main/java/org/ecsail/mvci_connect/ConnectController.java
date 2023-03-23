@@ -29,5 +29,4 @@ public class ConnectController {
         connectView.createStage(connectView.build());
         return this;
     }
-
 }

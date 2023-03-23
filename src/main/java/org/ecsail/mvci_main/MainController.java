@@ -4,7 +4,6 @@ package org.ecsail.mvci_main;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import org.ecsail.mvci_connect.ConnectController;
-import org.ecsail.mvci_connect.ConnectInteractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +19,7 @@ public class MainController {
         mainInteractor = new MainInteractor(mainModel);
         mainView = new MainView(mainModel, this::closeAllConnections);
         connectController = new ConnectController(this).getView();
+
     }
 
     public Runnable closeAllConnections(Runnable closeConnections) {
@@ -44,4 +44,5 @@ public class MainController {
     public Stage getLoginStage() {
         return loginStage;
     }
+
 }
