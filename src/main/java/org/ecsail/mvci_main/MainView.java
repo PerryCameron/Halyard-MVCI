@@ -31,8 +31,6 @@ public class MainView implements Builder<Region> {
 
     @Override
     public Region build() {
-        //        startFileLogger();
-//        BaseApplication.logger.info("Starting application...");
         BorderPane borderPane = new BorderPane();
         borderPane.setPrefSize(1028,830);
         borderPane.setTop(setUpTopPane());
