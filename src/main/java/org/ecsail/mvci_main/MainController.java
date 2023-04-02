@@ -22,7 +22,7 @@ public class MainController {
         connectController = new ConnectController(this).getView();
     }
 
-    public void closeAllConnections(Void nothing) {
+    public void closeAllConnections() {
         Platform.runLater(connectController.closeDatabaseConnection());
     }
 

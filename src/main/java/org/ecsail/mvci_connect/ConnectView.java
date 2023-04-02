@@ -32,11 +32,10 @@ import java.util.function.Consumer;
 public class ConnectView implements Builder<Region> {
     private final ConnectModel connectModel;
     private final RunState runState;
-    private final Consumer<Void> saveLogins;
-    private final Consumer<Void> connect;
+    private final Runnable saveLogins;
+    private final Runnable connect;
     private final LoginDTOListSupplier loginSupplier;
-    public ConnectView(ConnectModel model, Consumer<Void> saveLogins, LoginDTOListSupplier loginSupplier,
-                       Consumer<Void> connect) {
+    public ConnectView(ConnectModel model, Runnable saveLogins, LoginDTOListSupplier loginSupplier, Runnable connect) {
         this.connectModel = model;
         this.runState = new RunStateImpl(model);
         this.loginSupplier = loginSupplier;
@@ -137,7 +136,7 @@ public class ConnectView implements Builder<Region> {
         Button loginButton = new Button("Login");
         loginButton.setOnAction((event) -> {
             connectModel.setRotateShipWheel(true);
-            connect.accept(null);
+            connect.run();
         });
         Button cancelButton = new Button("Cancel");
         cancelButton.setOnAction((event) -> System.exit(0));
@@ -229,13 +228,13 @@ public class ConnectView implements Builder<Region> {
         buttonSave.setOnAction(event -> {
             updateSelectedLogin();
             runState.setMode(RunState.Mode.NORMAL);
-            saveLogins.accept(null);
+            saveLogins.run();
             updateFields();
         });
         Button buttonDelete = new Button("Delete");
         buttonDelete.setOnAction(event -> {
             connectModel.getComboBox().getItems().remove(connectModel.getComboBox().getValue());
-            saveLogins.accept(null);
+            saveLogins.run();
             runState.setMode(RunState.Mode.NORMAL);
         });
         Button buttonCancel = new Button("Cancel");

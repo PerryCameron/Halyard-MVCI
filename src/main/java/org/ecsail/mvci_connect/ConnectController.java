@@ -26,7 +26,7 @@ public class ConnectController {
         connectView = new ConnectView(connectModel, this::saveLogins, this::loginSupply, this::connectToServer);
     }
 
-    private void saveLogins(Void unused) {
+    private void saveLogins() {
         connectInteractor.saveLoginObjects();
     }
 
@@ -39,7 +39,7 @@ public class ConnectController {
         return this;
     }
 
-    private void connectToServer(Void unused) {
+    private void connectToServer() {
         Task<Boolean> connectTask = new Task<Boolean>() {
             @Override
             protected Boolean call() throws Exception {

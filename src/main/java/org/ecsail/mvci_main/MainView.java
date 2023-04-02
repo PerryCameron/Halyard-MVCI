@@ -22,10 +22,10 @@ import static java.lang.System.getProperty;
 
 public class MainView implements Builder<Region> {
     private final MainModel mainModel;
-    private final Consumer<Void> closeConnections;
+    private final Runnable closeConnections;
 
     private Stage loginStage = new Stage();
-    public MainView(MainModel mainModel, Consumer<Void> closeConnections) {
+    public MainView(MainModel mainModel, Runnable closeConnections) {
         this.mainModel = mainModel;
         this.closeConnections = closeConnections;
     }
@@ -38,7 +38,7 @@ public class MainView implements Builder<Region> {
         borderPane.setBottom(setUpBottomPane());
         borderPane.setCenter(setUpCenterPane());
         // closing program with x button
-        BaseApplication.primaryStage.setOnHiding(event -> closeConnections.accept(null));
+        BaseApplication.primaryStage.setOnHiding(event -> closeConnections.run());
         Image mainIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/title_bar_icon.png")));
         BaseApplication.primaryStage.getIcons().add(mainIcon);
         BaseApplication.primaryStage.setTitle("Halyard");
