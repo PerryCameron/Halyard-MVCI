@@ -26,6 +26,8 @@ public class ConnectModel {
     private final StringProperty sshUser = new SimpleStringProperty();
     private final StringProperty knownHosts = new SimpleStringProperty();
 
+    private final StringProperty statusBarText = new SimpleStringProperty();
+
 
 
 
@@ -174,5 +176,17 @@ public class ConnectModel {
 
     public DoubleProperty centerPaneHeightProperty() {
         return centerPaneHeight;
+    }
+
+    public String getStatusBarText() {
+        return statusBarText.get();
+    }
+
+    public StringProperty statusBarTextProperty() {
+        return statusBarText;
+    }
+
+    public void setStatusBarText(String statusBarText) {
+        this.statusBarText.set(statusBarText);
     }
 }

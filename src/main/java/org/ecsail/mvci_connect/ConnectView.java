@@ -33,12 +33,14 @@ public class ConnectView implements Builder<Region> {
     private final ConnectModel connectModel;
     private final RunState runState;
     private final Consumer<Void> saveLogins;
+    private final Consumer<Void> connect;
     private final LoginDTOListSupplier loginSupplier;
-    public ConnectView(ConnectModel model, Consumer<Void> saveLogins, LoginDTOListSupplier loginSupplier) {
+    public ConnectView(ConnectModel model, Consumer<Void> saveLogins, LoginDTOListSupplier loginSupplier, Consumer<Void> connect) {
         this.connectModel = model;
         this.runState = new RunStateImpl(model);
         this.loginSupplier = loginSupplier;
         this.saveLogins = saveLogins;
+        this.connect = connect;
     }
 
     @Override
@@ -134,7 +136,7 @@ public class ConnectView implements Builder<Region> {
         Button loginButton = new Button("Login");
         loginButton.setOnAction((event) -> {
             connectModel.setRotateShipWheel(true);
-//            connectToServer();
+            connect.accept(null);
         });
         Button cancelButton = new Button("Cancel");
         cancelButton.setOnAction((event) -> System.exit(0));

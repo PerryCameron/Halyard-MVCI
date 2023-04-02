@@ -5,7 +5,6 @@ import javafx.scene.control.ListCell;
 import org.ecsail.dto.LoginDTO;
 
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 public class LogInComboBox extends ComboBox<LoginDTO> {
 

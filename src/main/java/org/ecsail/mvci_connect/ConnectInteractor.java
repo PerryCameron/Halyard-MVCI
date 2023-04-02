@@ -1,5 +1,6 @@
 package org.ecsail.mvci_connect;
 
+import org.ecsail.connection.Connections;
 import org.ecsail.dto.LoginDTO;
 import org.ecsail.fileio.FileIO;
 import org.ecsail.interfaces.ConfigFilePaths;
@@ -15,19 +16,22 @@ public class ConnectInteractor implements ConfigFilePaths {
 
     private static final Logger logger = LoggerFactory.getLogger(ConnectInteractor.class);
     private final ConnectModel connectModel;
+    private final Connections connections;
     public ConnectInteractor(ConnectModel connectModel) {
         this.connectModel = connectModel;
+        this.connections = new Connections(connectModel);
     }
+
+
 
     public List<LoginDTO> supplyLogins() {
         List<LoginDTO> loginDTOS = new ArrayList<>();
         if (FileIO.hostFileExists(LOGIN_FILE))
             openLoginObjects(loginDTOS);
         else {
-            System.out.println("Starting application for first time");
+            logger.info("Starting application for first time");
             loginDTOS.add(ObjectFx.createLoginDTO()); // we are starting application for the first time
         }
-        System.out.println(loginDTOS.size());
         return loginDTOS;
     }
 
@@ -62,5 +66,9 @@ public class ConnectInteractor implements ConfigFilePaths {
             System.exit(0);
         }
         logger.info(LOGIN_FILE + " saved");
+    }
+
+    public Connections getConnections() {
+        return connections;
     }
 }
