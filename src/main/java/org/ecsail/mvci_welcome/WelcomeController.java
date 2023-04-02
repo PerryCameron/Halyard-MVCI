@@ -1,6 +1,7 @@
 package org.ecsail.mvci_welcome;
 
 import javafx.scene.control.Tab;
+import javafx.scene.layout.Region;
 import org.ecsail.mvci_main.MainController;
 
 public class WelcomeController {
@@ -15,7 +16,7 @@ public class WelcomeController {
         this.welcomeView = new WelcomeView(welcomeModel);
     }
 
-    public Tab getView() {
+    public Region getView() {
        return welcomeView.build();
     }
 }

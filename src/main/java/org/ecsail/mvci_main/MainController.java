@@ -2,6 +2,7 @@ package org.ecsail.mvci_main;
 
 
 import javafx.application.Platform;
+import javafx.scene.control.Tab;
 import javafx.scene.layout.Region;
 import org.ecsail.mvci_connect.ConnectController;
 import org.ecsail.mvci_welcome.WelcomeController;
@@ -23,7 +24,7 @@ public class MainController {
 
     public void openWelcomeMVCI() {
         mainView.closeTabs();
-        mainView.getMainTabPane().getTabs().add(new WelcomeController(this).getView());
+        mainView.addTab("Welcome",new WelcomeController(this).getView());
     }
 
     private void closeAllConnections() {

@@ -11,6 +11,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import org.ecsail.BaseApplication;
+import org.ecsail.mvci_welcome.WelcomeController;
 import org.ecsail.widgetfx.MenuFx;
 
 import java.util.Objects;
@@ -97,6 +98,9 @@ public class MainView implements Builder<Region> {
 
     protected void closeTabs() {
         mainModel.getMainTabPane().getTabs().clear();
+    }
+    protected void addTab(String name, Region region) {
+        mainModel.getMainTabPane().getTabs().add(new Tab(name, region));
     }
 
 
