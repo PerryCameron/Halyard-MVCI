@@ -1,6 +1,7 @@
 package org.ecsail.mvci_main;
 
 
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -21,10 +22,10 @@ import static java.lang.System.getProperty;
 
 public class MainView implements Builder<Region> {
     private final MainModel mainModel;
-    private final Consumer<Runnable> closeConnections;
+    private final Consumer<Void> closeConnections;
 
     private Stage loginStage = new Stage();
-    public MainView(MainModel mainModel, Consumer<Runnable> closeConnections) {
+    public MainView(MainModel mainModel, Consumer<Void> closeConnections) {
         this.mainModel = mainModel;
         this.closeConnections = closeConnections;
     }

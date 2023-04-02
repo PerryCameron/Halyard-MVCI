@@ -35,7 +35,8 @@ public class ConnectView implements Builder<Region> {
     private final Consumer<Void> saveLogins;
     private final Consumer<Void> connect;
     private final LoginDTOListSupplier loginSupplier;
-    public ConnectView(ConnectModel model, Consumer<Void> saveLogins, LoginDTOListSupplier loginSupplier, Consumer<Void> connect) {
+    public ConnectView(ConnectModel model, Consumer<Void> saveLogins, LoginDTOListSupplier loginSupplier,
+                       Consumer<Void> connect) {
         this.connectModel = model;
         this.runState = new RunStateImpl(model);
         this.loginSupplier = loginSupplier;

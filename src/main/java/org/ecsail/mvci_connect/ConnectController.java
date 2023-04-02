@@ -1,11 +1,14 @@
 package org.ecsail.mvci_connect;
 
+import com.jcraft.jsch.JSchException;
 import javafx.concurrent.Task;
+import org.ecsail.connection.PortForwardingL;
 import org.ecsail.dto.LoginDTO;
 import org.ecsail.mvci_main.MainController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class ConnectController {
@@ -63,5 +66,27 @@ public class ConnectController {
         });
         Thread thread = new Thread(connectTask);
         thread.start();
+    }
+
+    public Runnable closeDatabaseConnection() {
+        return () -> {
+            try {
+                connectInteractor.getConnections().getSqlConnection().close();
+                logger.info("SQL: Connection closed");
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            PortForwardingL sshConnection = connectInteractor.getConnections().getSshConnection();
+            // if ssh is connected then disconnect
+            if (sshConnection != null && sshConnection.getSession().isConnected()) {
+                try {
+                    sshConnection.getSession().delPortForwardingL(3306);
+                    sshConnection.getSession().disconnect();
+                    logger.info("SSH: port forwarding closed");
+                } catch (JSchException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
     }
 }
