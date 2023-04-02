@@ -2,6 +2,7 @@ package org.ecsail.mvci_connect;
 
 import com.jcraft.jsch.JSchException;
 import javafx.concurrent.Task;
+import org.ecsail.BaseApplication;
 import org.ecsail.connection.PortForwardingL;
 import org.ecsail.dto.LoginDTO;
 import org.ecsail.mvci_main.MainController;
@@ -18,7 +19,6 @@ public class ConnectController {
     ConnectInteractor connectInteractor;
 
     private static final Logger logger = LoggerFactory.getLogger(ConnectController.class);
-
 
     public ConnectController(MainController mainController) {
         this.mainController = mainController;
@@ -51,12 +51,10 @@ public class ConnectController {
             boolean connectionSuccessful = connectTask.getValue();
             if (connectionSuccessful) {
                 connectModel.setRotateShipWheel(false);
-//                primaryStage.setTitle("Halyard");
+                mainController.setStatus("(Connected) " + connectModel.getHost());
+                BaseApplication.loginStage.close();
 //                BaseApplication.tabPane.getTabs().remove(BaseApplication.tabPane.getSelectionModel().getSelectedIndex());
 //                BaseApplication.tabPane.getTabs().add(new TabWelcome(new HBoxWelcome()));
-//                showStatus();
-//                logonStage.close();
-                // Code to execute after the task completes successfully
             } else {
                 // Handle the case where the connection fails
             }
@@ -68,7 +66,7 @@ public class ConnectController {
         thread.start();
     }
 
-    public Runnable closeDatabaseConnection() {
+    public Runnable closeConnection() {
         return () -> {
             try {
                 connectInteractor.getConnections().getSqlConnection().close();

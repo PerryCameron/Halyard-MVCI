@@ -22,16 +22,14 @@ public class MainController {
         connectController = new ConnectController(this).getView();
     }
 
-    public void closeAllConnections() {
-        Platform.runLater(connectController.closeDatabaseConnection());
+    private void closeAllConnections() {
+        Platform.runLater(connectController.closeConnection());
     }
 
     public Region getView() {
         { return mainView.build(); }
     }
 
-    public Stage getLoginStage() {
-        return loginStage;
-    }
+    public void setStatus(String status) { mainView.setStatus(status); }
 
 }

@@ -1,7 +1,6 @@
 package org.ecsail.mvci_main;
 
 
-import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -10,13 +9,11 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import javafx.util.Builder;
 import org.ecsail.BaseApplication;
 import org.ecsail.widgetfx.MenuFx;
 
 import java.util.Objects;
-import java.util.function.Consumer;
 
 import static java.lang.System.getProperty;
 
@@ -24,7 +21,6 @@ public class MainView implements Builder<Region> {
     private final MainModel mainModel;
     private final Runnable closeConnections;
 
-    private Stage loginStage = new Stage();
     public MainView(MainModel mainModel, Runnable closeConnections) {
         this.mainModel = mainModel;
         this.closeConnections = closeConnections;
@@ -49,8 +45,8 @@ public class MainView implements Builder<Region> {
         Label statusLabel = new Label();
         statusLabel.setPadding(new Insets(5.0f, 5.0f, 5.0f, 5.0f));
         statusLabel.setMaxWidth(Double.MAX_VALUE);
-        statusLabel.setText("(Not Connected) Ready.");
         statusLabel.textProperty().bind(mainModel.statusLabelProperty());
+        mainModel.statusLabelProperty().set("(Not Connected) Ready.");
         return statusLabel;
     }
 
@@ -86,22 +82,13 @@ public class MainView implements Builder<Region> {
         return menu;
     }
 
-    public static boolean isMac() {
+    private static boolean isMac() {
         return getProperty("os.name").contains("Mac");
     }
 
-
-
-//    public void log(String s) {
-//        statusLabel.setText(s);
-//    }
-
-//    private final Plugin[] plugins = new Plugin[]{
-//            new StandardMenus(),
-//            new FileDrop(),
-//            new SearchToolBar(),
-//            new LogFile()
-//    };
+    public void setStatus(String status) {
+        mainModel.statusLabelProperty().set(status);
+    }
 
 
 //    private static void startFileLogger() {
@@ -115,19 +102,5 @@ public class MainView implements Builder<Region> {
 //        }
 //    }
 //
-//    public static void connectDatabase() {
-//        connect = new ConnectDatabase(stage);
-//    }
-//
-//    public static PortForwardingL getSSHConnection() {
-//        return connect.getSshConnection();
-//    }
-//
-//    public static DataSource getDataSource() {
-//        return connect.getMainModel().getAppConfig().getDataSource();
-//    }
-//
-//    public static Model getModel() { return connect.getMainModel(); }
-//    }
 
 }
