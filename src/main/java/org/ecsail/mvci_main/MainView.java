@@ -53,6 +53,7 @@ public class MainView implements Builder<Region> {
     private Node setUpCenterPane() {
         TabPane tabPane = new TabPane();
         tabPane.getTabs().add(new Tab("Log in"));
+        mainModel.setMainTabPane(tabPane);
         return tabPane;
     }
 
@@ -86,9 +87,18 @@ public class MainView implements Builder<Region> {
         return getProperty("os.name").contains("Mac");
     }
 
-    public void setStatus(String status) {
+    protected void setStatus(String status) {
         mainModel.statusLabelProperty().set(status);
     }
+
+    protected TabPane getMainTabPane() {
+        return mainModel.getMainTabPane();
+    }
+
+    protected void closeTabs() {
+        mainModel.getMainTabPane().getTabs().clear();
+    }
+
 
 
 //    private static void startFileLogger() {

@@ -40,9 +40,9 @@ public class ConnectController {
     }
 
     private void connectToServer() {
-        Task<Boolean> connectTask = new Task<Boolean>() {
+        Task<Boolean> connectTask = new Task<>() {
             @Override
-            protected Boolean call() throws Exception {
+            protected Boolean call() {
                 // Perform database connection here
                 return connectInteractor.getConnections().connect();
             }
@@ -53,15 +53,12 @@ public class ConnectController {
                 connectModel.setRotateShipWheel(false);
                 mainController.setStatus("(Connected) " + connectModel.getHost());
                 BaseApplication.loginStage.close();
-//                BaseApplication.tabPane.getTabs().remove(BaseApplication.tabPane.getSelectionModel().getSelectedIndex());
-//                BaseApplication.tabPane.getTabs().add(new TabWelcome(new HBoxWelcome()));
+                mainController.openWelcomeMVCI();
             } else {
                 // Handle the case where the connection fails
             }
         });
-        connectTask.setOnFailed(event -> {
-            logger.error(connectTask.getException().getMessage());
-        });
+        connectTask.setOnFailed(event -> logger.error(connectTask.getException().getMessage()));
         Thread thread = new Thread(connectTask);
         thread.start();
     }
