@@ -2,17 +2,17 @@ package org.ecsail.mvci_welcome;
 
 import javafx.collections.FXCollections;
 import javafx.scene.Node;
-import javafx.scene.chart.Axis;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import org.ecsail.dto.StatsDTO;
+import org.ecsail.interfaces.ChartConstants;
 
-public class MembershipBarChart extends BarChart<String,Number> {
+public class MembershipBarChart extends BarChart<String,Number> implements ChartConstants {
     private final WelcomeModel welcomeModel;
-    Series seriesData = new Series();
+    Series<String,Number> seriesData = new Series<>();
 
-    public MembershipBarChart(WelcomeModel welcomeModel) {
+    protected MembershipBarChart(WelcomeModel welcomeModel) {
         super(new CategoryAxis(),new NumberAxis());
         this.welcomeModel = welcomeModel;
         setLegendVisible(false);
@@ -22,40 +22,38 @@ public class MembershipBarChart extends BarChart<String,Number> {
         getXAxis().setLabel("Years");
     addData();
     setSeriesData();
-    getData().addAll(seriesData);
+    getData().add(seriesData);
     }
 
     private void addData() {
         for (StatsDTO s: welcomeModel.getStats()) {
             switch (welcomeModel.getChartSet()) {
-                case 1:
-                    welcomeModel.getNonRenewData().add(new Data<>(String.valueOf(s.getFiscalYear()), s.getNonRenewMemberships()));
-                    break;
-                case 2:
-                    welcomeModel.getNewMemberData().add(new Data<>(String.valueOf(s.getFiscalYear()), s.getNewMemberships()));
-                    break;
-                case 3:
-                    welcomeModel.getReturnMemberData().add(new Data<>(String.valueOf(s.getFiscalYear()), s.getReturnMemberships()));
+                case NON_RENEW ->
+                        welcomeModel.getNonRenewData().add(new Data<>(String.valueOf(s.getFiscalYear()), s.getNonRenewMemberships()));
+                case NEW_MEMBER ->
+                        welcomeModel.getNewMemberData().add(new Data<>(String.valueOf(s.getFiscalYear()), s.getNewMemberships()));
+                case RETURN_MEMBER ->
+                        welcomeModel.getReturnMemberData().add(new Data<>(String.valueOf(s.getFiscalYear()), s.getReturnMemberships()));
             }
         }
     }
 
     private void setSeriesData() {
         switch (welcomeModel.getChartSet()) {
-            case 1:
+            case NON_RENEW -> {
                 seriesData.setData(welcomeModel.getNonRenewData());
                 setTitle("Non-Renewed Memberships");
-
-                break;
-            case 2:
+            }
+            case NEW_MEMBER -> {
                 seriesData.setData(welcomeModel.getNewMemberData());
                 setTitle("New Memberships");
                 changeSeriesColor("#860061");
-                break;
-            case 3:
+            }
+            case RETURN_MEMBER -> {
                 seriesData.setData(welcomeModel.getReturnMemberData());
                 setTitle("Return Memberships");
                 changeSeriesColor("#22bad9");
+            }
         }
     }
 
@@ -63,7 +61,7 @@ public class MembershipBarChart extends BarChart<String,Number> {
         seriesData.getData().clear();
     }
 
-    public void changeData(int change) {
+    protected void changeData(int change) {
         welcomeModel.setChartSet(change);
         clearSeries();
         addData();
@@ -71,7 +69,7 @@ public class MembershipBarChart extends BarChart<String,Number> {
         setData(FXCollections.singletonObservableList(seriesData));
     }
 
-    public void changeSeriesColor(String color) {
+    private void changeSeriesColor(String color) {
         for(int i = 0; i < welcomeModel.getStats().size(); i++) {
             for(Node n:lookupAll(".data"+i+".chart-bar")) {
                n.setStyle("-fx-bar-fill: "+color+";");
@@ -79,8 +77,7 @@ public class MembershipBarChart extends BarChart<String,Number> {
         }
     }
 
-    public void refreshChart() {
+    protected void refreshChart() {
         changeData(welcomeModel.getChartSet());
     }
-
 }

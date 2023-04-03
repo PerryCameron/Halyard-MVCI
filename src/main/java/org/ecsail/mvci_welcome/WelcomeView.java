@@ -11,6 +11,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
+import org.ecsail.interfaces.ChartConstants;
 import org.ecsail.widgetfx.ButtonFx;
 import org.ecsail.widgetfx.HBoxFx;
 import org.ecsail.widgetfx.VBoxFx;
@@ -20,10 +21,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.stream.IntStream;
 
-public class WelcomeView implements Builder<Region> {
-    public static final int NON_RENEW = 1;
-    public static final int NEW_MEMBER = 2;
-    public static final int RETURN_MEMBER = 3;
+public class WelcomeView implements Builder<Region>, ChartConstants {
     WelcomeModel welcomeModel;
     Runnable reloadStats;
 
@@ -47,7 +45,7 @@ public class WelcomeView implements Builder<Region> {
     }
 
     private Node addChartControls() {
-        HBox hBox = HBoxFx.hBoxOf(Pos.CENTER, new Insets(5,0,5,0),10.0);
+        HBox hBox = HBoxFx.hBoxOf(Pos.CENTER, new Insets(5,0,5,0),15.0);
         Node hBoxStart = HBoxFx.hBoxOf(5, Pos.CENTER_LEFT, new Label("Start"),createStartYearComboBox());
         Node hBoxStop = HBoxFx.hBoxOf(5, Pos.CENTER_LEFT, new Label("Year Span"), createYearSpanComboBox());
         Node hBoxTop = HBoxFx.hBoxOf(5, Pos.CENTER_LEFT, new Label("Bottom"),createChartSelectionComboBox());

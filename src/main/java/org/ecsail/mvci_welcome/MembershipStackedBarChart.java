@@ -1,21 +1,19 @@
 package org.ecsail.mvci_welcome;
 
-import javafx.collections.FXCollections;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.StackedBarChart;
-import org.ecsail.dto.StatsDTO;
 
 import java.util.Arrays;
 
 public class MembershipStackedBarChart extends StackedBarChart<String,Number> {
 
 	private final WelcomeModel welcomeModel;
-	Series<String,Number> seriesFamily = new Series<>();
-	Series<String,Number> seriesRegular = new Series<>();
-	Series<String,Number> seriesSocial = new Series<>();
-	Series<String,Number> seriesLakeAssociate = new Series<>();
-	Series<String,Number> seriesLifeMember = new Series<>();
+	private final Series<String,Number> seriesFamily = new Series<>();
+	private final Series<String,Number> seriesRegular = new Series<>();
+	private final Series<String,Number> seriesSocial = new Series<>();
+	private final Series<String,Number> seriesLakeAssociate = new Series<>();
+	private final Series<String,Number> seriesLifeMember = new Series<>();
 
 	public MembershipStackedBarChart(WelcomeModel welcomeModel) {
 		super(new CategoryAxis(),new NumberAxis());
@@ -29,7 +27,7 @@ public class MembershipStackedBarChart extends StackedBarChart<String,Number> {
 		getData().addAll(Arrays.asList(seriesFamily,seriesRegular,seriesSocial,seriesLakeAssociate,seriesLifeMember));
 	}
 
-	public void setNames() {
+	private void setNames() {
 		seriesFamily.setName("Family");
 		seriesRegular.setName("Regular");
 		seriesSocial.setName("Social");
@@ -37,14 +35,14 @@ public class MembershipStackedBarChart extends StackedBarChart<String,Number> {
 		seriesLifeMember.setName("Life Member");
 	}
 
-	public void addData() {
-		for (StatsDTO s: welcomeModel.getStats()) {
+	private void addData() {
+		welcomeModel.getStats().forEach(s -> {
 			welcomeModel.getFamilyData().add(new Data<>(String.valueOf(s.getFiscalYear()), s.getFamily()));
 			welcomeModel.getRegularData().add(new Data<>(String.valueOf(s.getFiscalYear()), s.getRegular()));
 			welcomeModel.getSocialData().add(new Data<>(String.valueOf(s.getFiscalYear()), s.getSocial()));
 			welcomeModel.getLakeAssociateData().add(new Data<>(String.valueOf(s.getFiscalYear()), s.getLakeAssociates()));
 			welcomeModel.getLifeMemberData().add(new Data<>(String.valueOf(s.getFiscalYear()), s.getLifeMembers()));
-		}
+		});
 		setData();
 	}
 
@@ -56,7 +54,7 @@ public class MembershipStackedBarChart extends StackedBarChart<String,Number> {
 		seriesLifeMember.setData(welcomeModel.getLifeMemberData());
 	}
 
-	public void clearData() {
+	private void clearData() {
 			welcomeModel.getFamilyData().clear();
 			welcomeModel.getRegularData().clear();
 			welcomeModel.getSocialData().clear();
@@ -64,9 +62,9 @@ public class MembershipStackedBarChart extends StackedBarChart<String,Number> {
 			welcomeModel.getLifeMemberData().clear();
 	}
 
-	public void refreshChart() {
+	protected void refreshChart() {
 		clearData();
 		addData();
-		setData(FXCollections.observableArrayList(seriesFamily,seriesRegular,seriesSocial,seriesLakeAssociate,seriesLifeMember));
+		setData();
 	}
 }
