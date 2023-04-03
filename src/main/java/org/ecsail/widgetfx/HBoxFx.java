@@ -4,6 +4,9 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.control.Control;
+import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 
@@ -77,6 +80,12 @@ public class HBoxFx {
         box.setPadding(padding);
         box.setSpacing(spacing);
         return box;
+    }
+
+    public static HBox hBoxOf(double spacing, Pos position, Node control1, Node control2) {
+        HBox hBox = new HBox(spacing, control1,control2);
+        hBox.setAlignment(position);
+        return hBox;
     }
 
     public static HBox spacerOf(double height) {

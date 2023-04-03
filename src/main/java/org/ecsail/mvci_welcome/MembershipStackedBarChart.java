@@ -17,12 +17,11 @@ public class MembershipStackedBarChart extends StackedBarChart<String,Number> {
 	Series<String,Number> seriesLakeAssociate = new Series<>();
 	Series<String,Number> seriesLifeMember = new Series<>();
 
-	public MembershipStackedBarChart(WelcomeModel welcomeModel, CategoryAxis xAxis, NumberAxis yAxis) {
-		super(xAxis,yAxis);
-//		super(new CategoryAxis(), xAxis);
+	public MembershipStackedBarChart(WelcomeModel welcomeModel) {
+		super(new CategoryAxis(),new NumberAxis());
 		this.welcomeModel = welcomeModel;
 	        setTitle("Active Memberships By Year");
-			xAxis.setAutoRanging(true);
+			getXAxis().setAutoRanging(true);
 			setNames();
 			addData();
 			setAnimated(false);

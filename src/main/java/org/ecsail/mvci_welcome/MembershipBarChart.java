@@ -4,23 +4,21 @@ import javafx.collections.FXCollections;
 import javafx.scene.Node;
 import javafx.scene.chart.Axis;
 import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
 import org.ecsail.dto.StatsDTO;
 
 public class MembershipBarChart extends BarChart<String,Number> {
     private final WelcomeModel welcomeModel;
-    int set;
-
     Series seriesData = new Series();
 
-    public MembershipBarChart(Axis xAxis, Axis yAxis, WelcomeModel welcomeModel, int set) {
-        super(xAxis, yAxis);
-        this.set = set;
+    public MembershipBarChart(WelcomeModel welcomeModel) {
+        super(new CategoryAxis(),new NumberAxis());
         this.welcomeModel = welcomeModel;
         setLegendVisible(false);
         setAnimated(false);
         setTitle("Non-Renewed Memberships");
-        xAxis.setLabel("Years");
-
+        getXAxis().setLabel("Years");
     addData();
     setSeriesData();
     getData().addAll(seriesData);
@@ -28,21 +26,21 @@ public class MembershipBarChart extends BarChart<String,Number> {
 
     private void addData() {
         for (StatsDTO s: welcomeModel.getStats()) {
-            switch (set) {
+            switch (welcomeModel.getChartSet()) {
                 case 1:
-                    welcomeModel.getNonRenewData().add(new Data<String,Number>(String.valueOf(s.getFiscalYear()),s.getNonRenewMemberships()));
+                    welcomeModel.getNonRenewData().add(new Data<>(String.valueOf(s.getFiscalYear()), s.getNonRenewMemberships()));
                     break;
                 case 2:
-                    welcomeModel.getNewMemberData().add(new Data<String,Number>(String.valueOf(s.getFiscalYear()),s.getNewMemberships()));
+                    welcomeModel.getNewMemberData().add(new Data<>(String.valueOf(s.getFiscalYear()), s.getNewMemberships()));
                     break;
                 case 3:
-                    welcomeModel.getReturnMemberData().add(new Data<String,Number>(String.valueOf(s.getFiscalYear()),s.getReturnMemberships()));
+                    welcomeModel.getReturnMemberData().add(new Data<>(String.valueOf(s.getFiscalYear()), s.getReturnMemberships()));
             }
         }
     }
 
     private void setSeriesData() {
-        switch (set) {
+        switch (welcomeModel.getChartSet()) {
             case 1:
                 seriesData.setData(welcomeModel.getNonRenewData());
                 setTitle("Non-Renewed Memberships");
@@ -65,7 +63,7 @@ public class MembershipBarChart extends BarChart<String,Number> {
     }
 
     public void changeData(int change) {
-        this.set = change;
+        welcomeModel.setChartSet(change);
         clearSeries();
         addData();
         setSeriesData();
@@ -81,7 +79,7 @@ public class MembershipBarChart extends BarChart<String,Number> {
     }
 
     public void refreshChart() {
-        changeData(set);
+        changeData(welcomeModel.getChartSet());
     }
 
 }
