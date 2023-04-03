@@ -13,7 +13,11 @@ public class WelcomeController {
         WelcomeModel welcomeModel = new WelcomeModel();
         this.mainController = mainController;
         welcomeInteractor = new WelcomeInteractor(welcomeModel, mainController.getConnections());
-        this.welcomeView = new WelcomeView(welcomeModel);
+        this.welcomeView = new WelcomeView(welcomeModel, this::refreshStats);
+    }
+
+    private void refreshStats() {
+        welcomeInteractor.reloadStats();
     }
 
     public Region getView() {

@@ -25,8 +25,11 @@ public class WelcomeView implements Builder<Region> {
     public static final int NEW_MEMBER = 2;
     public static final int RETURN_MEMBER = 3;
     WelcomeModel welcomeModel;
-    public WelcomeView(WelcomeModel welcomeModel) {
+    Runnable reloadStats;
+
+    public WelcomeView(WelcomeModel welcomeModel, Runnable reloadStats) {
         this.welcomeModel = welcomeModel;
+        this.reloadStats = reloadStats;
     }
 
     @Override
@@ -80,7 +83,7 @@ public class WelcomeView implements Builder<Region> {
         comboBox.setValue(welcomeModel.getYearSpan());
         comboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             welcomeModel.setYearSpan(newValue);
-            reloadStats();
+            reloadStats.run();
             welcomeModel.getMembershipBarChart().refreshChart();
             welcomeModel.getMembershipStackedBarChart().refreshChart();
         });
@@ -97,7 +100,7 @@ public class WelcomeView implements Builder<Region> {
         comboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             System.out.println("combo box ");
             welcomeModel.setDefaultStartYear(newValue);
-            reloadStats();
+            reloadStats.run();
             welcomeModel.getMembershipBarChart().refreshChart();
             welcomeModel.getMembershipStackedBarChart().refreshChart();
         });
