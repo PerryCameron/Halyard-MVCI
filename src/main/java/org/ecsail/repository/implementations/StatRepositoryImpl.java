@@ -3,6 +3,8 @@ package org.ecsail.repository.implementations;
 
 import org.ecsail.dto.StatsDTO;
 import org.ecsail.repository.interfaces.StatRepository;
+import org.ecsail.repository.rowmappers.BoatRowMapper;
+import org.ecsail.repository.rowmappers.StatsRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
@@ -18,7 +20,8 @@ public class StatRepositoryImpl implements StatRepository {
 
     @Override
     public List<StatsDTO> getStatistics(int startYear, int stopYear) {
-        return null;
+        String query = "SELECT * FROM stats WHERE fiscal_year > "+(startYear -1)+" AND fiscal_year < " + (stopYear +1);
+        return template.query(query, new StatsRowMapper());
     }
 
     @Override

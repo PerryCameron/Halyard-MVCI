@@ -19,15 +19,28 @@ public class WelcomeModel {
     private ObservableList<XYChart.Data<String,Number>> nonRenewData = FXCollections.observableArrayList();
     private ObservableList<XYChart.Data<String,Number>> newMemberData = FXCollections.observableArrayList();
     private ObservableList<XYChart.Data<String,Number>> returnMemberData = FXCollections.observableArrayList();
-    private IntegerProperty selectedYear = new SimpleIntegerProperty();
-    private IntegerProperty defaultStartYear = new SimpleIntegerProperty(Year.now().getValue());
-    private IntegerProperty defaultYearSpan = new SimpleIntegerProperty(20);
-    private IntegerProperty yearSpan = new SimpleIntegerProperty();
+    private IntegerProperty selectedYear = new SimpleIntegerProperty(Year.now().getValue());
+    private IntegerProperty defaultStartYear = new SimpleIntegerProperty(Year.now().getValue() - 20);
+//    private IntegerProperty defaultYearSpan = new SimpleIntegerProperty(21);
+    private IntegerProperty yearSpan = new SimpleIntegerProperty(21);
+    private IntegerProperty totalNumberOfYears = new SimpleIntegerProperty();
     private IntegerProperty chartSet = new SimpleIntegerProperty(1);
     private BooleanProperty dataBaseStatisticsRefreshed = new SimpleBooleanProperty(false);
     private ObjectProperty<MembershipBarChart> membershipBarChart = new SimpleObjectProperty<>();
     private ObjectProperty<MembershipStackedBarChart> membershipStackedBarChart = new SimpleObjectProperty<>();
 
+
+    public int getTotalNumberOfYears() {
+        return totalNumberOfYears.get();
+    }
+
+    public IntegerProperty totalNumberOfYearsProperty() {
+        return totalNumberOfYears;
+    }
+
+    public void setTotalNumberOfYears(int totalNumberOfYears) {
+        this.totalNumberOfYears.set(totalNumberOfYears);
+    }
 
     public MembershipBarChart getMembershipBarChart() {
         return membershipBarChart.get();
@@ -89,17 +102,17 @@ public class WelcomeModel {
         this.defaultStartYear.set(defaultStartYear);
     }
 
-    public int getDefaultYearSpan() {
-        return defaultYearSpan.get();
-    }
-
-    public IntegerProperty defaultYearSpanProperty() {
-        return defaultYearSpan;
-    }
-
-    public void setDefaultYearSpan(int defaultYearSpan) {
-        this.defaultYearSpan.set(defaultYearSpan);
-    }
+//    public int getDefaultYearSpan() {
+//        return defaultYearSpan.get();
+//    }
+//
+//    public IntegerProperty defaultYearSpanProperty() {
+//        return defaultYearSpan;
+//    }
+//
+//    public void setDefaultYearSpan(int defaultYearSpan) {
+//        this.defaultYearSpan.set(defaultYearSpan);
+//    }
 
     public int getYearSpan() {
         return yearSpan.get();

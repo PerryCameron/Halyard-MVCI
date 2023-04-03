@@ -1,8 +1,11 @@
 package org.ecsail.mvci_welcome;
 
 import org.ecsail.connection.Connections;
+import org.ecsail.dto.StatsDTO;
 import org.ecsail.repository.implementations.StatRepositoryImpl;
 import org.ecsail.repository.interfaces.StatRepository;
+
+import java.util.ArrayList;
 
 public class WelcomeInteractor {
 
@@ -14,10 +17,20 @@ public class WelcomeInteractor {
         this.welcomeModel = welcomeModel;
         this.connections = connections;
         this.statRepository = new StatRepositoryImpl(connections.getDataSource());
-        welcomeModel.setStats(statRepository.getStatistics(welcomeModel.getDefaultStartYear(), we));
+        setStatistics();
     }
 
+    private void setStatistics() {
+        int endYear = welcomeModel.getDefaultStartYear() + welcomeModel.getYearSpan();
+        welcomeModel.setStats((ArrayList<StatsDTO>) statRepository.getStatistics(welcomeModel.getDefaultStartYear(), endYear));
+    }
 
+    protected void reloadStats() {
+        int endYear = welcomeModel.getDefaultStartYear() + welcomeModel.getYearSpan();
+        if(endYear > welcomeModel.getSelectedYear()) endYear = welcomeModel.getSelectedYear();
+        welcomeModel.getStats().clear();
+        welcomeModel.getStats().addAll((ArrayList<StatsDTO>) statRepository.getStatistics(welcomeModel.getDefaultStartYear(), endYear));
+    }
 
 
 }

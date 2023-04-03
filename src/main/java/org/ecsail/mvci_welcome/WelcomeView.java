@@ -15,6 +15,7 @@ import org.ecsail.widgetfx.ButtonFx;
 import org.ecsail.widgetfx.HBoxFx;
 import org.ecsail.widgetfx.VBoxFx;
 
+import java.time.Year;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.stream.IntStream;
@@ -74,11 +75,11 @@ public class WelcomeView implements Builder<Region> {
 
     private Node createYearSpanComboBox() {
         var comboBox = new ComboBox<Integer>();
-        IntStream.rangeClosed(10, welcomeModel.getSelectedYear() - 1)
+        IntStream.rangeClosed(10, Year.now().getValue() - 1)
                 .forEach(comboBox.getItems()::add);
-        comboBox.setValue(welcomeModel.getYearSpan() +1);
+        comboBox.setValue(welcomeModel.getYearSpan());
         comboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
-            welcomeModel.setDefaultYearSpan(newValue);
+            welcomeModel.setYearSpan(newValue);
             reloadStats();
             welcomeModel.getMembershipBarChart().refreshChart();
             welcomeModel.getMembershipStackedBarChart().refreshChart();
@@ -89,11 +90,12 @@ public class WelcomeView implements Builder<Region> {
     private Node createStartYearComboBox() {
         var comboBox = new ComboBox<Integer>();
         comboBox.setValue(welcomeModel.getDefaultStartYear());
-        IntStream.rangeClosed(1969, welcomeModel.getSelectedYear() - 10)
+        IntStream.rangeClosed(1969, Year.now().getValue() - 10)
                 .boxed()
                 .sorted(Comparator.reverseOrder())
                 .forEach(comboBox.getItems()::add);
         comboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
+            System.out.println("combo box ");
             welcomeModel.setDefaultStartYear(newValue);
             reloadStats();
             welcomeModel.getMembershipBarChart().refreshChart();
@@ -107,7 +109,7 @@ public class WelcomeView implements Builder<Region> {
         welcomeModel.setMembershipStackedBarChart(new MembershipStackedBarChart(welcomeModel));
         welcomeModel.setMembershipBarChart(new MembershipBarChart(welcomeModel));
         vBox.getChildren().addAll(welcomeModel.getMembershipStackedBarChart(),welcomeModel.getMembershipBarChart());
-        return null;
+        return vBox;
     }
 
     private Node setUpRightPane() {
@@ -123,14 +125,5 @@ public class WelcomeView implements Builder<Region> {
         button.setOnAction((event) -> System.out.println(category));
         return button;
     }
-
-    // TODO move this to interactor
-    private void reloadStats() {
-        int endYear = welcomeModel.getDefaultStartYear() + welcomeModel.getDefaultYearSpan();
-        if(endYear > welcomeModel.getSelectedYear()) endYear = welcomeModel.getSelectedYear();
-        welcomeModel.getStats().clear();
-//        this.stats.addAll(SqlStats.getStatistics(defaultStartYear, endYear));
-    }
-
 
 }
