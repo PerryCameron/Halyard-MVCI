@@ -8,12 +8,13 @@ public class WelcomeInteractor {
 
     private WelcomeModel welcomeModel;
     private Connections connections;
-
-    private StatRepository statRepository = new StatRepositoryImpl(connections.getDataSource());
+    private StatRepository statRepository;
 
     public WelcomeInteractor(WelcomeModel welcomeModel, Connections connections) {
         this.welcomeModel = welcomeModel;
         this.connections = connections;
+        this.statRepository = new StatRepositoryImpl(connections.getDataSource());
+        welcomeModel.setStats(statRepository.getStatistics(welcomeModel.getDefaultStartYear(), we));
     }
 
 

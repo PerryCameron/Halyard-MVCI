@@ -25,8 +25,8 @@ public class WelcomeModel {
     private IntegerProperty yearSpan = new SimpleIntegerProperty();
     private IntegerProperty chartSet = new SimpleIntegerProperty(1);
     private BooleanProperty dataBaseStatisticsRefreshed = new SimpleBooleanProperty(false);
-    private ObjectProperty<MembershipBarChart> membershipBarChart;
-    private ObjectProperty<MembershipStackedBarChart> membershipStackedBarChart;
+    private ObjectProperty<MembershipBarChart> membershipBarChart = new SimpleObjectProperty<>();
+    private ObjectProperty<MembershipStackedBarChart> membershipStackedBarChart = new SimpleObjectProperty<>();
 
 
     public MembershipBarChart getMembershipBarChart() {

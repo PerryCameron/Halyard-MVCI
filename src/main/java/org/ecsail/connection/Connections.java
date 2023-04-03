@@ -52,7 +52,7 @@ public class Connections {
             createDataSource(ip,port,user,password);
             setSqlConnection(dataSource.getConnection());
             successful = true;
-            // Creating a Statement object
+            logger.info("SQL Connection established." + dataSource);
         } catch (ClassNotFoundException | SQLException e) {
             logger.error(e.getMessage());
         }
