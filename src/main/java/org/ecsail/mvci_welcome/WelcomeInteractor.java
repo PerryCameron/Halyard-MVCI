@@ -29,7 +29,7 @@ public class WelcomeInteractor {
         int endYear = welcomeModel.getDefaultStartYear() + welcomeModel.getYearSpan();
         if(endYear > welcomeModel.getSelectedYear()) endYear = welcomeModel.getSelectedYear();
         welcomeModel.getStats().clear();
-        welcomeModel.getStats().addAll((ArrayList<StatsDTO>) statRepository.getStatistics(welcomeModel.getDefaultStartYear(), endYear));
+        welcomeModel.getStats().addAll(statRepository.getStatistics(welcomeModel.getDefaultStartYear(), endYear));
     }
 
 

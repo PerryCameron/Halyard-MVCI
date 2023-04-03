@@ -22,8 +22,9 @@ public class MembershipStackedBarChart extends StackedBarChart<String,Number> {
 		this.welcomeModel = welcomeModel;
 	        setTitle("Active Memberships By Year");
 			getXAxis().setAutoRanging(true);
+			getYAxis().setPrefWidth(30);
 			setNames();
-//			addData();
+			addData();
 			setAnimated(false);
 		getData().addAll(Arrays.asList(seriesFamily,seriesRegular,seriesSocial,seriesLakeAssociate,seriesLifeMember));
 	}

@@ -61,6 +61,13 @@ public class HBoxFx {
         return box;
     }
 
+    public static HBox hBoxOf(double spacing, Pos alignment) {
+        HBox box = new HBox();
+        box.setAlignment(alignment);
+        box.setSpacing(spacing);
+        return box;
+    }
+
     public static HBox hBoxOf(Pos alignment, double prefWidth, Insets padding, double spacing) {
         HBox box = new HBox();
         box.setAlignment(alignment);

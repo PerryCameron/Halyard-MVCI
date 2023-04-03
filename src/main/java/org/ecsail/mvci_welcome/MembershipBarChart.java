@@ -17,6 +17,7 @@ public class MembershipBarChart extends BarChart<String,Number> {
         this.welcomeModel = welcomeModel;
         setLegendVisible(false);
         setAnimated(false);
+        getYAxis().setPrefWidth(30);
         setTitle("Non-Renewed Memberships");
         getXAxis().setLabel("Years");
     addData();

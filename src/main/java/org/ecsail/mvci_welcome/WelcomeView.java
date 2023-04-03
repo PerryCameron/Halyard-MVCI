@@ -47,7 +47,7 @@ public class WelcomeView implements Builder<Region> {
     }
 
     private Node addChartControls() {
-        HBox hBox = new HBox();
+        HBox hBox = HBoxFx.hBoxOf(Pos.CENTER, new Insets(5,0,5,0),10.0);
         Node hBoxStart = HBoxFx.hBoxOf(5, Pos.CENTER_LEFT, new Label("Start"),createStartYearComboBox());
         Node hBoxStop = HBoxFx.hBoxOf(5, Pos.CENTER_LEFT, new Label("Year Span"), createYearSpanComboBox());
         Node hBoxTop = HBoxFx.hBoxOf(5, Pos.CENTER_LEFT, new Label("Bottom"),createChartSelectionComboBox());
@@ -128,5 +128,4 @@ public class WelcomeView implements Builder<Region> {
         button.setOnAction((event) -> System.out.println(category));
         return button;
     }
-
 }
