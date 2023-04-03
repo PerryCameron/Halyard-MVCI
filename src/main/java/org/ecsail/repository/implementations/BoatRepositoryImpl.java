@@ -1,22 +1,23 @@
 package org.ecsail.repository.implementations;
 
-import com.ecsail.BaseApplication;
-import com.ecsail.dto.BoatDTO;
-import com.ecsail.dto.BoatListDTO;
-import com.ecsail.dto.BoatOwnerDTO;
-import com.ecsail.repository.interfaces.BoatRepository;
-import com.ecsail.repository.rowmappers.BoatListRowMapper;
-import com.ecsail.repository.rowmappers.BoatOwnerRowMapper;
-import com.ecsail.repository.rowmappers.BoatRowMapper;
+
+import org.ecsail.dto.BoatDTO;
+import org.ecsail.dto.BoatListDTO;
+import org.ecsail.dto.BoatOwnerDTO;
+import org.ecsail.repository.interfaces.BoatRepository;
+import org.ecsail.repository.rowmappers.BoatListRowMapper;
+import org.ecsail.repository.rowmappers.BoatOwnerRowMapper;
+import org.ecsail.repository.rowmappers.BoatRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import javax.sql.DataSource;
 import java.util.List;
 
 public class BoatRepositoryImpl implements BoatRepository {
     private final JdbcTemplate template;
 
-    public BoatRepositoryImpl() {
-        this.template = new JdbcTemplate(BaseApplication.getDataSource());
+    public BoatRepositoryImpl(DataSource dataSource) {
+        this.template = new JdbcTemplate(dataSource);
     }
 
     @Override

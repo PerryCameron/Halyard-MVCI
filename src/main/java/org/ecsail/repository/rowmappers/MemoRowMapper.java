@@ -1,6 +1,6 @@
 package org.ecsail.repository.rowmappers;
 
-import com.ecsail.dto.MemoDTO;
+import org.ecsail.dto.MemoDTO;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

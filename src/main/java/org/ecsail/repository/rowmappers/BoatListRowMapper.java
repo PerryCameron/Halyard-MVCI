@@ -1,6 +1,8 @@
 package org.ecsail.repository.rowmappers;
 
-import com.ecsail.dto.BoatListDTO;
+
+
+import org.ecsail.dto.BoatListDTO;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

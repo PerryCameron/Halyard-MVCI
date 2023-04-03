@@ -1,14 +1,15 @@
 package org.ecsail.repository.implementations;
 
-import com.ecsail.BaseApplication;
-import com.ecsail.dto.DepositDTO;
-import com.ecsail.dto.InvoiceDTO;
-import com.ecsail.repository.interfaces.InvoiceRepository;
-import com.ecsail.repository.rowmappers.InvoiceRowMapper;
-import com.ecsail.repository.rowmappers.InvoiceWithMemberInfoRowMapper;
-import com.ecsail.views.tabs.deposits.InvoiceWithMemberInfoDTO;
+
+import org.ecsail.dto.DepositDTO;
+import org.ecsail.dto.InvoiceDTO;
+import org.ecsail.dto.InvoiceWithMemberInfoDTO;
+import org.ecsail.repository.interfaces.InvoiceRepository;
+import org.ecsail.repository.rowmappers.InvoiceRowMapper;
+import org.ecsail.repository.rowmappers.InvoiceWithMemberInfoRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import javax.sql.DataSource;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -17,8 +18,8 @@ import java.util.Optional;
 public class InvoiceRepositoryImpl implements InvoiceRepository {
     private final JdbcTemplate template;
 
-    public InvoiceRepositoryImpl() {
-        this.template = new JdbcTemplate(BaseApplication.getDataSource());
+    public InvoiceRepositoryImpl(DataSource dataSource) {
+        this.template = new JdbcTemplate(dataSource);
     }
 
     @Override

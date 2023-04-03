@@ -22,8 +22,6 @@ public class ConnectInteractor implements ConfigFilePaths {
         this.connections = new Connections(connectModel);
     }
 
-
-
     public List<LoginDTO> supplyLogins() {
         List<LoginDTO> loginDTOS = new ArrayList<>();
         if (FileIO.hostFileExists(LOGIN_FILE))

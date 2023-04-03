@@ -1,8 +1,9 @@
 package org.ecsail.repository.interfaces;
 
-import com.ecsail.dto.BoatDTO;
-import com.ecsail.dto.BoatListDTO;
-import com.ecsail.dto.BoatOwnerDTO;
+
+import org.ecsail.dto.BoatDTO;
+import org.ecsail.dto.BoatListDTO;
+import org.ecsail.dto.BoatOwnerDTO;
 
 import java.util.List;
 

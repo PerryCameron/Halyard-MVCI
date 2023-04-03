@@ -1,6 +1,6 @@
 package org.ecsail.repository.rowmappers;
 
-import com.ecsail.dto.MembershipListDTO;
+import org.ecsail.dto.MembershipListDTO;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

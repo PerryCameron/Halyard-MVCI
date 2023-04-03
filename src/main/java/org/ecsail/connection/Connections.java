@@ -87,4 +87,8 @@ public class Connections {
     public void setSqlConnection(Connection sqlConnection) {
         this.sqlConnection = sqlConnection;
     }
+
+    public DataSource getDataSource() {
+        return dataSource;
+    }
 }

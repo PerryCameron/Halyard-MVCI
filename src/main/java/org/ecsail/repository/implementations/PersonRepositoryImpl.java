@@ -1,20 +1,20 @@
 package org.ecsail.repository.implementations;
 
-import com.ecsail.BaseApplication;
-import com.ecsail.dto.PersonDTO;
-import com.ecsail.repository.interfaces.PersonRepository;
-import com.ecsail.repository.rowmappers.PersonRowMapper;
-import com.ecsail.views.dialogues.Dialogue_ErrorSQL;
+
+import org.ecsail.dto.PersonDTO;
+import org.ecsail.repository.interfaces.PersonRepository;
+import org.ecsail.repository.rowmappers.PersonRowMapper;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import javax.sql.DataSource;
 import java.util.List;
 
 public class PersonRepositoryImpl implements PersonRepository {
     private JdbcTemplate template;
 
-    public PersonRepositoryImpl() {
-        this.template = new JdbcTemplate(BaseApplication.getDataSource());
+    public PersonRepositoryImpl(DataSource dataSource) {
+        this.template = new JdbcTemplate(dataSource);
     }
 
     @Override
@@ -29,7 +29,8 @@ public class PersonRepositoryImpl implements PersonRepository {
         try {
             template.update(query, p.getP_id());
         } catch (DataAccessException e) {
-            new Dialogue_ErrorSQL(e,"Unable to DELETE","See below for details");
+//            new Dialogue_ErrorSQL(e,"Unable to DELETE","See below for details");
+            System.out.println(e);
         }
     }
 

@@ -84,4 +84,8 @@ public class ConnectController {
             }
         };
     }
+
+    public ConnectInteractor getConnectInteractor() {
+        return connectInteractor;
+    }
 }

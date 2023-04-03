@@ -1,6 +1,7 @@
 package org.ecsail.repository.interfaces;
 
-import com.ecsail.dto.PersonDTO;
+
+import org.ecsail.dto.PersonDTO;
 
 import java.util.List;
 

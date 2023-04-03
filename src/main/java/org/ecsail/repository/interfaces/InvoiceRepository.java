@@ -1,10 +1,8 @@
 package org.ecsail.repository.interfaces;
 
-
-
-import com.ecsail.dto.DepositDTO;
-import com.ecsail.dto.InvoiceDTO;
-import com.ecsail.views.tabs.deposits.InvoiceWithMemberInfoDTO;
+import org.ecsail.dto.DepositDTO;
+import org.ecsail.dto.InvoiceDTO;
+import org.ecsail.dto.InvoiceWithMemberInfoDTO;
 
 import java.util.List;
 

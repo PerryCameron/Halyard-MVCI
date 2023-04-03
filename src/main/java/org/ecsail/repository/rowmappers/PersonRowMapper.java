@@ -1,6 +1,7 @@
 package org.ecsail.repository.rowmappers;
 
-import com.ecsail.dto.PersonDTO;
+
+import org.ecsail.dto.PersonDTO;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

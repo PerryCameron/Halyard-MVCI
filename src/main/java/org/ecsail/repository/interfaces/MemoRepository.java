@@ -1,8 +1,10 @@
 package org.ecsail.repository.interfaces;
 
-import com.ecsail.dto.Memo2DTO;
-import com.ecsail.dto.MemoDTO;
-import com.ecsail.views.tabs.deposits.InvoiceWithMemberInfoDTO;
+
+
+import org.ecsail.dto.InvoiceWithMemberInfoDTO;
+import org.ecsail.dto.Memo2DTO;
+import org.ecsail.dto.MemoDTO;
 
 import java.util.List;
 

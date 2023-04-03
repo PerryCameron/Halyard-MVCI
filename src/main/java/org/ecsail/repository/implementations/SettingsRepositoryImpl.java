@@ -1,25 +1,26 @@
 package org.ecsail.repository.implementations;
 
-import com.ecsail.BaseApplication;
-import com.ecsail.dto.DbBoatSettingsDTO;
-import com.ecsail.dto.DbRosterSettingsDTO;
-import com.ecsail.dto.MembershipListRadioDTO;
-import com.ecsail.repository.interfaces.SettingsRepository;
-import com.ecsail.repository.rowmappers.BoatListRadioRowMapper;
-import com.ecsail.repository.rowmappers.DbBoatSettingsRowMapper;
-import com.ecsail.repository.rowmappers.DbMembershipListRadioRowMapper;
-import com.ecsail.repository.rowmappers.DbRosterSettingsRowMapper;
-import com.ecsail.views.tabs.boatlist.BoatListRadioDTO;
+
+import org.ecsail.dto.BoatListRadioDTO;
+import org.ecsail.dto.DbBoatSettingsDTO;
+import org.ecsail.dto.DbRosterSettingsDTO;
+import org.ecsail.dto.MembershipListRadioDTO;
+import org.ecsail.repository.interfaces.SettingsRepository;
+import org.ecsail.repository.rowmappers.BoatListRadioRowMapper;
+import org.ecsail.repository.rowmappers.DbBoatSettingsRowMapper;
+import org.ecsail.repository.rowmappers.DbMembershipListRadioRowMapper;
+import org.ecsail.repository.rowmappers.DbRosterSettingsRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import javax.sql.DataSource;
 import java.util.List;
 
 public class SettingsRepositoryImpl implements SettingsRepository {
 
     private JdbcTemplate template;
 
-    public SettingsRepositoryImpl() {
-        this.template = new JdbcTemplate(BaseApplication.getDataSource());
+    public SettingsRepositoryImpl(DataSource dataSource) {
+        this.template = new JdbcTemplate(dataSource);
     }
 
     @Override

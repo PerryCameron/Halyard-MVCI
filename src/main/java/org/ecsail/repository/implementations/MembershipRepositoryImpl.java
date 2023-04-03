@@ -1,18 +1,18 @@
 package org.ecsail.repository.implementations;
 
-import com.ecsail.BaseApplication;
-import com.ecsail.dto.MembershipListDTO;
-import com.ecsail.repository.interfaces.MembershipRepository;
-import com.ecsail.repository.rowmappers.MembershipListRowMapper;
+import org.ecsail.dto.MembershipListDTO;
+import org.ecsail.repository.interfaces.MembershipRepository;
+import org.ecsail.repository.rowmappers.MembershipListRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import javax.sql.DataSource;
 import java.util.List;
 
 public class MembershipRepositoryImpl implements MembershipRepository {
     private JdbcTemplate template;
 
-    public MembershipRepositoryImpl() {
-        this.template = new JdbcTemplate(BaseApplication.getDataSource());
+    public MembershipRepositoryImpl(DataSource dataSource) {
+        this.template = new JdbcTemplate(dataSource);
     }
 
     @Override

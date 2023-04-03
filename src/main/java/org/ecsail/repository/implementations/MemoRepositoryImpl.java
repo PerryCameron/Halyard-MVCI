@@ -1,21 +1,22 @@
 package org.ecsail.repository.implementations;
 
-import com.ecsail.BaseApplication;
-import com.ecsail.dto.Memo2DTO;
-import com.ecsail.dto.MemoDTO;
-import com.ecsail.repository.interfaces.MemoRepository;
-import com.ecsail.repository.rowmappers.Memo2RowMapper;
-import com.ecsail.repository.rowmappers.MemoRowMapper;
-import com.ecsail.views.tabs.deposits.InvoiceWithMemberInfoDTO;
+
+import org.ecsail.dto.InvoiceWithMemberInfoDTO;
+import org.ecsail.dto.Memo2DTO;
+import org.ecsail.dto.MemoDTO;
+import org.ecsail.repository.interfaces.MemoRepository;
+import org.ecsail.repository.rowmappers.Memo2RowMapper;
+import org.ecsail.repository.rowmappers.MemoRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import javax.sql.DataSource;
 import java.util.List;
 
 public class MemoRepositoryImpl implements MemoRepository {
     private JdbcTemplate template;
 
-    public MemoRepositoryImpl() {
-        this.template = new JdbcTemplate(BaseApplication.getDataSource());
+    public MemoRepositoryImpl(DataSource dataSource) {
+        this.template = new JdbcTemplate(dataSource);
     }
 
     @Override

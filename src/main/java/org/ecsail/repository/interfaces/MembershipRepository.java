@@ -1,6 +1,7 @@
 package org.ecsail.repository.interfaces;
 
-import com.ecsail.dto.MembershipListDTO;
+
+import org.ecsail.dto.MembershipListDTO;
 
 import java.util.List;
 

@@ -1,6 +1,7 @@
 package org.ecsail.repository.rowmappers;
 
-import com.ecsail.dto.DbRosterSettingsDTO;
+
+import org.ecsail.dto.DbRosterSettingsDTO;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

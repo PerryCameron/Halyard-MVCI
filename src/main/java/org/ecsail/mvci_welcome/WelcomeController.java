@@ -11,8 +11,8 @@ public class WelcomeController {
     MainController mainController;
     public WelcomeController(MainController mainController) {
         WelcomeModel welcomeModel = new WelcomeModel();
-        welcomeInteractor = new WelcomeInteractor(welcomeModel);
         this.mainController = mainController;
+        welcomeInteractor = new WelcomeInteractor(welcomeModel, mainController.getConnections());
         this.welcomeView = new WelcomeView(welcomeModel);
     }
 
