@@ -1,28 +1,10 @@
-/*.chart {*/
-/*    -fx-padding: 10px;*/
-/*}*/
-/*.chart-content {*/
-/*    -fx-padding: 10px;*/
-/*}*/
-
-/*.chart-legend-item-symbol{*/
-/*    -fx-background-radius: 5;*/
-/*}*/
-
 .chart-legend {
     -fx-background-color:  transparent;
     -fx-padding: 20px;
 }
-
-/*.chart-plot-background {*/
-/*    -fx-background-color: transparent;*/
-/*}*/
-/*.chart-vertical-grid-lines {*/
-/*    -fx-stroke: transparent;*/
-/*}*/
-/*.chart-horizontal-grid-lines {*/
-/*    -fx-stroke: #61a2b1;*/
-/*}*/
+.legend-small .label {
+    -fx-font-size: 10px;
+}
 
 .default-color0.chart-bar { -fx-bar-fill: #1658e7; }
 .default-color1.chart-bar { -fx-bar-fill: #22bad9; }

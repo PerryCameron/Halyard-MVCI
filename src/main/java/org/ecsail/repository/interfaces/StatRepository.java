@@ -9,6 +9,8 @@ public interface StatRepository {
 
     List<StatsDTO> getStatistics(int startYear , int stopYear);
     List<StatsDTO> createStatDTO(int year, int statID);
-    String getStatQuery(int year);
+    StatsDTO createStatDTO(int year);
     int getNumberOfStatYears();
+    int deleteAllStats();
+    int addStatRecord(StatsDTO s);
 }

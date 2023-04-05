@@ -31,6 +31,7 @@ public class WelcomeInteractor {
         welcomeModel.getStats().clear();
         welcomeModel.getStats().addAll(statRepository.getStatistics(welcomeModel.getDefaultStartYear(), endYear));
     }
-
-
+    protected int deleteAllStats() { return statRepository.deleteAllStats(); }
+    protected StatsDTO createStatDTO(int year) { return statRepository.createStatDTO(year); }
+    protected int insertStatDTO(StatsDTO statsDTO) { return  statRepository.addStatRecord(statsDTO); }
 }

@@ -3,13 +3,16 @@ package org.ecsail.mvci_welcome;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import javafx.util.Builder;
 import org.ecsail.interfaces.ChartConstants;
 import org.ecsail.widgetfx.ButtonFx;
@@ -19,15 +22,18 @@ import org.ecsail.widgetfx.VBoxFx;
 import java.time.Year;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
 public class WelcomeView implements Builder<Region>, ChartConstants {
     WelcomeModel welcomeModel;
     Runnable reloadStats;
+    Consumer<WelcomeModel> updateStats;
 
-    public WelcomeView(WelcomeModel welcomeModel, Runnable reloadStats) {
+    public WelcomeView(WelcomeModel welcomeModel, Runnable reloadStats, Consumer<WelcomeModel> updateStats) {
         this.welcomeModel = welcomeModel;
         this.reloadStats = reloadStats;
+        this.updateStats = updateStats;
     }
 
     @Override
@@ -55,8 +61,13 @@ public class WelcomeView implements Builder<Region>, ChartConstants {
 
     private Node createRefreshButton() {
         var button = new Button("Refresh Data");
-        // TODO move this into the controller
-//        button.setOnAction((event)-> new Dialogue_LoadNewStats(dataBaseStatisticsRefreshed));
+        button.setOnAction((event)-> {
+            Stage stage = new Stage();
+            stage.setScene(new Scene(new DialogProgressIndicator(welcomeModel).build()));
+            stage.getScene().getStylesheets().add("css/dark/custom_dialogue.css");
+            stage.show();
+            updateStats.accept(welcomeModel);
+        });
         return button;
     }
 

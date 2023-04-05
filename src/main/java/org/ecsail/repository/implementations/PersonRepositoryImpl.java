@@ -20,8 +20,7 @@ public class PersonRepositoryImpl implements PersonRepository {
     @Override
     public List<PersonDTO> getActivePeopleByMsId(int msId) {
         String query = "SELECT * FROM person WHERE IS_ACTIVE=true AND ms_id=?";
-                List<PersonDTO> personDTOS = template.query(query, new PersonRowMapper(), new Object[]{msId});
-        return personDTOS;
+        return template.query(query, new PersonRowMapper(), new Object[]{msId});
     }
 
     public  void deletePerson(PersonDTO p) {
