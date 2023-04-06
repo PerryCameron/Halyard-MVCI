@@ -28,19 +28,16 @@ public class WelcomeController {
         int numberOfYears = Year.now().getValue() - welcomeModel.getStartYear() + 1;
         double increment = 100 / numberOfYears;
         System.out.println("made # 1");
-        Task<String> task = new Task<>(){
+        Task<Void> task = new Task<>(){
             @Override
-            protected String call() {
-//                for (int i = 0; i < numberOfYears; i++) {
-//                    System.out.println("Creating statDTO");
+            protected Void call() {
+                for (int i = 0; i < numberOfYears; i++) {
                     StatsDTO stat = welcomeInteractor.createStatDTO(welcomeModel.getStartYear());
-//                    System.out.println("Inserting statDTO");
-//                    welcomeInteractor.insertStatDTO(stat);
-//                    welcomeModel.incrementStartYear();
+                    welcomeInteractor.insertStatDTO(stat);
+                    welcomeModel.incrementStartYear();
 //                    welcomeModel.progressProperty.set((int) (stat.getStatId() * increment));
-//                }
+                }
                 welcomeModel.setStartYear(1970);
-                System.out.println(stat);
                 return null;
             }
         };
