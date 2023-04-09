@@ -5,11 +5,15 @@ import org.ecsail.dto.StatsDTO;
 import org.ecsail.repository.implementations.StatRepositoryImpl;
 import org.ecsail.repository.interfaces.StatRepository;
 import org.ecsail.repository.temp.SqlStats;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.time.Year;
 import java.util.ArrayList;
 
 public class WelcomeInteractor {
 
+    private static final Logger logger = LoggerFactory.getLogger(WelcomeInteractor.class);
     private WelcomeModel welcomeModel;
     private Connections connections;
     private StatRepository statRepository;
@@ -32,10 +36,27 @@ public class WelcomeInteractor {
         welcomeModel.getStats().clear();
         welcomeModel.getStats().addAll(statRepository.getStatistics(welcomeModel.getDefaultStartYear(), endYear));
     }
-    protected int deleteAllStats() { return statRepository.deleteAllStats(); }
-    protected StatsDTO createStatDTO(int year) {
-//        return statRepository.createStatDTO(year);
-        return SqlStats.createStatDTO(year, connections.getDataSource());
+
+    protected void updateProgressBar() {
+        statRepository.deleteAllStats();
+        final double numberOfYears = Year.now().getValue() - welcomeModel.getStartYear() + 1;
+        final double increment = 100 / numberOfYears;
+        for (int i = 0; i < numberOfYears; i++) {
+            StatsDTO statsDTO = SqlStats.createStatDTO(welcomeModel.getStartYear(), connections.getDataSource());
+            statRepository.addStatRecord(statsDTO);
+            welcomeModel.incrementStartYear();
+            double currentProgress = welcomeModel.getProgress();
+            double nextProgress = currentProgress + increment;
+            welcomeModel.setProgress(nextProgress);
+        }
+        welcomeModel.setStartYear(1970);
     }
-    protected int insertStatDTO(StatsDTO statsDTO) { return  statRepository.addStatRecord(statsDTO); }
+
+    protected void setStatUpdateSucceeded() {
+        reloadStats();
+        welcomeModel.getMembershipBarChart().refreshChart();
+        welcomeModel.getMembershipStackedBarChart().refreshChart();
+        welcomeModel.setDataBaseStatisticsRefreshed(true);
+        logger.info("Finished updating Statistics");
+    }
 }

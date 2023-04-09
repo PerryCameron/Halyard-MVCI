@@ -67,7 +67,6 @@ public class SqlStats {
                     // handle exceptions here
                 }
             }
-
             return stat;
         }
     }

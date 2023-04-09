@@ -1,6 +1,5 @@
 package org.ecsail.mvci_welcome;
 
-import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -13,7 +12,7 @@ import org.ecsail.widgetfx.HBoxFx;
 public class DialogProgressIndicator implements Builder<Region> {
     WelcomeModel welcomeModel;
     public DialogProgressIndicator(WelcomeModel welcomeModel) {
-        this.welcomeModel = new WelcomeModel();
+        this.welcomeModel = welcomeModel;
     }
 
     @Override
@@ -26,9 +25,7 @@ public class DialogProgressIndicator implements Builder<Region> {
     private Node createProgressBar() {
         ProgressBar progressBar = new ProgressBar();
         progressBar.setPrefSize(300, 30);
-        progressBar.progressProperty().bind(Bindings.createDoubleBinding(
-                () -> welcomeModel.progressProperty.get() / 100.0, welcomeModel.progressProperty
-        ));
+        progressBar.progressProperty().bind(welcomeModel.progressProperty().divide(100));
         return progressBar;
     }
 }

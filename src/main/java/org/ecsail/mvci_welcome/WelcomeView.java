@@ -28,9 +28,9 @@ import java.util.stream.IntStream;
 public class WelcomeView implements Builder<Region>, ChartConstants {
     WelcomeModel welcomeModel;
     Runnable reloadStats;
-    Consumer<WelcomeModel> updateStats;
+    Runnable updateStats;
 
-    public WelcomeView(WelcomeModel welcomeModel, Runnable reloadStats, Consumer<WelcomeModel> updateStats) {
+    public WelcomeView(WelcomeModel welcomeModel, Runnable reloadStats, Runnable updateStats) {
         this.welcomeModel = welcomeModel;
         this.reloadStats = reloadStats;
         this.updateStats = updateStats;
@@ -63,10 +63,15 @@ public class WelcomeView implements Builder<Region>, ChartConstants {
         var button = new Button("Refresh Data");
         button.setOnAction((event)-> {
             Stage stage = new Stage();
+            System.out.println(welcomeModel);
             stage.setScene(new Scene(new DialogProgressIndicator(welcomeModel).build()));
             stage.getScene().getStylesheets().add("css/dark/custom_dialogue.css");
             stage.show();
-            updateStats.accept(welcomeModel);
+            updateStats.run();
+            welcomeModel.dataBaseStatisticsRefreshedProperty().addListener((observable, oldValue, newValue) -> {
+                if(newValue) stage.close();
+                welcomeModel.setDataBaseStatisticsRefreshed(false);
+            });
         });
         return button;
     }

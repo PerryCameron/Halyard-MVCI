@@ -7,7 +7,6 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.ProgressBar;
 import org.ecsail.dto.StatsDTO;
 
-import javax.swing.*;
 import java.time.Year;
 import java.util.ArrayList;
 
@@ -28,20 +27,19 @@ public class WelcomeModel {
     private final BooleanProperty dataBaseStatisticsRefreshed = new SimpleBooleanProperty(false);
     private final ObjectProperty<MembershipBarChart> membershipBarChart = new SimpleObjectProperty<>();
     private final ObjectProperty<MembershipStackedBarChart> membershipStackedBarChart = new SimpleObjectProperty<>();
-    IntegerProperty progressProperty = new SimpleIntegerProperty(0);
+    private final DoubleProperty progress = new SimpleDoubleProperty(0);
     private final IntegerProperty startYear = new SimpleIntegerProperty(1970);
 
-
-    public int getProgressProperty() {
-        return progressProperty.get();
+    public double getProgress() {
+        return progress.get();
     }
 
-    public IntegerProperty progressPropertyProperty() {
-        return progressProperty;
+    public DoubleProperty progressProperty() {
+        return progress;
     }
 
-    public void setProgressProperty(int progressProperty) {
-        this.progressProperty.set(progressProperty);
+    public void setProgress(double progress) {
+        this.progress.set(progress);
     }
 
     public int getStartYear() {
