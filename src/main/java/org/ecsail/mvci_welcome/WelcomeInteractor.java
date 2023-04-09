@@ -23,10 +23,9 @@ public class WelcomeInteractor {
         this.welcomeModel = welcomeModel;
         this.connections = connections;
         this.statRepository = new StatRepositoryImpl(connections.getDataSource());
-        setStatistics();
     }
 
-    private void setStatistics() {
+    protected void setStatistics() {
         int endYear = welcomeModel.getDefaultStartYear() + welcomeModel.getYearSpan();
         welcomeModel.setStats((ArrayList<StatsDTO>) statRepository.getStatistics(welcomeModel.getDefaultStartYear(), endYear));
     }
@@ -59,6 +58,12 @@ public class WelcomeInteractor {
         welcomeModel.getMembershipStackedBarChart().refreshChart();
         welcomeModel.setDataBaseStatisticsRefreshed(true);
         logger.info("Finished updating Statistics");
+    }
+
+    protected void setStatSucceeded() {
+        welcomeModel.getMembershipBarChart().refreshChart();
+        welcomeModel.getMembershipStackedBarChart().refreshChart();
+        logger.info("Statistics have been loaded");
     }
 
     public void taskOnFailed(WorkerStateEvent e) {

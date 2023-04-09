@@ -20,9 +20,9 @@ public class MembershipBarChart extends BarChart<String,Number> implements Chart
         getYAxis().setPrefWidth(30);
         setTitle("Non-Renewed Memberships");
         getXAxis().setLabel("Years");
-    addData();
-    setSeriesData();
-    getData().add(seriesData);
+//    addData();
+//    setSeriesData();
+//    getData().add(seriesData);
     }
 
     private void addData() {

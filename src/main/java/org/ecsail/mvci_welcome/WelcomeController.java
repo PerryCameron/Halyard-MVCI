@@ -13,7 +13,20 @@ public class WelcomeController {
         WelcomeModel welcomeModel = new WelcomeModel();
         this.mainController = mainController;
         welcomeInteractor = new WelcomeInteractor(welcomeModel, mainController.getConnections());
+        getStatisticsOnLaunch();
         this.welcomeView = new WelcomeView(welcomeModel, this::refreshStats, this::updateStats);
+    }
+
+    private void getStatisticsOnLaunch() {
+            Task<Void> task = new Task<>() {
+                @Override
+                protected Void call() {
+                    welcomeInteractor.setStatistics();
+                    return null;
+                }
+            };
+            task.setOnSucceeded(e -> welcomeInteractor.setStatSucceeded());
+            new Thread(task).start();
     }
 
     private void refreshStats() {
@@ -28,9 +41,7 @@ public class WelcomeController {
                 return null;
             }
         };
-        task.setOnSucceeded(e -> {
-            welcomeInteractor.setStatUpdateSucceeded();
-        });
+        task.setOnSucceeded(e -> welcomeInteractor.setStatUpdateSucceeded());
         task.setOnFailed(e -> welcomeInteractor.taskOnFailed(e));
         new Thread(task).start();
     }

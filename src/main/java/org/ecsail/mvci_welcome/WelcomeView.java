@@ -7,7 +7,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.ProgressIndicator;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
@@ -22,7 +21,6 @@ import org.ecsail.widgetfx.VBoxFx;
 import java.time.Year;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
 public class WelcomeView implements Builder<Region>, ChartConstants {
