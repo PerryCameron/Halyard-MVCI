@@ -31,9 +31,8 @@ public class WelcomeController {
         task.setOnSucceeded(e -> {
             welcomeInteractor.setStatUpdateSucceeded();
         });
-        task.setOnFailed(e -> System.out.println("Was unable to compile stats"));
-        Thread thread = new Thread(task);
-        thread.start();
+        task.setOnFailed(e -> welcomeInteractor.taskOnFailed(e));
+        new Thread(task).start();
     }
 
     public Region getView() {

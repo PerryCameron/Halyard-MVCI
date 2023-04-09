@@ -63,7 +63,7 @@ public class WelcomeView implements Builder<Region>, ChartConstants {
         var button = new Button("Refresh Data");
         button.setOnAction((event)-> {
             Stage stage = new Stage();
-            System.out.println(welcomeModel);
+            stage.setTitle("Updating Statistics");
             stage.setScene(new Scene(new DialogProgressIndicator(welcomeModel).build()));
             stage.getScene().getStylesheets().add("css/dark/custom_dialogue.css");
             stage.show();

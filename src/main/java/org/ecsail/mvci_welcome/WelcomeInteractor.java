@@ -1,5 +1,6 @@
 package org.ecsail.mvci_welcome;
 
+import javafx.concurrent.WorkerStateEvent;
 import org.ecsail.connection.Connections;
 import org.ecsail.dto.StatsDTO;
 import org.ecsail.repository.implementations.StatRepositoryImpl;
@@ -58,5 +59,9 @@ public class WelcomeInteractor {
         welcomeModel.getMembershipStackedBarChart().refreshChart();
         welcomeModel.setDataBaseStatisticsRefreshed(true);
         logger.info("Finished updating Statistics");
+    }
+
+    public void taskOnFailed(WorkerStateEvent e) {
+        logger.error(e.toString());
     }
 }
