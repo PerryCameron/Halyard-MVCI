@@ -4,17 +4,16 @@ package org.ecsail.mvci_main;
 import javafx.application.Platform;
 import javafx.scene.layout.Region;
 import org.ecsail.connection.Connections;
+import org.ecsail.interfaces.Controller;
 import org.ecsail.mvci_connect.ConnectController;
+import org.ecsail.mvci_roster.RosterController;
 import org.ecsail.mvci_welcome.WelcomeController;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-public class MainController {
+public class MainController extends Controller {
 
-    private static final Logger logger = LoggerFactory.getLogger(MainController.class);
     private final MainInteractor mainInteractor;
-    private MainView mainView;
-    private ConnectController connectController;
+    private final MainView mainView;
+    private final ConnectController connectController;
     public MainController() {
         MainModel mainModel = new MainModel();
         mainInteractor = new MainInteractor(mainModel);
@@ -23,7 +22,20 @@ public class MainController {
     }
 
     public void openTab(String tabName) {
-        mainView.addTab(tabName, mainInteractor.returnController(tabName, this));
+        Region region = null;
+        switch (tabName) {
+            case "People" -> System.out.println("Displaying people list");
+            case "Slips" -> System.out.println("Displaying slips list");
+            case "Board of Directors" -> System.out.println("Displaying board of directors list");
+            case "Create New Membership" -> System.out.println("Creating new membership");
+            case "Deposits" -> System.out.println("Displaying deposits");
+            case "Rosters" -> region = new RosterController(this).getView();
+            case "Boats" -> System.out.println("Displaying boats");
+            case "Notes" -> System.out.println("Displaying notes");
+            case "Jotform" -> System.out.println("Opening Jotform");
+            default -> System.out.println("Invalid input");
+        }
+        mainView.addTab(tabName, region);
     }
 
     public void openWelcomeMVCI() {
@@ -39,9 +51,8 @@ public class MainController {
         Platform.runLater(connectController.closeConnection());
     }
 
-    public Region getView() {
-        { return mainView.build(); }
-    }
+    @Override
+    public Region getView() { return mainView.build(); }
 
     public void setStatus(String status) { mainView.setStatus(status); }
 
