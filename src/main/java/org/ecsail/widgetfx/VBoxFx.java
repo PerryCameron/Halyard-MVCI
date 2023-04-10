@@ -36,6 +36,13 @@ public class VBoxFx {
         return vBox;
     }
 
+    public static VBox vBoxOf(Double width, Double spacing) {
+        VBox vBox = new VBox();
+        vBox.setPrefWidth(width);
+        vBox.setSpacing(spacing);
+        return vBox;
+    }
+
 
 
 }
