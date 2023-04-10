@@ -8,6 +8,8 @@ import javafx.scene.chart.NumberAxis;
 import org.ecsail.dto.StatsDTO;
 import org.ecsail.interfaces.ChartConstants;
 
+import java.util.stream.IntStream;
+
 public class MembershipBarChart extends BarChart<String,Number> implements ChartConstants {
     private final WelcomeModel welcomeModel;
     Series<String,Number> seriesData = new Series<>();
@@ -20,9 +22,6 @@ public class MembershipBarChart extends BarChart<String,Number> implements Chart
         getYAxis().setPrefWidth(30);
         setTitle("Non-Renewed Memberships");
         getXAxis().setLabel("Years");
-//    addData();
-//    setSeriesData();
-//    getData().add(seriesData);
     }
 
     private void addData() {
@@ -70,11 +69,9 @@ public class MembershipBarChart extends BarChart<String,Number> implements Chart
     }
 
     private void changeSeriesColor(String color) {
-        for(int i = 0; i < welcomeModel.getStats().size(); i++) {
-            for(Node n:lookupAll(".data"+i+".chart-bar")) {
-               n.setStyle("-fx-bar-fill: "+color+";");
-            }
-        }
+        IntStream.range(0, welcomeModel.getStats().size())
+                .forEach(i -> lookupAll(".data"+i+".chart-bar")
+                        .forEach(n -> n.setStyle("-fx-bar-fill: "+color+";")));
     }
 
     protected void refreshChart() {

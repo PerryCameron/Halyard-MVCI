@@ -22,7 +22,6 @@ public class MembershipStackedBarChart extends StackedBarChart<String,Number> {
 			getXAxis().setAutoRanging(true);
 			getYAxis().setPrefWidth(30);
 			setNames();
-//			addData();
 			getLegend().getStyleClass().add("legend-small");
 			setAnimated(false);
 		getData().addAll(Arrays.asList(seriesFamily,seriesRegular,seriesSocial,seriesLakeAssociate,seriesLifeMember));

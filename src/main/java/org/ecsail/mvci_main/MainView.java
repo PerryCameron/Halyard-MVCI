@@ -92,10 +92,6 @@ public class MainView implements Builder<Region> {
         mainModel.statusLabelProperty().set(status);
     }
 
-    protected TabPane getMainTabPane() {
-        return mainModel.getMainTabPane();
-    }
-
     protected void closeTabs() {
         mainModel.getMainTabPane().getTabs().clear();
     }

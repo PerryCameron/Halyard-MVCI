@@ -21,17 +21,20 @@ import org.ecsail.widgetfx.VBoxFx;
 import java.time.Year;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
 public class WelcomeView implements Builder<Region>, ChartConstants {
     WelcomeModel welcomeModel;
     Runnable reloadStats;
     Runnable updateStats;
+    Consumer openTab;
 
-    public WelcomeView(WelcomeModel welcomeModel, Runnable reloadStats, Runnable updateStats) {
-        this.welcomeModel = welcomeModel;
-        this.reloadStats = reloadStats;
-        this.updateStats = updateStats;
+    public WelcomeView(WelcomeModel wm, Runnable rs, Runnable us, Consumer<String> o) {
+        this.welcomeModel = wm;
+        this.reloadStats = rs;
+        this.updateStats = us;
+        this.openTab = o;
     }
 
     @Override
@@ -135,9 +138,9 @@ public class WelcomeView implements Builder<Region>, ChartConstants {
         return vBox;
     }
 
-    private Node newBigButton(String category) {
-        Button button = ButtonFx.bigButton(category);
-        button.setOnAction((event) -> System.out.println(category));
+    private Node newBigButton(String tab) {
+        Button button = ButtonFx.bigButton(tab);
+        button.setOnAction((event) -> openTab.accept(tab));
         return button;
     }
 }

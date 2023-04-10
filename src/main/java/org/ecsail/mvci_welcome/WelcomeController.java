@@ -14,7 +14,11 @@ public class WelcomeController {
         this.mainController = mainController;
         welcomeInteractor = new WelcomeInteractor(welcomeModel, mainController.getConnections());
         getStatisticsOnLaunch();
-        this.welcomeView = new WelcomeView(welcomeModel, this::refreshStats, this::updateStats);
+        this.welcomeView = new WelcomeView(welcomeModel, this::refreshStats, this::updateStats, this::openTab);
+    }
+
+    private void openTab(String tab) {
+        mainController.openTab(tab);
     }
 
     private void getStatisticsOnLaunch() {

@@ -22,6 +22,10 @@ public class MainController {
         connectController = new ConnectController(this).getView();
     }
 
+    public void openTab(String tabName) {
+        mainView.addTab(tabName, mainInteractor.returnController(tabName, this));
+    }
+
     public void openWelcomeMVCI() {
         mainView.closeTabs();
         mainView.addTab("Welcome",new WelcomeController(this).getView());
@@ -40,5 +44,6 @@ public class MainController {
     }
 
     public void setStatus(String status) { mainView.setStatus(status); }
+
 
 }

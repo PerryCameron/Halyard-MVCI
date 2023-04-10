@@ -1,5 +1,6 @@
 package org.ecsail.mvci_main;
 
+import javafx.scene.layout.Region;
 import org.ecsail.fileio.FileIO;
 import org.ecsail.interfaces.ConfigFilePaths;
 
@@ -12,24 +13,7 @@ public class MainInteractor implements ConfigFilePaths {
         FileIO.checkPath(LOG_FOLDER);
     }
 
-
-//    public void closeConnections() {
-//        try {
-//            model.getSqlConnection().close();
-//            BaseApplication.logger.info("SQL: Connection closed");
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
-//        // if ssh is connected then disconnect
-//        if (model.getSshConnection() != null && model.getSshConnection().getSession().isConnected()) {
-//            try {
-//                model.getSshConnection().getSession().delPortForwardingL(3306);
-//                model.getSshConnection().getSession().disconnect();
-//                BaseApplication.logger.info("SSH: port forwarding closed");
-//            } catch (JSchException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
-
+    public Region returnController(String tabName, MainController mainController) {
+        return null;
+    }
 }
