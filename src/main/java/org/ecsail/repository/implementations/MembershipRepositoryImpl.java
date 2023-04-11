@@ -46,7 +46,7 @@ public class MembershipRepositoryImpl implements MembershipRepository {
     }
 
     @Override
-    public List<MembershipListDTO> getAllRoster(String selectedYear) {
+    public List<MembershipListDTO> getAllRoster(int selectedYear) {
         String query = """
                 SELECT m.ms_id,m.p_id,id.membership_id,id.fiscal_year,id.fiscal_year,m.join_date,id.mem_type,
                 s.SLIP_NUM,p.l_name,p.f_name,s.subleased_to,m.address,m.city,m.state,m.zip 

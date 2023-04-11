@@ -30,30 +30,28 @@ public class RosterView implements Builder<Region> {
     }
 
     private Node setUpTableView() {
-        VBox vBox = new VBox();
-        vBox.getChildren().add(new RosterTableView(rosterModel));
+        VBox vBox = VBoxFx.vBoxOf(new Insets(0,5,0,0));
+        RosterTableView tableView = new RosterTableView(rosterModel);
+        rosterModel.setRosterTableView(tableView);
+        vBox.getChildren().add(tableView);
         return vBox;
     }
 
     private Node setUpLeftPane() {
-        VBox vBox = VBoxFx.vBoxOf(220.0,10.0);
+        VBox vBox = VBoxFx.vBoxOf(220.0,10.0, new Insets(10,0,0,10));
         vBox.getChildren().addAll(setUpRecordCountBox(),setUpSearchBox(),setUpFieldSelectedToSearchBox(),
                 createRadioBox(),setUpFieldSelectedToExport());
         return vBox;
     }
 
     private Node setUpFieldSelectedToExport() {
-        VBox vBox = new VBox();
-        VBox checkVBox = new VBox();
-        VBox buttonVBox = new VBox();
-        buttonVBox.setAlignment(Pos.CENTER);
-        vBox.setPadding(new Insets(15,15,0,0));
-        buttonVBox.setPadding(new Insets(10,0,0,0));
+        VBox vBox = VBoxFx.vBoxOf(new Insets(15,15,0,0));
+        VBox checkVBox = new VBox(5);
+        VBox buttonVBox = VBoxFx.vBoxOf(new Insets(10,0,0,0),Pos.CENTER);
         Button button = new Button("Export to XLS");
         TitledPane titledPane = new TitledPane();
         titledPane.setText("Export to XLS");
         titledPane.setExpanded(false);
-        checkVBox.setSpacing(5);
 //        for(DbRosterSettingsDTO dto: parent.rosterSettings) {
 //            SettingsCheckBox checkBox = new SettingsCheckBox(this, dto, "exportable");
 //            parent.checkBoxes.add(checkBox);

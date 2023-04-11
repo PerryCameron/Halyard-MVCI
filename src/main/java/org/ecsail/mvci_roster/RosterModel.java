@@ -13,9 +13,19 @@ public class RosterModel {
     private StringProperty numberOfRecords = new SimpleStringProperty("0");
     private IntegerProperty selectedYear = new SimpleIntegerProperty(Year.now().getValue());
     private StringProperty textField = new SimpleStringProperty();
-
     private SimpleObjectProperty<TableView<MembershipListDTO>> rosterTableView = new SimpleObjectProperty<>();
 
+
+    public TableView<MembershipListDTO> getRosterTableView() {
+        return rosterTableView.get();
+    }
+    public SimpleObjectProperty<TableView<MembershipListDTO>> rosterTableViewProperty() {
+        return rosterTableView;
+    }
+
+    public void setRosterTableView(TableView<MembershipListDTO> rosterTableView) {
+        this.rosterTableView.set(rosterTableView);
+    }
 
     public String getTextField() {
         return textField.get();

@@ -15,6 +15,7 @@ import org.ecsail.mvci_welcome.WelcomeController;
 import org.ecsail.widgetfx.MenuFx;
 
 import java.util.Objects;
+import java.util.stream.IntStream;
 
 import static java.lang.System.getProperty;
 
@@ -96,7 +97,9 @@ public class MainView implements Builder<Region> {
         mainModel.getMainTabPane().getTabs().clear();
     }
     protected void addTab(String name, Region region) {
-        mainModel.getMainTabPane().getTabs().add(new Tab(name, region));
+        Tab newTab = new Tab(name, region);
+        mainModel.getMainTabPane().getTabs().add(newTab);
+        mainModel.getMainTabPane().getSelectionModel().select(newTab);
     }
 
 

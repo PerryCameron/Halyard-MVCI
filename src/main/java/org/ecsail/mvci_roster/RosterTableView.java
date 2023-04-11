@@ -17,8 +17,6 @@ import org.ecsail.dto.MembershipListDTO;
 import java.util.Arrays;
 
 public class RosterTableView extends TableView<MembershipListDTO> {
-
-
     public RosterTableView(RosterModel rosterModel) {
 
         VBox.setVgrow(this, Priority.ALWAYS);
@@ -33,9 +31,9 @@ public class RosterTableView extends TableView<MembershipListDTO> {
         TableColumn<MembershipListDTO, String> stateCol = new TableColumn<>("City");
         TableColumn<MembershipListDTO, String> msIdCol = new TableColumn<>("MSID");
 
-        this.setItems(rosterModel.getRosters());
-        this.setFixedCellSize(30);
-        this.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+
+        setFixedCellSize(30);
+        setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         idCol.setCellValueFactory(new PropertyValueFactory<>("membershipId"));
         joinDateCol.setCellValueFactory(new PropertyValueFactory<>("joinDate"));

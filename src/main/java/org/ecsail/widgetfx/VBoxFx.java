@@ -2,6 +2,7 @@ package org.ecsail.widgetfx;
 
 import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.layout.VBox;
 
 public class VBoxFx {
@@ -16,6 +17,13 @@ public class VBoxFx {
 
     public static VBox vBoxOf(Insets insets) {
         VBox vBox = new VBox();
+        vBox.setPadding(insets);
+        return vBox;
+    }
+
+    public static VBox vBoxOf(Insets insets, Pos pos) {
+        VBox vBox = new VBox();
+        vBox.setAlignment(pos);
         vBox.setPadding(insets);
         return vBox;
     }
@@ -40,6 +48,14 @@ public class VBoxFx {
         VBox vBox = new VBox();
         vBox.setPrefWidth(width);
         vBox.setSpacing(spacing);
+        return vBox;
+    }
+
+    public static VBox vBoxOf(Double width, Double spacing, Insets insets) {
+        VBox vBox = new VBox();
+        vBox.setPrefWidth(width);
+        vBox.setSpacing(spacing);
+        vBox.setPadding(insets);
         return vBox;
     }
 
