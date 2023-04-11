@@ -15,15 +15,15 @@ public class RosterController extends Controller {
         mainController = mc;
         RosterModel rosterModel = new RosterModel();
         rosterInteractor = new RosterInteractor(rosterModel,mainController.getConnections());
-        rosterView = new RosterView(rosterModel, this::changeYear);
+        rosterView = new RosterView(rosterModel, this::changeState);
         getRosterOnLaunch();
     }
 
-    private void changeYear() {
+    private void changeState() {
         Task<Void> task = new Task<>() {
             @Override
             protected Void call() {
-                rosterInteractor.changeYear();
+                rosterInteractor.changeState();
                 return null;
             }
         };
@@ -42,7 +42,7 @@ public class RosterController extends Controller {
         };
         task.setOnSucceeded(e -> {
             rosterInteractor.setRosterToTableview();
-            rosterInteractor.getRadioChoicesSize();
+            rosterView.setRadioListener(); // set last, so it doesn't fire, when radios are created.
         });
         new Thread(task).start();
     }

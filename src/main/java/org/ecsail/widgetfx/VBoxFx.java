@@ -51,6 +51,13 @@ public class VBoxFx {
         return vBox;
     }
 
+    public static VBox vBoxOf(Double spacing, Insets insets) {
+        VBox vBox = new VBox();
+        vBox.setSpacing(spacing);
+        vBox.setPadding(insets);
+        return vBox;
+    }
+
     public static VBox vBoxOf(Double width, Double spacing, Insets insets) {
         VBox vBox = new VBox();
         vBox.setPrefWidth(width);

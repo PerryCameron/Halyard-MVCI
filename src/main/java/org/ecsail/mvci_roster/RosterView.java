@@ -1,8 +1,6 @@
 package org.ecsail.mvci_roster;
 
 import javafx.animation.PauseTransition;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
 import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -16,15 +14,16 @@ import javafx.scene.text.Text;
 import javafx.util.Builder;
 import javafx.util.Duration;
 import org.ecsail.dto.MembershipListRadioDTO;
+import org.ecsail.widgetfx.HBoxFx;
 import org.ecsail.widgetfx.VBoxFx;
 
 public class RosterView implements Builder<Region> {
 
     RosterModel rosterModel;
-    Runnable changeYear;
+    Runnable changeState;
     public RosterView(RosterModel rm, Runnable cy) {
         rosterModel = rm;
-        changeYear = cy;
+        changeState = cy;
     }
 
     @Override
@@ -72,9 +71,7 @@ public class RosterView implements Builder<Region> {
     }
 
     private Node createRadioBox() {
-        VBox vBox = new VBox();
-        vBox.setSpacing(7);
-        vBox.setPadding(new Insets(20,0,0,20));
+        VBox vBox = VBoxFx.vBoxOf(7.0, new Insets(20,0,0,20));
         ToggleGroup tg = new ToggleGroup();
         // reactive listener used at opening of tab only
         rosterModel.getRadioChoices().addListener((ListChangeListener<MembershipListRadioDTO>) c -> {
@@ -86,19 +83,17 @@ public class RosterView implements Builder<Region> {
                 }
             }
         });
-        rosterModel.selectedRadioBoxProperty().addListener(Observable -> System.out.println(Observable));
         return vBox;
     }
-
-
+    protected void setRadioListener() {
+        rosterModel.selectedRadioBoxProperty().addListener(Observable -> changeState.run());
+    }
     private Node setUpFieldSelectedToSearchBox() {
-        VBox vBox = new VBox();
-        vBox.setPadding(new Insets(0,15,0,57));
+        VBox vBox = VBoxFx.vBoxOf(new Insets(0,15,0,57));
         TitledPane titledPane = new TitledPane();
         titledPane.setText("Searchable Fields");
         titledPane.setExpanded(false);
-        VBox checkVBox = new VBox();
-        checkVBox.setSpacing(5);
+        VBox checkVBox = new VBox(5);
 //        for(DbRosterSettingsDTO dto: parent.rosterSettings) {
 //            SettingsCheckBox checkBox = new SettingsCheckBox(this, dto, "searchable");
 //            parent.checkBoxes.add(checkBox);
@@ -110,10 +105,8 @@ public class RosterView implements Builder<Region> {
     }
 
     private Node setUpSearchBox() {
-        HBox hBox = new HBox();
+        HBox hBox = HBoxFx.hBoxOf(new Insets(0,15,0,0),10.0);
         hBox.setAlignment(Pos.CENTER_LEFT);
-        hBox.setSpacing(10);
-        hBox.setPadding(new Insets(0,15,0,0));
         Text text = new Text("Search");
         text.setId("invoice-text-number");
         TextField textField = new TextField();
@@ -169,7 +162,7 @@ public class RosterView implements Builder<Region> {
         comboBox.getSelectionModel().select(1);
         comboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             rosterModel.setSelectedYear(newValue);
-            changeYear.run();
+            changeState.run();
 //            makeListByRadioButtonChoice();
 //            updateRecordCount();
 //            parent.rosterTableView.sort();

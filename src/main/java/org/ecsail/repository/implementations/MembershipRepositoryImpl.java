@@ -16,7 +16,7 @@ public class MembershipRepositoryImpl implements MembershipRepository {
     }
 
     @Override
-    public List<MembershipListDTO> getActiveRoster(String selectedYear) {
+    public List<MembershipListDTO> getActiveRoster(Integer selectedYear) {
         String query = """
                 SELECT m.ms_id,m.p_id,id.membership_id,id.fiscal_year,id.fiscal_year,m.join_date,id.mem_type, 
                 s.SLIP_NUM,p.l_name,p.f_name,s.subleased_to,m.address,m.city,m.state,m.zip 
@@ -26,12 +26,12 @@ public class MembershipRepositoryImpl implements MembershipRepository {
                 LEFT JOIN slip s on m.MS_ID = s.MS_ID;
                 """;
         List<MembershipListDTO> membershipListDTOS
-                = template.query(query, new MembershipListRowMapper(), new Object[] {selectedYear});
+                = template.query(query, new MembershipListRowMapper(), new Object[] {selectedYear.intValue()});
         return membershipListDTOS;
     }
 
     @Override
-    public List<MembershipListDTO> getInActiveRoster(String selectedYear) {
+    public List<MembershipListDTO> getInActiveRoster(Integer selectedYear) {
         String query = """
                 SELECT m.ms_id,m.p_id,id.membership_id,id.fiscal_year,id.fiscal_year,m.join_date,id.mem_type, 
                 s.SLIP_NUM,p.l_name,p.f_name,s.subleased_to,m.address,m.city,m.state,m.zip 
@@ -41,12 +41,12 @@ public class MembershipRepositoryImpl implements MembershipRepository {
                 LEFT JOIN slip s on m.MS_ID = s.MS_ID;
                 """;
         List<MembershipListDTO> membershipListDTOS
-                = template.query(query, new MembershipListRowMapper(), new Object[]{selectedYear});
+                = template.query(query, new MembershipListRowMapper(), new Object[]{selectedYear.intValue()});
         return membershipListDTOS;
     }
 
     @Override
-    public List<MembershipListDTO> getAllRoster(int selectedYear) {
+    public List<MembershipListDTO> getAllRoster(Integer selectedYear) {
         String query = """
                 SELECT m.ms_id,m.p_id,id.membership_id,id.fiscal_year,id.fiscal_year,m.join_date,id.mem_type,
                 s.SLIP_NUM,p.l_name,p.f_name,s.subleased_to,m.address,m.city,m.state,m.zip 
@@ -56,12 +56,12 @@ public class MembershipRepositoryImpl implements MembershipRepository {
                 LEFT JOIN slip s on m.MS_ID = s.MS_ID;
                 """;
         List<MembershipListDTO> membershipListDTOS
-                = template.query(query, new MembershipListRowMapper(), new Object[]{selectedYear});
+                = template.query(query, new MembershipListRowMapper(), new Object[]{selectedYear.intValue()});
         return membershipListDTOS;
     }
 
     @Override
-    public List<MembershipListDTO> getNewMemberRoster(String selectedYear) {
+    public List<MembershipListDTO> getNewMemberRoster(Integer selectedYear) {
         String query = """
                 SELECT m.ms_id,m.p_id,id.membership_id,id.fiscal_year,id.fiscal_year,m.join_date,id.mem_type,s.SLIP_NUM,p.l_name,p.f_name,s.subleased_to,m.address,m.city,m.state,m.zip
                 FROM (select * from membership where YEAR(JOIN_DATE)=?) m
@@ -70,12 +70,12 @@ public class MembershipRepositoryImpl implements MembershipRepository {
                 LEFT JOIN slip s on m.MS_ID = s.MS_ID
                                 """;
         List<MembershipListDTO> membershipListDTOS
-                = template.query(query, new MembershipListRowMapper(), new Object[]{selectedYear,selectedYear});
+                = template.query(query, new MembershipListRowMapper(), new Object[]{selectedYear,selectedYear.intValue()});
         return membershipListDTOS;
     }
 
     @Override
-    public List<MembershipListDTO> getReturnMemberRoster(String selectedYear) {
+    public List<MembershipListDTO> getReturnMemberRoster(Integer selectedYear) {
         String query = """
                 SELECT m.ms_id,m.p_id,id.membership_id,id.fiscal_year,m.join_date,id.mem_type,s.SLIP_NUM,p.l_name,
                        p.f_name,s.subleased_to,m.address,m.city,m.state,m.zip
@@ -105,13 +105,14 @@ public class MembershipRepositoryImpl implements MembershipRepository {
                                            AND ms_id = id.ms_id));
                                 """;
         List<MembershipListDTO> membershipListDTOS
-                = template.query(query, new MembershipListRowMapper(), new Object[]{selectedYear,selectedYear,
-                selectedYear,selectedYear,selectedYear,selectedYear});
+                = template.query(query, new MembershipListRowMapper(), new Object[]{selectedYear.intValue(),
+                selectedYear.intValue(), selectedYear.intValue(),selectedYear.intValue(),selectedYear.intValue(),
+                selectedYear.intValue()});
         return membershipListDTOS;
     }
 
     @Override
-    public List<MembershipListDTO> getSlipWaitList(String selectedYear) {
+    public List<MembershipListDTO> getSlipWaitList(Integer selectedYear) {
         String query = """
                 SELECT m.ms_id,m.p_id,id.membership_id,id.fiscal_year,id.fiscal_year,m.join_date,id.mem_type,
                 s.SLIP_NUM,p.l_name,p.f_name,s.subleased_to,m.address,m.city,m.state,m.zip
@@ -122,7 +123,7 @@ public class MembershipRepositoryImpl implements MembershipRepository {
                 LEFT JOIN slip s on m.MS_ID = s.MS_ID;
                 """;
         List<MembershipListDTO> membershipListDTOS
-                = template.query(query, new MembershipListRowMapper(), new Object[]{selectedYear});
+                = template.query(query, new MembershipListRowMapper(), new Object[]{selectedYear.intValue()});
         return membershipListDTOS;
     }
 }

@@ -1,11 +1,8 @@
 package org.ecsail.mvci_roster;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import org.ecsail.connection.Connections;
 import org.ecsail.dto.MembershipListDTO;
-import org.ecsail.dto.MembershipListRadioDTO;
-import org.ecsail.mvci_connect.ConnectInteractor;
 import org.ecsail.repository.implementations.MembershipRepositoryImpl;
 import org.ecsail.repository.implementations.SettingsRepositoryImpl;
 import org.ecsail.repository.interfaces.MembershipRepository;
@@ -13,8 +10,10 @@ import org.ecsail.repository.interfaces.SettingsRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Comparator;
+import java.util.List;
 
 public class RosterInteractor {
 
@@ -44,8 +43,18 @@ public class RosterInteractor {
 
     private void updateRecords(int number) { rosterModel.setNumberOfRecords(String.valueOf(number)); }
 
-    public void changeYear() {
-        System.out.println(rosterModel.getSelectedYear());
+    public void changeState() {
+        rosterModel.getRosters().clear();
+        Method method;
+        try {
+            method = membershipRepo.getClass().getMethod(rosterModel.getSelectedRadioBox().getMethod(),Integer.class);
+            rosterModel.getRosters().setAll((List<MembershipListDTO>) method.invoke(membershipRepo, rosterModel.getSelectedYear()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+//        if(!parent.textField.getText().equals("")) fillTableView(parent.textField.getText());
+        updateRecords(rosterModel.getRosters().size());
+        rosterModel.getRosters().sort(Comparator.comparing(MembershipListDTO::getMembershipId));
     }
 
     public void getRadioChoices() {
@@ -54,7 +63,6 @@ public class RosterInteractor {
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
-        System.out.println("Radio list added here");
     }
 
     public void getRadioChoicesSize() {
