@@ -25,6 +25,7 @@ public class BaseApplication extends Application {
         primaryStage.getScene().getStylesheets().addAll("css/dark/dark.css");
         primaryStage.getScene().getStylesheets().addAll("css/dark/chart.css");
         primaryStage.getScene().getStylesheets().addAll("css/dark/tabpane.css");
+        primaryStage.getScene().getStylesheets().addAll("css/dark/tableview.css");
         primaryStage.show();
         loginStage.setX(primaryStage.getX() + 260);
         loginStage.setY(primaryStage.getY() + 300);

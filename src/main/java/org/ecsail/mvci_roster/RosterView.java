@@ -1,6 +1,9 @@
 package org.ecsail.mvci_roster;
 
 import javafx.animation.PauseTransition;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
+import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -12,13 +15,16 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Builder;
 import javafx.util.Duration;
+import org.ecsail.dto.MembershipListRadioDTO;
 import org.ecsail.widgetfx.VBoxFx;
 
 public class RosterView implements Builder<Region> {
 
     RosterModel rosterModel;
-    public RosterView(RosterModel rm) {
+    Runnable changeYear;
+    public RosterView(RosterModel rm, Runnable cy) {
         rosterModel = rm;
+        changeYear = cy;
     }
 
     @Override
@@ -66,19 +72,24 @@ public class RosterView implements Builder<Region> {
     }
 
     private Node createRadioBox() {
-        ToggleGroup tg = new ToggleGroup();
         VBox vBox = new VBox();
         vBox.setSpacing(7);
         vBox.setPadding(new Insets(20,0,0,20));
-//        for(MembershipListRadioDTO radio: parent.radioChoices) {
-//            if(!radio.getMethodName().equals("query")) {
-//                RadioHBox radioHBox = new RadioHBox(radio, this);
-//                vBox.getChildren().add(radioHBox);
-//                radioHBox.getRadioButton().setToggleGroup(tg);
-//            }
-//        }
+        ToggleGroup tg = new ToggleGroup();
+        // reactive listener used at opening of tab only
+        rosterModel.getRadioChoices().addListener((ListChangeListener<MembershipListRadioDTO>) c -> {
+            for (MembershipListRadioDTO radio : rosterModel.getRadioChoices()) {
+                if (!radio.getMethodName().equals("query")) {
+                    RadioHBox radioHBox = new RadioHBox(radio, rosterModel);
+                    vBox.getChildren().add(radioHBox);
+                    radioHBox.getRadioButton().setToggleGroup(tg);
+                }
+            }
+        });
+        rosterModel.selectedRadioBoxProperty().addListener(Observable -> System.out.println(Observable));
         return vBox;
     }
+
 
     private Node setUpFieldSelectedToSearchBox() {
         VBox vBox = new VBox();
@@ -158,6 +169,7 @@ public class RosterView implements Builder<Region> {
         comboBox.getSelectionModel().select(1);
         comboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             rosterModel.setSelectedYear(newValue);
+            changeYear.run();
 //            makeListByRadioButtonChoice();
 //            updateRecordCount();
 //            parent.rosterTableView.sort();
