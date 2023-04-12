@@ -4,24 +4,76 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableView;
+import javafx.scene.layout.VBox;
+import org.ecsail.dto.DbRosterSettingsDTO;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.dto.MembershipListRadioDTO;
 
 import java.time.Year;
+import java.util.ArrayList;
 
 public class RosterModel {
     private ObservableList<MembershipListDTO> rosters = FXCollections.observableArrayList();
-    private StringProperty numberOfRecords = new SimpleStringProperty("0");
-    private IntegerProperty selectedYear = new SimpleIntegerProperty(Year.now().getValue());
-    private StringProperty textField = new SimpleStringProperty();
-    private SimpleObjectProperty<TableView<MembershipListDTO>> rosterTableView = new SimpleObjectProperty<>();
+    private ObservableList<MembershipListDTO> searchedRosters = FXCollections.observableArrayList();
+    private final StringProperty numberOfRecords = new SimpleStringProperty("0");
+    private final IntegerProperty selectedYear = new SimpleIntegerProperty(Year.now().getValue());
+    private final StringProperty textFieldString = new SimpleStringProperty();
+    private final BooleanProperty isActiveSearch = new SimpleBooleanProperty(false);
+    private final SimpleObjectProperty<TableView<MembershipListDTO>> rosterTableView = new SimpleObjectProperty<>();
     private ObservableList<MembershipListRadioDTO> radioChoices = FXCollections.observableArrayList();
-    private SimpleObjectProperty<RadioHBox> selectedRadioBox = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<RadioHBox> selectedRadioBox = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<VBox> checkVbox = new SimpleObjectProperty<>();
+    private ArrayList<SettingsCheckBox> checkBoxes = new ArrayList<>();
+    private ObservableList<DbRosterSettingsDTO> rosterSettings = FXCollections.observableArrayList();
+    private BooleanProperty listsLoaded = new SimpleBooleanProperty(false);
 
+    public boolean isListsLoaded() {
+        return listsLoaded.get();
+    }
 
+    public BooleanProperty listsLoadedProperty() {
+        return listsLoaded;
+    }
 
+    public void setListsLoaded(boolean listsLoaded) {
+        this.listsLoaded.set(listsLoaded);
+    }
 
+    public ArrayList<SettingsCheckBox> getCheckBoxes() {
+        return checkBoxes;
+    }
 
+    public void setCheckBoxes(ArrayList<SettingsCheckBox> checkBoxes) {
+        this.checkBoxes = checkBoxes;
+    }
+
+    public ObservableList<DbRosterSettingsDTO> getRosterSettings() {
+        return rosterSettings;
+    }
+
+    public void setRosterSettings(ObservableList<DbRosterSettingsDTO> rosterSettings) {
+        this.rosterSettings = rosterSettings;
+    }
+
+    public boolean isIsActiveSearch() {
+        return isActiveSearch.get();
+    }
+
+    public BooleanProperty isActiveSearchProperty() {
+        return isActiveSearch;
+    }
+
+    public void setIsActiveSearch(boolean isActiveSearch) {
+        this.isActiveSearch.set(isActiveSearch);
+    }
+
+    public ObservableList<MembershipListDTO> getSearchedRosters() {
+        return searchedRosters;
+    }
+
+    public void setSearchedRosters(ObservableList<MembershipListDTO> searchedRosters) {
+        this.searchedRosters = searchedRosters;
+    }
 
     public RadioHBox getSelectedRadioBox() {
         return selectedRadioBox.get();
@@ -54,16 +106,16 @@ public class RosterModel {
         this.rosterTableView.set(rosterTableView);
     }
 
-    public String getTextField() {
-        return textField.get();
+    public String getTextFieldString() {
+        return textFieldString.get();
     }
 
-    public StringProperty textFieldProperty() {
-        return textField;
+    public StringProperty textFieldStringProperty() {
+        return textFieldString;
     }
 
-    public void setTextField(String textField) {
-        this.textField.set(textField);
+    public void setTextFieldString(String textFieldString) {
+        this.textFieldString.set(textFieldString);
     }
 
     public int getSelectedYear() {

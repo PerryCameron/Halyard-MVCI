@@ -9,6 +9,7 @@ import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 
 public class HBoxFx {
 
@@ -102,5 +103,12 @@ public class HBoxFx {
         hBox.getChildren().add(region);
         return hBox;
     }
+//    public static HBox hBoxOf(Pos pos, Double spacing, Insets insets) {
+//        HBox hBox = new HBox();
+//        hBox.setAlignment(pos);
+//        hBox.setSpacing(spacing);
+//        hBox.setPadding(insets);
+//        return hBox;
+//    }
 
 }

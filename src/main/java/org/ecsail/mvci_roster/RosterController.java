@@ -15,8 +15,20 @@ public class RosterController extends Controller {
         mainController = mc;
         RosterModel rosterModel = new RosterModel();
         rosterInteractor = new RosterInteractor(rosterModel,mainController.getConnections());
-        rosterView = new RosterView(rosterModel, this::changeState);
-        getRosterOnLaunch();
+        rosterView = new RosterView(rosterModel, this::changeState, this::search);
+        getRosterData();
+    }
+
+    private void search() {
+        Task<Void> task = new Task<>() {
+            @Override
+            protected Void call() {
+                rosterInteractor.fillTableView();
+                return null;
+            }
+        };
+//        task.setOnSucceeded(e -> rosterInteractor.setRosterToTableview());
+        new Thread(task).start();
     }
 
     private void changeState() {
@@ -31,16 +43,18 @@ public class RosterController extends Controller {
         new Thread(task).start();
     }
 
-    private void getRosterOnLaunch() {
+    private void getRosterData() {
         Task<Void> task = new Task<>() {
             @Override
             protected Void call() {
                 rosterInteractor.getSelectedRoster();
-                Platform.runLater(() -> rosterInteractor.getRadioChoices());
+                rosterInteractor.getRadioChoices();
+                rosterInteractor.getRosterSettings();
                 return null;
             }
         };
         task.setOnSucceeded(e -> {
+            rosterInteractor.setListsLoaded();
             rosterInteractor.setRosterToTableview();
             rosterView.setRadioListener(); // set last, so it doesn't fire, when radios are created.
         });

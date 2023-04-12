@@ -1,7 +1,6 @@
 package org.ecsail.mvci_roster;
 
 import javafx.animation.PauseTransition;
-import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -13,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Builder;
 import javafx.util.Duration;
+import org.ecsail.dto.DbRosterSettingsDTO;
 import org.ecsail.dto.MembershipListRadioDTO;
 import org.ecsail.widgetfx.HBoxFx;
 import org.ecsail.widgetfx.VBoxFx;
@@ -21,9 +21,11 @@ public class RosterView implements Builder<Region> {
 
     RosterModel rosterModel;
     Runnable changeState;
-    public RosterView(RosterModel rm, Runnable cy) {
+    Runnable search;
+    public RosterView(RosterModel rm, Runnable cy, Runnable s) {
         rosterModel = rm;
         changeState = cy;
+        search = s;
     }
 
     @Override
@@ -57,11 +59,13 @@ public class RosterView implements Builder<Region> {
         TitledPane titledPane = new TitledPane();
         titledPane.setText("Export to XLS");
         titledPane.setExpanded(false);
-//        for(DbRosterSettingsDTO dto: parent.rosterSettings) {
-//            SettingsCheckBox checkBox = new SettingsCheckBox(this, dto, "exportable");
-//            parent.checkBoxes.add(checkBox);
-//            checkVBox.getChildren().add(checkBox);
-//        }
+        rosterModel.listsLoadedProperty().addListener(observable -> {
+                    for (DbRosterSettingsDTO dto : rosterModel.getRosterSettings()) {
+                        SettingsCheckBox checkBox = new SettingsCheckBox(rosterModel, dto, "exportable");
+                        rosterModel.getCheckBoxes().add(checkBox);
+                        checkVBox.getChildren().add(checkBox);
+                    }
+                });
 //        button.setOnAction((event) -> chooseRoster());
         buttonVBox.getChildren().add(button);
         checkVBox.getChildren().add(buttonVBox);
@@ -70,11 +74,19 @@ public class RosterView implements Builder<Region> {
         return vBox;
     }
 
+// TODO move to interactor
+//    private void chooseRoster() { //
+//        if (parent.searchedRosters.size() > 0)
+//            new Xls_roster(parent.searchedRosters, parent.rosterSettings, parent.selectedRadioBox.getRadioLabel());
+//        else
+//            new Xls_roster(parent.rosters, parent.rosterSettings, parent.selectedRadioBox.getRadioLabel());
+//    }
+
     private Node createRadioBox() {
         VBox vBox = VBoxFx.vBoxOf(7.0, new Insets(20,0,0,20));
         ToggleGroup tg = new ToggleGroup();
         // reactive listener used at opening of tab only
-        rosterModel.getRadioChoices().addListener((ListChangeListener<MembershipListRadioDTO>) c -> {
+        rosterModel.listsLoadedProperty().addListener(observable -> {
             for (MembershipListRadioDTO radio : rosterModel.getRadioChoices()) {
                 if (!radio.getMethodName().equals("query")) {
                     RadioHBox radioHBox = new RadioHBox(radio, rosterModel);
@@ -93,56 +105,44 @@ public class RosterView implements Builder<Region> {
         TitledPane titledPane = new TitledPane();
         titledPane.setText("Searchable Fields");
         titledPane.setExpanded(false);
-        VBox checkVBox = new VBox(5);
-//        for(DbRosterSettingsDTO dto: parent.rosterSettings) {
-//            SettingsCheckBox checkBox = new SettingsCheckBox(this, dto, "searchable");
-//            parent.checkBoxes.add(checkBox);
-//            checkVBox.getChildren().add(checkBox);
-//        }
-        titledPane.setContent(checkVBox);
+        rosterModel.listsLoadedProperty().addListener(observable -> {
+            titledPane.setContent(setAllCheckBoxes());
+        });
         vBox.getChildren().add(titledPane);
         return vBox;
     }
 
+    protected Node setAllCheckBoxes() {
+        VBox checkVBox = new VBox(5);
+        for(DbRosterSettingsDTO dto: rosterModel.getRosterSettings()) {
+            SettingsCheckBox checkBox = new SettingsCheckBox(rosterModel, dto, "searchable");
+            rosterModel.getCheckBoxes().add(checkBox);
+            checkVBox.getChildren().add(checkBox);
+        }
+        return checkVBox;
+    }
+
     private Node setUpSearchBox() {
-        HBox hBox = HBoxFx.hBoxOf(new Insets(0,15,0,0),10.0);
+        HBox hBox = HBoxFx.hBoxOf(Pos.CENTER_LEFT, new Insets(5,0,15,0),5.0);
         hBox.setAlignment(Pos.CENTER_LEFT);
         Text text = new Text("Search");
         text.setId("invoice-text-number");
         TextField textField = new TextField();
-        textField.textProperty().bind(rosterModel.textFieldProperty());
+        rosterModel.textFieldStringProperty().bind(textField.textProperty());
         hBox.getChildren().addAll(text, textField);
         PauseTransition pause = new PauseTransition(Duration.seconds(1));
         // this is awesome, stole from stackoverflow.com
         textField.textProperty().addListener(
                 (observable, oldValue, newValue) -> {
-                    pause.setOnFinished(event -> fillTableView(textField.getText()));  //TODO don't need to send parameter
+                    pause.setOnFinished(event -> search.run());
                     pause.playFromStart();
                 }
         );
         return hBox;
     }
 
-    // TODO move to interactor
-    private void fillTableView(String searchTerm) {
-//        if(!searchTerm.equals("")) {
-//            parent.searchedRosters.clear();
-//            parent.searchedRosters.addAll(searchString(searchTerm));
-//            parent.rosterTableView.setItems(parent.searchedRosters);
-//            parent.isActiveSearch = true;
-//        } else { // if search box has been cleared
-//            parent.rosterTableView.setItems(parent.rosters);
-//            parent.isActiveSearch = false;
-//            parent.searchedRosters.clear();
-//        }
-//        updateRecordCount();
-    }
-
     private Node setUpRecordCountBox() {
-        HBox hBox = new HBox();
-        hBox.setSpacing(5);
-        hBox.setAlignment(Pos.CENTER_LEFT);
-        hBox.setPadding(new Insets(5,0,15,0));
+        HBox hBox = HBoxFx.hBoxOf(Pos.CENTER_LEFT, new Insets(5,0,15,0),5.0);
         Text label = new Text("Records");
         label.setId("invoice-text-label");
         Text numberOfRecords = new Text(String.valueOf(rosterModel.getRosters().size()));
@@ -153,36 +153,15 @@ public class RosterView implements Builder<Region> {
     }
 
     private Node createYearBox() {
-        VBox vBox = new VBox();
-        vBox.setSpacing(10);
-        vBox.setAlignment(Pos.CENTER);
-        vBox.setPadding(new Insets(0,10,0,0));
+        VBox vBox = VBoxFx.vBoxOf(Pos.CENTER,10.0, new Insets(0,10,0,0));
         ComboBox<Integer> comboBox = new ComboBox<>();
         for(int i = rosterModel.getSelectedYear() + 1; i > 1969; i--) { comboBox.getItems().add(i); }
         comboBox.getSelectionModel().select(1);
         comboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             rosterModel.setSelectedYear(newValue);
             changeState.run();
-//            makeListByRadioButtonChoice();
-//            updateRecordCount();
-//            parent.rosterTableView.sort();
         });
         vBox.getChildren().add(comboBox);
         return vBox;
     }
-
-//    protected void makeListByRadioButtonChoice()  {
-//        parent.rosters.clear();
-//        Method method;
-//        try {
-//            method = parent.membershipRepository.getClass().getMethod(parent.selectedRadioBox.getMethod(),String.class);
-//            parent.rosters.setAll((List<MembershipListDTO>) method.invoke(parent.membershipRepository, parent.selectedYear));
-//        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-//            throw new RuntimeException(e);
-//        }
-//        if(!parent.textField.getText().equals("")) fillTableView(parent.textField.getText());
-//        updateRecordCount();
-//        parent.rosters.sort(Comparator.comparing(MembershipListDTO::getMembershipId));
-//    }
-
 }

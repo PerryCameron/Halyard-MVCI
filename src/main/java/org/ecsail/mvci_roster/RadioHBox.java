@@ -14,7 +14,6 @@ public class RadioHBox extends HBox {
         rosterModel = rm;
         this.radioButton = new RadioButton(membershipListRadioDTO.getLabel());
         setRadioButtonListener();
-        System.out.println("radiobutton =" + getRadioLabel());
         radioButton.setSelected(membershipListRadioDTO.isSelected());
         this.getChildren().add(radioButton);
     }
@@ -23,7 +22,6 @@ public class RadioHBox extends HBox {
         radioButton.selectedProperty().addListener((obs, wasPreviouslySelected, isNowSelected) -> {
             if (isNowSelected) {
              rosterModel.setSelectedRadioBox(this);
-//                    parent.makeListByRadioButtonChoice();
             }
         });
     }

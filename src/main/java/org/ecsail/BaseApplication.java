@@ -22,10 +22,14 @@ public class BaseApplication extends Application {
         logger.info("Starting application");
         primaryStage = stage;
         primaryStage.setScene(new Scene(new MainController().getView()));
-        primaryStage.getScene().getStylesheets().addAll("css/dark/dark.css");
-        primaryStage.getScene().getStylesheets().addAll("css/dark/chart.css");
-        primaryStage.getScene().getStylesheets().addAll("css/dark/tabpane.css");
-        primaryStage.getScene().getStylesheets().addAll("css/dark/tableview.css");
+        primaryStage.getScene().getStylesheets().addAll(
+                "css/dark/dark.css",
+                "css/dark/tabpane.css",
+                "css/dark/tableview.css",
+                "css/dark/chart.css",
+                "css/dark/bod.css",
+                "css/dark/table_changes.css",
+                "css/dark/invoice.css");
         primaryStage.show();
         loginStage.setX(primaryStage.getX() + 260);
         loginStage.setY(primaryStage.getY() + 300);
