@@ -9,4 +9,5 @@ public interface ConfigFilePaths {
     String WINDOWS_FILE_SEPARATOR = "\\";
     String UNIX_FILE_SEPARATOR = "/";
     String FILE_EXTENSION = ".";
+    String ROSTERS = System.getProperty("user.home") + "/Documents/ECSC/Rosters";
 }

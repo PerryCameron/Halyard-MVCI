@@ -15,8 +15,19 @@ public class RosterController extends Controller {
         mainController = mc;
         RosterModel rosterModel = new RosterModel();
         rosterInteractor = new RosterInteractor(rosterModel,mainController.getConnections());
-        rosterView = new RosterView(rosterModel, this::changeState, this::search);
+        rosterView = new RosterView(rosterModel, this::changeState, this::search, this::chooseRoster);
         getRosterData();
+    }
+
+    private void chooseRoster() {
+        Task<Void> task = new Task<>() {
+            @Override
+            protected Void call() {
+                rosterInteractor.chooseRoster();
+                return null;
+            }
+        };
+        new Thread(task).start();
     }
 
     private void search() {
@@ -27,7 +38,6 @@ public class RosterController extends Controller {
                 return null;
             }
         };
-//        task.setOnSucceeded(e -> rosterInteractor.setRosterToTableview());
         new Thread(task).start();
     }
 

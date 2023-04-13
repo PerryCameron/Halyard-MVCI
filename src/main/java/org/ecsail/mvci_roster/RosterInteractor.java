@@ -7,19 +7,19 @@ import org.ecsail.connection.Connections;
 import org.ecsail.dto.DbRosterSettingsDTO;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.dto.MembershipListRadioDTO;
-import org.ecsail.repository.implementations.MembershipRepositoryImpl;
-import org.ecsail.repository.implementations.SettingsRepositoryImpl;
-import org.ecsail.repository.interfaces.MembershipRepository;
-import org.ecsail.repository.interfaces.SettingsRepository;
+import org.ecsail.repository.implementations.*;
+import org.ecsail.repository.interfaces.*;
 import org.ecsail.static_calls.StringTools;
+import org.ecsail.static_calls.Xls_roster;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class RosterInteractor {
 
@@ -27,11 +27,18 @@ public class RosterInteractor {
     private final RosterModel rosterModel;
     private final MembershipRepository membershipRepo;
     private final SettingsRepository settingsRepo;
+    private final PhoneRepository phoneRepo;
+    private final EmailRepository emailRepo;
+    private final MembershipIdRepository membershipIdRepo;
+
 
     public RosterInteractor(RosterModel rm, Connections connections) {
         rosterModel = rm;
         membershipRepo = new MembershipRepositoryImpl(connections.getDataSource());
         settingsRepo = new SettingsRepositoryImpl(connections.getDataSource());
+        phoneRepo = new PhoneRepositoryImpl(connections.getDataSource());
+        emailRepo = new EmailRepositoryImpl(connections.getDataSource());
+        membershipIdRepo = new MembershipIdRepositoryImpl(connections.getDataSource());
     }
 
     protected void getSelectedRoster() {
@@ -62,7 +69,6 @@ public class RosterInteractor {
 
     @SuppressWarnings("unchecked")
     protected void changeListState() {
-            logger.info("changeListState()");
             rosterModel.getRosters().clear();
             Method method;
             try {
@@ -91,12 +97,24 @@ public class RosterInteractor {
     }
 
     // TODO move to interactor
-//    private void chooseRoster() { //
-//        if (parent.searchedRosters.size() > 0)
-//            new Xls_roster(parent.searchedRosters, parent.rosterSettings, parent.selectedRadioBox.getRadioLabel());
-//        else
-//            new Xls_roster(parent.rosters, parent.rosterSettings, parent.selectedRadioBox.getRadioLabel());
-//    }
+    protected void chooseRoster() { //
+        if (rosterModel.getSearchedRosters().size() > 0)
+            new Xls_roster(
+                    rosterModel.getSearchedRosters(),
+                    rosterModel.getRosterSettings(),
+                    rosterModel.getSelectedRadioBox().getRadioLabel(),
+                    emailRepo,
+                    phoneRepo,
+                    membershipIdRepo);
+        else
+            new Xls_roster(
+                    rosterModel.getRosters(),
+                    rosterModel.getRosterSettings(),
+                    rosterModel.getSelectedRadioBox().getRadioLabel(),
+                    emailRepo,
+                    phoneRepo,
+                    membershipIdRepo);
+    }
 
     protected void fillTableView() {
             if (!rosterModel.getTextFieldString().equals("")) fillWithSearchResults();
@@ -114,7 +132,7 @@ public class RosterInteractor {
     }
 
     private void fillWithSearchResults() {
-        ObservableList list = searchString(rosterModel.getTextFieldString());
+        ObservableList<MembershipListDTO> list = searchString(rosterModel.getTextFieldString());
         Platform.runLater(() -> {
             rosterModel.getSearchedRosters().clear();
             rosterModel.getSearchedRosters().addAll(list);
@@ -125,26 +143,19 @@ public class RosterInteractor {
     }
 
     private ObservableList<MembershipListDTO> searchString(String searchTerm) {
-        String text = searchTerm.toLowerCase();
-        ObservableList<MembershipListDTO> searchedMemberships = FXCollections.observableArrayList();
-        boolean hasMatch = false;
-        for(MembershipListDTO membershipListDTO: rosterModel.getRosters()) {
-            Field[] fields1 = membershipListDTO.getClass().getDeclaredFields();
-            Field[] fields2 = membershipListDTO.getClass().getSuperclass().getDeclaredFields();
-            Field[] allFields = new Field[fields1.length + fields2.length];
-            Arrays.setAll(allFields, i -> (i < fields1.length ? fields1[i] : fields2[i - fields1.length]));
-            for(Field field: allFields) {
-                if(fieldIsSearchable(field.getName())) {
-                    field.setAccessible(true);
-                    String value = StringTools.returnFieldValueAsString(field, membershipListDTO).toLowerCase();
-                    if (value.contains(text)) hasMatch = true;
-                }
-            }  // add boat DTO here
-            if(hasMatch)
-                searchedMemberships.add(membershipListDTO);
-            hasMatch = false;
-        }
-        return searchedMemberships;
+        String searchTermToLowerCase = searchTerm.toLowerCase();
+        return rosterModel.getRosters().stream()
+                .filter(membershipListDTO -> Stream.concat(
+                                Arrays.stream(membershipListDTO.getClass().getDeclaredFields()),
+                                Arrays.stream(membershipListDTO.getClass().getSuperclass().getDeclaredFields())
+                        )
+                        .filter(field -> fieldIsSearchable(field.getName()))
+                        .peek(field -> field.setAccessible(true))
+                        .anyMatch(field -> {
+                            String value = StringTools.returnFieldValueAsString(field, membershipListDTO).toLowerCase();
+                            return value.contains(searchTermToLowerCase);
+                        }))
+                .collect(Collectors.toCollection(FXCollections::observableArrayList));
     }
 
     private boolean fieldIsSearchable(String fieldName) {

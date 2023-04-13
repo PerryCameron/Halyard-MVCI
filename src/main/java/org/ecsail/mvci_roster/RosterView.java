@@ -22,9 +22,11 @@ public class RosterView implements Builder<Region> {
     RosterModel rosterModel;
     Runnable changeState;
     Runnable search;
-    public RosterView(RosterModel rm, Runnable cy, Runnable s) {
+    Runnable chooseRoster;
+    public RosterView(RosterModel rm, Runnable cy, Runnable s, Runnable cr) {
         rosterModel = rm;
         changeState = cy;
+        chooseRoster =cr;
         search = s;
     }
 
@@ -60,13 +62,12 @@ public class RosterView implements Builder<Region> {
         titledPane.setText("Export to XLS");
         titledPane.setExpanded(false);
         rosterModel.listsLoadedProperty().addListener(observable -> {
-                    for (DbRosterSettingsDTO dto : rosterModel.getRosterSettings()) {
-                        SettingsCheckBox checkBox = new SettingsCheckBox(rosterModel, dto, "exportable");
-                        rosterModel.getCheckBoxes().add(checkBox);
-                        checkVBox.getChildren().add(checkBox);
-                    }
-                });
-//        button.setOnAction((event) -> chooseRoster());
+            rosterModel.getRosterSettings().stream()
+                    .map(dto -> new SettingsCheckBox(rosterModel, dto, "exportable"))
+                    .peek(rosterModel.getCheckBoxes()::add)
+                    .forEach(checkVBox.getChildren()::add);
+        });
+        button.setOnAction((event) -> chooseRoster.run());
         buttonVBox.getChildren().add(button);
         checkVBox.getChildren().add(buttonVBox);
         titledPane.setContent(checkVBox);
@@ -143,11 +144,6 @@ public class RosterView implements Builder<Region> {
         hBox.getChildren().addAll(createYearBox(),label,numberOfRecords);
         return hBox;
     }
-
-//    private Node setUpRecordBox() {
-//        HBox hBox = new HBox();
-//
-//    }
 
     private Node createYearBox() {
         VBox vBox = VBoxFx.vBoxOf(Pos.CENTER,10.0, new Insets(0,10,0,0));
