@@ -1,10 +1,12 @@
 package org.ecsail.mvci_roster;
 
-import javafx.beans.value.ChangeListener;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.ecsail.connection.Connections;
+import org.ecsail.dto.DbRosterSettingsDTO;
 import org.ecsail.dto.MembershipListDTO;
+import org.ecsail.dto.MembershipListRadioDTO;
 import org.ecsail.repository.implementations.MembershipRepositoryImpl;
 import org.ecsail.repository.implementations.SettingsRepositoryImpl;
 import org.ecsail.repository.interfaces.MembershipRepository;
@@ -22,9 +24,9 @@ import java.util.List;
 public class RosterInteractor {
 
     private static final Logger logger = LoggerFactory.getLogger(RosterInteractor.class);
-    private RosterModel rosterModel;
-    private MembershipRepository membershipRepo;
-    private SettingsRepository settingsRepo;
+    private final RosterModel rosterModel;
+    private final MembershipRepository membershipRepo;
+    private final SettingsRepository settingsRepo;
 
     public RosterInteractor(RosterModel rm, Connections connections) {
         rosterModel = rm;
@@ -32,54 +34,94 @@ public class RosterInteractor {
         settingsRepo = new SettingsRepositoryImpl(connections.getDataSource());
     }
 
-    public void getSelectedRoster() {
+    protected void getSelectedRoster() {
         try {
-            rosterModel.setRosters(FXCollections.observableArrayList(membershipRepo.getAllRoster(rosterModel.getSelectedYear())));
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-        }
-    }
-    public void setRosterToTableview() {
-        rosterModel.getRosterTableView().setItems(rosterModel.getRosters());
-        rosterModel.getRosters().sort(Comparator.comparing(MembershipListDTO::getMembershipId));
-
-        updateRecords(rosterModel.getRosters().size());
-    }
-
-    private void updateRecords(int number) { rosterModel.setNumberOfRecords(String.valueOf(number)); }
-
-    public void changeState() {
-        rosterModel.getRosters().clear();
-        Method method;
-        try {
-            method = membershipRepo.getClass().getMethod(rosterModel.getSelectedRadioBox().getMethod(),Integer.class);
-            rosterModel.getRosters().setAll((List<MembershipListDTO>) method.invoke(membershipRepo, rosterModel.getSelectedYear()));
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        updateRecords(rosterModel.getRosters().size());
-        rosterModel.getRosters().sort(Comparator.comparing(MembershipListDTO::getMembershipId));
-    }
-
-    public void getRadioChoices() {
-        try {
-        rosterModel.getRadioChoices().addAll(FXCollections.observableArrayList(settingsRepo.getRadioChoices()));
+            ObservableList<MembershipListDTO> observableList = FXCollections.observableArrayList(membershipRepo.getAllRoster(rosterModel.getSelectedYear()));
+            Platform.runLater(() -> rosterModel.setRosters(observableList));
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
     }
 
-    public void fillTableView() {
-        if(!rosterModel.getTextFieldString().equals("")) {
-            rosterModel.getSearchedRosters().clear();
-            rosterModel.getSearchedRosters().addAll(searchString(rosterModel.getTextFieldString()));
-            rosterModel.getRosterTableView().setItems(rosterModel.getSearchedRosters());
-            rosterModel.setIsActiveSearch(true);
-        } else { // if search box has been cleared
+    protected void setRosterToTableview() {
+        Platform.runLater(() -> {
             rosterModel.getRosterTableView().setItems(rosterModel.getRosters());
-            rosterModel.setIsActiveSearch(false);
-            rosterModel.getSearchedRosters().clear();
+            rosterModel.getRosters().sort(Comparator.comparing(MembershipListDTO::getMembershipId));
+        });
+        changeState();
+    }
+
+    private void changeState() {
+        Platform.runLater(() -> {
+            if (rosterModel.isSearchMode())
+                rosterModel.setNumberOfRecords(String.valueOf(rosterModel.getSearchedRosters().size()));
+            else
+                rosterModel.setNumberOfRecords(String.valueOf(rosterModel.getRosters().size()));
+        });
+    }
+
+    @SuppressWarnings("unchecked")
+    protected void changeListState() {
+            logger.info("changeListState()");
+            rosterModel.getRosters().clear();
+            Method method;
+            try {
+                method = membershipRepo.getClass().getMethod(rosterModel.getSelectedRadioBox().getMethod(), Integer.class);
+                ObservableList<MembershipListDTO> updatedRoster
+                        = FXCollections.observableArrayList((List<MembershipListDTO>) method.invoke(membershipRepo, rosterModel.getSelectedYear()));
+                updateRoster(updatedRoster);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            changeState();
+            rosterModel.getRosters().sort(Comparator.comparing(MembershipListDTO::getMembershipId));
+    }
+
+    private void updateRoster(ObservableList<MembershipListDTO> updatedRoster) {
+        Platform.runLater(() -> rosterModel.getRosters().setAll(updatedRoster));
+    }
+
+    protected void getRadioChoices() {
+        try {
+            ObservableList<MembershipListRadioDTO> list = FXCollections.observableArrayList(settingsRepo.getRadioChoices());
+            Platform.runLater(() -> rosterModel.getRadioChoices().addAll(list));
+        } catch (Exception e) {
+            logger.error(e.getMessage());
         }
+    }
+
+    // TODO move to interactor
+//    private void chooseRoster() { //
+//        if (parent.searchedRosters.size() > 0)
+//            new Xls_roster(parent.searchedRosters, parent.rosterSettings, parent.selectedRadioBox.getRadioLabel());
+//        else
+//            new Xls_roster(parent.rosters, parent.rosterSettings, parent.selectedRadioBox.getRadioLabel());
+//    }
+
+    protected void fillTableView() {
+            if (!rosterModel.getTextFieldString().equals("")) fillWithSearchResults();
+            else fillWithResults(); // search box cleared
+        changeState();
+    }
+
+    private void fillWithResults() {
+        Platform.runLater(() -> {
+        rosterModel.getRosterTableView().setItems(rosterModel.getRosters());
+        rosterModel.setIsSearchMode(false);
+        rosterModel.getSearchedRosters().clear();
+        logger.info("normal mode");
+        });
+    }
+
+    private void fillWithSearchResults() {
+        ObservableList list = searchString(rosterModel.getTextFieldString());
+        Platform.runLater(() -> {
+            rosterModel.getSearchedRosters().clear();
+            rosterModel.getSearchedRosters().addAll(list);
+            rosterModel.getRosterTableView().setItems(rosterModel.getSearchedRosters());
+            rosterModel.setIsSearchMode(true);
+            logger.info("search mode");
+        });
     }
 
     private ObservableList<MembershipListDTO> searchString(String searchTerm) {
@@ -113,10 +155,12 @@ public class RosterInteractor {
                 .orElse(false);
     }
 
-    public void getRosterSettings() {
-        rosterModel.setRosterSettings(FXCollections.observableArrayList(settingsRepo.getSearchableListItems()));
+    protected void getRosterSettings() {
+        ObservableList<DbRosterSettingsDTO> list = FXCollections.observableArrayList(settingsRepo.getSearchableListItems());
+        Platform.runLater(() -> rosterModel.setRosterSettings(list));
     }
 
-    public void setListsLoaded() { rosterModel.setListsLoaded(true); }
-
+    protected void setListsLoaded() {
+        Platform.runLater(() -> rosterModel.setListsLoaded(true));
+    }
 }

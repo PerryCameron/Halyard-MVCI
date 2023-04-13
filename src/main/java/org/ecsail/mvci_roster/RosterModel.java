@@ -4,7 +4,6 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableView;
-import javafx.scene.layout.VBox;
 import org.ecsail.dto.DbRosterSettingsDTO;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.dto.MembershipListRadioDTO;
@@ -22,10 +21,23 @@ public class RosterModel {
     private final SimpleObjectProperty<TableView<MembershipListDTO>> rosterTableView = new SimpleObjectProperty<>();
     private ObservableList<MembershipListRadioDTO> radioChoices = FXCollections.observableArrayList();
     private final SimpleObjectProperty<RadioHBox> selectedRadioBox = new SimpleObjectProperty<>();
-    private final SimpleObjectProperty<VBox> checkVbox = new SimpleObjectProperty<>();
     private ArrayList<SettingsCheckBox> checkBoxes = new ArrayList<>();
     private ObservableList<DbRosterSettingsDTO> rosterSettings = FXCollections.observableArrayList();
     private BooleanProperty listsLoaded = new SimpleBooleanProperty(false);
+    private BooleanProperty changeState = new SimpleBooleanProperty(false);
+
+
+    public boolean isChangeState() {
+        return changeState.get();
+    }
+
+    public BooleanProperty changeStateProperty() {
+        return changeState;
+    }
+
+    public void setChangeState(boolean changeState) {
+        this.changeState.set(changeState);
+    }
 
     public boolean isListsLoaded() {
         return listsLoaded.get();
@@ -55,15 +67,15 @@ public class RosterModel {
         this.rosterSettings = rosterSettings;
     }
 
-    public boolean isIsActiveSearch() {
+    public boolean isSearchMode() {
         return isActiveSearch.get();
     }
 
-    public BooleanProperty isActiveSearchProperty() {
+    public BooleanProperty isSearchModeProperty() {
         return isActiveSearch;
     }
 
-    public void setIsActiveSearch(boolean isActiveSearch) {
+    public void setIsSearchMode(boolean isActiveSearch) {
         this.isActiveSearch.set(isActiveSearch);
     }
 

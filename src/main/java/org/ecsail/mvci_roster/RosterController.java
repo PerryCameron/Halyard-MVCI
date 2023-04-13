@@ -35,7 +35,7 @@ public class RosterController extends Controller {
         Task<Void> task = new Task<>() {
             @Override
             protected Void call() {
-                rosterInteractor.changeState();
+                rosterInteractor.changeListState();
                 return null;
             }
         };

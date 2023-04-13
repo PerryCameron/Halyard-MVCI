@@ -37,7 +37,7 @@ public class RosterView implements Builder<Region> {
     }
 
     private Node setUpTableView() {
-        VBox vBox = VBoxFx.vBoxOf(new Insets(0,5,0,0));
+        VBox vBox = VBoxFx.vBoxOf(new Insets(5,5,0,10));
         RosterTableView tableView = new RosterTableView(rosterModel);
         rosterModel.setRosterTableView(tableView);
         vBox.getChildren().add(tableView);
@@ -73,14 +73,6 @@ public class RosterView implements Builder<Region> {
         vBox.getChildren().add(titledPane);
         return vBox;
     }
-
-// TODO move to interactor
-//    private void chooseRoster() { //
-//        if (parent.searchedRosters.size() > 0)
-//            new Xls_roster(parent.searchedRosters, parent.rosterSettings, parent.selectedRadioBox.getRadioLabel());
-//        else
-//            new Xls_roster(parent.rosters, parent.rosterSettings, parent.selectedRadioBox.getRadioLabel());
-//    }
 
     private Node createRadioBox() {
         VBox vBox = VBoxFx.vBoxOf(7.0, new Insets(20,0,0,20));
@@ -151,6 +143,11 @@ public class RosterView implements Builder<Region> {
         hBox.getChildren().addAll(createYearBox(),label,numberOfRecords);
         return hBox;
     }
+
+//    private Node setUpRecordBox() {
+//        HBox hBox = new HBox();
+//
+//    }
 
     private Node createYearBox() {
         VBox vBox = VBoxFx.vBoxOf(Pos.CENTER,10.0, new Insets(0,10,0,0));
