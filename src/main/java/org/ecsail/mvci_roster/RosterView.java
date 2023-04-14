@@ -14,8 +14,12 @@ import javafx.util.Builder;
 import javafx.util.Duration;
 import org.ecsail.dto.DbRosterSettingsDTO;
 import org.ecsail.dto.MembershipListRadioDTO;
+import org.ecsail.mvci_roster.export.SaveFileChooser;
+import org.ecsail.static_calls.HalyardPaths;
 import org.ecsail.widgetfx.HBoxFx;
 import org.ecsail.widgetfx.VBoxFx;
+
+import java.io.File;
 
 public class RosterView implements Builder<Region> {
 
@@ -57,7 +61,6 @@ public class RosterView implements Builder<Region> {
         VBox vBox = VBoxFx.vBoxOf(new Insets(15,15,0,0));
         VBox checkVBox = new VBox(5);
         VBox buttonVBox = VBoxFx.vBoxOf(new Insets(10,0,0,0),Pos.CENTER);
-        Button button = new Button("Export to XLS");
         TitledPane titledPane = new TitledPane();
         titledPane.setText("Export to XLS");
         titledPane.setExpanded(false);
@@ -67,12 +70,23 @@ public class RosterView implements Builder<Region> {
                     .peek(rosterModel.getCheckBoxes()::add)
                     .forEach(checkVBox.getChildren()::add);
         });
-        button.setOnAction((event) -> chooseRoster.run());
-        buttonVBox.getChildren().add(button);
+        buttonVBox.getChildren().add(createExportButton());
         checkVBox.getChildren().add(buttonVBox);
         titledPane.setContent(checkVBox);
         vBox.getChildren().add(titledPane);
         return vBox;
+    }
+
+    private Node createExportButton() {
+        Button button = new Button("Export to XLS");
+        button.setOnAction((event) -> {
+        rosterModel.setFileToSave(new SaveFileChooser(HalyardPaths.ROSTERS + "/",
+                rosterModel.getSelectedYear() + "_" +
+                        rosterModel.getSelectedRadioBox().getRadioLabel().replace(" ", "_"),
+                "Excel Files", "*.xlsx").getFile());
+            chooseRoster.run();
+        });
+        return button;
     }
 
     private Node createRadioBox() {

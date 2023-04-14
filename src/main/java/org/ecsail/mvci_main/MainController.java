@@ -54,7 +54,5 @@ public class MainController extends Controller {
     @Override
     public Region getView() { return mainView.build(); }
 
-    public void setStatus(String status) { mainView.setStatus(status); }
-
-
+    public void setStatus(String status) { mainInteractor.setStatus(status); }
 }

@@ -1,15 +1,13 @@
-package org.ecsail.static_calls;
+package org.ecsail.mvci_roster.export;
 
 
-import javafx.collections.ObservableList;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.ecsail.dto.*;
+import org.ecsail.dto.DbRosterSettingsDTO;
+import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.interfaces.ConfigFilePaths;
-import org.ecsail.mvci_roster.SaveFileChooser;
-import org.ecsail.repository.interfaces.EmailRepository;
-import org.ecsail.repository.interfaces.MembershipIdRepository;
-import org.ecsail.repository.interfaces.PhoneRepository;
+import org.ecsail.mvci_roster.RosterModel;
+import org.ecsail.static_calls.HalyardPaths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,32 +18,21 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-
+import java.util.stream.IntStream;
 
 
 public class Xls_roster implements ConfigFilePaths {
 
 	private static final Logger logger = LoggerFactory.getLogger(Xls_roster.class);
-	private final EmailRepository emailRepo;
-	private final PhoneRepository phoneRepo;
-	private final MembershipIdRepository membershipIdRepo;
-	ObservableList<DbRosterSettingsDTO> rosterSettings;
-	String selectedYear = "";
-	
-	public Xls_roster(ObservableList<MembershipListDTO> rosters,
-					  ObservableList<DbRosterSettingsDTO> rosterSettings,
-					  String rosterType,
-					  EmailRepository emailRepo,
-					  PhoneRepository phoneRepo,
-					  MembershipIdRepository membershipIdRepo) {
-		this.rosterSettings = rosterSettings;
-		this.emailRepo = emailRepo;
-		this.phoneRepo = phoneRepo;
-		this.membershipIdRepo = membershipIdRepo;
+	private final RosterModel rosterModel;
+	private String selectedYear = null;
+
+	public Xls_roster(RosterModel rosterModel, String rosterType) {
+		this.rosterModel = rosterModel;
 		ArrayList<String> headers = getHeaders();
-		if(rosters.size() > 1) this.selectedYear = rosters.get(0).getSelectedYear();
+		if(rosterModel.getRosters().size() > 1)
+			this.selectedYear = rosterModel.getRosters().get(0).getSelectedYear();
 		logger.info("Creating Roster..");
-		//String[] columnHeads = {"Membership ID", "Last Name", "First Name", "Join Date", "Street Address","City","State","Zip"};
 
         // Create a Workbook
         Workbook workBook = new XSSFWorkbook(); // new HSSFWorkbook() for generating `.xls` file
@@ -71,35 +58,51 @@ public class Xls_roster implements ConfigFilePaths {
         Row headerRow = sheet.createRow(0);
 
         // Create the header of the sheet
-        for(int i = 0; i < headers.size(); i++) {
-            Cell cell = headerRow.createCell(i);
-            cell.setCellValue(headers.get(i));
-            cell.setCellStyle(headerCellStyle);
-        }
+		createSheetHeader(headers, headerCellStyle, headerRow);
 
-        // prints the main body of information
-        int rowNum = 1;
-        for(MembershipListDTO m: rosters) {
-            createRow(sheet,rowNum,m);
-            rowNum++;
-        }
+		// prints the main body of information
+		createRows(rosterModel, sheet);
 
 		// makes the columns nice widths for the data
-		for (int i = 0; i < headers.size(); i++) {
-			sheet.autoSizeColumn(i);
-		}
+		setProperColumnWithToMatchDataSize(headers, sheet);
 
-		File file = new SaveFileChooser(HalyardPaths.ROSTERS + "/",
-				selectedYear + "_" + rosterType.replace(" ","_"),
-				"Excel Files", "*.xlsx").getFile();
-
-		if (file != null) {
-			FileOutputStream fileOut = getFileOutPutStream(file);
+//		Platform.runLater(() -> {
+//			File file = new SaveFileChooser(HalyardPaths.ROSTERS + "/",
+//					selectedYear + "_" + rosterType.replace(" ", "_"),
+//					"Excel Files", "*.xlsx").getFile();
+//		});
+//
+		if (rosterModel.getFileToSave() != null) {
+			FileOutputStream fileOut = getFileOutPutStream(rosterModel.getFileToSave());
 			writeToWorkbook(workBook, fileOut);
 			closeFileStream(fileOut);
 			closeWorkBook(workBook);
 		}
+	}
 
+	private static void createSheetHeader(ArrayList<String> headers, CellStyle headerCellStyle, Row headerRow) {
+		for(int i = 0; i < headers.size(); i++) {
+			Cell cell = headerRow.createCell(i);
+			cell.setCellValue(headers.get(i));
+			cell.setCellStyle(headerCellStyle);
+		}
+	}
+
+	private void createRows(RosterModel rosterModel, Sheet sheet) {
+//		int rowNum = 1;
+//		for(MembershipListDTO m: rosterModel.getRosters()) {
+//			createRow(sheet,rowNum,m);
+//			rowNum++;
+//		}
+		int initialRowNum = 1;
+		IntStream.range(0, rosterModel.getRosters().size())
+				.forEach(i -> createRow(sheet, initialRowNum + i, rosterModel.getRosters().get(i)));
+	}
+
+	private static void setProperColumnWithToMatchDataSize(ArrayList<String> headers, Sheet sheet) {
+		for (int i = 0; i < headers.size(); i++) {
+			sheet.autoSizeColumn(i);
+		}
 	}
 
 	private void closeWorkBook(Workbook workBook) {
@@ -153,7 +156,7 @@ public class Xls_roster implements ConfigFilePaths {
 	private Object getField(MembershipListDTO m, DbRosterSettingsDTO dto) {
 		Object obj;
 		try {
-			System.out.println(dto.getGetter());
+//			System.out.println("dto.getGetter" + dto.getGetter());
 			Method method = m.getClass().getMethod(dto.getGetter());
 			obj = method.invoke(m);
 		} catch (NoSuchMethodException e) {
@@ -169,7 +172,7 @@ public class Xls_roster implements ConfigFilePaths {
 	private Row createRow(Sheet sheet, int rowNum, MembershipListDTO m) {
 		Row row = sheet.createRow(rowNum);
 		int cellNumber = 0;
-		for(DbRosterSettingsDTO dto: rosterSettings) {
+		for(DbRosterSettingsDTO dto: rosterModel.getRosterSettings()) {
 			if(dto.isExportable()) {
 				Object result = getField(m, dto);
 				if (result instanceof String) {
@@ -187,7 +190,7 @@ public class Xls_roster implements ConfigFilePaths {
 
 	private ArrayList<String> getHeaders() {
 		ArrayList<String> headers = new ArrayList<>();
-		for(DbRosterSettingsDTO dto: rosterSettings) {
+		for(DbRosterSettingsDTO dto: rosterModel.getRosterSettings()) {
 			if (dto.isExportable()) {
 				headers.add(dto.getName());
 			}
@@ -195,38 +198,38 @@ public class Xls_roster implements ConfigFilePaths {
 		return headers;
 	}
 
-	private String getPhone(int p_id) {
-		String phoneString = "";
-		ArrayList<PhoneDTO> phones = (ArrayList<PhoneDTO>) phoneRepo.getPhoneByPid(p_id);
-		if (phones != null) {
-			for (PhoneDTO p : phones) {
-				if (p.getPhoneType().equals("C")) {  // we prefer a cell phone
-					phoneString = p.getPhoneNumber();
-					break;
-				} else if (p.getPhoneType().contentEquals("H")) { // if home phone is all that is available we go with it
-					phoneString = p.getPhoneNumber();
-				}
-			}
-		}
-		return phoneString;
-	}
+//	private String getPhone(int p_id) {
+//		String phoneString = "";
+//		ArrayList<PhoneDTO> phones = (ArrayList<PhoneDTO>) phoneRepo.getPhoneByPid(p_id);
+//		if (phones != null) {
+//			for (PhoneDTO p : phones) {
+//				if (p.getPhoneType().equals("C")) {  // we prefer a cell phone
+//					phoneString = p.getPhoneNumber();
+//					break;
+//				} else if (p.getPhoneType().contentEquals("H")) { // if home phone is all that is available we go with it
+//					phoneString = p.getPhoneNumber();
+//				}
+//			}
+//		}
+//		return phoneString;
+//	}
 
-	private String getEmail(int p_id) {
-		String emailString = "";
-		ArrayList<EmailDTO> email = (ArrayList<EmailDTO>) emailRepo.getEmail(p_id);
-		if (email != null) {
-			for (EmailDTO e: email) {
-				if(e.isPrimaryUse()) {
-					emailString = e.getEmail();
-					break;
-				} else {
-					emailString = e.getEmail();
-				}
-
-			}
-		}
-		return emailString;
-	}
+//	private String getEmail(int p_id) {
+//		String emailString = "";
+//		ArrayList<EmailDTO> email = (ArrayList<EmailDTO>) emailRepo.getEmail(p_id);
+//		if (email != null) {
+//			for (EmailDTO e: email) {
+//				if(e.isPrimaryUse()) {
+//					emailString = e.getEmail();
+//					break;
+//				} else {
+//					emailString = e.getEmail();
+//				}
+//
+//			}
+//		}
+//		return emailString;
+//	}
 
 //	private String getSubleaser(MembershipListDTO owner) { // SqlMembership_Id.getId(owner.getSubleaser());
 //		MembershipIdDTO membershipIdDTO;

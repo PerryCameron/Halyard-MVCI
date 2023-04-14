@@ -11,11 +11,9 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import org.ecsail.BaseApplication;
-import org.ecsail.mvci_welcome.WelcomeController;
 import org.ecsail.widgetfx.MenuFx;
 
 import java.util.Objects;
-import java.util.stream.IntStream;
 
 import static java.lang.System.getProperty;
 
@@ -84,15 +82,9 @@ public class MainView implements Builder<Region> {
         menu.getItems().addAll(undo, redo, editSeparator, cut, copy, paste);
         return menu;
     }
-
     private static boolean isMac() {
         return getProperty("os.name").contains("Mac");
     }
-
-    protected void setStatus(String status) {
-        mainModel.statusLabelProperty().set(status);
-    }
-
     protected void closeTabs() {
         mainModel.getMainTabPane().getTabs().clear();
     }
@@ -101,8 +93,6 @@ public class MainView implements Builder<Region> {
         mainModel.getMainTabPane().getTabs().add(newTab);
         mainModel.getMainTabPane().getSelectionModel().select(newTab);
     }
-
-
 
 //    private static void startFileLogger() {
 //        try {

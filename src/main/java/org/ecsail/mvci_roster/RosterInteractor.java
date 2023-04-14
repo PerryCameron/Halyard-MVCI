@@ -10,7 +10,7 @@ import org.ecsail.dto.MembershipListRadioDTO;
 import org.ecsail.repository.implementations.*;
 import org.ecsail.repository.interfaces.*;
 import org.ecsail.static_calls.StringTools;
-import org.ecsail.static_calls.Xls_roster;
+import org.ecsail.mvci_roster.export.Xls_roster;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -98,22 +98,9 @@ public class RosterInteractor {
 
     // TODO move to interactor
     protected void chooseRoster() { //
-        if (rosterModel.getSearchedRosters().size() > 0)
             new Xls_roster(
-                    rosterModel.getSearchedRosters(),
-                    rosterModel.getRosterSettings(),
-                    rosterModel.getSelectedRadioBox().getRadioLabel(),
-                    emailRepo,
-                    phoneRepo,
-                    membershipIdRepo);
-        else
-            new Xls_roster(
-                    rosterModel.getRosters(),
-                    rosterModel.getRosterSettings(),
-                    rosterModel.getSelectedRadioBox().getRadioLabel(),
-                    emailRepo,
-                    phoneRepo,
-                    membershipIdRepo);
+                    rosterModel,
+                    rosterModel.getSelectedRadioBox().getRadioLabel());
     }
 
     protected void fillTableView() {
@@ -127,7 +114,6 @@ public class RosterInteractor {
         rosterModel.getRosterTableView().setItems(rosterModel.getRosters());
         rosterModel.setIsSearchMode(false);
         rosterModel.getSearchedRosters().clear();
-        logger.info("normal mode");
         });
     }
 
@@ -138,7 +124,6 @@ public class RosterInteractor {
             rosterModel.getSearchedRosters().addAll(list);
             rosterModel.getRosterTableView().setItems(rosterModel.getSearchedRosters());
             rosterModel.setIsSearchMode(true);
-            logger.info("search mode");
         });
     }
 

@@ -8,6 +8,7 @@ import org.ecsail.dto.DbRosterSettingsDTO;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.dto.MembershipListRadioDTO;
 
+import java.io.File;
 import java.time.Year;
 import java.util.ArrayList;
 
@@ -21,11 +22,24 @@ public class RosterModel {
     private final SimpleObjectProperty<TableView<MembershipListDTO>> rosterTableView = new SimpleObjectProperty<>();
     private ObservableList<MembershipListRadioDTO> radioChoices = FXCollections.observableArrayList();
     private final SimpleObjectProperty<RadioHBox> selectedRadioBox = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<File> fileToSave = new SimpleObjectProperty<>();
     private ArrayList<SettingsCheckBox> checkBoxes = new ArrayList<>();
     private ObservableList<DbRosterSettingsDTO> rosterSettings = FXCollections.observableArrayList();
     private BooleanProperty listsLoaded = new SimpleBooleanProperty(false);
     private BooleanProperty changeState = new SimpleBooleanProperty(false);
 
+
+    public File getFileToSave() {
+        return fileToSave.get();
+    }
+
+    public SimpleObjectProperty<File> fileToSaveProperty() {
+        return fileToSave;
+    }
+
+    public void setFileToSave(File fileToSave) {
+        this.fileToSave.set(fileToSave);
+    }
 
     public boolean isChangeState() {
         return changeState.get();

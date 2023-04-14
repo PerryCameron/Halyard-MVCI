@@ -16,7 +16,7 @@
         <main-class>org.ecsail.BaseApplication</main-class>
         <!-- Change your app's name to something interesting... but you might want to avoid spaces
         just to safe for compatibility across operating systems. -->
-        <app.name>TestApp</app.name>
+        <app.name>Halyard</app.name>
         <!-- This converts the build timestamp to a Windows-installer friendly version number (minute level resolution).
         Note that Maven generated timestamp is in UTC, not local time. For more information see:
          https://docs.microsoft.com/en-us/windows/win32/msi/productversion
