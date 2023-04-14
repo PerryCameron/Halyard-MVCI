@@ -20,11 +20,8 @@ public class PortForwardingL {
     private static final Logger logger = LoggerFactory.getLogger(PortForwardingL.class);
     private static final boolean usePublicKey = true;
 
-//	private Sftp ftp;
-
-//    public PortForwardingL(String host, String rhost, int lport, int rport, String user, String knownHosts, String key) {
     public PortForwardingL(LoginDTO login) {
-        System.out.println("Connecting with public key..");
+        logger.info("Connecting with public key..");
         try {
             jsch.setKnownHosts(login.getKnownHostsFile());
             jsch.addIdentity(login.getPublicKeyFile());
@@ -33,9 +30,9 @@ public class PortForwardingL {
             if (hks != null) {
                 logger.info("Host keys exist");
                 // This will print out the keys
-                for (HostKey hk : hks) {
-                    System.out.println(hk.getHost() + " " + hk.getType() + " " + hk.getFingerPrint(jsch));
-                }
+//                for (HostKey hk : hks) {
+//                    System.out.println(hk.getHost() + " " + hk.getType() + " " + hk.getFingerPrint(jsch));
+//                }
             }
 
             session = jsch.getSession(login.getSshUser(), login.getHost(), login.getSshPort());
@@ -89,14 +86,12 @@ public class PortForwardingL {
         public void showMessage(String message) {
             /// put in a JavaFX message display here.
         }
-
     }
 
     public boolean checkSSHConnection() {
         Socket socket;
         try {
             socket = new Socket("localhost", 7);
-
             if (socket.isConnected()) {
                 socket.close();
                 return true;

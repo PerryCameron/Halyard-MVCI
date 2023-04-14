@@ -10,15 +10,12 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class Connections {
-
     private Connection sqlConnection;
     private PortForwardingL sshConnection;
     private Sftp scp;
     private DataSource dataSource;
     private static final Logger logger = LoggerFactory.getLogger(Connections.class);
-
     private ConnectModel connectModel;
-
     public Connections(ConnectModel connectModel) {
         this.connectModel = connectModel;
     }
@@ -32,13 +29,9 @@ public class Connections {
             logger.info("Attempting to connect to " + connectModel.getHost());
             setSshConnection(new PortForwardingL(connectModel.getComboBox().getValue()));
             logger.info("Server Alive interval: " + sshConnection.getSession().getServerAliveInterval());
-        } else {
+        } else
             logger.info("SSH connection is not being used");
-        }
         if(createConnection(connectModel.getUser(), connectModel.getPass(), loopback, connectModel.getLocalSqlPort())) {
-//            BaseApplication.activeMemberships = SqlMembershipList.getRoster(BaseApplication.selectedYear, true);
-            // gets a list of all the board positions to use throughout the application
-//            BaseApplication.boardPositions = Officer.getPositionList();
             this.scp = new Sftp(sshConnection);
         } else {
             logger.error("Can not connect to SQL server");
