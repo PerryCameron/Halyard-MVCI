@@ -7,7 +7,6 @@ import org.ecsail.dto.DbRosterSettingsDTO;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.interfaces.ConfigFilePaths;
 import org.ecsail.mvci_roster.RosterModel;
-import org.ecsail.static_calls.HalyardPaths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +17,8 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 
@@ -25,13 +26,13 @@ public class Xls_roster implements ConfigFilePaths {
 
 	private static final Logger logger = LoggerFactory.getLogger(Xls_roster.class);
 	private final RosterModel rosterModel;
-	private String selectedYear = null;
 
-	public Xls_roster(RosterModel rosterModel, String rosterType) {
+	public Xls_roster(RosterModel rosterModel) {
 		this.rosterModel = rosterModel;
-		ArrayList<String> headers = getHeaders();
+		ArrayList<String> headers = (ArrayList<String>) getHeaders();
+		String selectedYear = null;
 		if(rosterModel.getRosters().size() > 1)
-			this.selectedYear = rosterModel.getRosters().get(0).getSelectedYear();
+			selectedYear = rosterModel.getRosters().get(0).getSelectedYear();
 		logger.info("Creating Roster..");
 
         // Create a Workbook
@@ -49,29 +50,21 @@ public class Xls_roster implements ConfigFilePaths {
         headerFont.setBold(true);
         headerFont.setFontHeightInPoints((short) 12);
         headerFont.setColor(IndexedColors.BLACK.getIndex());
-
         // Create a CellStyle with the font
         CellStyle headerCellStyle = workBook.createCellStyle();
         headerCellStyle.setFont(headerFont);
-
         // Create a Row
         Row headerRow = sheet.createRow(0);
-
         // Create the header of the sheet
 		createSheetHeader(headers, headerCellStyle, headerRow);
-
 		// prints the main body of information
-		createRows(rosterModel, sheet);
-
+		createRows(sheet);
 		// makes the columns nice widths for the data
 		setProperColumnWithToMatchDataSize(headers, sheet);
+		createFile(rosterModel, workBook);
+	}
 
-//		Platform.runLater(() -> {
-//			File file = new SaveFileChooser(HalyardPaths.ROSTERS + "/",
-//					selectedYear + "_" + rosterType.replace(" ", "_"),
-//					"Excel Files", "*.xlsx").getFile();
-//		});
-//
+	private void createFile(RosterModel rosterModel, Workbook workBook) {
 		if (rosterModel.getFileToSave() != null) {
 			FileOutputStream fileOut = getFileOutPutStream(rosterModel.getFileToSave());
 			writeToWorkbook(workBook, fileOut);
@@ -88,28 +81,21 @@ public class Xls_roster implements ConfigFilePaths {
 		}
 	}
 
-	private void createRows(RosterModel rosterModel, Sheet sheet) {
-//		int rowNum = 1;
-//		for(MembershipListDTO m: rosterModel.getRosters()) {
-//			createRow(sheet,rowNum,m);
-//			rowNum++;
-//		}
+	private void createRows(Sheet sheet) {
 		int initialRowNum = 1;
 		IntStream.range(0, rosterModel.getRosters().size())
 				.forEach(i -> createRow(sheet, initialRowNum + i, rosterModel.getRosters().get(i)));
 	}
 
 	private static void setProperColumnWithToMatchDataSize(ArrayList<String> headers, Sheet sheet) {
-		for (int i = 0; i < headers.size(); i++) {
-			sheet.autoSizeColumn(i);
-		}
+		IntStream.range(0, headers.size()).forEach(i -> sheet.autoSizeColumn(i));
 	}
 
 	private void closeWorkBook(Workbook workBook) {
 		try {
 			workBook.close();
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
+			logger.error(e1.getMessage());
 			e1.printStackTrace();
 		}
 	}
@@ -120,7 +106,7 @@ public class Xls_roster implements ConfigFilePaths {
 		try {
 			fileOut.close();
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
+			logger.error(e1.getMessage());
 			e1.printStackTrace();
 		}
 	}
@@ -129,7 +115,7 @@ public class Xls_roster implements ConfigFilePaths {
 		try {
 			workbook.write(fileOut);
 		} catch (IOException e2) {
-			// TODO Auto-generated catch block
+			logger.error(e2.getMessage());
 			e2.printStackTrace();
 		}
 	}
@@ -138,25 +124,24 @@ public class Xls_roster implements ConfigFilePaths {
 		FileOutputStream fileOut = null;
 		try {
 			fileOut = new FileOutputStream(file);
-			System.out.println("Creating " + file);
+			logger.info("Creating " + file);
 		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
+			logger.error(e1.getMessage());
 			e1.printStackTrace();
 		}
 		return fileOut;
 	}
 
-	private String getFileName(String rosterType) {
-		HalyardPaths.checkPath(ROSTERS);
-		String fileName = rosterType;
-		System.out.println("Filename " + rosterType + " is selected");
-		return fileName += " Roster.xlsx";
-	}
+//	private String getFileName(String rosterType) {
+//		HalyardPaths.checkPath(ROSTERS);
+//		String fileName = rosterType;
+//		System.out.println("Filename " + rosterType + " is selected");
+//		return fileName += " Roster.xlsx";
+//	}
 
 	private Object getField(MembershipListDTO m, DbRosterSettingsDTO dto) {
 		Object obj;
 		try {
-//			System.out.println("dto.getGetter" + dto.getGetter());
 			Method method = m.getClass().getMethod(dto.getGetter());
 			obj = method.invoke(m);
 		} catch (NoSuchMethodException e) {
@@ -188,14 +173,11 @@ public class Xls_roster implements ConfigFilePaths {
         return row;
 	}
 
-	private ArrayList<String> getHeaders() {
-		ArrayList<String> headers = new ArrayList<>();
-		for(DbRosterSettingsDTO dto: rosterModel.getRosterSettings()) {
-			if (dto.isExportable()) {
-				headers.add(dto.getName());
-			}
-		}
-		return headers;
+	private List<String> getHeaders() {
+		return rosterModel.getRosterSettings().stream()
+				.filter(DbRosterSettingsDTO::isExportable)
+				.map(DbRosterSettingsDTO::getName)
+				.collect(Collectors.toList());
 	}
 
 //	private String getPhone(int p_id) {

@@ -95,13 +95,7 @@ public class RosterInteractor {
             logger.error(e.getMessage());
         }
     }
-
-    // TODO move to interactor
-    protected void chooseRoster() { //
-            new Xls_roster(
-                    rosterModel,
-                    rosterModel.getSelectedRadioBox().getRadioLabel());
-    }
+    protected void chooseRoster() { new Xls_roster(rosterModel); }
 
     protected void fillTableView() {
             if (!rosterModel.getTextFieldString().equals("")) fillWithSearchResults();
