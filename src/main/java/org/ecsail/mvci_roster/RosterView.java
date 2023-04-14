@@ -13,6 +13,7 @@ import javafx.scene.text.Text;
 import javafx.util.Builder;
 import javafx.util.Duration;
 import org.ecsail.dto.DbRosterSettingsDTO;
+import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.dto.MembershipListRadioDTO;
 import org.ecsail.mvci_roster.export.SaveFileChooser;
 import org.ecsail.static_calls.HalyardPaths;
@@ -20,6 +21,7 @@ import org.ecsail.widgetfx.HBoxFx;
 import org.ecsail.widgetfx.VBoxFx;
 
 import java.io.File;
+import java.util.function.Consumer;
 
 public class RosterView implements Builder<Region> {
 
@@ -27,10 +29,12 @@ public class RosterView implements Builder<Region> {
     Runnable changeState;
     Runnable search;
     Runnable chooseRoster;
-    public RosterView(RosterModel rm, Runnable cy, Runnable s, Runnable cr) {
+    Consumer<MembershipListDTO> launchTab;
+    public RosterView(RosterModel rm, Runnable cy, Runnable s, Runnable cr, Consumer<MembershipListDTO> lt) {
         rosterModel = rm;
         changeState = cy;
         chooseRoster =cr;
+        launchTab =lt;
         search = s;
     }
 
@@ -47,6 +51,7 @@ public class RosterView implements Builder<Region> {
         RosterTableView tableView = new RosterTableView(rosterModel);
         rosterModel.setRosterTableView(tableView);
         vBox.getChildren().add(tableView);
+        setTabLaunchListener();
         return vBox;
     }
 
@@ -106,6 +111,12 @@ public class RosterView implements Builder<Region> {
     }
     protected void setRadioListener() {
         rosterModel.selectedRadioBoxProperty().addListener(Observable -> changeState.run());
+    }
+
+    private void setTabLaunchListener() {
+        rosterModel.selectedMembershipListProperty().addListener((observable, oldValue, newValue) -> {
+            launchTab.accept(newValue);
+        });
     }
     private Node setUpFieldSelectedToSearchBox() {
         VBox vBox = VBoxFx.vBoxOf(new Insets(0,15,0,57));

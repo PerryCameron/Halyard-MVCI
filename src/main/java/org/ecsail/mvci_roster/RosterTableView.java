@@ -13,11 +13,19 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import org.ecsail.dto.MembershipListDTO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
 public class RosterTableView extends TableView<MembershipListDTO> {
+
+    private static final Logger logger = LoggerFactory.getLogger(RosterTableView.class);
+    private final RosterModel rosterModel;
+
+
     public RosterTableView(RosterModel rosterModel) {
+        this.rosterModel = rosterModel;
 
         VBox.setVgrow(this, Priority.ALWAYS);
         HBox.setHgrow(this, Priority.ALWAYS);
@@ -30,7 +38,6 @@ public class RosterTableView extends TableView<MembershipListDTO> {
         TableColumn<MembershipListDTO, String> lastNameCol = new TableColumn<>("Last Name");
         TableColumn<MembershipListDTO, String> stateCol = new TableColumn<>("City");
         TableColumn<MembershipListDTO, String> msIdCol = new TableColumn<>("MSID");
-
 
         setFixedCellSize(30);
         setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
@@ -87,23 +94,22 @@ public class RosterTableView extends TableView<MembershipListDTO> {
 
         this.getColumns()
                 .addAll(Arrays.asList(idCol, firstNameCol, lastNameCol, typeCol, joinDateCol, slipCol, stateCol, msIdCol));
-//        setRosterRowFactory();
+        setRosterRowFactory();
     }
 
-//    private void setRosterRowFactory() {
-//        this.setRowFactory(tv -> {
-//            TableRow<MembershipListDTO> row = new TableRow<>();
-//            row.setOnMouseClicked(event -> {
-//                if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
-//                    // int rowIndex = row.getIndex();
-//                    MembershipListDTO clickedRow = row.getItem();
-//                    Launcher.createMembershipTabForRoster(clickedRow.getMembershipId(), clickedRow.getMsId());
-//                }
+    private void setRosterRowFactory() {
+        this.setRowFactory(tv -> {
+            TableRow<MembershipListDTO> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
+                    // int rowIndex = row.getIndex();
+                    rosterModel.setSelectedMembershipList(row.getItem());
+                }
 ////				if (!row.isEmpty() && event.getButton() == MouseButton.SECONDARY && event.getClickCount() == 1) {
 ////				row.setContextMenu(new rosterContextMenu(row.getItem(), selectedYear));
 ////				}
-//            });
-//            return row;
-//        });
-//    }
+            });
+            return row;
+        });
+    }
 }

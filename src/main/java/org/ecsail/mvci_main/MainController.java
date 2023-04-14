@@ -4,6 +4,7 @@ package org.ecsail.mvci_main;
 import javafx.application.Platform;
 import javafx.scene.layout.Region;
 import org.ecsail.connection.Connections;
+import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.interfaces.Controller;
 import org.ecsail.mvci_connect.ConnectController;
 import org.ecsail.mvci_roster.RosterController;
@@ -19,6 +20,10 @@ public class MainController extends Controller {
         mainInteractor = new MainInteractor(mainModel);
         mainView = new MainView(mainModel, this::closeAllConnections);
         connectController = new ConnectController(this).getView();
+    }
+
+    public void openMembershipMVCI(MembershipListDTO membershipListDTO) {
+        mainInteractor.printMembershipList(membershipListDTO);
     }
 
     public void openTab(String tabName) {

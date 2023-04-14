@@ -2,6 +2,7 @@ package org.ecsail.mvci_main;
 
 import javafx.application.Platform;
 import javafx.scene.layout.Region;
+import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.fileio.FileIO;
 import org.ecsail.interfaces.ConfigFilePaths;
 import org.ecsail.mvci_connect.ConnectController;
@@ -27,5 +28,9 @@ public class MainInteractor implements ConfigFilePaths {
         Platform.runLater(() -> {
             mainModel.statusLabelProperty().set(status);
         });
+    }
+
+    public void printMembershipList(MembershipListDTO membershipListDTO) {
+        logger.info(membershipListDTO.toString());
     }
 }
