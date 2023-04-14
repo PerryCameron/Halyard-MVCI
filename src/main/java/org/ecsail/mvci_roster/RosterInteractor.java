@@ -60,6 +60,7 @@ public class RosterInteractor {
 
     private void changeState() {
         Platform.runLater(() -> {
+            logger.debug("Rosters is in search mode: " + rosterModel.isSearchMode());
             if (rosterModel.isSearchMode())
                 rosterModel.setNumberOfRecords(String.valueOf(rosterModel.getSearchedRosters().size()));
             else
@@ -67,20 +68,41 @@ public class RosterInteractor {
         });
     }
 
-    @SuppressWarnings("unchecked")
+
     protected void changeListState() {
-            rosterModel.getRosters().clear();
+        clearMainRoster();
             Method method;
             try {
                 method = membershipRepo.getClass().getMethod(rosterModel.getSelectedRadioBox().getMethod(), Integer.class);
                 ObservableList<MembershipListDTO> updatedRoster
                         = FXCollections.observableArrayList((List<MembershipListDTO>) method.invoke(membershipRepo, rosterModel.getSelectedYear()));
                 updateRoster(updatedRoster);
+                fillTableView();
             } catch (Exception e) {
                 e.printStackTrace();
             }
             changeState();
+            clearSearchBox();
+            sortRoster();
+    }
+
+    private void clearSearchBox() {
+        if(!rosterModel.getTextFieldString().equals(""))
+        Platform.runLater(() -> {
+            rosterModel.setTextFieldString("");
+        });
+    }
+
+    private void clearMainRoster() {
+        Platform.runLater(() -> {
+            rosterModel.getRosters().clear();
+        });
+    }
+
+    private void sortRoster() {
+        Platform.runLater(() -> {
             rosterModel.getRosters().sort(Comparator.comparing(MembershipListDTO::getMembershipId));
+        });
     }
 
     private void updateRoster(ObservableList<MembershipListDTO> updatedRoster) {
@@ -105,9 +127,10 @@ public class RosterInteractor {
 
     private void fillWithResults() {
         Platform.runLater(() -> {
-        rosterModel.getRosterTableView().setItems(rosterModel.getRosters());
-        rosterModel.setIsSearchMode(false);
-        rosterModel.getSearchedRosters().clear();
+            logger.debug("TableView is set to display normal results");
+            rosterModel.getRosterTableView().setItems(rosterModel.getRosters());
+            rosterModel.setIsSearchMode(false);
+            rosterModel.getSearchedRosters().clear();
         });
     }
 
@@ -117,6 +140,7 @@ public class RosterInteractor {
             rosterModel.getSearchedRosters().clear();
             rosterModel.getSearchedRosters().addAll(list);
             rosterModel.getRosterTableView().setItems(rosterModel.getSearchedRosters());
+            logger.debug("TableView is set to display searched results");
             rosterModel.setIsSearchMode(true);
         });
     }

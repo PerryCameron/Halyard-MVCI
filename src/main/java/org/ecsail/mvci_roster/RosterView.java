@@ -135,7 +135,7 @@ public class RosterView implements Builder<Region> {
         Text text = new Text("Search");
         text.setId("invoice-text-number");
         TextField textField = new TextField();
-        rosterModel.textFieldStringProperty().bind(textField.textProperty());
+        rosterModel.textFieldStringProperty().bindBidirectional(textField.textProperty());
         hBox.getChildren().addAll(text, textField);
         PauseTransition pause = new PauseTransition(Duration.seconds(1));
         // this is awesome, stole from stackoverflow.com
