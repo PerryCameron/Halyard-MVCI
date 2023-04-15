@@ -29,7 +29,7 @@ public class MembershipController extends Controller {
             }
         };
         task.setOnSucceeded(e -> {
-            System.out.println("succeeded");
+            membershipInteractor.setListsLoaded(true);
         });
         new Thread(task).start();
     }

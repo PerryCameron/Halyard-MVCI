@@ -29,4 +29,8 @@ public class MembershipInteractor {
             logger.info("set people, size: " +membershipModel.getPeople().size());
         });
     }
+
+    protected void setListsLoaded(boolean isLoaded) {
+        Platform.runLater(() -> membershipModel.setListsLoaded(isLoaded));
+    }
 }

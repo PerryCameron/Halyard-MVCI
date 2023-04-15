@@ -174,7 +174,7 @@ public class RosterInteractor {
         Platform.runLater(() -> rosterModel.setRosterSettings(list));
     }
 
-    protected void setListsLoaded() {
-        Platform.runLater(() -> rosterModel.setListsLoaded(true));
+    protected void setListsLoaded(boolean isLoaded) {
+        Platform.runLater(() -> rosterModel.setListsLoaded(isLoaded));
     }
 }

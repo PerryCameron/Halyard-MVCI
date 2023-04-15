@@ -68,7 +68,7 @@ public class RosterController extends Controller {
             }
         };
         task.setOnSucceeded(e -> {
-            rosterInteractor.setListsLoaded();
+            rosterInteractor.setListsLoaded(true);
             rosterInteractor.setRosterToTableview();
             rosterView.setRadioListener(); // set last, so it doesn't fire, when radios are created.
         });
