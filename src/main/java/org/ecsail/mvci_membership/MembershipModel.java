@@ -1,15 +1,23 @@
 package org.ecsail.mvci_membership;
 
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.ecsail.dto.MembershipListDTO;
+import org.ecsail.dto.PersonDTO;
 
 public class MembershipModel {
 
-    SimpleObjectProperty<MembershipListDTO> membership = new SimpleObjectProperty<>();
+    private ObservableList<PersonDTO> people = FXCollections.observableArrayList();
+    private final SimpleObjectProperty<MembershipListDTO> membership = new SimpleObjectProperty<>();
 
 
-
-
+    public ObservableList<PersonDTO> getPeople() {
+        return people;
+    }
+    public void setPeople(ObservableList<PersonDTO> people) {
+        this.people = people;
+    }
     public MembershipListDTO getMembership() {
         return membership.get();
     }
