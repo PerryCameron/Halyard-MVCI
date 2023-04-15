@@ -7,6 +7,7 @@ import org.ecsail.connection.Connections;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.interfaces.Controller;
 import org.ecsail.mvci_connect.ConnectController;
+import org.ecsail.mvci_membership.MembershipController;
 import org.ecsail.mvci_roster.RosterController;
 import org.ecsail.mvci_welcome.WelcomeController;
 
@@ -22,8 +23,8 @@ public class MainController extends Controller {
         connectController = new ConnectController(this).getView();
     }
 
-    public void openMembershipMVCI(MembershipListDTO membershipListDTO) {
-        mainInteractor.printMembershipList(membershipListDTO);
+    public void openMembershipMVCI(MembershipListDTO ml) {
+        mainView.addTab("Mem " + ml.getMembershipId(), new MembershipController(this, ml).getView());
     }
 
     public void openTab(String tabName) {

@@ -11,6 +11,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import org.ecsail.BaseApplication;
+import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.widgetfx.MenuFx;
 
 import java.util.Objects;
@@ -93,6 +94,7 @@ public class MainView implements Builder<Region> {
         mainModel.getMainTabPane().getTabs().add(newTab);
         mainModel.getMainTabPane().getSelectionModel().select(newTab);
     }
+
 
 //    private static void startFileLogger() {
 //        try {

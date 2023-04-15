@@ -1,17 +1,19 @@
 package org.ecsail.mvci_membership;
 
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.util.Builder;
 
 public class MembershipView implements Builder<Region> {
 
-    MembershipModel boatListModel;
-    public MembershipView(MembershipModel rm) {
-        boatListModel = rm;
+    MembershipModel membershipModel;
+    public MembershipView(MembershipModel mm) {
+        membershipModel = mm;
     }
 
     @Override
     public Region build() {
-        return null;
+        BorderPane borderPane = new BorderPane();
+        return borderPane;
     }
 }
