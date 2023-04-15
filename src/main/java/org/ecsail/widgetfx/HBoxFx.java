@@ -77,6 +77,7 @@ public class HBoxFx {
         box.setSpacing(spacing);
         return box;
     }
+
     public static HBox hBoxOf(Insets padding) {
         HBox box = new HBox();
         box.setPadding(padding);

@@ -9,9 +9,12 @@ public class MembershipController extends Controller {
 
     MembershipInteractor rosterInteractor;
     MembershipView membershipView;
+    MainController mainController;
 
-    public MembershipController(MainController mainController, MembershipListDTO membershipListDTO) {
-        MembershipModel membershipModel = new MembershipModel(membershipListDTO);
+    public MembershipController(MainController mc, MembershipListDTO ml) {
+        System.out.println(ml);
+        MembershipModel membershipModel = new MembershipModel(ml);
+        this.mainController = mc;
         membershipView = new MembershipView(membershipModel);
     }
 

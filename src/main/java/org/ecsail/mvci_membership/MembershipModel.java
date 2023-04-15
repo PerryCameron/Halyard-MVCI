@@ -19,5 +19,7 @@ public class MembershipModel {
     public void setMembership(MembershipListDTO membership) {
         this.membership.set(membership);
     }
-    public MembershipModel(MembershipListDTO membershipListDTO) {}
+    public MembershipModel(MembershipListDTO membershipListDTO) {
+        membership.set(membershipListDTO);
+    }
 }
