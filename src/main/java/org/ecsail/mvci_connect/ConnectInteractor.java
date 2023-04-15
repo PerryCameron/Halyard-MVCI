@@ -42,6 +42,7 @@ public class ConnectInteractor implements ConfigFilePaths {
                 logins.clear();
                 for (Object x : ar) {
                     logins.add((LoginDTO) x);
+                    System.out.println(x);
                 }
                 in.close();
             } catch (Exception e) {

@@ -6,10 +6,14 @@ import javafx.beans.property.Property;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.util.Builder;
+import org.apache.poi.ss.formula.functions.T;
 import org.ecsail.widgetfx.HBoxFx;
+import org.ecsail.widgetfx.TabPaneFx;
 
 import java.awt.*;
 
@@ -24,7 +28,14 @@ public class MembershipView implements Builder<Region> {
     public Region build() {
         BorderPane borderPane = new BorderPane();
         borderPane.setTop(createHeader());
+        borderPane.setLeft(createPeopleTabPane());
         return borderPane;
+    }
+
+    private Node createPeopleTabPane() {
+        TabPane tabPane = TabPaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE, 560);
+
+        return tabPane;
     }
 
     private Node createHeader() {
