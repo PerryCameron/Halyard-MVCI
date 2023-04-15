@@ -1,6 +1,9 @@
 package org.ecsail.widgetfx;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.binding.StringBinding;
 import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.Property;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -15,17 +18,16 @@ public class TextFieldFx {
         return textField;
     }
 
-    public static TextField textFieldOf(double width, IntegerProperty integerProperty) {
+    public static TextField textFieldOf(double width, Property<?> property) {
         TextField textField = new TextField();
         textField.setPrefWidth(width);
-        textField.textProperty().bindBidirectional(integerProperty, new NumberStringConverter("#"));
-        return textField;
-    }
-
-    public static TextField textFieldOf(double width, StringProperty stringProperty) {
-        TextField textField = new TextField();
-        textField.setPrefWidth(width);
-        textField.textProperty().bindBidirectional(stringProperty);
+        if (property instanceof StringProperty) {
+            textField.textProperty().bindBidirectional((StringProperty) property);
+        } else if (property instanceof IntegerProperty) {
+            textField.textProperty().bindBidirectional((IntegerProperty) property, new NumberStringConverter());
+        } else {
+            throw new IllegalArgumentException("Unsupported property type: " + property.getClass());
+        }
         return textField;
     }
 

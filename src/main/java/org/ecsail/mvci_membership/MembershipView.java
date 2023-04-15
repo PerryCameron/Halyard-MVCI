@@ -34,7 +34,10 @@ public class MembershipView implements Builder<Region> {
 
     private Node createPeopleTabPane() {
         TabPane tabPane = TabPaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE, 560);
-
+        membershipModel.listsLoadedProperty().addListener((observable, oldValue, newValue) -> {
+            membershipModel.getPeople().forEach(personDTO
+                    -> tabPane.getTabs().add(new PersonTab(personDTO, membershipModel).build()));
+        });
         return tabPane;
     }
 
