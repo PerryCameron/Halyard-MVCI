@@ -52,3 +52,8 @@
 #group:hover {
     -fx-fill:white;
 }
+
+#text-white
+{
+    -fx-fill:white;
+}

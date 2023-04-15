@@ -1,5 +1,6 @@
 package org.ecsail.widgetfx;
 
+import javafx.geometry.Pos;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
@@ -12,4 +13,5 @@ public class TextFx {
         text.setOnMouseEntered(en -> text.setFill(Color.RED));
         return text;
     }
+
 }

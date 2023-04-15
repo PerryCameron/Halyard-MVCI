@@ -6,16 +6,13 @@ import javafx.beans.property.Property;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.util.Builder;
-import org.apache.poi.ss.formula.functions.T;
 import org.ecsail.widgetfx.HBoxFx;
 import org.ecsail.widgetfx.TabPaneFx;
-
-import java.awt.*;
+import org.ecsail.widgetfx.VBoxFx;
 
 public class MembershipView implements Builder<Region> {
 
@@ -26,24 +23,26 @@ public class MembershipView implements Builder<Region> {
 
     @Override
     public Region build() {
+        VBox vBox = VBoxFx.vBoxOf(new Insets(0,5,0,10));
         BorderPane borderPane = new BorderPane();
         borderPane.setTop(createHeader());
         borderPane.setLeft(createPeopleTabPane());
-        return borderPane;
+        vBox.getChildren().add(borderPane);
+        return vBox;
     }
 
     private Node createPeopleTabPane() {
-        TabPane tabPane = TabPaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE, 560);
+        TabPane tabPane = TabPaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE, 498);
+        tabPane.setId("custom-tab-pane");
         membershipModel.listsLoadedProperty().addListener((observable, oldValue, newValue) -> {
             membershipModel.getPeople().forEach(personDTO
-                    -> tabPane.getTabs().add(new PersonTab(personDTO, membershipModel).build()));
+                    -> tabPane.getTabs().add(new PersonTabView(this, personDTO).build()));
         });
         return tabPane;
     }
 
     private Node createHeader() {
-        HBox hBox = HBoxFx.hBoxOf(Pos.TOP_CENTER, new Insets(15,15,0,15), 100);
-//        VBox.setVgrow(hbox1, Priority.ALWAYS);
+        HBox hBox = HBoxFx.hBoxOf(Pos.TOP_CENTER, new Insets(15,15,10,15), 100);
         hBox.getChildren().add(newBox("Record Year: ", membershipModel.getMembership().selectedYearProperty()));
         hBox.getChildren().add(newBox("Membership ID: ", membershipModel.getMembership().membershipIdProperty()));
         hBox.getChildren().add(newBox("Membership Type: ", membershipModel.getMembership().memTypeProperty()));
@@ -62,5 +61,7 @@ public class MembershipView implements Builder<Region> {
         return hBox;
     }
 
-
+    protected MembershipModel getMembershipModel() {
+        return membershipModel;
+    }
 }

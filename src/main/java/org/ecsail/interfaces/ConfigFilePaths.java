@@ -10,4 +10,6 @@ public interface ConfigFilePaths {
     String UNIX_FILE_SEPARATOR = "/";
     String FILE_EXTENSION = ".";
     String ROSTERS = System.getProperty("user.home") + "/Documents/ECSC/Rosters";
+    String DEFAULT_PHOTO = "/personimg.png";
+
 }

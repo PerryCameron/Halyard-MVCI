@@ -15,6 +15,14 @@ public class VBoxFx {
         return vBox;
     }
 
+    public static VBox vBoxOf(double width, double height, Insets insets, String style) {
+        VBox vBox = new VBox();
+        vBox.setPrefSize(width,height);
+        vBox.setPadding(insets);
+        vBox.setId(style);
+        return vBox;
+    }
+
     public static VBox vBoxOf(Insets insets) {
         VBox vBox = new VBox();
         vBox.setPadding(insets);
