@@ -18,8 +18,6 @@ public class ConnectController {
     ConnectView connectView;
     ConnectInteractor connectInteractor;
 
-    private static final Logger logger = LoggerFactory.getLogger(ConnectController.class);
-
     public ConnectController(MainController mainController) {
         this.mainController = mainController;
         connectInteractor = new ConnectInteractor(connectModel);
@@ -48,17 +46,13 @@ public class ConnectController {
             }
         };
         connectTask.setOnSucceeded(event -> {
-            boolean connectionSuccessful = connectTask.getValue();
-            if (connectionSuccessful) {
                 connectModel.setRotateShipWheel(false);
                 mainController.setStatus("(Connected) " + connectModel.getHost());
                 BaseApplication.loginStage.close();
                 mainController.openWelcomeMVCI();
-            } else {
-                // Handle the case where the connection fails
-            }
+                mainController.loadCommonLists();
         });
-        connectTask.setOnFailed(event -> logger.error(connectTask.getException().getMessage()));
+        connectTask.setOnFailed(event -> connectInteractor.logError(connectTask.getException().getMessage()));
         Thread thread = new Thread(connectTask);
         thread.start();
     }
@@ -67,7 +61,7 @@ public class ConnectController {
         return () -> {
             try {
                 connectInteractor.getConnections().getSqlConnection().close();
-                logger.info("SQL: Connection closed");
+                connectInteractor.logInfo("SQL: Connection closed");
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -77,7 +71,7 @@ public class ConnectController {
                 try {
                     sshConnection.getSession().delPortForwardingL(3306);
                     sshConnection.getSession().disconnect();
-                    logger.info("SSH: port forwarding closed");
+                    connectInteractor.logInfo("SSH: port forwarding closed");
                 } catch (JSchException e) {
                     e.printStackTrace();
                 }

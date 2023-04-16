@@ -2,6 +2,7 @@ package org.ecsail.enums;
 
 
 
+import javafx.collections.ObservableList;
 import org.ecsail.dto.BoardPositionDTO;
 
 import java.util.ArrayList;
@@ -29,12 +30,10 @@ public class Officer {
      * @param officerCode - two character code
      * @return String - full name of position
      */
-    public static String getByCode(String officerCode) {
-//        return BaseApplication.boardPositions
-//                .stream()
-//                .filter(p -> p.identifier().equals(officerCode))
-//                .map(p -> p.position()).findFirst().orElse("not found");
-        return null;
+    public static String getByCode(String officerCode, ObservableList<BoardPositionDTO> bp) {
+        return bp.stream()
+                .filter(p -> p.identifier().equals(officerCode))
+                .map(p -> p.position()).findFirst().orElse("not found");
     }
 
     /**
@@ -42,12 +41,10 @@ public class Officer {
      * @param name String the full name of a position
      * @return String the two character code that represents given position name
      */
-    public static String getByName(String name) {
-//        return BaseApplication.boardPositions
-//                .stream()
-//                .filter(p -> p.position().equals(name))
-//                .map(p -> p.identifier()).findFirst().orElse("not found");
-        return null;
+    public static String getByName(String name, ObservableList<BoardPositionDTO> bp) {
+        return bp.stream()
+                .filter(p -> p.position().equals(name))
+                .map(p -> p.identifier()).findFirst().orElse("not found");
     }
 
 }

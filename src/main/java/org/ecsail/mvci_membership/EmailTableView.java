@@ -8,15 +8,13 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import org.ecsail.custom.RadioButtonCell;
 import org.ecsail.dto.EmailDTO;
 import org.ecsail.dto.PersonDTO;
 import org.ecsail.static_calls.StringTools;
 import org.ecsail.widgetfx.TableColumnFx;
+import org.ecsail.widgetfx.TableViewFx;
 
 public class EmailTableView implements Builder<TableView> {
 
@@ -32,13 +30,8 @@ public class EmailTableView implements Builder<TableView> {
 
     @Override
     public TableView build() {
-        TableView<EmailDTO> tableView = new TableView<>();
-        VBox.setVgrow(tableView, Priority.ALWAYS);
-        HBox.setHgrow(tableView, Priority.ALWAYS);
+        TableView<EmailDTO> tableView = TableViewFx.tableViewOf(EmailDTO.class);
         tableView.setItems(person.getEmail());
-        tableView.setFixedCellSize(30);
-        tableView.setEditable(true);
-        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
         tableView.getColumns().addAll(createColumn1(), createColumn2(), createColumn3());
         return tableView;
     }

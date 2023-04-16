@@ -4,16 +4,9 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.ecsail.connection.Connections;
-import org.ecsail.dto.MembershipListDTO;
-import org.ecsail.dto.PersonDTO;
-import org.ecsail.repository.implementations.AwardRepositoryImpl;
-import org.ecsail.repository.implementations.EmailRepositoryImpl;
-import org.ecsail.repository.implementations.PersonRepositoryImpl;
-import org.ecsail.repository.implementations.PhoneRepositoryImpl;
-import org.ecsail.repository.interfaces.AwardRepository;
-import org.ecsail.repository.interfaces.EmailRepository;
-import org.ecsail.repository.interfaces.PersonRepository;
-import org.ecsail.repository.interfaces.PhoneRepository;
+import org.ecsail.dto.*;
+import org.ecsail.repository.implementations.*;
+import org.ecsail.repository.interfaces.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +17,7 @@ public class MembershipInteractor {
     private final PhoneRepository phoneRepo;
     private final EmailRepository emailRepo;
     private final AwardRepository awardRepo;
+    private final OfficerRepository officerRepo;
 
 
     public MembershipInteractor(MembershipModel membershipModel, Connections connections) {
@@ -32,26 +26,25 @@ public class MembershipInteractor {
         phoneRepo = new PhoneRepositoryImpl(connections.getDataSource());
         emailRepo = new EmailRepositoryImpl(connections.getDataSource());
         awardRepo = new AwardRepositoryImpl(connections.getDataSource());
+        officerRepo = new OfficerRepositoryImpl(connections.getDataSource());
     }
 
-    public void getLists(MembershipListDTO ml) {
-        ObservableList<PersonDTO> people = null;
+    public void getLists(MembershipListDTO ml) { // not on FX thread because lists added before UI is launched
+        ObservableList<PersonDTO> personDTOS = null;
         try {
-            people = FXCollections.observableArrayList(peopleRepo.getActivePeopleByMsId(ml.getMsId()));
-            for (PersonDTO person : people) {
+            personDTOS = FXCollections.observableArrayList(peopleRepo.getActivePeopleByMsId(ml.getMsId()));
+            for (PersonDTO person : personDTOS) {
                 person.setPhones(FXCollections.observableArrayList(phoneRepo.getPhoneByPid(person.getP_id())));
                 person.setEmail(FXCollections.observableArrayList(emailRepo.getEmail(person.getP_id())));
                 person.setAwards(FXCollections.observableArrayList(awardRepo.getAwards(person)));
+                person.setOfficer(FXCollections.observableArrayList(officerRepo.getOfficer(person)));
             }
         } catch (Exception e) {
             logger.error(e.getMessage());
             e.printStackTrace();
         }
-        ObservableList<PersonDTO> finalPeople = people;
-        Platform.runLater(() -> {
-            membershipModel.setPeople(finalPeople);
+            membershipModel.setPeople(personDTOS);
             logger.info("set people, size: " +membershipModel.getPeople().size());
-        });
     }
 
     protected void setListsLoaded(boolean isLoaded) {

@@ -12,9 +12,11 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import org.ecsail.dto.AwardDTO;
+import org.ecsail.dto.OfficerDTO;
 import org.ecsail.dto.PersonDTO;
 import org.ecsail.enums.Awards;
 import org.ecsail.widgetfx.TableColumnFx;
+import org.ecsail.widgetfx.TableViewFx;
 
 public class AwardTableView implements Builder<TableView> {
     private final PersonDTO person;
@@ -29,13 +31,8 @@ public class AwardTableView implements Builder<TableView> {
 
     @Override
     public TableView build() {
-        TableView<AwardDTO> tableView = new TableView<>();
-        VBox.setVgrow(tableView, Priority.ALWAYS);
-        HBox.setHgrow(tableView, Priority.ALWAYS);
+        TableView<AwardDTO> tableView = TableViewFx.tableViewOf(AwardDTO.class);
         tableView.setItems(person.getAwards());
-        tableView.setFixedCellSize(30);
-        tableView.setEditable(true);
-        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY );
         tableView.getColumns().addAll(createColumn1(), createColumn2());
         return tableView;
     }
@@ -63,9 +60,7 @@ public class AwardTableView implements Builder<TableView> {
             Awards type = Awards.getByCode(awardCode);
             return new SimpleObjectProperty<>(type);
         });
-
         col2.setCellFactory(ComboBoxTableCell.forTableColumn(awardsList));
-
         col2.setOnEditCommit((TableColumn.CellEditEvent<AwardDTO, Awards> event) -> {
             // get the position on the table
             TablePosition<AwardDTO, Awards> pos = event.getTablePosition();

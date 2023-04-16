@@ -2,7 +2,9 @@ package org.ecsail.mvci_main;
 
 
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.scene.layout.Region;
+import org.ecsail.BaseApplication;
 import org.ecsail.connection.Connections;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.interfaces.Controller;
@@ -49,8 +51,24 @@ public class MainController extends Controller {
         mainView.addTab("Welcome",new WelcomeController(this).getView());
     }
 
+    public void loadCommonLists() {
+        Task<Boolean> connectTask = new Task<>() {
+            @Override
+            protected Boolean call() {
+                mainInteractor.loadCommonLists(getConnections());
+                return null;
+            }
+        };
+        Thread thread = new Thread(connectTask);
+        thread.start();
+    }
+
     public Connections getConnections() {
         return connectController.getConnectInteractor().getConnections();
+    }
+
+    public MainModel getMainModel() {
+        return mainInteractor.getMainModel();
     }
 
     private void closeAllConnections() {

@@ -70,4 +70,14 @@ public class ConnectInteractor implements ConfigFilePaths {
     public Connections getConnections() {
         return connections;
     }
+
+    public void logError(String message) {
+        logger.error(message);
+    }
+
+    public void logInfo(String message) {
+        logger.info(message);
+    }
+    public void loadCommonLists() {
+    }
 }

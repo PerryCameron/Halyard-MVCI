@@ -11,14 +11,12 @@ import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.ComboBoxTableCell;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import org.ecsail.dto.PersonDTO;
 import org.ecsail.dto.PhoneDTO;
 import org.ecsail.enums.PhoneType;
 import org.ecsail.widgetfx.TableColumnFx;
+import org.ecsail.widgetfx.TableViewFx;
 
 import java.util.regex.Pattern;
 
@@ -36,13 +34,8 @@ public class PhoneTableView implements Builder<TableView> {
 
     @Override
     public TableView build() {
-        TableView<PhoneDTO> tableView = new TableView<>();
-        VBox.setVgrow(tableView, Priority.ALWAYS);
-        HBox.setHgrow(tableView, Priority.ALWAYS);
+        TableView<PhoneDTO> tableView = TableViewFx.tableViewOf(PhoneDTO.class);
         tableView.setItems(person.getPhones());
-        tableView.setFixedCellSize(30);
-        tableView.setEditable(true);
-        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY );
         tableView.getColumns().addAll(createColumn1(), createColumn2(), createColumn3());
         return tableView;
     }

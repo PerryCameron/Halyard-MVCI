@@ -14,7 +14,7 @@ public class MembershipController extends Controller {
 
     public MembershipController(MainController mc, MembershipListDTO ml) {
         this.mainController = mc;
-        MembershipModel membershipModel = new MembershipModel(ml);
+        MembershipModel membershipModel = new MembershipModel(ml , mainController.getMainModel());
         this.membershipInteractor = new MembershipInteractor(membershipModel,mainController.getConnections());
         getDataForMembership(ml);
         membershipView = new MembershipView(membershipModel);
