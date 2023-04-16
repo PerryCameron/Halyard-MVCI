@@ -7,9 +7,21 @@ import javafx.beans.property.SimpleStringProperty;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.util.StringJoiner;
+import java.util.regex.Pattern;
 
 public class StringTools {
 
+	public static boolean isValidEmail(String email)
+	{
+		String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
+				"[a-zA-Z0-9_+&*-]+)*@" +
+				"(?:[a-zA-Z0-9-]+\\.)+[a-z" +
+				"A-Z]{2,7}$";
+		Pattern pat = Pattern.compile(emailRegex);
+		if (email == null)
+			return false;
+		return pat.matcher(email).matches();
+	}
 	public static String changeEmptyStringToZero(String input) {
 		if(input != null) {
 			if(input.equals("")) input= "0";

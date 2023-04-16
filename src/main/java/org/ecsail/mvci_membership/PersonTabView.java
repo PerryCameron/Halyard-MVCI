@@ -54,6 +54,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths 
         VBox vBox = VBoxFx.vBoxOf(new Insets(10,5,5,5)); // space between borders
         TabPane tabPane = new TabPane();
         tabPane.getTabs().add(detailsTab("Phone"));
+        tabPane.getTabs().add(detailsTab("Email"));
         vBox.getChildren().add(tabPane);
         return vBox;
     }
@@ -76,19 +77,21 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths 
 
     private Node handleAwardsTab() {
         HBox hBox = HBoxFx.hBoxOf(new Insets(5,5,5,5),"box-background-light");
-
+            // ADD DELTET
         return hBox;
     }
 
     private Node handleOfficerTab() {
         HBox hBox = HBoxFx.hBoxOf(new Insets(5,5,5,5),"box-background-light");
-
+            // ADD DElETE
         return hBox;
     }
 
     private Node handleEmailTab() {
-        HBox hBox = HBoxFx.hBoxOf(new Insets(5,5,5,5),"box-background-light");
-
+        HBox hBox = HBoxFx.hBoxOf(new Insets(10,10,5,10),"box-background-light");
+        hBox.setPrefHeight(130);
+        VBox vBox = createButtonBox(createAdd(person), createDelete(person), createCopy(person), createEmail(person));
+        hBox.getChildren().addAll(new EmailTableView(person, membershipView).build(),vBox);
         return hBox;
     }
 
@@ -108,16 +111,25 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths 
 
     private Button createCopy(Object object) {
         Button button = ButtonFx.buttonOf("Copy",60);
+        // TODO Add listener
         return button;
     }
 
     private Button createDelete(Object object) {
         Button button = ButtonFx.buttonOf("Delete",60);
+        // TODO Add listener
         return button;
     }
 
     private Button createAdd(Object object) {
         Button button = ButtonFx.buttonOf("Add",60);
+        // TODO Add listener
+        return button;
+    }
+
+    private Button createEmail(Object object) {
+        Button button = ButtonFx.buttonOf("Email",60);
+        // TODO Add listener
         return button;
     }
 

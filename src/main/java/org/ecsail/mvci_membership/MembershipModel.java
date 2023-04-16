@@ -12,7 +12,7 @@ import org.ecsail.dto.PhoneDTO;
 public class MembershipModel {
 
     private ObservableList<PersonDTO> people = FXCollections.observableArrayList();
-    private ObservableList<PhoneDTO> phones = FXCollections.observableArrayList();
+
     private final SimpleObjectProperty<MembershipListDTO> membership = new SimpleObjectProperty<>();
     private final BooleanProperty listsLoaded = new SimpleBooleanProperty(false);
 
