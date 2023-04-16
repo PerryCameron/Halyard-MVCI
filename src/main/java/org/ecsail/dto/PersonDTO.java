@@ -7,7 +7,7 @@ import javafx.collections.ObservableList;
 public class PersonDTO {
 	private IntegerProperty p_id;
 	private IntegerProperty ms_id;
-	private IntegerProperty memberType; // 1 == primary 2 == secondary 3 == children of
+	private IntegerProperty memberType; // 1 == primary 2 == secondary 3 == dependant
 	private StringProperty firstName;
 	private StringProperty lastName;
 	private StringProperty occupation;
@@ -18,6 +18,7 @@ public class PersonDTO {
 	private IntegerProperty oldMsid;
 	private ObservableList<PhoneDTO> phones = FXCollections.observableArrayList();
 	private ObservableList<EmailDTO> email = FXCollections.observableArrayList();
+	private ObservableList<AwardDTO> awards = FXCollections.observableArrayList();
 
 	public PersonDTO(Integer pid, Integer ms_id, Integer memberType, String firstName, String lastName,
                      String birthday, String occupation,
@@ -33,6 +34,14 @@ public class PersonDTO {
 		this.active = new SimpleBooleanProperty(isActive);
 		this.nickName = new SimpleStringProperty(nickName);
 		this.oldMsid = new SimpleIntegerProperty(oldMsid);
+	}
+
+	public ObservableList<AwardDTO> getAwards() {
+		return awards;
+	}
+
+	public void setAwards(ObservableList<AwardDTO> awards) {
+		this.awards = awards;
 	}
 
 	public PersonDTO() { }// default constructor

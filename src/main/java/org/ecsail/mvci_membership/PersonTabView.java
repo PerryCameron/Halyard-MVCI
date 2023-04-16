@@ -55,6 +55,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths 
         TabPane tabPane = new TabPane();
         tabPane.getTabs().add(detailsTab("Phone"));
         tabPane.getTabs().add(detailsTab("Email"));
+        tabPane.getTabs().add(detailsTab("Awards"));
         vBox.getChildren().add(tabPane);
         return vBox;
     }
@@ -76,8 +77,10 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths 
     }
 
     private Node handleAwardsTab() {
-        HBox hBox = HBoxFx.hBoxOf(new Insets(5,5,5,5),"box-background-light");
-            // ADD DELTET
+        HBox hBox = HBoxFx.hBoxOf(new Insets(10,10,5,10),"box-background-light");
+        hBox.setPrefHeight(130);
+        VBox vBox = createButtonBox(createAdd(person), createDelete(person));
+        hBox.getChildren().addAll(new AwardTableView(person, membershipView).build(),vBox);
         return hBox;
     }
 

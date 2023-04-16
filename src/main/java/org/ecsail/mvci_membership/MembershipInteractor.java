@@ -6,9 +6,11 @@ import javafx.collections.ObservableList;
 import org.ecsail.connection.Connections;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.dto.PersonDTO;
+import org.ecsail.repository.implementations.AwardRepositoryImpl;
 import org.ecsail.repository.implementations.EmailRepositoryImpl;
 import org.ecsail.repository.implementations.PersonRepositoryImpl;
 import org.ecsail.repository.implementations.PhoneRepositoryImpl;
+import org.ecsail.repository.interfaces.AwardRepository;
 import org.ecsail.repository.interfaces.EmailRepository;
 import org.ecsail.repository.interfaces.PersonRepository;
 import org.ecsail.repository.interfaces.PhoneRepository;
@@ -21,6 +23,7 @@ public class MembershipInteractor {
     private final PersonRepository peopleRepo;
     private final PhoneRepository phoneRepo;
     private final EmailRepository emailRepo;
+    private final AwardRepository awardRepo;
 
 
     public MembershipInteractor(MembershipModel membershipModel, Connections connections) {
@@ -28,6 +31,7 @@ public class MembershipInteractor {
         peopleRepo = new PersonRepositoryImpl(connections.getDataSource());
         phoneRepo = new PhoneRepositoryImpl(connections.getDataSource());
         emailRepo = new EmailRepositoryImpl(connections.getDataSource());
+        awardRepo = new AwardRepositoryImpl(connections.getDataSource());
     }
 
     public void getLists(MembershipListDTO ml) {
@@ -37,6 +41,7 @@ public class MembershipInteractor {
             for (PersonDTO person : people) {
                 person.setPhones(FXCollections.observableArrayList(phoneRepo.getPhoneByPid(person.getP_id())));
                 person.setEmail(FXCollections.observableArrayList(emailRepo.getEmail(person.getP_id())));
+                person.setAwards(FXCollections.observableArrayList(awardRepo.getAwards(person)));
             }
         } catch (Exception e) {
             logger.error(e.getMessage());
