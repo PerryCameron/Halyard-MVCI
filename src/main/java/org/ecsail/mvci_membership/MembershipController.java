@@ -24,7 +24,7 @@ public class MembershipController extends Controller {
         Task<Void> task = new Task<>() {
             @Override
             protected Void call() {
-                membershipInteractor.getPeople(ml);
+                membershipInteractor.getLists(ml);
                 return null;
             }
         };

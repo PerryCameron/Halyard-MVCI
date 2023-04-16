@@ -1,19 +1,23 @@
 package org.ecsail.dto;
 
 import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 public class PersonDTO {
 	private IntegerProperty p_id;
 	private IntegerProperty ms_id;
 	private IntegerProperty memberType; // 1 == primary 2 == secondary 3 == children of
-	private StringProperty fname;
-	private StringProperty lname;
+	private StringProperty firstName;
+	private StringProperty lastName;
 	private StringProperty occupation;
 	private StringProperty business;
 	private StringProperty birthday;
 	private BooleanProperty active;
-	private StringProperty nname;
+	private StringProperty nickName;
 	private IntegerProperty oldMsid;
+	private ObservableList<PhoneDTO> phones = FXCollections.observableArrayList();
+	private ObservableList<EmailDTO> email = FXCollections.observableArrayList();
 
 	public PersonDTO(Integer pid, Integer ms_id, Integer memberType, String firstName, String lastName,
                      String birthday, String occupation,
@@ -21,24 +25,38 @@ public class PersonDTO {
 		this.p_id = new SimpleIntegerProperty(pid);
 		this.ms_id = new SimpleIntegerProperty(ms_id);
 		this.memberType = new SimpleIntegerProperty(memberType);
-		this.fname = new SimpleStringProperty(firstName);
-		this.lname = new SimpleStringProperty(lastName);
+		this.firstName = new SimpleStringProperty(firstName);
+		this.lastName = new SimpleStringProperty(lastName);
 		this.birthday = new SimpleStringProperty(birthday);
 		this.occupation = new SimpleStringProperty(occupation);
 		this.business = new SimpleStringProperty(business);
 		this.active = new SimpleBooleanProperty(isActive);
-		this.nname = new SimpleStringProperty(nickName);
+		this.nickName = new SimpleStringProperty(nickName);
 		this.oldMsid = new SimpleIntegerProperty(oldMsid);
 	}
 
-	public PersonDTO() { // default constructor
+	public PersonDTO() { }// default constructor
 
+	public ObservableList<PhoneDTO> getPhones() {
+		return phones;
+	}
+
+	public void setPhones(ObservableList<PhoneDTO> phones) {
+		this.phones = phones;
+	}
+
+	public ObservableList<EmailDTO> getEmail() {
+		return email;
+	}
+
+	public void setEmail(ObservableList<EmailDTO> email) {
+		this.email = email;
 	}
 
 	public String getFullName() {
-		if(getFname() == null) setFname("First");
-		if(getLname() == null) setLname("Last");
-		return getFname() + " " + getLname();
+		if(getFirstName() == null) setFirstName("First");
+		if(getLastName() == null) setLastName("Last");
+		return getFirstName() + " " + getLastName();
 	}
 
 	public String getNameWithInfo() {
@@ -93,28 +111,28 @@ public class PersonDTO {
 		this.memberTypeProperty().set(memberType);
 	}
 
-	public final StringProperty fnameProperty() {
-		return this.fname;
+	public final StringProperty firstNameProperty() {
+		return this.firstName;
 	}
 
-	public final String getFname() {
-		return this.fnameProperty().get();
+	public final String getFirstName() {
+		return this.firstNameProperty().get();
 	}
 
-	public final void setFname(final String fname) {
-		this.fnameProperty().set(fname);
+	public final void setFirstName(final String firstName) {
+		this.firstNameProperty().set(firstName);
 	}
 
-	public final StringProperty lnameProperty() {
-		return this.lname;
+	public final StringProperty lastNameProperty() {
+		return this.lastName;
 	}
 
-	public final String getLname() {
-		return this.lnameProperty().get();
+	public final String getLastName() {
+		return this.lastNameProperty().get();
 	}
 
-	public final void setLname(final String lname) {
-		this.lnameProperty().set(lname);
+	public final void setLastName(final String lastName) {
+		this.lastNameProperty().set(lastName);
 	}
 
 	public final StringProperty occupationProperty() {
@@ -165,23 +183,23 @@ public class PersonDTO {
 		this.activeProperty().set(active);
 	}
 
-	public final StringProperty nnameProperty() {
-		return this.nname;
+	public final StringProperty nickNameProperty() {
+		return this.nickName;
 	}
 
-	public final String getNname() {
-		return this.nnameProperty().get();
+	public final String getNickName() {
+		return this.nickNameProperty().get();
 	}
 
-	public final void setNname(final String nname) {
-		this.nnameProperty().set(nname);
+	public final void setNickName(final String nickName) {
+		this.nickNameProperty().set(nickName);
 	}
 
 	@Override
 	public String toString() {
-		return "Object_Person [p_id=" + p_id + ", ms_id=" + ms_id + ", memberType=" + memberType + ", fname=" + fname
-				+ ", lname=" + lname + ", occupation=" + occupation + ", business=" + business + ", birthday="
-				+ birthday + ", active=" + active + ", nname=" + nname + "]";
+		return "Object_Person [p_id=" + p_id + ", ms_id=" + ms_id + ", memberType=" + memberType + ", fname=" + firstName
+				+ ", lname=" + lastName + ", occupation=" + occupation + ", business=" + business + ", birthday="
+				+ birthday + ", active=" + active + ", nname=" + nickName + "]";
 	}
 
 }

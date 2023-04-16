@@ -6,9 +6,12 @@ import javafx.collections.ObservableList;
 import org.ecsail.connection.Connections;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.dto.PersonDTO;
-import org.ecsail.mvci_roster.RosterInteractor;
+import org.ecsail.repository.implementations.EmailRepositoryImpl;
 import org.ecsail.repository.implementations.PersonRepositoryImpl;
+import org.ecsail.repository.implementations.PhoneRepositoryImpl;
+import org.ecsail.repository.interfaces.EmailRepository;
 import org.ecsail.repository.interfaces.PersonRepository;
+import org.ecsail.repository.interfaces.PhoneRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,21 +19,40 @@ public class MembershipInteractor {
     private final MembershipModel membershipModel;
     private static final Logger logger = LoggerFactory.getLogger(MembershipInteractor.class);
     private final PersonRepository peopleRepo;
+    private final PhoneRepository phoneRepo;
+    private final EmailRepository emailRepo;
+
 
     public MembershipInteractor(MembershipModel membershipModel, Connections connections) {
         this.membershipModel = membershipModel;
         peopleRepo = new PersonRepositoryImpl(connections.getDataSource());
+        phoneRepo = new PhoneRepositoryImpl(connections.getDataSource());
+        emailRepo = new EmailRepositoryImpl(connections.getDataSource());
     }
 
-    public void getPeople(MembershipListDTO ml) {
-        ObservableList<PersonDTO> people = FXCollections.observableArrayList(peopleRepo.getActivePeopleByMsId(ml.getMsId()));
+    public void getLists(MembershipListDTO ml) {
+        ObservableList<PersonDTO> people = null;
+        try {
+            people = FXCollections.observableArrayList(peopleRepo.getActivePeopleByMsId(ml.getMsId()));
+            for (PersonDTO person : people) {
+                person.setPhones(FXCollections.observableArrayList(phoneRepo.getPhoneByPid(person.getP_id())));
+                person.setEmail(FXCollections.observableArrayList(emailRepo.getEmail(person.getP_id())));
+            }
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            e.printStackTrace();
+        }
+        ObservableList<PersonDTO> finalPeople = people;
         Platform.runLater(() -> {
-            membershipModel.setPeople(people);
+            membershipModel.setPeople(finalPeople);
             logger.info("set people, size: " +membershipModel.getPeople().size());
         });
     }
 
     protected void setListsLoaded(boolean isLoaded) {
-        Platform.runLater(() -> membershipModel.setListsLoaded(isLoaded));
+        Platform.runLater(() -> {
+            logger.debug("Lists are loaded");
+            membershipModel.setListsLoaded(isLoaded);
+        });
     }
 }

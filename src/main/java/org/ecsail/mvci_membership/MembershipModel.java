@@ -7,10 +7,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.dto.PersonDTO;
+import org.ecsail.dto.PhoneDTO;
 
 public class MembershipModel {
 
     private ObservableList<PersonDTO> people = FXCollections.observableArrayList();
+    private ObservableList<PhoneDTO> phones = FXCollections.observableArrayList();
     private final SimpleObjectProperty<MembershipListDTO> membership = new SimpleObjectProperty<>();
     private final BooleanProperty listsLoaded = new SimpleBooleanProperty(false);
 

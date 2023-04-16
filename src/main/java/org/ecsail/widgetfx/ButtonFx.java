@@ -10,4 +10,10 @@ public class ButtonFx {
         button.setId("big-button");
         return button;
     }
+
+    public static Button buttonOf(String text, double width) {
+        Button button = new Button(text);
+        button.setPrefWidth(width);
+        return button;
+    }
 }

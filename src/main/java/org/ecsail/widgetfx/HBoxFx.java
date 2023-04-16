@@ -31,6 +31,13 @@ public class HBoxFx {
         return box;
     }
 
+    public static HBox hBoxOf(Insets padding, String id) {
+        HBox hBox = new HBox();
+        hBox.setPadding(padding);
+        hBox.setId(id);
+        return hBox;
+    }
+
     public static HBox hBoxOf(Pos alignment, double prefWidth) {
         HBox box = new HBox();
         box.setAlignment(alignment);
