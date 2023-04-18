@@ -12,6 +12,7 @@ public class BaseApplication extends Application {
 
     public static Stage primaryStage;
     public static Stage loginStage;
+    public static Stage loadingStage;
     private static final Logger logger = LoggerFactory.getLogger(BaseApplication.class);
     public static void main(String[] args) {
         launch(args);
@@ -31,6 +32,8 @@ public class BaseApplication extends Application {
                 "css/dark/table_changes.css",
                 "css/dark/invoice.css");
         primaryStage.show();
+        loadingStage.setX((primaryStage.getX() + primaryStage.getWidth() / 2d) - BaseApplication.loadingStage.getWidth() / 2d);
+        loadingStage.setY((primaryStage.getY() + primaryStage.getHeight() / 2d) - BaseApplication.loadingStage.getHeight() / 2d);
         loginStage.setX(primaryStage.getX() + 260);
         loginStage.setY(primaryStage.getY() + 300);
         loginStage.show();

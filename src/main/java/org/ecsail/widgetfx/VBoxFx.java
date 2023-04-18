@@ -7,6 +7,12 @@ import javafx.scene.layout.VBox;
 
 public class VBoxFx {
 
+    public static VBox vBoxOf(double width, double height) {
+        VBox vBox = new VBox();
+        vBox.setPrefSize(width, height);
+        return vBox;
+    }
+
     public static VBox vBoxOf(double width, Insets insets, String style) {
         VBox vBox = new VBox();
         vBox.setPrefWidth(width);

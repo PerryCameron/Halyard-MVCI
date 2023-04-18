@@ -9,6 +9,7 @@ import org.ecsail.connection.Connections;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.interfaces.Controller;
 import org.ecsail.mvci_connect.ConnectController;
+import org.ecsail.mvci_loading.LoadingController;
 import org.ecsail.mvci_membership.MembershipController;
 import org.ecsail.mvci_roster.RosterController;
 import org.ecsail.mvci_welcome.WelcomeController;
@@ -18,11 +19,13 @@ public class MainController extends Controller {
     private final MainInteractor mainInteractor;
     private final MainView mainView;
     private final ConnectController connectController;
+    private final LoadingController loadingController;
     public MainController() {
         MainModel mainModel = new MainModel();
         mainInteractor = new MainInteractor(mainModel);
         mainView = new MainView(mainModel, this::closeAllConnections);
         connectController = new ConnectController(this).getView();
+        loadingController = new LoadingController(this).getView();
     }
 
     public void openMembershipMVCI(MembershipListDTO ml) {
@@ -61,6 +64,10 @@ public class MainController extends Controller {
         };
         Thread thread = new Thread(connectTask);
         thread.start();
+    }
+
+    public void showLoadingSpinner(boolean isVisible) {
+        loadingController.showLoadSpinner(isVisible);
     }
 
     public Connections getConnections() {
