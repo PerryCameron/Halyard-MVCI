@@ -58,6 +58,7 @@ public class RosterController extends Controller {
     }
 
     private void getRosterData() {
+        mainController.showLoadingSpinner(true);
         Task<Void> task = new Task<>() {
             @Override
             protected Void call() {
@@ -68,6 +69,7 @@ public class RosterController extends Controller {
             }
         };
         task.setOnSucceeded(e -> {
+            mainController.showLoadingSpinner(false);
             rosterInteractor.setListsLoaded(true);
             rosterInteractor.setRosterToTableview();
             rosterView.setRadioListener(); // set last, so it doesn't fire, when radios are created.

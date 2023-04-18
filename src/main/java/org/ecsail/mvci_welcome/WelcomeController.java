@@ -2,6 +2,7 @@ package org.ecsail.mvci_welcome;
 
 import javafx.concurrent.Task;
 import javafx.scene.layout.Region;
+import org.ecsail.BaseApplication;
 import org.ecsail.mvci_main.MainController;
 
 public class WelcomeController {
@@ -29,7 +30,9 @@ public class WelcomeController {
                     return null;
                 }
             };
-            task.setOnSucceeded(e -> welcomeInteractor.setStatSucceeded());
+            task.setOnSucceeded(e -> {
+                welcomeInteractor.setStatSucceeded();
+            });
             new Thread(task).start();
     }
 

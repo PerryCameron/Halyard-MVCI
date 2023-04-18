@@ -1,6 +1,11 @@
 package org.ecsail.mvci_loading;
 
+import javafx.application.Platform;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class LoadingInteractor {
+    private static final Logger logger = LoggerFactory.getLogger(LoadingInteractor.class);
     private final LoadingModel loadingModel;
 
     public LoadingInteractor(LoadingModel loadingModel) {
@@ -8,6 +13,12 @@ public class LoadingInteractor {
     }
 
     public void showLoadSpinner(boolean show) {
-        loadingModel.setShow(show);
+        Platform.runLater(() -> {
+            logger.info("Loading Spinner set: " + show);
+            loadingModel.setShow(show); });
+    }
+
+    public void logInfo(String log) {
+        logger.info(log);
     }
 }

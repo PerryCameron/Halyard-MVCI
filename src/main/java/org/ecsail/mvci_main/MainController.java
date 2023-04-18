@@ -19,12 +19,16 @@ public class MainController extends Controller {
     private final MainInteractor mainInteractor;
     private final MainView mainView;
     private final ConnectController connectController;
-    private final LoadingController loadingController;
+    private LoadingController loadingController;
     public MainController() {
         MainModel mainModel = new MainModel();
         mainInteractor = new MainInteractor(mainModel);
         mainView = new MainView(mainModel, this::closeAllConnections);
         connectController = new ConnectController(this).getView();
+
+    }
+
+    public void createLoadingController() {
         loadingController = new LoadingController(this).getView();
     }
 

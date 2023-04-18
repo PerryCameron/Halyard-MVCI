@@ -47,6 +47,7 @@ public class ConnectController {
         };
         connectTask.setOnSucceeded(event -> {
                 connectModel.setRotateShipWheel(false);
+                mainController.createLoadingController();
                 mainController.setStatus("(Connected) " + connectModel.getHost());
                 BaseApplication.loginStage.close();
                 mainController.openWelcomeMVCI();

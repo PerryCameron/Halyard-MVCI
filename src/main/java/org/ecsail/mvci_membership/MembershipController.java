@@ -21,6 +21,7 @@ public class MembershipController extends Controller {
     }
 
     private void getDataForMembership(MembershipListDTO ml) {
+        mainController.showLoadingSpinner(true);
         Task<Void> task = new Task<>() {
             @Override
             protected Void call() {
@@ -29,6 +30,7 @@ public class MembershipController extends Controller {
             }
         };
         task.setOnSucceeded(e -> {
+            mainController.showLoadingSpinner(false);
             membershipInteractor.setListsLoaded(true);
         });
         new Thread(task).start();
