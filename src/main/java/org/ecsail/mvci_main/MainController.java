@@ -3,7 +3,9 @@ package org.ecsail.mvci_main;
 
 import javafx.application.Platform;
 import javafx.concurrent.Task;
+import javafx.scene.Scene;
 import javafx.scene.layout.Region;
+import javafx.scene.paint.Color;
 import org.ecsail.BaseApplication;
 import org.ecsail.connection.Connections;
 import org.ecsail.dto.MembershipListDTO;
@@ -29,7 +31,8 @@ public class MainController extends Controller {
     }
 
     public void createLoadingController() {
-        loadingController = new LoadingController(this).getView();
+        loadingController = new LoadingController(this);
+        loadingController.getStage().setScene(new Scene(loadingController.getView(), Color.TRANSPARENT));;
     }
 
     public void openMembershipMVCI(MembershipListDTO ml) {

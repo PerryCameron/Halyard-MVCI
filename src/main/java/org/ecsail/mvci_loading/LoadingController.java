@@ -1,15 +1,12 @@
 package org.ecsail.mvci_loading;
 
-import javafx.scene.Scene;
-import javafx.stage.Modality;
+import javafx.scene.layout.Region;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import org.ecsail.BaseApplication;
+import org.ecsail.interfaces.Controller;
 import org.ecsail.mvci_main.MainController;
 
-public class LoadingController {
+public class LoadingController extends Controller {
 
-    private Stage loadingStage;
     private final MainController mainController;
     private LoadingInteractor loadingInteractor;
     private LoadingModel loadingModel;
@@ -20,27 +17,18 @@ public class LoadingController {
         loadingModel = new LoadingModel();
         loadingView = new LoadingView(loadingModel);
         loadingInteractor = new LoadingInteractor(loadingModel);
-
     }
 
-    public LoadingController getView() {
-        this.loadingStage = new Stage();
-        loadingStage.initOwner(BaseApplication.primaryStage);
-        loadingStage.initModality(Modality.APPLICATION_MODAL);
-        loadingStage.initStyle(StageStyle.TRANSPARENT);
-        double centerXPosition = BaseApplication.primaryStage.getX() + BaseApplication.primaryStage.getWidth() / 2d;
-        double centerYPosition = BaseApplication.primaryStage.getY() + BaseApplication.primaryStage.getHeight() / 2d;
-//        loadingStage.setOnShown(windowEvent -> {
-//        BaseApplication.loadingStage.setX(centerXPosition - BaseApplication.loadingStage.getWidth() / 2d);
-//        BaseApplication.loadingStage.setY(centerYPosition - BaseApplication.loadingStage.getHeight() / 2d);
-//        });
-        loadingStage.setScene(new Scene(loadingView.build()));
-        loadingInteractor.logInfo("Loading Stage Set");
-        return this;
+    @Override
+    public Region getView() {
+        return loadingView.build();
+    }
+
+    public Stage getStage() {
+        return loadingInteractor.getStage();
     }
 
     public void showLoadSpinner(boolean show) {
-        if(show) loadingStage.show();
-        else loadingStage.hide();
+        loadingInteractor.showLoadSpinner(show);
     }
 }
