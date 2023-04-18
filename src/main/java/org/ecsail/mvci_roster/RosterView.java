@@ -20,7 +20,6 @@ import org.ecsail.static_calls.HalyardPaths;
 import org.ecsail.widgetfx.HBoxFx;
 import org.ecsail.widgetfx.VBoxFx;
 
-import java.io.File;
 import java.util.function.Consumer;
 
 public class RosterView implements Builder<Region> {
@@ -28,12 +27,12 @@ public class RosterView implements Builder<Region> {
     RosterModel rosterModel;
     Runnable changeState;
     Runnable search;
-    Runnable chooseRoster;
+    Runnable exportRoster;
     Consumer<MembershipListDTO> launchTab;
     public RosterView(RosterModel rm, Runnable cy, Runnable s, Runnable cr, Consumer<MembershipListDTO> lt) {
         rosterModel = rm;
         changeState = cy;
-        chooseRoster =cr;
+        exportRoster =cr;
         launchTab =lt;
         search = s;
     }
@@ -89,7 +88,7 @@ public class RosterView implements Builder<Region> {
                 rosterModel.getSelectedYear() + "_" +
                         rosterModel.getSelectedRadioBox().getRadioLabel().replace(" ", "_"),
                 "Excel Files", "*.xlsx").getFile());
-            chooseRoster.run();
+            exportRoster.run();
         });
         return button;
     }

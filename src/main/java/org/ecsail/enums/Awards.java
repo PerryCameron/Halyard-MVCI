@@ -4,8 +4,7 @@ import java.util.Arrays;
 
 public enum Awards {
 	   SPORTSMANSHIP_AWARD("SA", "Sportsmanship Award"),
-	   SAILOR_OF_THE_YEAR("SY", "Sailor of the Year")
-	   ;
+	   SAILOR_OF_THE_YEAR("SY", "Sailor of the Year");
 	 
 	   private final String code;
 	   private final String text;

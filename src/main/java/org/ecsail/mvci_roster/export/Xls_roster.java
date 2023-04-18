@@ -34,9 +34,7 @@ public class Xls_roster implements ConfigFilePaths {
 		if(rosterModel.getRosters().size() > 1)
 			selectedYear = rosterModel.getRosters().get(0).getSelectedYear();
 		logger.info("Creating Roster..");
-
-        // Create a Workbook
-        Workbook workBook = new XSSFWorkbook(); // new HSSFWorkbook() for generating `.xls` file
+		Workbook workBook = new XSSFWorkbook(); // new HSSFWorkbook() for generating `.xls` file
 
         /* CreationHelper helps us create instances of various things like DataFormat,
            Hyperlink, RichTextString etc, in a format (HSSF, XSSF) independent way */
@@ -44,7 +42,6 @@ public class Xls_roster implements ConfigFilePaths {
 
         // Create a Sheet
         Sheet sheet = workBook.createSheet(selectedYear + " Roster");
-
         // Create a Font for styling header cells
         Font headerFont = workBook.createFont();
         headerFont.setBold(true);
@@ -61,6 +58,7 @@ public class Xls_roster implements ConfigFilePaths {
 		createRows(sheet);
 		// makes the columns nice widths for the data
 		setProperColumnWithToMatchDataSize(headers, sheet);
+		System.out.println("got here");
 		createFile(rosterModel, workBook);
 	}
 

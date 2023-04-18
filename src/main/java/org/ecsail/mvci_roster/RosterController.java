@@ -15,7 +15,7 @@ public class RosterController extends Controller {
         mainController = mc;
         RosterModel rosterModel = new RosterModel();
         rosterInteractor = new RosterInteractor(rosterModel,mainController.getConnections());
-        rosterView = new RosterView(rosterModel, this::changeState, this::search, this::chooseRoster, this::launchTab);
+        rosterView = new RosterView(rosterModel, this::changeState, this::search, this::exportRoster, this::launchTab);
         getRosterData();
     }
 
@@ -23,11 +23,11 @@ public class RosterController extends Controller {
         mainController.openMembershipMVCI(membershipListDTO);
     }
 
-    private void chooseRoster() {
+    private void exportRoster() {
         Task<Void> task = new Task<>() {
             @Override
             protected Void call() {
-                rosterInteractor.chooseRoster();
+                rosterInteractor.exportRoster();
                 return null;
             }
         };

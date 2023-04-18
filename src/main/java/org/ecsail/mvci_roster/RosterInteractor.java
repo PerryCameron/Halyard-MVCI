@@ -117,7 +117,13 @@ public class RosterInteractor {
             logger.error(e.getMessage());
         }
     }
-    protected void chooseRoster() { new Xls_roster(rosterModel); }
+    protected void exportRoster() {
+        try {
+            new Xls_roster(rosterModel);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     protected void fillTableView() {
             if (!rosterModel.getTextFieldString().equals("")) fillWithSearchResults();
