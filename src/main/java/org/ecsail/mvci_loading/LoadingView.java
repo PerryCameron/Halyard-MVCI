@@ -1,5 +1,6 @@
 package org.ecsail.mvci_loading;
 
+import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Control;
@@ -45,6 +46,20 @@ public class LoadingView implements Builder<Region> {
         loadingModel.getLoadingStage().initOwner(BaseApplication.primaryStage);
         loadingModel.getLoadingStage().initModality(Modality.APPLICATION_MODAL);
         loadingModel.getLoadingStage().initStyle(StageStyle.TRANSPARENT);
+        loadingModel.primaryXPropertyProperty().bind(BaseApplication.primaryStage.xProperty());
+        loadingModel.primaryYPropertyProperty().bind(BaseApplication.primaryStage.yProperty());
+        updateSpinnerLocation();
+        monitorPropertyChange(loadingModel.primaryXPropertyProperty());
+        monitorPropertyChange(loadingModel.primaryYPropertyProperty());
+    }
+
+    public void monitorPropertyChange(DoubleProperty property) {
+        property.addListener((observable, oldValue, newValue) -> {
+            updateSpinnerLocation();
+        });
+    }
+
+    private void updateSpinnerLocation() {
         double centerXPosition = BaseApplication.primaryStage.getX() + BaseApplication.primaryStage.getWidth() / 2d;
         double centerYPosition = BaseApplication.primaryStage.getY() + BaseApplication.primaryStage.getHeight() / 2d;
         loadingModel.getLoadingStage().setOnShown(windowEvent -> {
