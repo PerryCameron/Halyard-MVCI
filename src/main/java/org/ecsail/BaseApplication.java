@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 public class BaseApplication extends Application {
 
     public static Stage primaryStage;
-    public static Stage loginStage;
     private static final Logger logger = LoggerFactory.getLogger(BaseApplication.class);
     public static void main(String[] args) {
         launch(args);
@@ -32,8 +31,5 @@ public class BaseApplication extends Application {
                 "css/dark/invoice.css");
         primaryStage.show();
         logger.info("Primary stage shown");
-        loginStage.setX(primaryStage.getX() + 260);
-        loginStage.setY(primaryStage.getY() + 300);
-        loginStage.show();
     }
 }

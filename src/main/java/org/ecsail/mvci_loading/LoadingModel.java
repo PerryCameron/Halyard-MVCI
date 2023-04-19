@@ -1,6 +1,5 @@
 package org.ecsail.mvci_loading;
 
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.stage.Stage;
 
@@ -11,38 +10,14 @@ public class LoadingModel {
     private SimpleDoubleProperty primaryYProperty = new SimpleDoubleProperty();
 
 
-
-    public double getPrimaryXProperty() {
-        return primaryXProperty.get();
-    }
-
-    public SimpleDoubleProperty primaryXPropertyProperty() {
+    
+    protected SimpleDoubleProperty primaryXPropertyProperty() {
         return primaryXProperty;
     }
-
-    public void setPrimaryXProperty(double primaryXProperty) {
-        this.primaryXProperty.set(primaryXProperty);
-    }
-
-    public double getPrimaryYProperty() {
-        return primaryYProperty.get();
-    }
-
-    public SimpleDoubleProperty primaryYPropertyProperty() {
+    protected SimpleDoubleProperty primaryYPropertyProperty() {
         return primaryYProperty;
     }
-
-    public void setPrimaryYProperty(double primaryYProperty) {
-        this.primaryYProperty.set(primaryYProperty);
-    }
-
-    public Stage getLoadingStage() {
+    protected Stage getLoadingStage() {
         return loadingStage;
     }
-
-    public void setLoadingStage(Stage loadingStage) {
-        this.loadingStage = loadingStage;
-    }
-
-
 }

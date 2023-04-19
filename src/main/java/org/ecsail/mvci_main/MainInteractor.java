@@ -45,8 +45,11 @@ public class MainInteractor implements ConfigFilePaths {
         BoardPositionsRepository boardPositionsRepo = new BoardPositionsRepositoryImpl(connections.getDataSource());
         mainModel.setBoardPositionDTOS(FXCollections.observableList(boardPositionsRepo.getPositions()));
     }
-
     public MainModel getMainModel() {
         return mainModel;
+    }
+    public void setComplete() {
+        logger.info("primaryStage completed");
+        Platform.runLater(() -> mainModel.setPrimaryStageComplete(true));
     }
 }

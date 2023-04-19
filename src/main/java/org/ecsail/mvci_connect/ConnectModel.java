@@ -6,10 +6,12 @@ import javafx.collections.ObservableMap;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import org.ecsail.dto.LoginDTO;
 
 public class ConnectModel {
 
+    protected Stage connectStage = new Stage();
     private final ObjectProperty<ComboBox<LoginDTO>> comboBox = new SimpleObjectProperty<>();
     private final DoubleProperty titleBarHeight = new SimpleDoubleProperty();
     private final BooleanProperty rotateShipWheel = new SimpleBooleanProperty(false);
@@ -25,11 +27,16 @@ public class ConnectModel {
     private final BooleanProperty isDefault = new SimpleBooleanProperty();
     private final StringProperty sshUser = new SimpleStringProperty();
     private final StringProperty knownHosts = new SimpleStringProperty();
-
     private final StringProperty statusBarText = new SimpleStringProperty();
 
 
+    public Stage getConnectStage() {
+        return connectStage;
+    }
 
+    public void setConnectStage(Stage connectStage) {
+        this.connectStage = connectStage;
+    }
 
     public boolean isDefault() {
         return isDefault.get();

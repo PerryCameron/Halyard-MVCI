@@ -1,5 +1,6 @@
 package org.ecsail.mvci_connect;
 
+import javafx.stage.Stage;
 import org.ecsail.connection.Connections;
 import org.ecsail.dto.LoginDTO;
 import org.ecsail.fileio.FileIO;
@@ -79,5 +80,17 @@ public class ConnectInteractor implements ConfigFilePaths {
         logger.info(message);
     }
     public void loadCommonLists() {
+    }
+    public Stage getStage() {
+        return connectModel.getConnectStage();
+    }
+    public void closeLoginStage() {
+        connectModel.getConnectStage().close();
+    }
+    protected void setRotateShipWheel(boolean rotate) {
+        connectModel.setRotateShipWheel(rotate);
+    }
+    protected String getHost() {
+        return connectModel.getHost();
     }
 }

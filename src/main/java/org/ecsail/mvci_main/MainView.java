@@ -21,10 +21,12 @@ import static java.lang.System.getProperty;
 public class MainView implements Builder<Region> {
     private final MainModel mainModel;
     private final Runnable closeConnections;
+    private final Runnable createConnectController;
 
-    public MainView(MainModel mainModel, Runnable closeConnections) {
+    public MainView(MainModel mainModel, Runnable closeConnections, Runnable createConnectController) {
         this.mainModel = mainModel;
         this.closeConnections = closeConnections;
+        this.createConnectController = createConnectController;
     }
 
     @Override
@@ -39,6 +41,7 @@ public class MainView implements Builder<Region> {
         Image mainIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/title_bar_icon.png")));
         BaseApplication.primaryStage.getIcons().add(mainIcon);
         BaseApplication.primaryStage.setTitle("Halyard");
+        setPrimaryStageCompleteListener();
         return borderPane;
     }
 
@@ -93,6 +96,12 @@ public class MainView implements Builder<Region> {
         Tab newTab = new Tab(name, region);
         mainModel.getMainTabPane().getTabs().add(newTab);
         mainModel.getMainTabPane().getSelectionModel().select(newTab);
+    }
+
+    private void setPrimaryStageCompleteListener() {
+        mainModel.primaryStageCompleteProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue) createConnectController.run();
+        });
     }
 
 

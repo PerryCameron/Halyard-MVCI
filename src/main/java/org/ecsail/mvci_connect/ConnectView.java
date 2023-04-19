@@ -27,7 +27,6 @@ import org.ecsail.widgetfx.TextFx;
 import org.ecsail.widgetfx.VBoxFx;
 
 import java.util.Objects;
-import java.util.function.Consumer;
 
 public class ConnectView implements Builder<Region> {
     private final ConnectModel connectModel;
@@ -45,6 +44,7 @@ public class ConnectView implements Builder<Region> {
 
     @Override
     public Region build() {
+        setUpStage();
         BorderPane pane = new BorderPane();
         pane.setCenter(createRightBox());
         pane.setLeft(createLeftBox());
@@ -277,23 +277,23 @@ public class ConnectView implements Builder<Region> {
         connectModel.getComboBox().getValue().setDefault(connectModel.isDefault());
     }
 
-    private void setStageHeightListener() {
+    protected void setStageHeightListener() {
         connectModel.bottomPaneHeightProperty().addListener((observable) -> {
-            connectModel.setTitleBarHeight(BaseApplication.loginStage.getHeight() - BaseApplication.loginStage.getScene().getHeight());
-            BaseApplication.loginStage.setHeight(connectModel.getBottomPaneHeight()
+            connectModel.setTitleBarHeight(connectModel.getConnectStage().getHeight() -
+                    connectModel.getConnectStage().getScene().getHeight());
+            connectModel.getConnectStage().setHeight(connectModel.getBottomPaneHeight()
                     + connectModel.getTitleBarHeight()
                     + connectModel.getCenterPaneHeight());
         });
     }
 
-    public void createStage(Region region) {
-        BaseApplication.loginStage = new Stage();
-        BaseApplication.loginStage.setScene(new Scene(region));
-        BaseApplication.loginStage.getScene().getStylesheets().add("css/dark/dark.css");
-        BaseApplication.loginStage.setAlwaysOnTop(true);
-        BaseApplication.loginStage.requestFocus();
-        BaseApplication.loginStage.toFront();
-        BaseApplication.loginStage.setResizable(false);
-        setStageHeightListener();
+    public void setUpStage() {
+        connectModel.getConnectStage().setAlwaysOnTop(true);
+        connectModel.getConnectStage().requestFocus();
+        connectModel.getConnectStage().toFront();
+        connectModel.getConnectStage().setResizable(false);
+        connectModel.getConnectStage().setX(BaseApplication.primaryStage.getX() + 260);
+        connectModel.getConnectStage().setY(BaseApplication.primaryStage.getY() + 300);
+        connectModel.getConnectStage().show();
     }
 }

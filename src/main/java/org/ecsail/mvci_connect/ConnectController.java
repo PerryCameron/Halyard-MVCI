@@ -2,23 +2,24 @@ package org.ecsail.mvci_connect;
 
 import com.jcraft.jsch.JSchException;
 import javafx.concurrent.Task;
+import javafx.scene.layout.Region;
+import javafx.stage.Stage;
 import org.ecsail.BaseApplication;
 import org.ecsail.connection.PortForwardingL;
 import org.ecsail.dto.LoginDTO;
+import org.ecsail.interfaces.Controller;
 import org.ecsail.mvci_main.MainController;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class ConnectController {
+public class ConnectController extends Controller {
     MainController mainController;
-    ConnectModel connectModel = new ConnectModel();
     ConnectView connectView;
     ConnectInteractor connectInteractor;
 
     public ConnectController(MainController mainController) {
+        ConnectModel connectModel = new ConnectModel();
         this.mainController = mainController;
         connectInteractor = new ConnectInteractor(connectModel);
         connectView = new ConnectView(connectModel, this::saveLogins, this::loginSupply, this::connectToServer);
@@ -32,9 +33,9 @@ public class ConnectController {
         return new ArrayList<>(connectInteractor.supplyLogins());
     }
 
-    public ConnectController getView() {
-        connectView.createStage(connectView.build());
-        return this;
+    @Override
+    public Region getView() {
+        return connectView.build();
     }
 
     private void connectToServer() {
@@ -46,10 +47,10 @@ public class ConnectController {
             }
         };
         connectTask.setOnSucceeded(event -> {
-                connectModel.setRotateShipWheel(false);
+                connectInteractor.setRotateShipWheel(false);
                 mainController.createLoadingController();
-                mainController.setStatus("(Connected) " + connectModel.getHost());
-                BaseApplication.loginStage.close();
+                mainController.setStatus("(Connected) " + connectInteractor.getHost());
+                connectInteractor.closeLoginStage();
                 mainController.openWelcomeMVCI();
                 mainController.loadCommonLists();
         });
@@ -78,6 +79,14 @@ public class ConnectController {
                 }
             }
         };
+    }
+
+    public Stage getStage() {
+        return connectInteractor.getStage();
+    }
+
+    public void setStageHeightListener() {  // Not crazy about accessing view here
+        connectView.setStageHeightListener();
     }
 
     public ConnectInteractor getConnectInteractor() {

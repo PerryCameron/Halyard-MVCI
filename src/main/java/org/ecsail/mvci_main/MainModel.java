@@ -1,10 +1,7 @@
 package org.ecsail.mvci_main;
 
 
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TabPane;
@@ -15,7 +12,20 @@ public class MainModel {
     private ObservableList<BoardPositionDTO> boardPositionDTOS = FXCollections.observableArrayList();
     private final StringProperty statusLabel = new SimpleStringProperty(""); // keeper here
     private final ObjectProperty<TabPane> mainTabPane = new SimpleObjectProperty();
+    private final BooleanProperty primaryStageComplete = new SimpleBooleanProperty(false);
 
+
+    public boolean isPrimaryStageComplete() {
+        return primaryStageComplete.get();
+    }
+
+    public BooleanProperty primaryStageCompleteProperty() {
+        return primaryStageComplete;
+    }
+
+    public void setPrimaryStageComplete(boolean primaryStageComplete) {
+        this.primaryStageComplete.set(primaryStageComplete);
+    }
 
     public ObservableList<BoardPositionDTO> getBoardPositionDTOS() {
         return boardPositionDTOS;
@@ -23,20 +33,11 @@ public class MainModel {
     public void setBoardPositionDTOS(ObservableList<BoardPositionDTO> boardPositionDTOS) {
         this.boardPositionDTOS = boardPositionDTOS;
     }
-    public String getStatusLabel() {
-        return statusLabel.get();
-    }
     public StringProperty statusLabelProperty() {
         return statusLabel;
     }
-    public void setStatusLabel(String statusLabel) {
-        this.statusLabel.set(statusLabel);
-    }
     public TabPane getMainTabPane() {
         return mainTabPane.get();
-    }
-    public ObjectProperty<TabPane> mainTabPaneProperty() {
-        return mainTabPane;
     }
     public void setMainTabPane(TabPane mainTabPane) {
         this.mainTabPane.set(mainTabPane);

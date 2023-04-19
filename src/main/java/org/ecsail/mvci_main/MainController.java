@@ -20,14 +20,20 @@ public class MainController extends Controller {
 
     private final MainInteractor mainInteractor;
     private final MainView mainView;
-    private final ConnectController connectController;
+    private ConnectController connectController;
     private LoadingController loadingController;
     public MainController() {
         MainModel mainModel = new MainModel();
         mainInteractor = new MainInteractor(mainModel);
-        mainView = new MainView(mainModel, this::closeAllConnections);
-        connectController = new ConnectController(this).getView();
+        mainView = new MainView(mainModel, this::closeAllConnections, this::createConnectController);
+        mainInteractor.setComplete();
+    }
 
+    public void createConnectController() {
+        connectController = new ConnectController(this);
+        connectController.getStage().setScene(new Scene(connectController.getView()));
+        connectController.getStage().getScene().getStylesheets().add("css/dark/dark.css");
+        connectController.setStageHeightListener();
     }
 
     public void createLoadingController() {
