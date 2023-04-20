@@ -63,8 +63,8 @@ public class LoadingView implements Builder<Region> {
         double centerXPosition = BaseApplication.primaryStage.getX() + BaseApplication.primaryStage.getWidth() / 2d;
         double centerYPosition = BaseApplication.primaryStage.getY() + BaseApplication.primaryStage.getHeight() / 2d;
         loadingModel.getLoadingStage().setOnShown(windowEvent -> {
-            loadingModel.getLoadingStage().setX(centerXPosition - loadingModel.getLoadingStage().getWidth() / 2d);
-            loadingModel.getLoadingStage().setY(centerYPosition - loadingModel.getLoadingStage().getHeight() / 2d);
+            loadingModel.getLoadingStage().setX(centerXPosition - (loadingModel.getLoadingStage().getWidth() + 50) / 2d);
+            loadingModel.getLoadingStage().setY(centerYPosition - (loadingModel.getLoadingStage().getHeight() + 50) / 2d);
         });
     }
 }
