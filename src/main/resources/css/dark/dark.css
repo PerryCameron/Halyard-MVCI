@@ -31,6 +31,7 @@
     -fx-background-color:  #1658e7;
 }
 
+
 .combo-box-base:hover
 {
     -fx-color: #1658e7;
@@ -102,3 +103,6 @@
 /*#committee-title {*/
 /*    -fx-text-fill: #ffffff;*/
 /*}*/
+.progress-indicator-style .progress-indicator {
+    -fx-progress-color: #1658e7;
+}

@@ -35,6 +35,8 @@ public class LoadingView implements Builder<Region> {
 
     private Control createProcessIndicator() {
         ProgressIndicator progressIndicator = new ProgressIndicator();
+//        progressIndicator.getStyleClass().add("progress-indicator-style"); // Add the custom style class
+        progressIndicator.setStyle("-fx-progress-color: #1658e7;"); // TODO move this to css
         // Set the scale transformation to resize the spinner
         double scaleFactor = 2.0; // Adjust this value to change the spinner's size
         Scale scale = new Scale(scaleFactor, scaleFactor);
