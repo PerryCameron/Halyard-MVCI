@@ -25,12 +25,13 @@ public class PersonRepositoryImpl implements PersonRepository {
 
     public  void deletePerson(PersonDTO p) {
         String query = "DELETE FROM person WHERE p_id = ?";
-        try {
-            template.update(query, p.getP_id());
-        } catch (DataAccessException e) {
-//            new Dialogue_ErrorSQL(e,"Unable to DELETE","See below for details");
-            System.out.println(e);
-        }
+        template.update(query, p.getP_id());
+    }
+
+    public int getPersonAge(PersonDTO person) {
+        String query = "SELECT DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(),(SELECT birthday FROM person where p_id=?))), '%Y')+0 AS AGE;";
+            Integer age = template.queryForObject(query, Integer.class, new Object[] { person.getP_id() });
+            return age != null ? age : 0;
     }
 
 

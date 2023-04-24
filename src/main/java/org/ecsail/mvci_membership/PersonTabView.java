@@ -15,6 +15,7 @@ import javafx.scene.text.Text;
 import javafx.util.Builder;
 import org.ecsail.dto.PersonDTO;
 import org.ecsail.interfaces.ConfigFilePaths;
+import org.ecsail.static_calls.MathTools;
 import org.ecsail.widgetfx.ButtonFx;
 import org.ecsail.widgetfx.HBoxFx;
 import org.ecsail.widgetfx.TextFieldFx;
@@ -53,6 +54,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths 
     private Node createBottomTabs() {
         VBox vBox = VBoxFx.vBoxOf(new Insets(10,5,5,5)); // space between borders
         TabPane tabPane = new TabPane();
+        tabPane.getTabs().add(detailsTab("Properties"));
         tabPane.getTabs().add(detailsTab("Phone"));
         tabPane.getTabs().add(detailsTab("Email"));
         tabPane.getTabs().add(detailsTab("Awards"));
@@ -103,8 +105,33 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths 
 
     private Node handlePropertiesTab() {
         HBox hBox = HBoxFx.hBoxOf(new Insets(5,5,5,5),"box-background-light");
-
+        hBox.getChildren().addAll(getInfoBox(), getRadioBox());
         return hBox;
+    }
+
+    private Node getRadioBox() {
+        VBox vBox = new VBox();
+        ToggleGroup tg = new ToggleGroup();
+        vBox.getChildren().add(radioButton(tg, "Change " + person.getFirstName() + "'s member type"));
+        vBox.getChildren().add(radioButton(tg, "Remove " + person.getFirstName() + " from this membership"));
+        vBox.getChildren().add(radioButton(tg, "Delete " + person.getFirstName() + " from database "));
+        vBox.getChildren().add(radioButton(tg, "Move " + person.getFirstName() + " to membership (MSID)"));
+        return vBox;
+    }
+
+    private RadioButton radioButton(ToggleGroup tg, String name) {
+        RadioButton radioButton = new RadioButton(name);
+        radioButton.setToggleGroup(tg);
+        return radioButton;
+    }
+
+    private Node getInfoBox() {
+        VBox vBox = new VBox();
+        vBox.getChildren().addAll(
+                new Label("Age: " + MathTools.calculateAge(person.getBirthday())),
+                new Label("Person ID: " + person.getP_id()),
+                new Label("MSID: " + person.getMs_id()));
+        return vBox;
     }
 
     private Node handlePhoneTab() {
