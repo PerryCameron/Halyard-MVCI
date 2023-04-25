@@ -10,16 +10,23 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.util.Builder;
+import org.ecsail.interfaces.Messages;
 import org.ecsail.widgetfx.HBoxFx;
 import org.ecsail.widgetfx.TabPaneFx;
 import org.ecsail.widgetfx.VBoxFx;
 
+import java.util.function.BiConsumer;
+
 public class MembershipView implements Builder<Region> {
 
-    MembershipModel membershipModel;
-    public MembershipView(MembershipModel mm) {
+    private MembershipModel membershipModel;
+    private BiConsumer<Messages, Object> personEdit;
+    protected MembershipView(MembershipModel mm, BiConsumer<Messages, Object> personEdit) {
         membershipModel = mm;
+        this.personEdit = personEdit;
     }
+
+
 
     @Override
     public Region build() {

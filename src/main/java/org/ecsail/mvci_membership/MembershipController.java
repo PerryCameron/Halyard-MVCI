@@ -4,6 +4,7 @@ import javafx.concurrent.Task;
 import javafx.scene.layout.Region;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.interfaces.Controller;
+import org.ecsail.interfaces.Messages;
 import org.ecsail.mvci_main.MainController;
 
 public class MembershipController extends Controller {
@@ -17,7 +18,11 @@ public class MembershipController extends Controller {
         MembershipModel membershipModel = new MembershipModel(ml , mainController.getMainModel());
         this.membershipInteractor = new MembershipInteractor(membershipModel,mainController.getConnections());
         getDataForMembership(ml);
-        membershipView = new MembershipView(membershipModel);
+        membershipView = new MembershipView(membershipModel, this::personEdit);
+    }
+
+    private void personEdit(Messages messages, Object o) {
+        membershipInteractor.printPersonMessage(messages, o);
     }
 
     private void getDataForMembership(MembershipListDTO ml) {

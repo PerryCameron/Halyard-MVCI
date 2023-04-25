@@ -2,6 +2,7 @@ package org.ecsail.mvci_roster;
 
 
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
@@ -26,6 +27,7 @@ public class RosterTableView extends TableView<MembershipListDTO> {
 
     public RosterTableView(RosterModel rosterModel) {
         this.rosterModel = rosterModel;
+        this.setPlaceholder(new Label("Loading Rosters..."));
 
         VBox.setVgrow(this, Priority.ALWAYS);
         HBox.setHgrow(this, Priority.ALWAYS);

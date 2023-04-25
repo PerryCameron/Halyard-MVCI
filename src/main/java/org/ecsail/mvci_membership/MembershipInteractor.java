@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.ecsail.connection.Connections;
 import org.ecsail.dto.*;
+import org.ecsail.interfaces.Messages;
 import org.ecsail.repository.implementations.*;
 import org.ecsail.repository.interfaces.*;
 import org.slf4j.Logger;
@@ -52,5 +53,9 @@ public class MembershipInteractor {
             logger.debug("Lists are loaded");
             membershipModel.setListsLoaded(isLoaded);
         });
+    }
+
+    public void printPersonMessage(Messages messages, Object o) {
+
     }
 }
