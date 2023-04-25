@@ -3,9 +3,11 @@ package org.ecsail.mvci_membership;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.Property;
+import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
@@ -20,13 +22,11 @@ import java.util.function.BiConsumer;
 public class MembershipView implements Builder<Region> {
 
     private MembershipModel membershipModel;
-    private BiConsumer<Messages, Object> personEdit;
-    protected MembershipView(MembershipModel mm, BiConsumer<Messages, Object> personEdit) {
+    private BiConsumer<Messages.MessageType, Object> personEdit;
+    protected MembershipView(MembershipModel mm, BiConsumer<Messages.MessageType, Object> personEdit) {
         membershipModel = mm;
         this.personEdit = personEdit;
     }
-
-
 
     @Override
     public Region build() {
@@ -41,9 +41,16 @@ public class MembershipView implements Builder<Region> {
     private Node createPeopleTabPane() {
         TabPane tabPane = TabPaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE, 498);
         tabPane.setId("custom-tab-pane");
+        // temp listener used at tab open, to wait for data first.
         membershipModel.listsLoadedProperty().addListener((observable, oldValue, newValue) -> {
-            membershipModel.getPeople().forEach(personDTO
-                    -> tabPane.getTabs().add(new PersonTabView(this, personDTO).build()));
+            membershipModel.getPeople().forEach(personDTO -> {
+                tabPane.getTabs().add(new PersonTabView(this, personDTO).build());
+            });
+        });
+        tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
+            Tab selectedTab = newTab;// Get the selected tab
+            PersonTabView personTabView = (PersonTabView) selectedTab.getUserData();// Get the associated PersonTabView object
+            membershipModel.setSelectedPerson(personTabView.getPerson());
         });
         return tabPane;
     }
@@ -70,5 +77,9 @@ public class MembershipView implements Builder<Region> {
 
     protected MembershipModel getMembershipModel() {
         return membershipModel;
+    }
+
+    public BiConsumer<Messages.MessageType, Object> getPersonEdit() {
+        return personEdit;
     }
 }

@@ -6,6 +6,9 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -22,7 +25,6 @@ import org.ecsail.widgetfx.VBoxFx;
 
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.function.BiConsumer;
 
 public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths, Messages {
     private final PersonDTO person;
@@ -41,6 +43,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     public Tab build() {
         Tab tab = new Tab();
         tab.setText(getMemberType());
+        tab.setUserData(this);
         VBox vBox = VBoxFx.vBoxOf(new Insets(5,5,5,5)); // makes outer border
         vBox.setId("custom-tap-pane-frame");
         BorderPane borderPane = new BorderPane();
@@ -114,21 +117,28 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     private Node getRadioBox() {
         VBox vBox = VBoxFx.vBoxOf(5.0, new Insets(5,5,5,15));
         ToggleGroup tg = new ToggleGroup();
-        vBox.getChildren().add(radioButton(tg, "Change " + person.getFirstName()
-                + "'s member type", message.CHANGE_MEMBER_TYPE));
-        vBox.getChildren().add(radioButton(tg, "Remove " + person.getFirstName()
-                + " from this membership", message.REMOVE_MEMBER_FROM_MEMBERSHIP));
-        vBox.getChildren().add(radioButton(tg, "Delete " + person.getFirstName()
-                + " from database ", message.DELETE_MEMBER_FROM_DATABASE));
-        vBox.getChildren().add(radioButton(tg, "Move " + person.getFirstName()
-                + " to membership (MSID)", message.MOVE_MEMBER_TO_MEMBERSHIP));
+        vBox.getChildren().add(radioButton(tg, "Change " + person.getFirstName() + "'s member type"));
+        vBox.getChildren().add(radioButton(tg, "Remove " + person.getFirstName() + " from this membership"));
+        vBox.getChildren().add(radioButton(tg, "Delete " + person.getFirstName() + " from database"));
+        vBox.getChildren().add(radioButton(tg, "Move " + person.getFirstName() + " to membership (MSID)"));
         vBox.getChildren().add(bottomControlBox());
         return vBox;
+    }
+
+    private MessageType mapStringToEnum(String input) {
+        switch (input.split(" ")[0]) { // Split the string and get the first word
+            case "Change" -> { return MessageType.CHANGE_MEMBER_TYPE; }
+            case "Remove" -> { return MessageType.REMOVE_MEMBER_FROM_MEMBERSHIP; }
+            case "Delete" -> { return MessageType.DELETE_MEMBER_FROM_DATABASE; }
+            case "Move" -> { return MessageType.MOVE_MEMBER_TO_MEMBERSHIP; }
+        }
+        return MessageType.NONE;
     }
 
     private Node bottomControlBox() {
         HBox hBox = HBoxFx.hBoxOf(new Insets(5,5,5,5), 30);
         TextField textField = TextFieldFx.textFieldOf(120, "MSID");
+        membershipModel.getPersonTextField().put(person,textField);
         membershipModel.getStackPaneMap().get(person).getChildren().addAll(createComboBox(), textField, createRegion());
         hBox.getChildren().addAll(membershipModel.getStackPaneMap().get(person), createSubmit());
         return hBox;
@@ -143,6 +153,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
 
     private Node createComboBox() {
         final ComboBox<String> comboBox = new ComboBox<>();
+        membershipModel.getPersonComboBox().put(person,comboBox);
         comboBox.setPrefWidth(120);
         comboBox.getItems().clear();
         switch (person.getMemberType()) {
@@ -154,28 +165,29 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         return comboBox;
     }
 
-    private Control radioButton(ToggleGroup tg, String name, message action) {
+    private Control radioButton(ToggleGroup tg, String name) {
         RadioButton radioButton = new RadioButton(name);
         radioButton.setToggleGroup(tg);
         radioButton.selectedProperty().addListener((obs, wasPreviouslySelected, isNowSelected) -> {
             if (isNowSelected) {
-                changeStackPane(action);
+                changeStackPane(mapStringToEnum(name));
+                membershipModel.getSelectedRadioForPerson().put(person, radioButton);
             }
         });
         return radioButton;
     }
 
-    private void changeStackPane(message action) {
+    private void changeStackPane(MessageType action) {
         membershipModel.getStackPaneMap().get(person).getChildren().forEach(child -> {
             if (child instanceof ComboBox) {
-                child.setVisible(action == message.CHANGE_MEMBER_TYPE);
-                child.setManaged(action == message.CHANGE_MEMBER_TYPE);
+                child.setVisible(action == MessageType.CHANGE_MEMBER_TYPE);
+                child.setManaged(action == MessageType.CHANGE_MEMBER_TYPE);
             } else if (child instanceof TextField) {
-                child.setVisible(action == message.MOVE_MEMBER_TO_MEMBERSHIP);
-                child.setManaged(action == message.MOVE_MEMBER_TO_MEMBERSHIP);
+                child.setVisible(action == MessageType.MOVE_MEMBER_TO_MEMBERSHIP);
+                child.setManaged(action == MessageType.MOVE_MEMBER_TO_MEMBERSHIP);
             } else if (child instanceof Region) {
-                child.setVisible(action == message.DELETE_MEMBER_FROM_DATABASE || action == message.REMOVE_MEMBER_FROM_MEMBERSHIP);
-                child.setManaged(action == message.DELETE_MEMBER_FROM_DATABASE || action == message.REMOVE_MEMBER_FROM_MEMBERSHIP);
+                child.setVisible(action == MessageType.DELETE_MEMBER_FROM_DATABASE || action == MessageType.REMOVE_MEMBER_FROM_MEMBERSHIP);
+                child.setManaged(action == MessageType.DELETE_MEMBER_FROM_DATABASE || action == MessageType.REMOVE_MEMBER_FROM_MEMBERSHIP);
             }
         });
     }
@@ -199,8 +211,23 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
 
     private Control createSubmit() {
         Button button = ButtonFx.buttonOf("Submit",60);
-        // TODO Add listener
+        button.setOnAction(event -> {
+            // get selected radio button
+            RadioButton rb = membershipModel.getSelectedRadioForPerson().get(person);
+            Messages.MessageType type = mapStringToEnum(rb.getText());
+            membershipView.getPersonEdit().accept(type,createData(type));
+        });
         return button;
+    }
+
+    private Object createData(MessageType message) {
+        String returnString = "";
+        switch (message) {
+            case CHANGE_MEMBER_TYPE -> returnString = membershipModel.getPersonComboBox().get(person).getValue();
+            case MOVE_MEMBER_TO_MEMBERSHIP -> returnString = membershipModel.getPersonTextField().get(person).getText();
+            default -> returnString = "NONE";
+        }
+        return returnString;
     }
 
     private Button createCopy(Object object) {
@@ -292,4 +319,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         return memberTypeString;
     }
 
+    public PersonDTO getPerson() {
+        return person;
+    }
 }

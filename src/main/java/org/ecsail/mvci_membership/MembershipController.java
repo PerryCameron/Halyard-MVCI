@@ -21,8 +21,8 @@ public class MembershipController extends Controller {
         membershipView = new MembershipView(membershipModel, this::personEdit);
     }
 
-    private void personEdit(Messages messages, Object o) {
-        membershipInteractor.printPersonMessage(messages, o);
+    private void personEdit(Messages.MessageType type, Object o) {
+        membershipInteractor.printPersonMessage(type, o);
     }
 
     private void getDataForMembership(MembershipListDTO ml) {
