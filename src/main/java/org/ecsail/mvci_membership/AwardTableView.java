@@ -15,6 +15,7 @@ import org.ecsail.dto.AwardDTO;
 import org.ecsail.dto.OfficerDTO;
 import org.ecsail.dto.PersonDTO;
 import org.ecsail.enums.Awards;
+import org.ecsail.interfaces.Messages;
 import org.ecsail.widgetfx.TableColumnFx;
 import org.ecsail.widgetfx.TableViewFx;
 
@@ -42,9 +43,9 @@ public class AwardTableView implements Builder<TableView> {
         col1.setSortType(TableColumn.SortType.DESCENDING);
         col1.setOnEditCommit(
                 t -> {
-                    t.getTableView().getItems().get(
-                            t.getTablePosition().getRow()).setAwardYear(t.getNewValue());
-//         TODO           SqlUpdate.updateAward("award_year", t.getRowValue().getAwardId(), t.getNewValue());  // have to get by money id and pid eventually
+                    AwardDTO awardDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
+                    awardDTO.setAwardYear(t.getNewValue());
+                    membershipView.getPersonEdit().accept(Messages.MessageType.UPDATE, awardDTO);
                 }
         );
         col1.setMaxWidth(1f * Integer.MAX_VALUE * 20);   // Phone
@@ -67,11 +68,11 @@ public class AwardTableView implements Builder<TableView> {
             // use enum to convert DB value
             Awards newAward = event.getNewValue();
             // give object a name to manipulate
-            AwardDTO thisAward = event.getTableView().getItems().get(pos.getRow());
+            AwardDTO awardDTO = event.getTableView().getItems().get(pos.getRow());
             // update the SQL
-//    TODO        SqlUpdate.updateAward("award_type", thisAward.getAwardId(), newAward.getCode());
+            membershipView.getPersonEdit().accept(Messages.MessageType.UPDATE, awardDTO);
             // update the GUI
-            thisAward.setAwardType(newAward.getCode());
+            awardDTO.setAwardType(newAward.getCode());
         });
         col2.setMaxWidth(1f * Integer.MAX_VALUE * 50);  // Type
         return col2;

@@ -98,7 +98,7 @@ public class EmailDTO {
 	
 
 
-	public final boolean isIsListed() {
+	public final boolean isListed() {
 		return this.isListedProperty().get();
 	}
 	

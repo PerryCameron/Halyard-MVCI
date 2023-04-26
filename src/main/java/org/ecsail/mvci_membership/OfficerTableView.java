@@ -12,6 +12,7 @@ import org.ecsail.dto.BoardPositionDTO;
 import org.ecsail.dto.OfficerDTO;
 import org.ecsail.dto.PersonDTO;
 import org.ecsail.enums.Officer;
+import org.ecsail.interfaces.Messages;
 import org.ecsail.widgetfx.TableColumnFx;
 import org.ecsail.widgetfx.TableViewFx;
 
@@ -42,9 +43,10 @@ public class OfficerTableView implements Builder<TableView> {
         col1.setSortType(TableColumn.SortType.DESCENDING);
         col1.setOnEditCommit(
                 t -> {
-                    t.getTableView().getItems().get(
-                            t.getTablePosition().getRow()).setFiscal_year(t.getNewValue());
-//         TODO           SqlUpdate.updateOfficer("off_year",t.getRowValue().getOfficer_id(), t.getNewValue());  // have to get by money id and pid eventually
+                    OfficerDTO officerDTO = t.getTableView().getItems().get(
+                            t.getTablePosition().getRow());
+                    officerDTO.setFiscal_year(t.getNewValue());
+                    membershipView.getPersonEdit().accept(Messages.MessageType.UPDATE, officerDTO);
                 }
         );
         col1.setMaxWidth(1f * Integer.MAX_VALUE * 20);   // Phone
@@ -67,9 +69,9 @@ public class OfficerTableView implements Builder<TableView> {
             TablePosition<OfficerDTO, String> pos = event.getTablePosition();
             String newOfficer = event.getNewValue();
             int row = pos.getRow();
-            OfficerDTO thisofficer = event.getTableView().getItems().get(row);
-//      TODO      SqlUpdate.updateOfficer("off_type",thisofficer.getOfficer_id(), Officer.getByName(newOfficer));
-            thisofficer.setOfficer_type(newOfficer);
+            OfficerDTO officerDTO = event.getTableView().getItems().get(row);
+            officerDTO.setOfficer_type(newOfficer);
+            membershipView.getPersonEdit().accept(Messages.MessageType.UPDATE, officerDTO);
         });
         col2.setMaxWidth(1f * Integer.MAX_VALUE * 50);  // Type
         return col2;
@@ -79,9 +81,9 @@ public class OfficerTableView implements Builder<TableView> {
         TableColumn<OfficerDTO, String> col3 = TableColumnFx.tableColumnOf(OfficerDTO::board_yearProperty, "Exp");
         col3.setOnEditCommit(
                 t -> {
-                    t.getTableView().getItems().get(
-                            t.getTablePosition().getRow()).setBoard_year(t.getNewValue());  // need to change
-//         TODO           SqlUpdate.updateOfficer("board_year",t.getRowValue().getOfficer_id(), t.getNewValue());  // have to get by money id and pid eventually
+                    OfficerDTO officerDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
+                    officerDTO.setBoard_year(t.getNewValue());
+                    membershipView.getPersonEdit().accept(Messages.MessageType.UPDATE, officerDTO);
                 }
         );
         col3.setMaxWidth( 1f * Integer.MAX_VALUE * 20 );  // Listed

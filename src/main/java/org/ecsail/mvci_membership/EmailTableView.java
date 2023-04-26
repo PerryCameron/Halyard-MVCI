@@ -12,6 +12,7 @@ import javafx.util.Builder;
 import org.ecsail.custom.RadioButtonCell;
 import org.ecsail.dto.EmailDTO;
 import org.ecsail.dto.PersonDTO;
+import org.ecsail.interfaces.Messages;
 import org.ecsail.static_calls.StringTools;
 import org.ecsail.widgetfx.TableColumnFx;
 import org.ecsail.widgetfx.TableViewFx;
@@ -42,8 +43,9 @@ public class EmailTableView implements Builder<TableView> {
         col1.setOnEditCommit(t -> {
             int email_id = t.getTableView().getItems().get(t.getTablePosition().getRow()).getEmail_id();
             if(StringTools.isValidEmail(t.getNewValue())) {
-                t.getTableView().getItems().get(t.getTablePosition().getRow()).setEmail(t.getNewValue());
-                // TODO ADD Consumer<Object> -> SqlUpdate.updateEmail(email_id, t.getNewValue());
+                EmailDTO emailDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
+                emailDTO.setEmail(t.getNewValue());
+                membershipView.getPersonEdit().accept(Messages.MessageType.UPDATE,emailDTO);
             } else {
                 person.getEmail().stream()
                         .filter(q -> q.getEmail_id() == email_id)
@@ -68,14 +70,14 @@ public class EmailTableView implements Builder<TableView> {
     private TableColumn<EmailDTO,Boolean> createColumn3() {
         TableColumn<EmailDTO, Boolean> col3 = new TableColumn<>("Listed");
         col3.setCellValueFactory(param -> {
-            EmailDTO email = param.getValue();
-            SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(email.isIsListed());
+            EmailDTO emailDTO = param.getValue();
+            SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(emailDTO.isListed());
             // Note: singleCol.setOnEditCommit(): Not work for
             // CheckBoxTableCell.
             // When "Listed?" column change.
             booleanProp.addListener((observable, oldValue, newValue) -> {
-                email.setIsListed(newValue);
-//      TODO          SqlUpdate.updateEmail("email_listed", email.getEmail_id(), newValue);
+                emailDTO.setIsListed(newValue);
+                membershipView.getPersonEdit().accept(Messages.MessageType.UPDATE,emailDTO);
             });
             return booleanProp;
         });
