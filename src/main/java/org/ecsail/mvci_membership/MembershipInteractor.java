@@ -56,6 +56,6 @@ public class MembershipInteractor {
     }
 
     public void printPersonMessage(Messages.MessageType messages, Object o) {
-        System.out.println(messages + " " + o + " " + membershipModel.getSelectedPerson().getFirstName());
+        System.out.println(messages + " " + o + " " + membershipModel.getSelectedPerson());
     }
 }

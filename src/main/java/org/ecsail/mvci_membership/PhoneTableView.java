@@ -15,6 +15,7 @@ import javafx.util.Builder;
 import org.ecsail.dto.PersonDTO;
 import org.ecsail.dto.PhoneDTO;
 import org.ecsail.enums.PhoneType;
+import org.ecsail.interfaces.Messages;
 import org.ecsail.widgetfx.TableColumnFx;
 import org.ecsail.widgetfx.TableViewFx;
 
@@ -49,11 +50,10 @@ public class PhoneTableView implements Builder<TableView> {
                         t.getTableView().getItems().get(
                                 t.getTablePosition().getRow()).setPhoneNumber(t.getNewValue());
                         String processedNumber = processNumber(t.getNewValue());
-                        int phone_id = t.getTableView().getItems().get(t.getTablePosition().getRow()).getPhone_ID();
-                        // TODO send Consumer<Object>
-//                        SqlUpdate.updatePhone("phone", phone_id, processedNumber);
+                        PhoneDTO phoneDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
+                        membershipView.getPersonEdit().accept(Messages.MessageType.UPDATE, phoneDTO);
                         person.getPhones().stream()
-                                .filter(p -> p.getPhone_ID() == phone_id)
+                                .filter(p -> p.getPhone_ID() == phoneDTO.getPhone_ID())
                                 .forEach(s -> s.setPhoneNumber(processedNumber));
                     }
 
@@ -113,10 +113,10 @@ public class PhoneTableView implements Builder<TableView> {
             TablePosition<PhoneDTO, PhoneType> pos = event.getTablePosition();
             PhoneType newPhoneType = event.getNewValue();
             int row = pos.getRow();
-            PhoneDTO thisPhone = event.getTableView().getItems().get(row);
+            PhoneDTO phoneDTO = event.getTableView().getItems().get(row);
             // TODO add Consumer<Object> here
-//            SqlUpdate.updatePhone("phone_type", thisPhone.getPhone_ID(), newPhoneType.getCode());
-            thisPhone.setPhoneType(newPhoneType.getCode());
+            membershipView.getPersonEdit().accept(Messages.MessageType.UPDATE, phoneDTO);
+            phoneDTO.setPhoneType(newPhoneType.getCode());
         });
         Col2.setMaxWidth( 1f * Integer.MAX_VALUE * 30 );  // Type
         return Col2;
@@ -125,13 +125,14 @@ public class PhoneTableView implements Builder<TableView> {
     private TableColumn<PhoneDTO,?> createColumn3() {
         TableColumn<PhoneDTO, Boolean> Col3 = new TableColumn<>("Listed");
         Col3.setCellValueFactory(param -> {
-            PhoneDTO phone = param.getValue();
-            SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(phone.isIsListed());
+            PhoneDTO phoneDTO = param.getValue();
+            SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(phoneDTO.isIsListed());
             // Note: singleCol.setOnEditCommit(): Not work for
             // CheckBoxTableCell.
             // When "isListed?" column change.
             booleanProp.addListener((observable, oldValue, newValue) -> {
-                phone.setIsListed(newValue);
+                phoneDTO.setIsListed(newValue);
+                membershipView.getPersonEdit().accept(Messages.MessageType.UPDATE, phoneDTO);
                 // TODO Consumer<Object> here
 //                SqlUpdate.updateListed("phone_listed",phone.getPhone_ID(), newValue);
             });

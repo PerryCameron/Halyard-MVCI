@@ -221,7 +221,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     }
 
     private Object createData(MessageType message) {
-        String returnString = "";
+        String returnString;
         switch (message) {
             case CHANGE_MEMBER_TYPE -> returnString = membershipModel.getPersonComboBox().get(person).getValue();
             case MOVE_MEMBER_TO_MEMBERSHIP -> returnString = membershipModel.getPersonTextField().get(person).getText();
@@ -294,10 +294,8 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         TextField textField = TextFieldFx.textFieldOf(150, property);
         textField.focusedProperty()
                 .addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-            if (oldValue) {
-                // TODO send this to controller with consumer<PersonDTO>
-                System.out.println("label change to " + property.toString());
-            }
+                    updatePersonDTO(label, textField.getText());
+            if (oldValue) { membershipView.getPersonEdit().accept(MessageType.UPDATE,label); }
         });
         Text text = new Text(label);
         text.setId("text-white");
@@ -307,6 +305,17 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         hBoxTextField.getChildren().add(textField);
         hBox.getChildren().addAll(hBoxLabel, hBoxTextField);
         return hBox;
+    }
+
+    private void updatePersonDTO(String label, String text) {
+        switch (label) {
+            case "First Name" -> membershipModel.getSelectedPerson().setFirstName(text);
+            case "Last Name" -> membershipModel.getSelectedPerson().setLastName(text);
+            case "Nickname" -> membershipModel.getSelectedPerson().setNickName(text);
+            case "Occupation" -> membershipModel.getSelectedPerson().setOccupation(text);
+            case "Business" -> membershipModel.getSelectedPerson().setBusiness(text);
+            case "Birthday" -> membershipModel.getSelectedPerson().setBirthday(text);
+        }
     }
 
     private String getMemberType() {

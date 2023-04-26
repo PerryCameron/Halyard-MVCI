@@ -216,9 +216,16 @@ public class PersonDTO {
 
 	@Override
 	public String toString() {
-		return "Object_Person [p_id=" + p_id + ", ms_id=" + ms_id + ", memberType=" + memberType + ", fname=" + firstName
-				+ ", lname=" + lastName + ", occupation=" + occupation + ", business=" + business + ", birthday="
-				+ birthday + ", active=" + active + ", nname=" + nickName + "]";
+		return    p_id + "\n"
+				+ ms_id + "\n"
+				+ memberType + "\n"
+				+ firstName + "\n"
+				+ lastName + "\n"
+				+ occupation + "\n"
+				+ business + "\n"
+				+ birthday + "\n"
+				+ active + "\n"
+				+ nickName;
 	}
 
 }
