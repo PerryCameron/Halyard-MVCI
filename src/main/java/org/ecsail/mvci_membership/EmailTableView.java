@@ -4,6 +4,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Pos;
+import javafx.scene.control.Control;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
@@ -17,7 +18,7 @@ import org.ecsail.static_calls.StringTools;
 import org.ecsail.widgetfx.TableColumnFx;
 import org.ecsail.widgetfx.TableViewFx;
 
-public class EmailTableView implements Builder<TableView> {
+public class EmailTableView implements Builder<TableView<EmailDTO>> {
 
     private final PersonDTO person;
     private final MembershipModel membershipModel;
@@ -30,7 +31,7 @@ public class EmailTableView implements Builder<TableView> {
     }
 
     @Override
-    public TableView build() {
+    public TableView<EmailDTO> build() {
         TableView<EmailDTO> tableView = TableViewFx.tableViewOf(EmailDTO.class);
         tableView.setItems(person.getEmail());
         tableView.getColumns().addAll(createColumn1(), createColumn2(), createColumn3());

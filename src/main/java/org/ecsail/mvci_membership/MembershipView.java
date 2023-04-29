@@ -3,13 +3,14 @@ package org.ecsail.mvci_membership;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.Property;
-import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Builder;
 import org.ecsail.interfaces.Messages;
@@ -21,8 +22,8 @@ import java.util.function.BiConsumer;
 
 public class MembershipView implements Builder<Region> {
 
-    private MembershipModel membershipModel;
-    private BiConsumer<Messages.MessageType, Object> personEdit;
+    private final MembershipModel membershipModel;
+    private final BiConsumer<Messages.MessageType, Object> personEdit;
     protected MembershipView(MembershipModel mm, BiConsumer<Messages.MessageType, Object> personEdit) {
         membershipModel = mm;
         this.personEdit = personEdit;
@@ -42,14 +43,11 @@ public class MembershipView implements Builder<Region> {
         TabPane tabPane = TabPaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE, 498);
         tabPane.setId("custom-tab-pane");
         // temp listener used at tab open, to wait for data first.
-        membershipModel.listsLoadedProperty().addListener((observable, oldValue, newValue) -> {
-            membershipModel.getPeople().forEach(personDTO -> {
-                tabPane.getTabs().add(new PersonTabView(this, personDTO).build());
-            });
-        });
+        membershipModel.listsLoadedProperty().addListener((observable, oldValue, newValue)
+                -> membershipModel.getPeople().forEach(personDTO
+                -> tabPane.getTabs().add(new PersonTabView(this, personDTO).build())));
         tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
-            Tab selectedTab = newTab;// Get the selected tab
-            PersonTabView personTabView = (PersonTabView) selectedTab.getUserData();// Get the associated PersonTabView object
+            PersonTabView personTabView = (PersonTabView) newTab.getUserData();// Get the associated PersonTabView object
             membershipModel.setSelectedPerson(personTabView.getPerson());
         });
         return tabPane;

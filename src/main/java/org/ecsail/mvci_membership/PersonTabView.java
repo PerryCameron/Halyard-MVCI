@@ -11,9 +11,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.Clipboard;
+import javafx.scene.input.ClipboardContent;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.util.Builder;
+import org.ecsail.connection.Mail;
+import org.ecsail.dto.EmailDTO;
 import org.ecsail.dto.PersonDTO;
 import org.ecsail.interfaces.ConfigFilePaths;
 import org.ecsail.interfaces.Messages;
@@ -103,8 +107,10 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     private Node handleEmailTab() {
         HBox hBox = HBoxFx.hBoxOf(new Insets(10,10,5,10),"box-background-light");
         hBox.setPrefHeight(130);
+        TableView<EmailDTO> tableView = new EmailTableView(person, membershipView).build();
+        membershipModel.setEmailTableView(tableView);
         VBox vBox = createButtonBox(createAdd(person), createDelete(person), createCopy(person), createEmail(person));
-        hBox.getChildren().addAll(new EmailTableView(person, membershipView).build(),vBox);
+        hBox.getChildren().addAll(membershipModel.getEmailTableView(),vBox);
         return hBox;
     }
 
@@ -232,25 +238,39 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
 
     private Button createCopy(Object object) {
         Button button = ButtonFx.buttonOf("Copy",60);
-        // TODO Add listener
+        button.setOnAction(event -> {
+            int selectedIndex = membershipModel.getEmailTableView().getSelectionModel().getSelectedIndex();
+            Clipboard clipboard = Clipboard.getSystemClipboard();
+            final ClipboardContent content = new ClipboardContent();
+            if (selectedIndex >= 0) {// make sure something is selected
+//                EmailDTO emailDTO = membershipModel.getEmailTableView().getItems().get(selectedIndex);
+//                Mail.composeEmail(emailDTO.getEmail(), "ECSC", "");
+            }
+        });
         return button;
     }
 
     private Button createDelete(Object object) {
         Button button = ButtonFx.buttonOf("Delete",60);
-        // TODO Add listener
+        membershipView.getPersonEdit().accept(MessageType.DELETE,object);
         return button;
     }
 
     private Button createAdd(Object object) {
         Button button = ButtonFx.buttonOf("Add",60);
-        // TODO Add listener
+        membershipView.getPersonEdit().accept(MessageType.INSERT,object);
         return button;
     }
 
     private Button createEmail(Object object) {
-        Button button = ButtonFx.buttonOf("Email",60);
-        // TODO Add listener
+        Button button = ButtonFx.buttonOf("Email", 60);
+        button.setOnAction(event -> {
+            int selectedIndex = membershipModel.getEmailTableView().getSelectionModel().getSelectedIndex();
+            if (selectedIndex >= 0) {// make sure something is selected
+                EmailDTO emailDTO = membershipModel.getEmailTableView().getItems().get(selectedIndex);
+                Mail.composeEmail(emailDTO.getEmail(), "ECSC", "");
+            }
+        });
         return button;
     }
 
@@ -319,13 +339,12 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     }
 
     private String getMemberType() {
-        String memberTypeString = switch (person.getMemberType()) {
+        return switch (person.getMemberType()) {
             case 1 -> "Primary";
             case 2 -> "Secondary";
             case 3 -> "Dependant";
             default -> "Unknown";
         };
-        return memberTypeString;
     }
 
     public PersonDTO getPerson() {

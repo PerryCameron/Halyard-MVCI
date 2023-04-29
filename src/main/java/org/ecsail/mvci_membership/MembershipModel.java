@@ -8,14 +8,18 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
+import org.ecsail.dto.EmailDTO;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.dto.PersonDTO;
 import org.ecsail.mvci_main.MainModel;
 
 public class MembershipModel {
 
+
+    private SimpleObjectProperty<TableView<EmailDTO>> emailTableView = new SimpleObjectProperty<>();
     private final ObservableMap<PersonDTO,StackPane> stackPaneMap = FXCollections.observableHashMap();
     private ObservableMap<PersonDTO, RadioButton> selectedRadioForPerson = FXCollections.observableHashMap();
     private ObservableMap<PersonDTO, ComboBox<String>> personComboBox = FXCollections.observableHashMap();
@@ -28,6 +32,19 @@ public class MembershipModel {
 
 
 
+
+
+    public TableView<EmailDTO> getEmailTableView() {
+        return emailTableView.get();
+    }
+
+    public SimpleObjectProperty<TableView<EmailDTO>> emailTableViewProperty() {
+        return emailTableView;
+    }
+
+    public void setEmailTableView(TableView<EmailDTO> emailTableView) {
+        this.emailTableView.set(emailTableView);
+    }
 
     public ObservableMap<PersonDTO, ComboBox<String>> getPersonComboBox() {
         return personComboBox;

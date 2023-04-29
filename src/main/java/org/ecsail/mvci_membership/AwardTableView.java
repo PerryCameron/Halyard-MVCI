@@ -7,38 +7,33 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.ComboBoxTableCell;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import org.ecsail.dto.AwardDTO;
-import org.ecsail.dto.OfficerDTO;
 import org.ecsail.dto.PersonDTO;
 import org.ecsail.enums.Awards;
 import org.ecsail.interfaces.Messages;
 import org.ecsail.widgetfx.TableColumnFx;
 import org.ecsail.widgetfx.TableViewFx;
 
-public class AwardTableView implements Builder<TableView> {
+public class AwardTableView implements Builder<TableView<AwardDTO>> {
     private final PersonDTO person;
-    private final MembershipModel membershipModel;
     private final MembershipView membershipView;
 
     public AwardTableView(PersonDTO personDTO, MembershipView membershipView) {
         this.person = personDTO;
-        this.membershipModel = membershipView.getMembershipModel();
         this.membershipView = membershipView;
     }
 
     @Override
-    public TableView build() {
+    public TableView<AwardDTO> build() {
         TableView<AwardDTO> tableView = TableViewFx.tableViewOf(AwardDTO.class);
         tableView.setItems(person.getAwards());
         tableView.getColumns().addAll(createColumn1(), createColumn2());
         return tableView;
     }
 
-    private TableColumn<AwardDTO,?> createColumn1() {
+
+    private TableColumn<AwardDTO,String> createColumn1() {
         TableColumn<AwardDTO, String> col1 = TableColumnFx.tableColumnOf(AwardDTO::awardYearProperty,"Year");
         col1.setSortType(TableColumn.SortType.DESCENDING);
         col1.setOnEditCommit(
@@ -52,7 +47,7 @@ public class AwardTableView implements Builder<TableView> {
         return col1;
     }
 
-    private TableColumn<AwardDTO,?> createColumn2() {
+    private TableColumn<AwardDTO,Awards> createColumn2() {
         ObservableList<Awards> awardsList = FXCollections.observableArrayList(Awards.values());
         final TableColumn<AwardDTO, Awards> col2 = new TableColumn<>("Award Type");
         col2.setCellValueFactory(param -> {
