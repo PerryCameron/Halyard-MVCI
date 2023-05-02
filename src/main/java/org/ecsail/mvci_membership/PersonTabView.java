@@ -27,6 +27,7 @@ import org.ecsail.widgetfx.TextFieldFx;
 import org.ecsail.widgetfx.VBoxFx;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Objects;
 
 public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths, Messages {
@@ -94,7 +95,8 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         HBox hBox = HBoxFx.hBoxOf(new Insets(10,10,5,10),"box-background-light");
         hBox.setPrefHeight(130);
         VBox vBox = createButtonBox(createAddButton(), createDeleteButton(person));
-        hBox.getChildren().addAll(new AwardTableView(person, membershipView).build(),vBox);
+        membershipModel.getAwardTableView().put(person, new AwardTableView(person, membershipView).build());
+        hBox.getChildren().addAll(membershipModel.getAwardTableView().get(person),vBox);
         return hBox;
     }
 
@@ -102,7 +104,8 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         HBox hBox = HBoxFx.hBoxOf(new Insets(10,10,5,10),"box-background-light");
         hBox.setPrefHeight(130);
         VBox vBox = createButtonBox(createAddButton(), createDeleteButton(person));
-        hBox.getChildren().addAll(new OfficerTableView(person, membershipView).build(),vBox);
+        membershipModel.getOfficerTableView().put(person, new OfficerTableView(person, membershipView).build());
+        hBox.getChildren().addAll(membershipModel.getOfficerTableView().get(person),vBox);
         return hBox;
     }
 
@@ -273,19 +276,40 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
             Object object = null;
             if (tabIs("Phone")) {
                 object = new PhoneDTO(person.getP_id());
+                person.getPhones().add((PhoneDTO) object);
+                person.getPhones().sort(Comparator.comparing(PhoneDTO::getPhone_ID));
+                requestFocusOnTable(membershipModel.getPhoneTableView().get(person));
             }
             if (tabIs("Email")) {
                 object = new EmailDTO(person.getP_id());
+                person.getEmail().add((EmailDTO) object);
+                person.getEmail().sort(Comparator.comparing(EmailDTO::getEmail_id));
+                requestFocusOnTable(membershipModel.getEmailTableView().get(person));
             }
             if (tabIs("Awards")) {
                 object = new AwardDTO(person.getP_id());
+                person.getAwards().add((AwardDTO) object);
+                person.getAwards().sort(Comparator.comparing(AwardDTO::getAwardId));
+                requestFocusOnTable(membershipModel.getAwardTableView().get(person));
             }
             if (tabIs("Officer")) {
                 object = new OfficerDTO(person.getP_id());
+                person.getOfficer().add((OfficerDTO) object);
+                person.getOfficer().sort(Comparator.comparing(OfficerDTO::getOfficer_id));
+                requestFocusOnTable(membershipModel.getOfficerTableView().get(person));
             }
             membershipView.getPersonEdit().accept(MessageType.INSERT, object);
         });
         return button;
+    }
+
+    private void requestFocusOnTable(TableView<?> tableView) {
+        TableColumn firstColumn = tableView.getColumns().get(0);
+        tableView.layout();
+        tableView.requestFocus();
+        tableView.getSelectionModel().select(0);
+        tableView.getFocusModel().focus(0);
+        tableView.edit(0, firstColumn);
     }
 
     private Button createEmailButton() {

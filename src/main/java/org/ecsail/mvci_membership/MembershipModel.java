@@ -8,21 +8,17 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
-import org.ecsail.dto.EmailDTO;
-import org.ecsail.dto.MembershipListDTO;
-import org.ecsail.dto.PersonDTO;
-import org.ecsail.dto.PhoneDTO;
+import org.ecsail.dto.*;
 import org.ecsail.mvci_main.MainModel;
 
 public class MembershipModel {
 
-
-
-
     // person model
     private ObservableMap<PersonDTO, TableView<EmailDTO>> emailTableView = FXCollections.observableHashMap();
     private ObservableMap<PersonDTO, TableView<PhoneDTO>> phoneTableView = FXCollections.observableHashMap();
-    private final ObservableMap<PersonDTO,StackPane> stackPaneMap = FXCollections.observableHashMap();
+    private ObservableMap<PersonDTO, TableView<AwardDTO>> awardTableView = FXCollections.observableHashMap();
+    private ObservableMap<PersonDTO, TableView<OfficerDTO>> officerTableView = FXCollections.observableHashMap();
+    private ObservableMap<PersonDTO,StackPane> stackPaneMap = FXCollections.observableHashMap();
     private ObservableMap<PersonDTO, RadioButton> selectedRadioForPerson = FXCollections.observableHashMap();
     private ObservableMap<PersonDTO, ComboBox<String>> personComboBox = FXCollections.observableHashMap();
     private ObservableMap<PersonDTO, Tab> personPropertiesTab = FXCollections.observableHashMap();
@@ -33,6 +29,24 @@ public class MembershipModel {
     private final BooleanProperty listsLoaded = new SimpleBooleanProperty(false);
     private final MainModel mainModel;
 
+
+
+
+    public ObservableMap<PersonDTO, TableView<OfficerDTO>> getOfficerTableView() {
+        return officerTableView;
+    }
+
+    public void setOfficerTableView(ObservableMap<PersonDTO, TableView<OfficerDTO>> officerTableView) {
+        this.officerTableView = officerTableView;
+    }
+
+    public ObservableMap<PersonDTO, TableView<AwardDTO>> getAwardTableView() {
+        return awardTableView;
+    }
+
+    public void setAwardTableView(ObservableMap<PersonDTO, TableView<AwardDTO>> awardTableView) {
+        this.awardTableView = awardTableView;
+    }
 
     public ObservableMap<PersonDTO, Tab> getPersonPropertiesTab() {
         return personPropertiesTab;

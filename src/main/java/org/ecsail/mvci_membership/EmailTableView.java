@@ -40,6 +40,7 @@ public class EmailTableView implements Builder<TableView<EmailDTO>> {
 
     private TableColumn<EmailDTO,String> createColumn1() { //
         TableColumn<EmailDTO, String> col1 = TableColumnFx.tableColumnOf(EmailDTO::emailProperty,"Email");
+        System.out.println("Column on creation" + col1);
         col1.setPrefWidth(137);
         col1.setOnEditCommit(t -> {
             int email_id = t.getTableView().getItems().get(t.getTablePosition().getRow()).getEmail_id();
