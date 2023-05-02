@@ -27,7 +27,7 @@ public class RosterTableView extends TableView<MembershipListDTO> {
 
     public RosterTableView(RosterModel rosterModel) {
         this.rosterModel = rosterModel;
-        this.setPlaceholder(new Label("Loading Rosters..."));
+        this.setPlaceholder(new Label(""));
 
         VBox.setVgrow(this, Priority.ALWAYS);
         HBox.setHgrow(this, Priority.ALWAYS);

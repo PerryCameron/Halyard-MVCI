@@ -58,6 +58,7 @@ public class RosterController extends Controller {
     }
 
     private void getRosterData() {
+        mainController.setSpinnerOffset(-175,-25);
         mainController.showLoadingSpinner(true);
         Task<Void> task = new Task<>() {
             @Override

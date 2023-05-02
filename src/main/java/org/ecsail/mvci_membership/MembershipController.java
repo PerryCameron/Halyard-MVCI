@@ -26,6 +26,7 @@ public class MembershipController extends Controller {
     }
 
     private void getDataForMembership(MembershipListDTO ml) {
+        mainController.setSpinnerOffset(50,50);
         mainController.showLoadingSpinner(true);
         Task<Void> task = new Task<>() {
             @Override
