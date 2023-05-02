@@ -108,7 +108,6 @@ public class OfficerDTO {
 
 	@Override
 	public String toString() {
-		return "Object_Officer [officer_id=" + officer_id + ", person_id=" + pId + ", board_year=" + board_year
-				+ ", officer_type=" + officer_type + ", fiscal_year=" + fiscal_year + "]";
+		return "Object_Officer [officer_id=" + officer_id +"]";
 	}
 }

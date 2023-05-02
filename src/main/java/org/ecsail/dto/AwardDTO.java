@@ -109,8 +109,7 @@ public class AwardDTO {
 
 	@Override
 	public String toString() {
-		return "Object_Award [awardId=" + awardId + ", pid=" + pId + ", awardYear=" + awardYear + ", awardType="
-				+ awardType + "]";
+		return "Object_Award [awardId=" + awardId + "]";
 	}
 
 }

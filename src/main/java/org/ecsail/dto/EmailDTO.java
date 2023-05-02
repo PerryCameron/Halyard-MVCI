@@ -114,6 +114,11 @@ public class EmailDTO {
 
 	public final void setIsListed(final boolean isListed) {
 		this.isListedProperty().set(isListed);
-	}	
-	
+	}
+
+	@Override
+	public String toString() {
+		return "EmailDTO " +
+				" email_id=" + email_id;
+	}
 }

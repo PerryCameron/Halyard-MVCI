@@ -119,14 +119,7 @@ public class PhoneDTO {
 
 	@Override
 	public String toString() {
-		return "PhoneDTO{" +
-				"phone_ID=" + phone_ID +
-				", pid=" + pid +
-				", isListed=" + isListed +
-				", phoneNumber=" + phoneNumber +
-				", phoneType=" + phoneType +
-				", membershiptypes=" + membershiptypes +
-				", combo_box=" + combo_box +
-				'}';
+		return "PhoneDTO " +
+				" phone_ID=" + phone_ID;
 	}
 }

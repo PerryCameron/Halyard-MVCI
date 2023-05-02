@@ -216,16 +216,8 @@ public class PersonDTO {
 
 	@Override
 	public String toString() {
-		return    p_id + "\n"
-				+ ms_id + "\n"
-				+ memberType + "\n"
-				+ firstName + "\n"
-				+ lastName + "\n"
-				+ occupation + "\n"
-				+ business + "\n"
-				+ birthday + "\n"
-				+ active + "\n"
-				+ nickName;
+		return    p_id + " "
+				+ firstName + " "
+				+ lastName + "\n";
 	}
-
 }

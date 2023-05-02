@@ -94,7 +94,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     private Node handleAwardsTab() {
         HBox hBox = HBoxFx.hBoxOf(new Insets(10,10,5,10),"box-background-light");
         hBox.setPrefHeight(130);
-        VBox vBox = createButtonBox(createAddButton(), createDeleteButton(person));
+        VBox vBox = createButtonBox(createAddButton(), createDeleteButton());
         membershipModel.getAwardTableView().put(person, new AwardTableView(person, membershipView).build());
         hBox.getChildren().addAll(membershipModel.getAwardTableView().get(person),vBox);
         return hBox;
@@ -103,7 +103,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     private Node handleOfficerTab() {
         HBox hBox = HBoxFx.hBoxOf(new Insets(10,10,5,10),"box-background-light");
         hBox.setPrefHeight(130);
-        VBox vBox = createButtonBox(createAddButton(), createDeleteButton(person));
+        VBox vBox = createButtonBox(createAddButton(), createDeleteButton());
         membershipModel.getOfficerTableView().put(person, new OfficerTableView(person, membershipView).build());
         hBox.getChildren().addAll(membershipModel.getOfficerTableView().get(person),vBox);
         return hBox;
@@ -114,7 +114,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         hBox.setPrefHeight(130);
         TableView<EmailDTO> tableView = new EmailTableView(person, membershipView).build();
         membershipModel.getEmailTableView().put(person, tableView);
-        VBox vBox = createButtonBox(createAddButton(), createDeleteButton(person), createCopyButton(), createEmailButton());
+        VBox vBox = createButtonBox(createAddButton(), createDeleteButton(), createCopyButton(), createEmailButton());
         hBox.getChildren().addAll(membershipModel.getEmailTableView().get(person),vBox);
         return hBox;
     }
@@ -215,7 +215,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     private Node handlePhoneTab() {
         HBox hBox = HBoxFx.hBoxOf(new Insets(10,10,5,10),"box-background-light");
         hBox.setPrefHeight(130);
-        VBox vBox = createButtonBox(createAddButton(), createDeleteButton(person), createCopyButton());
+        VBox vBox = createButtonBox(createAddButton(), createDeleteButton(), createCopyButton());
         membershipModel.getPhoneTableView().put(person,new PhoneTableView(person, membershipView).build());
         hBox.getChildren().addAll(membershipModel.getPhoneTableView().get(person),vBox);
         return hBox;
@@ -264,9 +264,35 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
 
     private boolean tabIs(String tab) { return membershipModel.getPersonPropertiesTab().get(person).getText().equals(tab);}
 
-    private Button createDeleteButton(Object object) {
-        Button button = ButtonFx.buttonOf("Delete",60);
-        membershipView.getPersonEdit().accept(MessageType.DELETE,object);
+    private Button createDeleteButton() {
+        Button button = ButtonFx.buttonOf("Delete", 60);
+        button.setOnAction(event -> {
+            if (tabIs("Phone")) {
+                int selectedIndex = membershipModel.getPhoneTableView().get(person).getSelectionModel().getSelectedIndex();
+                PhoneDTO phoneDTO = membershipModel.getPhoneTableView().get(person).getItems().get(selectedIndex);
+                membershipView.getPersonEdit().accept(MessageType.DELETE, phoneDTO);
+                person.getPhones().remove(phoneDTO);
+            }
+            if (tabIs("Email")) {
+                int selectedIndex = membershipModel.getEmailTableView().get(person).getSelectionModel().getSelectedIndex();
+                EmailDTO emailDTO = membershipModel.getEmailTableView().get(person).getItems().get(selectedIndex);
+                membershipView.getPersonEdit().accept(MessageType.DELETE, emailDTO);
+                person.getEmail().remove(emailDTO);
+
+            }
+            if (tabIs("Awards")) {
+                int selectedIndex = membershipModel.getAwardTableView().get(person).getSelectionModel().getSelectedIndex();
+                AwardDTO awardDTO = membershipModel.getAwardTableView().get(person).getItems().get(selectedIndex);
+                membershipView.getPersonEdit().accept(MessageType.DELETE, awardDTO);
+                person.getAwards().remove(awardDTO);
+            }
+            if (tabIs("Officer")) {
+                int selectedIndex = membershipModel.getOfficerTableView().get(person).getSelectionModel().getSelectedIndex();
+                OfficerDTO officerDTO = membershipModel.getOfficerTableView().get(person).getItems().get(selectedIndex);
+                membershipView.getPersonEdit().accept(MessageType.DELETE, officerDTO);
+                person.getOfficer().remove(officerDTO);
+            }
+        });
         return button;
     }
 
