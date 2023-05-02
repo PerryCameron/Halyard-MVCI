@@ -50,9 +50,17 @@ public class LoadingView implements Builder<Region> {
         loadingModel.getLoadingStage().initStyle(StageStyle.TRANSPARENT);
         loadingModel.primaryXPropertyProperty().bind(BaseApplication.primaryStage.xProperty());
         loadingModel.primaryYPropertyProperty().bind(BaseApplication.primaryStage.yProperty());
+        loadingModel.setOffsets(50.0, 50.0);
         updateSpinnerLocation();
+        setOffsetListener();
         monitorPropertyChange(loadingModel.primaryXPropertyProperty());
         monitorPropertyChange(loadingModel.primaryYPropertyProperty());
+    }
+
+    private void setOffsetListener() {
+        loadingModel.offsetXProperty().addListener(observable -> {
+            updateSpinnerLocation();
+        });
     }
 
     public void monitorPropertyChange(DoubleProperty property) {
@@ -65,8 +73,10 @@ public class LoadingView implements Builder<Region> {
         double centerXPosition = BaseApplication.primaryStage.getX() + BaseApplication.primaryStage.getWidth() / 2d;
         double centerYPosition = BaseApplication.primaryStage.getY() + BaseApplication.primaryStage.getHeight() / 2d;
         loadingModel.getLoadingStage().setOnShown(windowEvent -> {
-            loadingModel.getLoadingStage().setX(centerXPosition - (loadingModel.getLoadingStage().getWidth() + 50) / 2d);
-            loadingModel.getLoadingStage().setY(centerYPosition - (loadingModel.getLoadingStage().getHeight() + 50) / 2d);
+            loadingModel.getLoadingStage().setX(centerXPosition -
+                    (loadingModel.getLoadingStage().getWidth() + loadingModel.getOffsetX()) / 2d);
+            loadingModel.getLoadingStage().setY(centerYPosition -
+                    (loadingModel.getLoadingStage().getHeight() + loadingModel.getOffsetY()) / 2d);
         });
     }
 }

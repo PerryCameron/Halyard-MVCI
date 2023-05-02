@@ -28,4 +28,10 @@ public class LoadingInteractor {
     public Stage getStage() {
         return loadingModel.getLoadingStage();
     }
+
+    public void setOffSet(double x, double y) {
+        Platform.runLater(() -> {
+            loadingModel.setOffsets(x, y);
+        });
+    }
 }

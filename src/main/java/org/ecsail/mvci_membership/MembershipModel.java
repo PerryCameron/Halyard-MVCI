@@ -21,7 +21,7 @@ public class MembershipModel {
     private ObservableMap<PersonDTO,StackPane> stackPaneMap = FXCollections.observableHashMap();
     private ObservableMap<PersonDTO, RadioButton> selectedRadioForPerson = FXCollections.observableHashMap();
     private ObservableMap<PersonDTO, ComboBox<String>> personComboBox = FXCollections.observableHashMap();
-    private ObservableMap<PersonDTO, Tab> personPropertiesTab = FXCollections.observableHashMap();
+    private ObservableMap<PersonDTO, Tab> selectedPropertiesTab = FXCollections.observableHashMap();
     private ObservableMap<PersonDTO, TextField> personTextField = FXCollections.observableHashMap();
     private ObservableList<PersonDTO> people = FXCollections.observableArrayList();
     private final SimpleObjectProperty<PersonDTO> selectedPerson = new SimpleObjectProperty<>();
@@ -48,12 +48,12 @@ public class MembershipModel {
         this.awardTableView = awardTableView;
     }
 
-    public ObservableMap<PersonDTO, Tab> getPersonPropertiesTab() {
-        return personPropertiesTab;
+    public ObservableMap<PersonDTO, Tab> getSelectedPropertiesTab() {
+        return selectedPropertiesTab;
     }
 
-    public void setPersonPropertiesTab(ObservableMap<PersonDTO, Tab> personPropertiesTab) {
-        this.personPropertiesTab = personPropertiesTab;
+    public void setSelectedPropertiesTab(ObservableMap<PersonDTO, Tab> selectedPropertiesTab) {
+        this.selectedPropertiesTab = selectedPropertiesTab;
     }
 
     public ObservableMap<PersonDTO, TableView<PhoneDTO>> getPhoneTableView() {

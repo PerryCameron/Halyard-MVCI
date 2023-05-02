@@ -83,6 +83,10 @@ public class MainController extends Controller {
         loadingController.showLoadSpinner(isVisible);
     }
 
+    public void setSpinnerOffset(double x, double y) {
+        loadingController.setOffset(x,y);
+    }
+
     public Connections getConnections() {
         return connectController.getConnectInteractor().getConnections();
     }

@@ -28,6 +28,8 @@ public class LoadingController extends Controller {
         return loadingInteractor.getStage();
     }
 
+    public void setOffset(double x, double y) { loadingInteractor.setOffSet(x,y); }
+
     public void showLoadSpinner(boolean show) {
         loadingInteractor.showLoadSpinner(show);
     }
