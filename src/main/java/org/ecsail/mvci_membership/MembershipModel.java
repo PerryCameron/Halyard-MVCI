@@ -6,44 +6,53 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 import org.ecsail.dto.EmailDTO;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.dto.PersonDTO;
+import org.ecsail.dto.PhoneDTO;
 import org.ecsail.mvci_main.MainModel;
 
 public class MembershipModel {
 
 
-    private SimpleObjectProperty<TableView<EmailDTO>> emailTableView = new SimpleObjectProperty<>();
+    private ObservableMap<PersonDTO, TableView<EmailDTO>> emailTableView = FXCollections.observableHashMap();
+    private ObservableMap<PersonDTO, TableView<PhoneDTO>> phoneTableView = FXCollections.observableHashMap();
     private final ObservableMap<PersonDTO,StackPane> stackPaneMap = FXCollections.observableHashMap();
     private ObservableMap<PersonDTO, RadioButton> selectedRadioForPerson = FXCollections.observableHashMap();
     private ObservableMap<PersonDTO, ComboBox<String>> personComboBox = FXCollections.observableHashMap();
+    private ObservableMap<PersonDTO, Tab> personPropertiesTab = FXCollections.observableHashMap();
     private ObservableMap<PersonDTO, TextField> personTextField = FXCollections.observableHashMap();
     private ObservableList<PersonDTO> people = FXCollections.observableArrayList();
-    private SimpleObjectProperty<PersonDTO> selectedPerson = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<PersonDTO> selectedPerson = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<MembershipListDTO> membership = new SimpleObjectProperty<>();
     private final BooleanProperty listsLoaded = new SimpleBooleanProperty(false);
     private final MainModel mainModel;
 
 
-
-
-
-    public TableView<EmailDTO> getEmailTableView() {
-        return emailTableView.get();
+    public ObservableMap<PersonDTO, Tab> getPersonPropertiesTab() {
+        return personPropertiesTab;
     }
 
-    public SimpleObjectProperty<TableView<EmailDTO>> emailTableViewProperty() {
+    public void setPersonPropertiesTab(ObservableMap<PersonDTO, Tab> personPropertiesTab) {
+        this.personPropertiesTab = personPropertiesTab;
+    }
+
+    public ObservableMap<PersonDTO, TableView<PhoneDTO>> getPhoneTableView() {
+        return phoneTableView;
+    }
+
+    public void setPhoneTableView(ObservableMap<PersonDTO, TableView<PhoneDTO>> phoneTableView) {
+        this.phoneTableView = phoneTableView;
+    }
+
+    public ObservableMap<PersonDTO, TableView<EmailDTO>> getEmailTableView() {
         return emailTableView;
     }
 
-    public void setEmailTableView(TableView<EmailDTO> emailTableView) {
-        this.emailTableView.set(emailTableView);
+    public void setEmailTableView(ObservableMap<PersonDTO, TableView<EmailDTO>> emailTableView) {
+        this.emailTableView = emailTableView;
     }
 
     public ObservableMap<PersonDTO, ComboBox<String>> getPersonComboBox() {

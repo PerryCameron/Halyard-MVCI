@@ -19,6 +19,7 @@ import javafx.util.Builder;
 import org.ecsail.connection.Mail;
 import org.ecsail.dto.EmailDTO;
 import org.ecsail.dto.PersonDTO;
+import org.ecsail.dto.PhoneDTO;
 import org.ecsail.interfaces.ConfigFilePaths;
 import org.ecsail.interfaces.Messages;
 import org.ecsail.static_calls.MathTools;
@@ -69,6 +70,9 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         tabPane.getTabs().add(detailsTab("Awards"));
         tabPane.getTabs().add(detailsTab("Officer"));
         vBox.getChildren().add(tabPane);
+        tabPane.getSelectionModel().selectedItemProperty().addListener((ov, oldTab, newTab) -> {
+            membershipModel.getPersonPropertiesTab().put(person,newTab);
+        });
         return vBox;
     }
 
@@ -91,7 +95,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     private Node handleAwardsTab() {
         HBox hBox = HBoxFx.hBoxOf(new Insets(10,10,5,10),"box-background-light");
         hBox.setPrefHeight(130);
-        VBox vBox = createButtonBox(createAdd(person), createDelete(person));
+        VBox vBox = createButtonBox(createAddButton(person), createDeleteButton(person));
         hBox.getChildren().addAll(new AwardTableView(person, membershipView).build(),vBox);
         return hBox;
     }
@@ -99,7 +103,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     private Node handleOfficerTab() {
         HBox hBox = HBoxFx.hBoxOf(new Insets(10,10,5,10),"box-background-light");
         hBox.setPrefHeight(130);
-        VBox vBox = createButtonBox(createAdd(person), createDelete(person));
+        VBox vBox = createButtonBox(createAddButton(person), createDeleteButton(person));
         hBox.getChildren().addAll(new OfficerTableView(person, membershipView).build(),vBox);
         return hBox;
     }
@@ -108,9 +112,9 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         HBox hBox = HBoxFx.hBoxOf(new Insets(10,10,5,10),"box-background-light");
         hBox.setPrefHeight(130);
         TableView<EmailDTO> tableView = new EmailTableView(person, membershipView).build();
-        membershipModel.setEmailTableView(tableView);
-        VBox vBox = createButtonBox(createAdd(person), createDelete(person), createCopy(person), createEmail(person));
-        hBox.getChildren().addAll(membershipModel.getEmailTableView(),vBox);
+        membershipModel.getEmailTableView().put(person, tableView);
+        VBox vBox = createButtonBox(createAddButton(person), createDeleteButton(person), createCopyButton(), createEmailButton(person));
+        hBox.getChildren().addAll(membershipModel.getEmailTableView().get(person),vBox);
         return hBox;
     }
 
@@ -210,8 +214,9 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     private Node handlePhoneTab() {
         HBox hBox = HBoxFx.hBoxOf(new Insets(10,10,5,10),"box-background-light");
         hBox.setPrefHeight(130);
-        VBox vBox = createButtonBox(createAdd(person), createDelete(person), createCopy(person));
-        hBox.getChildren().addAll(new PhoneTableView(person, membershipView).build(),vBox);
+        VBox vBox = createButtonBox(createAddButton(person), createDeleteButton(person), createCopyButton());
+        membershipModel.getPhoneTableView().put(person,new PhoneTableView(person, membershipView).build());
+        hBox.getChildren().addAll(membershipModel.getPhoneTableView().get(person),vBox);
         return hBox;
     }
 
@@ -236,38 +241,44 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         return returnString;
     }
 
-    private Button createCopy(Object object) {
+    private Button createCopyButton() {
+        Clipboard clipboard = Clipboard.getSystemClipboard();
+        final ClipboardContent content = new ClipboardContent();
         Button button = ButtonFx.buttonOf("Copy",60);
         button.setOnAction(event -> {
-            int selectedIndex = membershipModel.getEmailTableView().getSelectionModel().getSelectedIndex();
-            Clipboard clipboard = Clipboard.getSystemClipboard();
-            final ClipboardContent content = new ClipboardContent();
-            if (selectedIndex >= 0) {// make sure something is selected
-//                EmailDTO emailDTO = membershipModel.getEmailTableView().getItems().get(selectedIndex);
-//                Mail.composeEmail(emailDTO.getEmail(), "ECSC", "");
+            if (membershipModel.getPersonPropertiesTab().get(person).getText().equals("Email")) {
+                int selectedIndex = membershipModel.getEmailTableView().get(person).getSelectionModel().getSelectedIndex();
+                EmailDTO emailDTO = membershipModel.getEmailTableView().get(person).getItems().get(selectedIndex);
+                content.putString(emailDTO.getEmail());
             }
+            if (membershipModel.getPersonPropertiesTab().get(person).getText().equals("Phone")) {
+                int selectedIndex = membershipModel.getPhoneTableView().get(person).getSelectionModel().getSelectedIndex();
+                PhoneDTO phoneDTO = membershipModel.getPhoneTableView().get(person).getItems().get(selectedIndex);
+                content.putString(phoneDTO.getPhoneNumber());
+            }
+            clipboard.setContent(content);
         });
         return button;
     }
 
-    private Button createDelete(Object object) {
+    private Button createDeleteButton(Object object) {
         Button button = ButtonFx.buttonOf("Delete",60);
         membershipView.getPersonEdit().accept(MessageType.DELETE,object);
         return button;
     }
 
-    private Button createAdd(Object object) {
+    private Button createAddButton(Object object) {
         Button button = ButtonFx.buttonOf("Add",60);
         membershipView.getPersonEdit().accept(MessageType.INSERT,object);
         return button;
     }
 
-    private Button createEmail(Object object) {
+    private Button createEmailButton(Object object) {
         Button button = ButtonFx.buttonOf("Email", 60);
         button.setOnAction(event -> {
-            int selectedIndex = membershipModel.getEmailTableView().getSelectionModel().getSelectedIndex();
+            int selectedIndex = membershipModel.getEmailTableView().get(person).getSelectionModel().getSelectedIndex();
             if (selectedIndex >= 0) {// make sure something is selected
-                EmailDTO emailDTO = membershipModel.getEmailTableView().getItems().get(selectedIndex);
+                EmailDTO emailDTO = membershipModel.getEmailTableView().get(person).getItems().get(selectedIndex);
                 Mail.composeEmail(emailDTO.getEmail(), "ECSC", "");
             }
         });
