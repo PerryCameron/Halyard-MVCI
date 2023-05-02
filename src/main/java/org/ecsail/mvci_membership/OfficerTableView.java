@@ -18,7 +18,7 @@ import org.ecsail.widgetfx.TableViewFx;
 
 import java.util.stream.Collectors;
 
-public class OfficerTableView implements Builder<TableView> {
+public class OfficerTableView implements Builder<TableView<OfficerDTO>> {
     private final PersonDTO person;
     private final MembershipModel membershipModel;
     private final MembershipView membershipView;
@@ -30,7 +30,7 @@ public class OfficerTableView implements Builder<TableView> {
     }
 
     @Override
-    public TableView build() {
+    public TableView<OfficerDTO> build() {
         TableView<OfficerDTO> tableView = TableViewFx.tableViewOf(OfficerDTO.class);
         tableView.setItems(person.getOfficer());
         tableView.getColumns().addAll(createColumn1(), createColumn2(), createColumn3());
@@ -39,7 +39,6 @@ public class OfficerTableView implements Builder<TableView> {
 
     private TableColumn<OfficerDTO, ?> createColumn1() {
         TableColumn<OfficerDTO, String> col1 = TableColumnFx.tableColumnOf(OfficerDTO::fiscal_yearProperty, "Year");
-
         col1.setSortType(TableColumn.SortType.DESCENDING);
         col1.setOnEditCommit(
                 t -> {
@@ -55,7 +54,7 @@ public class OfficerTableView implements Builder<TableView> {
 
     private TableColumn<OfficerDTO, String> createColumn2() {
         ObservableList<BoardPositionDTO> boardPositions = FXCollections.observableArrayList(membershipModel.getMainModel().getBoardPositionDTOS());
-        ObservableList<String> officerList = FXCollections.observableArrayList(boardPositions.stream().map(e -> e.position()).collect(Collectors.toList()));
+        ObservableList<String> officerList = FXCollections.observableArrayList(boardPositions.stream().map(BoardPositionDTO::position).collect(Collectors.toList()));
         final TableColumn<OfficerDTO, String> col2 = new TableColumn<>("Officers, Chairs and Board");
         col2.setCellValueFactory(param -> {
             OfficerDTO thisOfficer = param.getValue();

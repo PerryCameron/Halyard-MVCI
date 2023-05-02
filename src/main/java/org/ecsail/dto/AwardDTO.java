@@ -5,25 +5,32 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import java.time.Year;
+
 public class AwardDTO {
 	
 	private IntegerProperty awardId;
-	private IntegerProperty pid;
+	private IntegerProperty pId;
 	private StringProperty awardYear;
 	private StringProperty awardType;
 
 
 	
-	public AwardDTO(Integer awardId, Integer pid, String awardYear, String awardType) {
+	public AwardDTO(Integer awardId, Integer pId, String awardYear, String awardType) {
 		this.awardId = new SimpleIntegerProperty(awardId);
-		this.pid = new SimpleIntegerProperty(pid);
+		this.pId = new SimpleIntegerProperty(pId);
 		this.awardYear = new SimpleStringProperty(awardYear);
 		this.awardType = new SimpleStringProperty(awardType);
 	}
 
+    public AwardDTO(int pId) {
+		this.awardId = new SimpleIntegerProperty(0);
+		this.pId = new SimpleIntegerProperty(pId);
+		this.awardYear = new SimpleStringProperty(Year.now().toString());
+		this.awardType = new SimpleStringProperty("");
+    }
 
-
-	public final IntegerProperty awardIdProperty() {
+    public final IntegerProperty awardIdProperty() {
 		return this.awardId;
 	}
 
@@ -38,22 +45,22 @@ public class AwardDTO {
 
 
 
-	public final IntegerProperty pidProperty() {
-		return this.pid;
+	public final IntegerProperty pIdProperty() {
+		return this.pId;
 	}
 	
 
 
 
-	public final int getPid() {
-		return this.pidProperty().get();
+	public final int getpId() {
+		return this.pIdProperty().get();
 	}
 	
 
 
 
-	public final void setPid(final int pid) {
-		this.pidProperty().set(pid);
+	public final void setpId(final int pId) {
+		this.pIdProperty().set(pId);
 	}
 	
 
@@ -102,7 +109,7 @@ public class AwardDTO {
 
 	@Override
 	public String toString() {
-		return "Object_Award [awardId=" + awardId + ", pid=" + pid + ", awardYear=" + awardYear + ", awardType="
+		return "Object_Award [awardId=" + awardId + ", pid=" + pId + ", awardYear=" + awardYear + ", awardType="
 				+ awardType + "]";
 	}
 

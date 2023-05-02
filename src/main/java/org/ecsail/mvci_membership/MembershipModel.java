@@ -17,6 +17,9 @@ import org.ecsail.mvci_main.MainModel;
 public class MembershipModel {
 
 
+
+
+    // person model
     private ObservableMap<PersonDTO, TableView<EmailDTO>> emailTableView = FXCollections.observableHashMap();
     private ObservableMap<PersonDTO, TableView<PhoneDTO>> phoneTableView = FXCollections.observableHashMap();
     private final ObservableMap<PersonDTO,StackPane> stackPaneMap = FXCollections.observableHashMap();

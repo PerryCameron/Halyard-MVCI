@@ -24,6 +24,14 @@ public class PhoneDTO {
 		this.combo_box = new ComboBox<String>(membershiptypes);
 		combo_box.setValue("none");
 	}
+
+	public PhoneDTO(Integer pid) {
+		this.phone_ID = new SimpleIntegerProperty(0);
+		this.pid = new SimpleIntegerProperty(pid);
+		this.isListed = new SimpleBooleanProperty(true);
+		this.phoneNumber = new SimpleStringProperty("");
+		this.phoneType = new SimpleStringProperty("");
+	}
 	
 	//final ComboBox<String> combo_box
 

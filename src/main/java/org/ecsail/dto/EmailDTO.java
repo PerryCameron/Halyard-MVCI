@@ -5,22 +5,30 @@ import javafx.beans.property.*;
 public class EmailDTO {
 	
 	private IntegerProperty email_id;
-	private IntegerProperty pid;
+	private IntegerProperty pId;
 	private BooleanProperty isPrimaryUse;
 	private StringProperty email;
 	private BooleanProperty isListed;
 
 	
-	public EmailDTO(Integer email_id, Integer pid, Boolean primaryUse, String email, Boolean isListed) {
+	public EmailDTO(Integer email_id, Integer pId, Boolean primaryUse, String email, Boolean isListed) {
 		this.email_id = new SimpleIntegerProperty(email_id);
-		this.pid = new SimpleIntegerProperty(pid);
+		this.pId = new SimpleIntegerProperty(pId);
 		this.isPrimaryUse = new SimpleBooleanProperty(primaryUse);
 		this.email = new SimpleStringProperty(email);
 		this.isListed = new SimpleBooleanProperty(isListed);
 	}
 
+    public EmailDTO(Integer pId) {
+		this.email_id = new SimpleIntegerProperty(0);
+		this.pId = new SimpleIntegerProperty(pId);
+		this.isPrimaryUse = new SimpleBooleanProperty(false);
+		this.email = new SimpleStringProperty("");
+		this.isListed = new SimpleBooleanProperty(true);
+    }
 
-	public final IntegerProperty email_idProperty() {
+
+    public final IntegerProperty email_idProperty() {
 		return this.email_id;
 	}
 	
@@ -38,20 +46,20 @@ public class EmailDTO {
 	
 
 
-	public final IntegerProperty pidProperty() {
-		return this.pid;
+	public final IntegerProperty pIdProperty() {
+		return this.pId;
 	}
 	
 
 
-	public final int getPid() {
-		return this.pidProperty().get();
+	public final int getpId() {
+		return this.pIdProperty().get();
 	}
 	
 
 
-	public final void setPid(final int pid) {
-		this.pidProperty().set(pid);
+	public final void setpId(final int pId) {
+		this.pIdProperty().set(pId);
 	}
 	
 

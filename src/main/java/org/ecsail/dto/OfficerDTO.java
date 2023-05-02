@@ -5,25 +5,34 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import java.time.Year;
+
 public class OfficerDTO {
 
 	private IntegerProperty officer_id;
-	private IntegerProperty person_id;
+	private IntegerProperty pId;
 	private StringProperty board_year;
 	private StringProperty officer_type;
 	private StringProperty fiscal_year;
 	
-	public OfficerDTO(Integer officer_id, Integer person_id, String board_year,
-                      String officer_type, String fiscal_year) {
-
+	public OfficerDTO(Integer officer_id, Integer pId, String board_year,
+					  String officer_type, String fiscal_year) {
 		this.officer_id = new SimpleIntegerProperty(officer_id);
-		this.person_id = new SimpleIntegerProperty(person_id);
+		this.pId = new SimpleIntegerProperty(pId);
 		this.board_year = new SimpleStringProperty(board_year);
 		this.officer_type = new SimpleStringProperty(officer_type);
 		this.fiscal_year = new SimpleStringProperty(fiscal_year);
 	}
 
-	public final IntegerProperty officer_idProperty() {
+    public OfficerDTO(Integer pId) {
+		this.officer_id = new SimpleIntegerProperty(0);
+		this.pId = new SimpleIntegerProperty(pId);
+		this.board_year = new SimpleStringProperty("");
+		this.officer_type = new SimpleStringProperty("");
+		this.fiscal_year = new SimpleStringProperty(Year.now().toString());
+    }
+
+    public final IntegerProperty officer_idProperty() {
 		return this.officer_id;
 	}
 	
@@ -38,18 +47,18 @@ public class OfficerDTO {
 	}
 	
 
-	public final IntegerProperty person_idProperty() {
-		return this.person_id;
+	public final IntegerProperty pIdProperty() {
+		return this.pId;
 	}
 	
 
-	public final int getPerson_id() {
-		return this.person_idProperty().get();
+	public final int getpId() {
+		return this.pIdProperty().get();
 	}
 	
 
-	public final void setPerson_id(final int person_id) {
-		this.person_idProperty().set(person_id);
+	public final void setpId(final int pId) {
+		this.pIdProperty().set(pId);
 	}
 	
 
@@ -99,7 +108,7 @@ public class OfficerDTO {
 
 	@Override
 	public String toString() {
-		return "Object_Officer [officer_id=" + officer_id + ", person_id=" + person_id + ", board_year=" + board_year
+		return "Object_Officer [officer_id=" + officer_id + ", person_id=" + pId + ", board_year=" + board_year
 				+ ", officer_type=" + officer_type + ", fiscal_year=" + fiscal_year + "]";
 	}
 }
