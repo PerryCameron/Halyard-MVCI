@@ -15,7 +15,6 @@ public class SaveFileChooser {
 		fileChooser.getExtensionFilters().addAll(new ExtensionFilter(Description, extention));
 		fileChooser.setInitialDirectory(new File(directory + "/"));
 		fileChooser.setInitialFileName(fileName);
-		System.out.println("Getting to dialogue");
 			this.file = fileChooser.showSaveDialog(new Stage()); // used to use base application stage
 	}
 

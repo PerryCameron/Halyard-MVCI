@@ -31,11 +31,21 @@ public class MembershipView implements Builder<Region> {
 
     @Override
     public Region build() {
-        VBox vBox = VBoxFx.vBoxOf(new Insets(0,5,0,10));
+        VBox vBox = VBoxFx.vBoxOf(new Insets(0,10,0,10));
         BorderPane borderPane = new BorderPane();
         borderPane.setTop(createHeader());
         borderPane.setLeft(createPeopleTabPane());
+        borderPane.setCenter(createInfoTabPane());
         vBox.getChildren().add(borderPane);
+        return vBox;
+    }
+
+    private Node createInfoTabPane() {
+        VBox vBox = VBoxFx.vBoxOf(new Insets(0,0,0,10)); // gives space between tabPanes
+        TabPane tabPane = TabPaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE, 498);
+        tabPane.setId("custom-tab-pane");
+        tabPane.getTabs().add(new SlipTabView().build());
+        vBox.getChildren().add(tabPane);
         return vBox;
     }
 
