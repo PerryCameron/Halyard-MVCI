@@ -47,7 +47,7 @@ public class RosterView implements Builder<Region> {
 
     private Node setUpTableView() {
         VBox vBox = VBoxFx.vBoxOf(new Insets(5,5,0,10));
-        RosterTableView tableView = new RosterTableView(rosterModel);
+        TableView tableView = new RosterTableView(rosterModel).build();
         rosterModel.setRosterTableView(tableView);
         vBox.getChildren().add(tableView);
         setTabLaunchListener();

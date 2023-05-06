@@ -11,19 +11,18 @@ public class MembershipListDTO {
 	private IntegerProperty membershipId;
 	private StringProperty joinDate;
 	private StringProperty memType;  // Type of Membership (Family, Regular, Lake Associate(race fellow), Social
-	//private BooleanProperty activeMembership;  // Is the membership active?
 	private StringProperty address;
 	private StringProperty city;
 	private StringProperty state;
 	private StringProperty zip;
-	private StringProperty lName;
-	private StringProperty fName;
+	private StringProperty lastName;
+	private StringProperty firstName;
 	private StringProperty slip;
 	private IntegerProperty subLeaser;
 	private IntegerProperty selectedYear;
 
 	public MembershipListDTO(Integer msId, Integer pId, Integer membershipId, String joinDate, String memType, String address, String city,
-							 String state, String zip, String lName, String fName, String slip, Integer subLeaser,
+							 String state, String zip, String lastName, String firstName, String slip, Integer subLeaser,
 							 Integer selectedYear) {
 		this.msId = new SimpleIntegerProperty(msId);
 		this.pId = new SimpleIntegerProperty(pId);
@@ -34,8 +33,8 @@ public class MembershipListDTO {
 		this.city = new SimpleStringProperty(city);
 		this.state = new SimpleStringProperty(state);
 		this.zip = new SimpleStringProperty(zip);
-		this.lName = new SimpleStringProperty(lName);
-		this.fName = new SimpleStringProperty(fName);
+		this.lastName = new SimpleStringProperty(lastName);
+		this.firstName = new SimpleStringProperty(firstName);
 		this.slip = new SimpleStringProperty(slip);
 		this.subLeaser = new SimpleIntegerProperty(subLeaser);
 		this.selectedYear = new SimpleIntegerProperty(selectedYear);
@@ -57,7 +56,7 @@ public class MembershipListDTO {
 		this.msId.set(msId);
 	}
 
-	public int getpId() {
+	public int getPid() {
 		return pId.get();
 	}
 
@@ -65,7 +64,7 @@ public class MembershipListDTO {
 		return pId;
 	}
 
-	public void setpId(int pId) {
+	public void setPid(int pId) {
 		this.pId.set(pId);
 	}
 
@@ -141,28 +140,28 @@ public class MembershipListDTO {
 		this.zip.set(zip);
 	}
 
-	public String getlName() {
-		return lName.get();
+	public String getLastName() {
+		return lastName.get();
 	}
 
-	public StringProperty lNameProperty() {
-		return lName;
+	public StringProperty lastNameProperty() {
+		return lastName;
 	}
 
-	public void setlName(String lName) {
-		this.lName.set(lName);
+	public void setLastName(String lastName) {
+		this.lastName.set(lastName);
 	}
 
-	public String getfName() {
-		return fName.get();
+	public String getFirstName() {
+		return firstName.get();
 	}
 
-	public StringProperty fNameProperty() {
-		return fName;
+	public StringProperty firstNameProperty() {
+		return firstName;
 	}
 
-	public void setfName(String fName) {
-		this.fName.set(fName);
+	public void setFirstName(String firstName) {
+		this.firstName.set(firstName);
 	}
 
 	public String getSlip() {

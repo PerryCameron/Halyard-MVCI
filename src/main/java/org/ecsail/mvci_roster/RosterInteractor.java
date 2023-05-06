@@ -7,10 +7,10 @@ import org.ecsail.connection.Connections;
 import org.ecsail.dto.DbRosterSettingsDTO;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.dto.MembershipListRadioDTO;
+import org.ecsail.mvci_roster.export.Xls_roster;
 import org.ecsail.repository.implementations.*;
 import org.ecsail.repository.interfaces.*;
 import org.ecsail.static_calls.StringTools;
-import org.ecsail.mvci_roster.export.Xls_roster;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,7 +19,6 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class RosterInteractor {
 

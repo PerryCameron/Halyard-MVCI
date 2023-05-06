@@ -8,47 +8,94 @@ import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.util.Builder;
 import org.ecsail.dto.MembershipListDTO;
+import org.ecsail.widgetfx.TableViewFx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
-
-public class RosterTableView extends TableView<MembershipListDTO> {
+public class RosterTableView implements Builder<TableView> {
 
     private static final Logger logger = LoggerFactory.getLogger(RosterTableView.class);
     private final RosterModel rosterModel;
 
-
     public RosterTableView(RosterModel rosterModel) {
         this.rosterModel = rosterModel;
-        this.setPlaceholder(new Label(""));
+    }
 
-        VBox.setVgrow(this, Priority.ALWAYS);
-        HBox.setHgrow(this, Priority.ALWAYS);
+    @Override
+    public TableView build() {
+        TableView<MembershipListDTO> tableView = TableViewFx.tableViewOf(MembershipListDTO.class);
+        tableView.getColumns().addAll(create1(),create2(),create3(),create4(),create5(),create6(),create7(),create8());
+        tableView.setPlaceholder(new Label(""));
+        tableView.setRowFactory(tv -> {
+            TableRow<MembershipListDTO> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
+                    // int rowIndex = row.getIndex();
+                    rosterModel.setSelectedMembershipList(row.getItem());
+                }
+            });
+            return row;
+        });
+        return tableView;
+    }
 
-        TableColumn<MembershipListDTO, Integer> idCol = new TableColumn<>("ID");
-        TableColumn<MembershipListDTO, String> joinDateCol = new TableColumn<>("Join Date");
-        TableColumn<MembershipListDTO, Text> typeCol = new TableColumn<>("Type");
-        TableColumn<MembershipListDTO, Text> slipCol = new TableColumn<>("Slip");
-        TableColumn<MembershipListDTO, String> firstNameCol = new TableColumn<>("First Name");
-        TableColumn<MembershipListDTO, String> lastNameCol = new TableColumn<>("Last Name");
-        TableColumn<MembershipListDTO, String> stateCol = new TableColumn<>("City");
-        TableColumn<MembershipListDTO, String> msIdCol = new TableColumn<>("MSID");
+    private TableColumn<MembershipListDTO,String> create8() {
+        TableColumn<MembershipListDTO, String> col = new TableColumn<>("MSID");
+        col.setCellValueFactory(new PropertyValueFactory<>("msId"));
+        col.setMaxWidth(1f * Integer.MAX_VALUE * 10); // MSID
+        return col;
+    }
 
-        setFixedCellSize(30);
-        setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+    private TableColumn<MembershipListDTO,String> create7() {
+        TableColumn<MembershipListDTO, String> col = new TableColumn<>("City");
+        col.setCellValueFactory(new PropertyValueFactory<>("city"));
+        col.setStyle("-fx-alignment: top-center");
+        col.setMaxWidth(1f * Integer.MAX_VALUE * 15);  // State
+        return col;
+    }
 
-        idCol.setCellValueFactory(new PropertyValueFactory<>("membershipId"));
-        joinDateCol.setCellValueFactory(new PropertyValueFactory<>("joinDate"));
-        typeCol.setCellValueFactory(new PropertyValueFactory<>("memType"));
-        typeCol.setStyle("-fx-alignment: top-center");
-        typeCol.setCellValueFactory(param -> {  // don't need this now but will use for subleases
+    private TableColumn<MembershipListDTO,String> create6() {
+        TableColumn<MembershipListDTO, String> col = new TableColumn<>("Last Name");
+        col.setCellValueFactory(new PropertyValueFactory<>("lastName"));
+        col.setMaxWidth(1f * Integer.MAX_VALUE * 15);  // Last Name
+        return col;
+    }
+
+    private TableColumn<MembershipListDTO,String> create5() {
+        TableColumn<MembershipListDTO, String> col = new TableColumn<>("First Name");
+        col.setCellValueFactory(new PropertyValueFactory<>("firstName"));
+        col.setMaxWidth(1f * Integer.MAX_VALUE * 15);   // First Name
+        return col;
+    }
+
+    private TableColumn<MembershipListDTO,Text> create4() {
+        TableColumn<MembershipListDTO, Text> col = new TableColumn<>("Slip");
+        col.setCellValueFactory(new PropertyValueFactory<>("slip"));
+        col.setStyle("-fx-alignment: top-center");
+        // erasing code below will change nothing
+        col.setCellValueFactory(param -> {  // don't need this now but will use for subleases
+            MembershipListDTO m = param.getValue();
+            String valueDisplayed = "";
+            if (m.getSlip() != null) {
+                valueDisplayed = m.getSlip();
+            }
+            Text text = new Text(valueDisplayed);
+            text.setFill(Color.CHOCOLATE);
+            return new SimpleObjectProperty<>(text);
+        });
+        col.setMaxWidth(1f * Integer.MAX_VALUE * 10);   // Slip
+        return col;
+    }
+
+    private TableColumn<MembershipListDTO,Text> create3() {
+        TableColumn<MembershipListDTO, Text> col = new TableColumn<>("Type");
+        col.setCellValueFactory(new PropertyValueFactory<>("memType"));
+        col.setStyle("-fx-alignment: top-center");
+        col.setCellValueFactory(param -> {  // don't need this now but will use for subleases
             MembershipListDTO m = param.getValue();
             Text text = new Text();
             String valueDisplayed = "";
@@ -64,54 +111,21 @@ public class RosterTableView extends TableView<MembershipListDTO> {
             text.setText(valueDisplayed);
             return new SimpleObjectProperty<>(text);
         });
-        slipCol.setCellValueFactory(new PropertyValueFactory<>("slip"));
-        slipCol.setStyle("-fx-alignment: top-center");
-        // erasing code below will change nothing
-        slipCol.setCellValueFactory(param -> {  // don't need this now but will use for subleases
-            MembershipListDTO m = param.getValue();
-            String valueDisplayed = "";
-            if (m.getSlip() != null) {
-                valueDisplayed = m.getSlip();
-            }
-            Text text = new Text(valueDisplayed);
-            text.setFill(Color.CHOCOLATE);
-            return new SimpleObjectProperty<>(text);
-        });
-
-        firstNameCol.setCellValueFactory(new PropertyValueFactory<>("fName"));
-        lastNameCol.setCellValueFactory(new PropertyValueFactory<>("lName"));
-        stateCol.setCellValueFactory(new PropertyValueFactory<>("city"));
-        stateCol.setStyle("-fx-alignment: top-center");
-        msIdCol.setCellValueFactory(new PropertyValueFactory<>("msId"));
-
-        /// sets width of columns by percentage
-        idCol.setMaxWidth(1f * Integer.MAX_VALUE * 5);   // Mem 5%
-        joinDateCol.setMaxWidth(1f * Integer.MAX_VALUE * 15);  // Join Date 15%
-        typeCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);   // Type
-        slipCol.setMaxWidth(1f * Integer.MAX_VALUE * 10);   // Slip
-        firstNameCol.setMaxWidth(1f * Integer.MAX_VALUE * 15);   // First Name
-        lastNameCol.setMaxWidth(1f * Integer.MAX_VALUE * 15);  // Last Name
-        stateCol.setMaxWidth(1f * Integer.MAX_VALUE * 15);  // State
-        msIdCol.setMaxWidth(1f * Integer.MAX_VALUE * 10); // MSID
-
-        this.getColumns()
-                .addAll(Arrays.asList(idCol, firstNameCol, lastNameCol, typeCol, joinDateCol, slipCol, stateCol, msIdCol));
-        setRosterRowFactory();
+        col.setMaxWidth(1f * Integer.MAX_VALUE * 10);   // Type
+        return col;
     }
 
-    private void setRosterRowFactory() {
-        this.setRowFactory(tv -> {
-            TableRow<MembershipListDTO> row = new TableRow<>();
-            row.setOnMouseClicked(event -> {
-                if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
-                    // int rowIndex = row.getIndex();
-                    rosterModel.setSelectedMembershipList(row.getItem());
-                }
-////				if (!row.isEmpty() && event.getButton() == MouseButton.SECONDARY && event.getClickCount() == 1) {
-////				row.setContextMenu(new rosterContextMenu(row.getItem(), selectedYear));
-////				}
-            });
-            return row;
-        });
+    private TableColumn<MembershipListDTO,String> create2() {
+        TableColumn<MembershipListDTO, String> col = new TableColumn<>("Join Date");
+        col.setCellValueFactory(new PropertyValueFactory<>("joinDate"));
+        col.setMaxWidth(1f * Integer.MAX_VALUE * 15);  // Join Date 15%
+        return col;
+    }
+
+    private TableColumn<MembershipListDTO,Integer> create1() {
+        TableColumn<MembershipListDTO, Integer> col = new TableColumn<>("ID");
+        col.setCellValueFactory(new PropertyValueFactory<>("membershipId"));
+        col.setMaxWidth(1f * Integer.MAX_VALUE * 5);   // Mem 5%
+        return col;
     }
 }
