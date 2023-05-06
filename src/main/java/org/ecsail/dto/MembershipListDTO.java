@@ -38,7 +38,6 @@ public class MembershipListDTO {
 		this.fName = new SimpleStringProperty(fName);
 		this.slip = new SimpleStringProperty(slip);
 		this.subLeaser = new SimpleIntegerProperty(subLeaser);
-
 		this.selectedYear = new SimpleIntegerProperty(selectedYear);
 	}
 

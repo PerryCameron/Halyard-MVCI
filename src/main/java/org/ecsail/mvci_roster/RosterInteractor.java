@@ -154,10 +154,7 @@ public class RosterInteractor {
     private ObservableList<MembershipListDTO> searchString(String searchTerm) {
         String searchTermToLowerCase = searchTerm.toLowerCase();
         return rosterModel.getRosters().stream()
-                .filter(membershipListDTO -> Stream.concat(
-                                Arrays.stream(membershipListDTO.getClass().getDeclaredFields()),
-                                Arrays.stream(membershipListDTO.getClass().getSuperclass().getDeclaredFields())
-                        )
+                .filter(membershipListDTO -> Arrays.stream(membershipListDTO.getClass().getDeclaredFields())
                         .filter(field -> fieldIsSearchable(field.getName()))
                         .peek(field -> field.setAccessible(true))
                         .anyMatch(field -> {
