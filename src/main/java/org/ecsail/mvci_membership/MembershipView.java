@@ -44,7 +44,7 @@ public class MembershipView implements Builder<Region> {
         VBox vBox = VBoxFx.vBoxOf(new Insets(0,0,0,10)); // gives space between tabPanes
         TabPane tabPane = TabPaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE, 498);
         tabPane.setId("custom-tab-pane");
-        tabPane.getTabs().add(new SlipTabView().build());
+        tabPane.getTabs().add(new SlipTabView(this).build());
         vBox.getChildren().add(tabPane);
         return vBox;
     }

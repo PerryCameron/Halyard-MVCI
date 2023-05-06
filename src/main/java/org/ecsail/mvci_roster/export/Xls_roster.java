@@ -30,7 +30,7 @@ public class Xls_roster implements ConfigFilePaths {
 	public Xls_roster(RosterModel rosterModel) {
 		this.rosterModel = rosterModel;
 		ArrayList<String> headers = (ArrayList<String>) getHeaders();
-		String selectedYear = null;
+		Integer selectedYear = 0;
 		if(rosterModel.getRosters().size() > 1)
 			selectedYear = rosterModel.getRosters().get(0).getSelectedYear();
 		logger.info("Creating Roster..");

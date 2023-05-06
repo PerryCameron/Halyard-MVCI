@@ -14,6 +14,15 @@ import java.util.Objects;
 
 public class SlipTabView implements Builder<Tab> {
 
+
+    private final MembershipView membershipView;
+    private final MembershipModel membershipModel;
+
+    public SlipTabView(MembershipView membershipView) {
+        this.membershipView = membershipView;
+        this.membershipModel = membershipView.getMembershipModel();
+    }
+
     @Override
     public Tab build() {
         Tab tab = new Tab();
@@ -30,11 +39,27 @@ public class SlipTabView implements Builder<Tab> {
 
     private Node setSlipImage() {
         VBox vBox = VBoxFx.vBoxOf(new Insets(0,0,0,0));
-        Image slipImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/slips/" + filename + "_icon.png")));
+        Image slipImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/slips/" + getSlip() + "_icon.png")));
         ImageView imageView = new ImageView(slipImage);
         imageView.setPreserveRatio(true);
         imageView.setFitHeight(240);
         return vBox;
     }
+
+    private String getSlip() {
+        String slip = membershipModel.getMembership().getSlip();
+        if (slip == null) return "none";
+        if (slip.equals("")) return "none";
+        else return slip;
+    }
+
+//    private void displaySlip() {  // line 343
+//        if (hasSlip())
+//            checkIfLeasingOut();
+//        else if (isSubleasingSlip()) // does not own, but is sub-leasing
+//            setSubleasedSlip();
+//        else  // has no slip
+//            setSlipAsNone();
+//    }
 
 }

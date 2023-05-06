@@ -5,174 +5,212 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-public class MembershipListDTO extends MembershipDTO {
-
+public class MembershipListDTO {
+	private IntegerProperty msId; /// unique auto key for Membership
+	private IntegerProperty pId;  /// pid of Main Member
+	private IntegerProperty membershipId;
+	private StringProperty joinDate;
+	private StringProperty memType;  // Type of Membership (Family, Regular, Lake Associate(race fellow), Social
+	//private BooleanProperty activeMembership;  // Is the membership active?
+	private StringProperty address;
+	private StringProperty city;
+	private StringProperty state;
+	private StringProperty zip;
 	private StringProperty lName;
 	private StringProperty fName;
 	private StringProperty slip;
-	private IntegerProperty subleaser;
-	private IntegerProperty membershipId;
-	private StringProperty selectedYear;
-	
-	public MembershipListDTO(Integer msid, Integer pid, Integer membershipId, String joinDate, String memType,
-                             String slip, String lName, String fName, Integer subleaser, String address, String city, String state, String zip, String selectedYear) {
-		super(msid, pid, joinDate, memType, address, city, state, zip);
+	private IntegerProperty subLeaser;
+	private IntegerProperty selectedYear;
+
+	public MembershipListDTO(Integer msId, Integer pId, Integer membershipId, String joinDate, String memType, String address, String city,
+							 String state, String zip, String lName, String fName, String slip, Integer subLeaser,
+							 Integer selectedYear) {
+		this.msId = new SimpleIntegerProperty(msId);
+		this.pId = new SimpleIntegerProperty(pId);
+		this.membershipId = new SimpleIntegerProperty(membershipId);
+		this.joinDate = new SimpleStringProperty(joinDate);
+		this.memType = new SimpleStringProperty(memType);
+		this.address = new SimpleStringProperty(address);
+		this.city = new SimpleStringProperty(city);
+		this.state = new SimpleStringProperty(state);
+		this.zip = new SimpleStringProperty(zip);
 		this.lName = new SimpleStringProperty(lName);
 		this.fName = new SimpleStringProperty(fName);
 		this.slip = new SimpleStringProperty(slip);
-		this.subleaser = new SimpleIntegerProperty(subleaser);
-		this.membershipId = new SimpleIntegerProperty(membershipId);
-		this.selectedYear = new SimpleStringProperty(selectedYear);
-	}
+		this.subLeaser = new SimpleIntegerProperty(subLeaser);
 
-	public String getMembershipInfo() {
-		return "Membership " + getMembershipId() + " (ms_id " + getMsId() + ") ";
+		this.selectedYear = new SimpleIntegerProperty(selectedYear);
 	}
 
 	public MembershipListDTO() {
 		super();
 	}
 
-	public void setlName(StringProperty lName) {
-		this.lName = lName;
+	public int getMsId() {
+		return msId.get();
 	}
 
-
-
-	public void setfName(StringProperty fName) {
-		this.fName = fName;
+	public IntegerProperty msIdProperty() {
+		return msId;
 	}
 
-
-
-	public void setSlip(StringProperty slip) {
-		this.slip = slip;
+	public void setMsId(int msId) {
+		this.msId.set(msId);
 	}
 
-
-	public final StringProperty lNameProperty() {
-		return this.lName;
-	}
-	
-
-
-	public final String getlName() {
-		return this.lNameProperty().get();
-	}
-	
-
-
-	public final void setLname(final String lname) {
-		this.lNameProperty().set(lname);
-	}
-	
-
-
-	public final StringProperty fNameProperty() {
-		return this.fName;
-	}
-	
-
-
-	public final String getfName() {
-		return this.fNameProperty().get();
-	}
-	
-
-
-	public final void setFname(final String fname) {
-		this.fNameProperty().set(fname);
+	public int getpId() {
+		return pId.get();
 	}
 
-
-	public final StringProperty slipProperty() {
-		return this.slip;
-	}
-	
-
-
-
-	public final String getSlip() {
-		return this.slipProperty().get();
-	}
-	
-
-
-
-	public final void setSlip(final String slip) {
-		this.slipProperty().set(slip);
+	public IntegerProperty pIdProperty() {
+		return pId;
 	}
 
-
-
-	public final IntegerProperty subleaserProperty() {
-		return this.subleaser;
-	}
-	
-
-
-
-	public final int getSubleaser() {
-		return this.subleaserProperty().get();
-	}
-	
-
-
-
-	public final void setSubleaser(final int subleaser) {
-		this.subleaserProperty().set(subleaser);
+	public void setpId(int pId) {
+		this.pId.set(pId);
 	}
 
-
-	public final IntegerProperty membershipIdProperty() {
-		return this.membershipId;
-	}
-	
-
-
-
-	public final int getMembershipId() {
-		return this.membershipIdProperty().get();
-	}
-	
-
-
-
-	public final void setMembershipId(final int membershipId) {
-		this.membershipIdProperty().set(membershipId);
+	public String getJoinDate() {
+		return joinDate.get();
 	}
 
-	public final StringProperty selectedYearProperty() {
-		return this.selectedYear;
-	}
-	
-
-
-
-	public final String getSelectedYear() {
-		return this.selectedYearProperty().get();
-	}
-	
-
-
-
-	public final void setSelectedYear(final String selectedYear) {
-		this.selectedYearProperty().set(selectedYear);
+	public StringProperty joinDateProperty() {
+		return joinDate;
 	}
 
-
-
-	@Override
-	public String toString() {
-		return "Object_MembershipList [lname=" + lName + ", fname=" + fName + ", slip=" + slip + ", subleaser="
-				+ subleaser + ", membershipId=" + membershipId + ", selectedYear=" + selectedYear + ", msidProperty()="
-				+ msIdProperty() + ", getMsid()=" + getMsId() + ", pidProperty()=" + pIdProperty() + ", getPid()="
-				+ getpId() + ", joinDateProperty()=" + joinDateProperty() + ", getJoinDate()=" + getJoinDate()
-				+ ", memTypeProperty()=" + memTypeProperty() + ", getMemType()=" + getMemType() + ", addressProperty()="
-				+ addressProperty() + ", getAddress()=" + getAddress() + ", cityProperty()=" + cityProperty()
-				+ ", getCity()=" + getCity() + ", stateProperty()=" + stateProperty() + ", getState()=" + getState()
-				+ ", zipProperty()=" + zipProperty() + ", getZip()=" + getZip() + ", toString()=" + super.toString()
-				+ ", getClass()=" + getClass() + ", hashCode()=" + hashCode() + "]";
+	public void setJoinDate(String joinDate) {
+		this.joinDate.set(joinDate);
 	}
 
+	public String getMemType() {
+		return memType.get();
+	}
+
+	public StringProperty memTypeProperty() {
+		return memType;
+	}
+
+	public void setMemType(String memType) {
+		this.memType.set(memType);
+	}
+
+	public String getAddress() {
+		return address.get();
+	}
+
+	public StringProperty addressProperty() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address.set(address);
+	}
+
+	public String getCity() {
+		return city.get();
+	}
+
+	public StringProperty cityProperty() {
+		return city;
+	}
+
+	public void setCity(String city) {
+		this.city.set(city);
+	}
+
+	public String getState() {
+		return state.get();
+	}
+
+	public StringProperty stateProperty() {
+		return state;
+	}
+
+	public void setState(String state) {
+		this.state.set(state);
+	}
+
+	public String getZip() {
+		return zip.get();
+	}
+
+	public StringProperty zipProperty() {
+		return zip;
+	}
+
+	public void setZip(String zip) {
+		this.zip.set(zip);
+	}
+
+	public String getlName() {
+		return lName.get();
+	}
+
+	public StringProperty lNameProperty() {
+		return lName;
+	}
+
+	public void setlName(String lName) {
+		this.lName.set(lName);
+	}
+
+	public String getfName() {
+		return fName.get();
+	}
+
+	public StringProperty fNameProperty() {
+		return fName;
+	}
+
+	public void setfName(String fName) {
+		this.fName.set(fName);
+	}
+
+	public String getSlip() {
+		return slip.get();
+	}
+
+	public StringProperty slipProperty() {
+		return slip;
+	}
+
+	public void setSlip(String slip) {
+		this.slip.set(slip);
+	}
+
+	public int getSubLeaser() {
+		return subLeaser.get();
+	}
+
+	public IntegerProperty subLeaserProperty() {
+		return subLeaser;
+	}
+
+	public void setSubLeaser(int subLeaser) {
+		this.subLeaser.set(subLeaser);
+	}
+
+	public int getMembershipId() {
+		return membershipId.get();
+	}
+
+	public IntegerProperty membershipIdProperty() {
+		return membershipId;
+	}
+
+	public void setMembershipId(int membershipId) {
+		this.membershipId.set(membershipId);
+	}
+
+	public int getSelectedYear() {
+		return selectedYear.get();
+	}
+
+	public IntegerProperty selectedYearProperty() {
+		return selectedYear;
+	}
+
+	public void setSelectedYear(int selectedYear) {
+		this.selectedYear.set(selectedYear);
+	}
 }

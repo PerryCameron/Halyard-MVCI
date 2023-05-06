@@ -16,14 +16,14 @@ public class MembershipListRowMapper implements RowMapper<MembershipListDTO> {
                 rs.getInt("membership_id"),
                 rs.getString("join_date"),
                 rs.getString("mem_type"),
-                rs.getString("SLIP_NUM"),
-                rs.getString("l_name"),
-                rs.getString("f_name"),
-                rs.getInt("subleased_to"),
                 rs.getString("address"),
                 rs.getString("city"),
                 rs.getString("state"),
                 rs.getString("zip"),
-                rs.getString("fiscal_year"));
+                rs.getString("l_name"),
+                rs.getString("f_name"),
+                rs.getString("SLIP_NUM"),
+                rs.getInt("subleased_to"),
+                rs.getInt("fiscal_year"));
     }
 }
