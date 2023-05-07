@@ -19,7 +19,6 @@ public class RosterTableView implements Builder<TableView> {
 
     private static final Logger logger = LoggerFactory.getLogger(RosterTableView.class);
     private final RosterModel rosterModel;
-
     public RosterTableView(RosterModel rosterModel) {
         this.rosterModel = rosterModel;
     }

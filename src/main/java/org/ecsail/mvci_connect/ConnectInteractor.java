@@ -41,10 +41,8 @@ public class ConnectInteractor implements ConfigFilePaths {
                 Object obj = in.readObject();
                 ArrayList<?> ar = (ArrayList<?>) obj;
                 logins.clear();
-                for (Object x : ar) {
+                for (Object x : ar)
                     logins.add((LoginDTO) x);
-                    System.out.println(x);
-                }
                 in.close();
             } catch (Exception e) {
 				logger.error("Error occurred during reading of " + LOGIN_FILE);

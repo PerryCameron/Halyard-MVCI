@@ -70,7 +70,7 @@ public class RosterView implements Builder<Region> {
         titledPane.setExpanded(false);
         rosterModel.listsLoadedProperty().addListener(observable -> {
             rosterModel.getRosterSettings().stream()
-                    .map(dto -> new SettingsCheckBox(rosterModel, dto, "exportable"))
+                    .map(dto -> new SettingsCheckBox(dto, "exportable"))
                     .peek(rosterModel.getCheckBoxes()::add)
                     .forEach(checkVBox.getChildren()::add);
         });
@@ -132,7 +132,8 @@ public class RosterView implements Builder<Region> {
     protected Node setAllCheckBoxes() {
         VBox checkVBox = new VBox(5);
         for(DbRosterSettingsDTO dto: rosterModel.getRosterSettings()) {
-            SettingsCheckBox checkBox = new SettingsCheckBox(rosterModel, dto, "searchable");
+            System.out.println(dto.getName() + " " + dto.isSearchable());
+            SettingsCheckBox checkBox = new SettingsCheckBox(dto, "searchable");
             rosterModel.getCheckBoxes().add(checkBox);
             checkVBox.getChildren().add(checkBox);
         }

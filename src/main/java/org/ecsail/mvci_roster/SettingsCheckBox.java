@@ -4,11 +4,9 @@ import javafx.scene.control.CheckBox;
 import org.ecsail.dto.DbRosterSettingsDTO;
 
 public class SettingsCheckBox extends CheckBox {
-
-    private RosterModel rosterModel;
     private DbRosterSettingsDTO dbRosterSettingsDTO;
 
-    public SettingsCheckBox(RosterModel rosterModel, DbRosterSettingsDTO db, String mode) {
+    public SettingsCheckBox(DbRosterSettingsDTO db, String mode) {
         this.dbRosterSettingsDTO = db;
         this.setText(db.getName());
         setListener(mode);

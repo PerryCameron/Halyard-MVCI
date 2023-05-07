@@ -42,7 +42,6 @@ public class RosterInteractor {
     }
 
     protected ObservableList<MembershipListDTO> setSlipsForRoster(ObservableList<MembershipListDTO> updatedRoster) {
-        System.out.println("setSlipsForRoster()");
         List<Integer> subleases = new ArrayList<>();
         for(MembershipListDTO m: updatedRoster) {
             if(m.getSubLeaser() > 0) { // let's mark Sublease Owners
@@ -55,23 +54,19 @@ public class RosterInteractor {
     }
 
     private ObservableList<MembershipListDTO> setSublease(String slip, int subLeaser, ObservableList<MembershipListDTO> updatedRoster) {
-        for(MembershipListDTO m: updatedRoster) {
+        for(MembershipListDTO m: updatedRoster)
             if(m.getMsId() == subLeaser) m.setSlip("S" + slip);
-        }
         return updatedRoster;
     }
 
     protected void setRosterToTableview() {
-        System.out.println("setRosterToTableview()");
         Platform.runLater(() -> {
             rosterModel.getRosterTableView().setItems(rosterModel.getRosters());
-//            rosterModel.getRosters().sort(Comparator.comparing(MembershipListDTO::getMembershipId));
         });
         changeState();
     }
 
     private void changeState() {
-        System.out.println("changeState()");
         Platform.runLater(() -> {
             logger.debug("Rosters is in search mode: " + rosterModel.isSearchMode());
             if (rosterModel.isSearchMode())
@@ -81,16 +76,13 @@ public class RosterInteractor {
         });
     }
 
-
     protected void changeListState() {
-        System.out.println("changeListState()");
         clearMainRoster();
             Method method;
             try {
                 method = membershipRepo.getClass().getMethod(rosterModel.getSelectedRadioBox().getMethod(), Integer.class);
                 ObservableList<MembershipListDTO> updatedRoster
                         = FXCollections.observableArrayList((List<MembershipListDTO>) method.invoke(membershipRepo, rosterModel.getSelectedYear()));
-
                 updateRoster(updatedRoster);
                 fillTableView();
             } catch (Exception e) {
@@ -147,7 +139,6 @@ public class RosterInteractor {
     }
 
     private void fillWithResults() {
-        System.out.println("fillWithResults()");
         Platform.runLater(() -> {
             logger.debug("TableView is set to display normal results");
             rosterModel.getRosterTableView().setItems(rosterModel.getRosters());
@@ -157,7 +148,6 @@ public class RosterInteractor {
     }
 
     private void fillWithSearchResults() {
-        System.out.println("fillWithSearchResults()");
         ObservableList<MembershipListDTO> list = searchString(rosterModel.getTextFieldString());
         Platform.runLater(() -> {
             rosterModel.getSearchedRosters().clear();
@@ -181,11 +171,13 @@ public class RosterInteractor {
     }
 
     private boolean fieldIsSearchable(String fieldName) {
-        return rosterModel.getCheckBoxes().stream()
+        boolean isSearchable =
+        rosterModel.getCheckBoxes().stream()
                 .filter(dto -> dto.getDTOFieldName().equals(fieldName))
                 .findFirst()
                 .map(SettingsCheckBox::isSearchable)
                 .orElse(false);
+        return isSearchable;
     }
 
     protected void getRosterSettings() {

@@ -39,10 +39,10 @@ public class SlipTabView implements Builder<Tab> {
 
     private Node setSlipImage() {
         VBox vBox = VBoxFx.vBoxOf(new Insets(0,0,0,0));
-        Image slipImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/slips/" + getSlip() + "_icon.png")));
-        ImageView imageView = new ImageView(slipImage);
-        imageView.setPreserveRatio(true);
-        imageView.setFitHeight(240);
+//        Image slipImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/slips/" + getSlip() + "_icon.png")));
+//        ImageView imageView = new ImageView(slipImage);
+//        imageView.setPreserveRatio(true);
+//        imageView.setFitHeight(240);
         return vBox;
     }
 
