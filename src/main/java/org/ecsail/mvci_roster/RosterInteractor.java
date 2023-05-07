@@ -8,14 +8,15 @@ import org.ecsail.dto.DbRosterSettingsDTO;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.dto.MembershipListRadioDTO;
 import org.ecsail.mvci_roster.export.Xls_roster;
-import org.ecsail.repository.implementations.*;
-import org.ecsail.repository.interfaces.*;
+import org.ecsail.repository.implementations.MembershipRepositoryImpl;
+import org.ecsail.repository.implementations.SettingsRepositoryImpl;
+import org.ecsail.repository.interfaces.MembershipRepository;
+import org.ecsail.repository.interfaces.SettingsRepository;
 import org.ecsail.static_calls.StringTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -27,27 +28,24 @@ public class RosterInteractor {
     private final RosterModel rosterModel;
     private final MembershipRepository membershipRepo;
     private final SettingsRepository settingsRepo;
-    private final PhoneRepository phoneRepo;
-    private final EmailRepository emailRepo;
-    private final MembershipIdRepository membershipIdRepo;
 
 
     public RosterInteractor(RosterModel rm, Connections connections) {
         rosterModel = rm;
         membershipRepo = new MembershipRepositoryImpl(connections.getDataSource());
         settingsRepo = new SettingsRepositoryImpl(connections.getDataSource());
-        phoneRepo = new PhoneRepositoryImpl(connections.getDataSource());
-        emailRepo = new EmailRepositoryImpl(connections.getDataSource());
-        membershipIdRepo = new MembershipIdRepositoryImpl(connections.getDataSource());
+//        PhoneRepository phoneRepo = new PhoneRepositoryImpl(connections.getDataSource());
+//        EmailRepository emailRepo = new EmailRepositoryImpl(connections.getDataSource());
+//        MembershipIdRepository membershipIdRepo = new MembershipIdRepositoryImpl(connections.getDataSource());
     }
 
     protected ObservableList<MembershipListDTO> setSlipsForRoster(ObservableList<MembershipListDTO> updatedRoster) {
-        List<Integer> subleases = new ArrayList<>();
+//        List<Integer> subleases = new ArrayList<>();
         for(MembershipListDTO m: updatedRoster) {
             if(m.getSubLeaser() > 0) { // let's mark Sublease Owners
                     m.setSlip("O" + m.getSlip()); // put a 0 in front of owner
                     setSublease(m.getSlip(), m.getSubLeaser(), updatedRoster);
-                    subleases.add(m.getSubLeaser());
+//                    subleases.add(m.getSubLeaser());
             }
         }
         return updatedRoster;
@@ -60,9 +58,7 @@ public class RosterInteractor {
     }
 
     protected void setRosterToTableview() {
-        Platform.runLater(() -> {
-            rosterModel.getRosterTableView().setItems(rosterModel.getRosters());
-        });
+        Platform.runLater(() -> rosterModel.getRosterTableView().setItems(rosterModel.getRosters()));
         changeState();
     }
 
@@ -76,7 +72,7 @@ public class RosterInteractor {
         });
     }
 
-    protected void changeListState() {
+    protected void changeListType() {
         clearMainRoster();
             Method method;
             try {
@@ -95,21 +91,15 @@ public class RosterInteractor {
 
     private void clearSearchBox() {
         if(!rosterModel.getTextFieldString().equals(""))
-        Platform.runLater(() -> {
-            rosterModel.setTextFieldString("");
-        });
+            Platform.runLater(() -> rosterModel.setTextFieldString(""));
     }
 
     private void clearMainRoster() {
-        Platform.runLater(() -> {
-            rosterModel.getRosters().clear();
-        });
+        Platform.runLater(() -> rosterModel.getRosters().clear());
     }
 
     private void sortRoster() {
-        Platform.runLater(() -> {
-            rosterModel.getRosters().sort(Comparator.comparing(MembershipListDTO::getMembershipId));
-        });
+        Platform.runLater(() -> rosterModel.getRosters().sort(Comparator.comparing(MembershipListDTO::getMembershipId)));
     }
 
     private void updateRoster(ObservableList<MembershipListDTO> updatedRoster) {
@@ -171,13 +161,11 @@ public class RosterInteractor {
     }
 
     private boolean fieldIsSearchable(String fieldName) {
-        boolean isSearchable =
-        rosterModel.getCheckBoxes().stream()
+        return rosterModel.getCheckBoxes().stream()
                 .filter(dto -> dto.getDTOFieldName().equals(fieldName))
                 .findFirst()
                 .map(SettingsCheckBox::isSearchable)
                 .orElse(false);
-        return isSearchable;
     }
 
     protected void getRosterSettings() {

@@ -29,9 +29,6 @@ public class RosterModel {
     private final BooleanProperty listsLoaded = new SimpleBooleanProperty(false);
 
 
-    public MembershipListDTO getSelectedMembershipList() {
-        return selectedMembershipList.get();
-    }
     public SimpleObjectProperty<MembershipListDTO> selectedMembershipListProperty() {
         return selectedMembershipList;
     }
@@ -83,9 +80,7 @@ public class RosterModel {
     public TableView<MembershipListDTO> getRosterTableView() {
         return rosterTableView.get();
     }
-    public SimpleObjectProperty<TableView<MembershipListDTO>> rosterTableViewProperty() {
-        return rosterTableView;
-    }
+
     public void setRosterTableView(TableView<MembershipListDTO> rosterTableView) {
         this.rosterTableView.set(rosterTableView);
     }
@@ -112,8 +107,5 @@ public class RosterModel {
     }
     public ObservableList<MembershipListDTO> getRosters() {
         return rosters;
-    }
-    public void setRosters(ObservableList<MembershipListDTO> rosters) {
-        this.rosters = rosters;
     }
 }

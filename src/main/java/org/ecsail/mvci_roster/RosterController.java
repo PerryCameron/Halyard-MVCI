@@ -15,7 +15,7 @@ public class RosterController extends Controller {
         mainController = mc;
         RosterModel rosterModel = new RosterModel();
         rosterInteractor = new RosterInteractor(rosterModel,mainController.getConnections());
-        rosterView = new RosterView(rosterModel, this::changeState, this::search, this::exportRoster, this::launchTab);
+        rosterView = new RosterView(rosterModel, this::changeListType, this::search, this::exportRoster, this::launchTab);
         getRosterData();
     }
 
@@ -45,15 +45,17 @@ public class RosterController extends Controller {
         new Thread(task).start();
     }
 
-    private void changeState() {
+    private void changeListType() {
+        mainController.setSpinnerOffset(-175,-25);
+        mainController.showLoadingSpinner(true);
         Task<Void> task = new Task<>() {
             @Override
             protected Void call() {
-                rosterInteractor.changeListState();
+                rosterInteractor.changeListType();
                 return null;
             }
         };
-//        task.setOnSucceeded(e -> rosterInteractor.setRosterToTableview());
+        task.setOnSucceeded(e -> mainController.showLoadingSpinner(false));
         new Thread(task).start();
     }
 
@@ -63,7 +65,6 @@ public class RosterController extends Controller {
         Task<Void> task = new Task<>() {
             @Override
             protected Void call() {
-//                rosterInteractor.getSelectedRoster();
                 rosterInteractor.getRadioChoices();
                 rosterInteractor.getRosterSettings();
                 return null;
