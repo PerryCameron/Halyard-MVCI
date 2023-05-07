@@ -63,7 +63,7 @@ public class RosterController extends Controller {
         Task<Void> task = new Task<>() {
             @Override
             protected Void call() {
-                rosterInteractor.getSelectedRoster();
+//                rosterInteractor.getSelectedRoster();
                 rosterInteractor.getRadioChoices();
                 rosterInteractor.getRosterSettings();
                 return null;

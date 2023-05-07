@@ -1,6 +1,5 @@
 package org.ecsail.mvci_roster;
 
-
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -84,11 +83,21 @@ public class RosterTableView implements Builder<TableView> {
                 valueDisplayed = m.getSlip();
             }
             Text text = new Text(valueDisplayed);
-            text.setFill(Color.CHOCOLATE);
-            return new SimpleObjectProperty<>(text);
+            return new SimpleObjectProperty<>(setTextColor(text));
         });
         col.setMaxWidth(1f * Integer.MAX_VALUE * 10);   // Slip
         return col;
+    }
+
+    private Text setTextColor(Text text) {
+        if(text.getText().startsWith("O")) {
+            text.setFill(Color.BLUE);
+            text.setText(text.getText().substring(1));
+        } else if(text.getText().startsWith("SO")) {
+            text.setFill(Color.RED);
+            text.setText(text.getText().substring(2));
+        } else text.setFill(Color.CHOCOLATE);
+        return text;
     }
 
     private TableColumn<MembershipListDTO,Text> create3() {
