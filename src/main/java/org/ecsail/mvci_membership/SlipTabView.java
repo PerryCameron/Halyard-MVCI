@@ -39,10 +39,11 @@ public class SlipTabView implements Builder<Tab> {
 
     private Node setSlipImage() {
         VBox vBox = VBoxFx.vBoxOf(new Insets(0,0,0,0));
-//        Image slipImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/slips/" + getSlip() + "_icon.png")));
-//        ImageView imageView = new ImageView(slipImage);
-//        imageView.setPreserveRatio(true);
-//        imageView.setFitHeight(240);
+        Image slipImage = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/slips/" + getSlip() + "_icon.png")));
+        ImageView imageView = new ImageView(slipImage);
+        imageView.setPreserveRatio(true);
+        imageView.setFitHeight(240);
+        vBox.getChildren().add(imageView);
         return vBox;
     }
 
@@ -50,7 +51,14 @@ public class SlipTabView implements Builder<Tab> {
         String slip = membershipModel.getMembership().getSlip();
         if (slip == null) return "none";
         if (slip.equals("")) return "none";
-        else return slip;
+        else {
+            if (slip.startsWith("O")) {
+                return slip.substring(1);  // is subleasing slip
+            } else if (slip.startsWith("SO")) {
+                return slip.substring(2);  // is a subleaser
+            } else
+                return slip;
+        }
     }
 
 //    private void displaySlip() {  // line 343
