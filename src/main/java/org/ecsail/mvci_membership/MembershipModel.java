@@ -30,7 +30,8 @@ public class MembershipModel {
     // general membership information
     private final SimpleObjectProperty<MembershipListDTO> membership = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<SlipDTO> slip = new SimpleObjectProperty<>();
-
+    private final SimpleObjectProperty<TabPane> peopleTabPane = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<TabPane> infoTabPane = new SimpleObjectProperty<>();
 
 
 
@@ -39,6 +40,44 @@ public class MembershipModel {
 
 
 
+
+
+
+    public TabPane getInfoTabPane() {
+        return infoTabPane.get();
+    }
+
+    public SimpleObjectProperty<TabPane> infoTabPaneProperty() {
+        return infoTabPane;
+    }
+
+    public void setInfoTabPane(TabPane infoTabPane) {
+        this.infoTabPane.set(infoTabPane);
+    }
+
+    public TabPane getPeopleTabPane() {
+        return peopleTabPane.get();
+    }
+
+    public SimpleObjectProperty<TabPane> peopleTabPaneProperty() {
+        return peopleTabPane;
+    }
+
+    public void setPeopleTabPane(TabPane peopleTabPane) {
+        this.peopleTabPane.set(peopleTabPane);
+    }
+
+    public SlipDTO getSlip() {
+        return slip.get();
+    }
+
+    public SimpleObjectProperty<SlipDTO> slipProperty() {
+        return slip;
+    }
+
+    public void setSlip(SlipDTO slip) {
+        this.slip.set(slip);
+    }
 
     public ObservableMap<PersonDTO, TableView<OfficerDTO>> getOfficerTableView() {
         return officerTableView;

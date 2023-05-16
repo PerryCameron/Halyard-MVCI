@@ -37,14 +37,29 @@ public class MembershipView implements Builder<Region> {
         borderPane.setLeft(createPeopleTabPane());
         borderPane.setCenter(createInfoTabPane());
         vBox.getChildren().add(borderPane);
+        listenForData();
         return vBox;
+    }
+
+    private void listenForData() {
+        // waits for data to arrive before completing UI
+        membershipModel.listsLoadedProperty().addListener((observable, oldValue, newValue) -> {
+                    membershipModel.getPeople().forEach(personDTO -> membershipModel.getPeopleTabPane().getTabs()
+                            .add(new PersonTabView(this, personDTO).build()));
+                    membershipModel.getInfoTabPane().getTabs().add(new SlipTabView(this).build());
+                }
+        );
+        membershipModel.getPeopleTabPane().getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
+            PersonTabView personTabView = (PersonTabView) newTab.getUserData();// Get the associated PersonTabView object
+            membershipModel.setSelectedPerson(personTabView.getPerson());
+        });
     }
 
     private Node createInfoTabPane() {
         VBox vBox = VBoxFx.vBoxOf(new Insets(0,0,0,10)); // gives space between tabPanes
         TabPane tabPane = TabPaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE, 498);
         tabPane.setId("custom-tab-pane");
-        tabPane.getTabs().add(new SlipTabView(this).build());
+        membershipModel.setInfoTabPane(tabPane);
         vBox.getChildren().add(tabPane);
         return vBox;
     }
@@ -52,14 +67,7 @@ public class MembershipView implements Builder<Region> {
     private Node createPeopleTabPane() {
         TabPane tabPane = TabPaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE, 498);
         tabPane.setId("custom-tab-pane");
-        // temp listener used at tab open, to wait for data first.
-        membershipModel.listsLoadedProperty().addListener((observable, oldValue, newValue)
-                -> membershipModel.getPeople().forEach(personDTO
-                -> tabPane.getTabs().add(new PersonTabView(this, personDTO).build())));
-        tabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
-            PersonTabView personTabView = (PersonTabView) newTab.getUserData();// Get the associated PersonTabView object
-            membershipModel.setSelectedPerson(personTabView.getPerson());
-        });
+        membershipModel.setPeopleTabPane(tabPane);
         return tabPane;
     }
 

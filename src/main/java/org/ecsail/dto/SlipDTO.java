@@ -23,6 +23,15 @@ public class SlipDTO {
 		this.altText = new SimpleStringProperty(altText);
 	}
 
+	public SlipDTO() {
+		super();
+		this.slip_id = new SimpleIntegerProperty(0);
+		this.ms_id = new SimpleIntegerProperty(0);
+		this.slipNumber = new SimpleStringProperty("none");
+		this.subleased_to = new SimpleIntegerProperty(0);
+		this.altText = new SimpleStringProperty("none");
+	}
+
 	public final IntegerProperty slip_idProperty() {
 		return this.slip_id;
 	}

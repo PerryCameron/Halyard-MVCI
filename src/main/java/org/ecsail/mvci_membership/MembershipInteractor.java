@@ -11,9 +11,12 @@ import org.ecsail.repository.interfaces.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.sql.DataSource;
+
 public class MembershipInteractor {
     private final MembershipModel membershipModel;
     private static final Logger logger = LoggerFactory.getLogger(MembershipInteractor.class);
+    private DataSource dataSource;
     private final PersonRepository peopleRepo;
     private final PhoneRepository phoneRepo;
     private final EmailRepository emailRepo;
@@ -23,6 +26,7 @@ public class MembershipInteractor {
 
     public MembershipInteractor(MembershipModel membershipModel, Connections connections) {
         this.membershipModel = membershipModel;
+        this.dataSource = connections.getDataSource();
         peopleRepo = new PersonRepositoryImpl(connections.getDataSource());
         phoneRepo = new PhoneRepositoryImpl(connections.getDataSource());
         emailRepo = new EmailRepositoryImpl(connections.getDataSource());
@@ -49,6 +53,8 @@ public class MembershipInteractor {
     }
 
     public void getSlipInfo(MembershipListDTO ml) {
+        SlipRepository slipRepository = new SlipRepositoryImpl(dataSource);
+        membershipModel.setSlip(slipRepository.getSlip(ml.getMsId()));
     }
 
     protected void setListsLoaded(boolean isLoaded) {
