@@ -54,7 +54,10 @@ public class MembershipInteractor {
 
     public void getSlipInfo(MembershipListDTO ml) {
         SlipRepository slipRepository = new SlipRepositoryImpl(dataSource);
-        membershipModel.setSlip(slipRepository.getSlip(ml.getMsId()));
+        Platform.runLater(() -> {
+            logger.info("Slip is loaded");
+            membershipModel.setSlip(slipRepository.getSlip(ml.getMsId()));
+        });
     }
 
     protected void setListsLoaded(boolean isLoaded) {
