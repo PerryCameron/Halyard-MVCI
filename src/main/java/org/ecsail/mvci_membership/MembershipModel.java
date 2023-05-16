@@ -13,7 +13,8 @@ import org.ecsail.mvci_main.MainModel;
 
 public class MembershipModel {
 
-    // person model
+    // Person information for membership
+
     private ObservableMap<PersonDTO, TableView<EmailDTO>> emailTableView = FXCollections.observableHashMap();
     private ObservableMap<PersonDTO, TableView<PhoneDTO>> phoneTableView = FXCollections.observableHashMap();
     private ObservableMap<PersonDTO, TableView<AwardDTO>> awardTableView = FXCollections.observableHashMap();
@@ -25,7 +26,14 @@ public class MembershipModel {
     private ObservableMap<PersonDTO, TextField> personTextField = FXCollections.observableHashMap();
     private ObservableList<PersonDTO> people = FXCollections.observableArrayList();
     private final SimpleObjectProperty<PersonDTO> selectedPerson = new SimpleObjectProperty<>();
+
+    // general membership information
     private final SimpleObjectProperty<MembershipListDTO> membership = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<SlipDTO> slip = new SimpleObjectProperty<>();
+
+
+
+
     private final BooleanProperty listsLoaded = new SimpleBooleanProperty(false);
     private final MainModel mainModel;
 

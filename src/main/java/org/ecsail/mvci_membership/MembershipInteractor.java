@@ -30,7 +30,7 @@ public class MembershipInteractor {
         officerRepo = new OfficerRepositoryImpl(connections.getDataSource());
     }
 
-    public void getLists(MembershipListDTO ml) { // not on FX thread because lists added before UI is launched
+    public void getPersonLists(MembershipListDTO ml) { // not on FX thread because lists added before UI is launched
         ObservableList<PersonDTO> personDTOS = null;
         try {
             personDTOS = FXCollections.observableArrayList(peopleRepo.getActivePeopleByMsId(ml.getMsId()));
@@ -48,6 +48,9 @@ public class MembershipInteractor {
             logger.info("set people, size: " +membershipModel.getPeople().size());
     }
 
+    public void getSlipInfo(MembershipListDTO ml) {
+    }
+
     protected void setListsLoaded(boolean isLoaded) {
         Platform.runLater(() -> {
             logger.debug("Lists are loaded");
@@ -58,4 +61,6 @@ public class MembershipInteractor {
     public void printPersonMessage(Messages.MessageType messages, Object o) {
         System.out.println(messages + " " + o + " " + membershipModel.getSelectedPerson());
     }
+
+
 }
