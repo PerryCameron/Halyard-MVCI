@@ -14,4 +14,9 @@ public class TextFx {
         return text;
     }
 
+    public static Text textOf(String label, String id) {
+        Text text = new Text(label);
+        text.setId(id);
+        return text;
+    }
 }

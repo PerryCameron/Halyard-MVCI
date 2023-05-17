@@ -57,3 +57,14 @@
 {
     -fx-fill:white;
 }
+
+#text-blue
+{
+    -fx-fill:#1658e7;
+    -fx-font-weight: bold;
+}
+
+#text-bold
+{
+    -fx-font-weight: bold;
+}
