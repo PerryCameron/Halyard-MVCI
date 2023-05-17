@@ -5,7 +5,6 @@ import org.ecsail.repository.interfaces.SlipRepository;
 import org.ecsail.repository.rowmappers.SlipRowMapper;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 
 import javax.sql.DataSource;
 

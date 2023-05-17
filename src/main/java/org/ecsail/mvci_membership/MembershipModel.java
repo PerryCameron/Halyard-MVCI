@@ -9,6 +9,7 @@ import javafx.collections.ObservableMap;
 import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 import org.ecsail.dto.*;
+import org.ecsail.interfaces.SlipRelation;
 import org.ecsail.mvci_main.MainModel;
 
 public class MembershipModel {
@@ -33,15 +34,26 @@ public class MembershipModel {
     private final SimpleObjectProperty<TabPane> peopleTabPane = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TabPane> infoTabPane = new SimpleObjectProperty<>();
 
+    private final SimpleObjectProperty<SlipRelation.slip> slipRelationStatus = new SimpleObjectProperty<>();
+
+
 
 
     private final BooleanProperty listsLoaded = new SimpleBooleanProperty(false);
     private final MainModel mainModel;
 
 
+    public SlipRelation.slip getSlipRelationStatus() {
+        return slipRelationStatus.get();
+    }
 
+    public SimpleObjectProperty<SlipRelation.slip> slipRelationStatusProperty() {
+        return slipRelationStatus;
+    }
 
-
+    public void setSlipRelationStatus(SlipRelation.slip slipRelationStatus) {
+        this.slipRelationStatus.set(slipRelationStatus);
+    }
 
     public TabPane getInfoTabPane() {
         return infoTabPane.get();

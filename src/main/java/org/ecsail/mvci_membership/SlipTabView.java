@@ -8,11 +8,12 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
+import org.ecsail.interfaces.SlipRelation;
 import org.ecsail.widgetfx.VBoxFx;
 
 import java.util.Objects;
 
-public class SlipTabView implements Builder<Tab> {
+public class SlipTabView implements Builder<Tab>, SlipRelation {
 
 
     private final MembershipView membershipView;
@@ -48,26 +49,10 @@ public class SlipTabView implements Builder<Tab> {
     }
 
     private String getSlip() {
-        String slip = membershipModel.getMembership().getSlip();
-        if (slip == null) return "none";
-        if (slip.equals("")) return "none";
-        else {
-            if (slip.startsWith("O")) {
-                return slip.substring(1);  // is subleasing slip
-            } else if (slip.startsWith("SO")) {
-                return slip.substring(2);  // is a subleaser
-            } else
-                return slip;
+        switch (membershipModel.getSlipRelationStatus()) {
+            case noSlip -> { return "none"; }
+            case owner, subLeaser, ownAndSublease -> { return membershipModel.getSlip().getSlipNumber(); }
         }
+        return "none";
     }
-
-//    private void displaySlip() {  // line 343
-//        if (hasSlip())
-//            checkIfLeasingOut();
-//        else if (isSubleasingSlip()) // does not own, but is sub-leasing
-//            setSubleasedSlip();
-//        else  // has no slip
-//            setSlipAsNone();
-//    }
-
 }
