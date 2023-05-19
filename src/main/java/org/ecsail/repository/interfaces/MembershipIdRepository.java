@@ -8,6 +8,9 @@ public interface MembershipIdRepository {
     List<MembershipIdDTO> getIds();
     List<MembershipIdDTO> getIds(int ms_id);
     MembershipIdDTO getId(int ms_id);
+
+    MembershipIdDTO getCurrentId(int ms_id);
+
     MembershipIdDTO getMembershipIdFromMsid(int msid);
     MembershipIdDTO getMsidFromMembershipID(int membership_id);
     MembershipIdDTO getMembershipId(String year, int ms_id);

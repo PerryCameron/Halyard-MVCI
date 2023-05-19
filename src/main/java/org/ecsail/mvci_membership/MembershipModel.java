@@ -1,8 +1,6 @@
 package org.ecsail.mvci_membership;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
@@ -34,14 +32,38 @@ public class MembershipModel {
     private final SimpleObjectProperty<TabPane> peopleTabPane = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TabPane> infoTabPane = new SimpleObjectProperty<>();
 
+    // slip variables
     private final SimpleObjectProperty<SlipRelation.slip> slipRelationStatus = new SimpleObjectProperty<>();
 
-
-
-
+    private StringProperty sublease = new SimpleStringProperty("");
+    private StringProperty membershipId = new SimpleStringProperty("");
     private final BooleanProperty listsLoaded = new SimpleBooleanProperty(false);
     private final MainModel mainModel;
 
+
+    public String getMembershipId() {
+        return membershipId.get();
+    }
+
+    public StringProperty membershipIdProperty() {
+        return membershipId;
+    }
+
+    public void setMembershipId(String membershipId) {
+        this.membershipId.set(membershipId);
+    }
+
+    public String getSublease() {
+        return sublease.get();
+    }
+
+    public StringProperty subleaseProperty() {
+        return sublease;
+    }
+
+    public void setSublease(String sublease) {
+        this.sublease.set(sublease);
+    }
 
     public SlipRelation.slip getSlipRelationStatus() {
         return slipRelationStatus.get();

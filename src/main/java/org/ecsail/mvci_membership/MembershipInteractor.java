@@ -23,6 +23,7 @@ public class MembershipInteractor implements SlipRelation {
     private final EmailRepository emailRepo;
     private final AwardRepository awardRepo;
     private final OfficerRepository officerRepo;
+    private final MembershipIdRepository membershipIdRepo;
 
 
     public MembershipInteractor(MembershipModel membershipModel, Connections connections) {
@@ -33,6 +34,7 @@ public class MembershipInteractor implements SlipRelation {
         emailRepo = new EmailRepositoryImpl(connections.getDataSource());
         awardRepo = new AwardRepositoryImpl(connections.getDataSource());
         officerRepo = new OfficerRepositoryImpl(connections.getDataSource());
+        membershipIdRepo = new MembershipIdRepositoryImpl(connections.getDataSource());
     }
 
     public void getPersonLists(MembershipListDTO ml) { // not on FX thread because lists added before UI is launched
@@ -65,10 +67,22 @@ public class MembershipInteractor implements SlipRelation {
                 // member owns slip and is not subleasing
                 if(membershipModel.getSlip().getSubleased_to() == 0) membershipModel.setSlipRelationStatus(SlipRelation.slip.owner);
                     // member owns slip but is subleasing
-                else membershipModel.setSlipRelationStatus(SlipRelation.slip.ownAndSublease);
+                else setOwnAndSublease();
                 // member does not own but is subleasing
-            } else membershipModel.setSlipRelationStatus(SlipRelation.slip.subLeaser);
+            } else setSubLeaser();
         });
+    }
+
+    private void setSubLeaser() {
+        membershipModel.setSlipRelationStatus(SlipRelation.slip.subLeaser);
+        // gets the current id of the slip owner
+        membershipModel.setMembershipId(String.valueOf(membershipIdRepo.getCurrentId(membershipModel.getSlip().getMs_id()).getMembership_id()));
+    }
+
+    private void setOwnAndSublease() {
+        membershipModel.setSlipRelationStatus(SlipRelation.slip.ownAndSublease);
+        // gets the id of the subLeaser for the current year
+        membershipModel.setMembershipId(String.valueOf(membershipIdRepo.getCurrentId(membershipModel.getSlip().getSubleased_to()).getMembership_id()));
     }
 
     protected void setListsLoaded(boolean isLoaded) {

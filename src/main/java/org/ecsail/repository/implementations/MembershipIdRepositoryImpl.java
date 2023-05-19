@@ -1,11 +1,8 @@
 package org.ecsail.repository.implementations;
 
 import org.ecsail.dto.MembershipIdDTO;
-import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.repository.interfaces.MembershipIdRepository;
-import org.ecsail.repository.interfaces.MembershipRepository;
 import org.ecsail.repository.rowmappers.MembershipIdRowMapper;
-import org.ecsail.repository.rowmappers.PhoneRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
@@ -30,8 +27,13 @@ public class MembershipIdRepositoryImpl implements MembershipIdRepository {
 
     @Override
     public MembershipIdDTO getId(int ms_id) {
-        String query = "SELECT * FROM membership_id WHERE ms_id=" +ms_id;
-        return template.queryForObject(query, new MembershipIdRowMapper());
+        return null;
+    }
+
+    @Override
+    public MembershipIdDTO getCurrentId(int msId) {
+        String query = "SELECT * FROM membership_id WHERE FISCAL_YEAR=YEAR(CURDATE()) and MS_ID=?";
+        return template.queryForObject(query, new MembershipIdRowMapper(),msId);
     }
 
     @Override
