@@ -40,8 +40,6 @@ public class MembershipView implements Builder<Region> {
         return vBox;
     }
 
-
-
     private void listenForData() {
         // waits for data to arrive before completing UI
         membershipModel.listsLoadedProperty().addListener((observable, oldValue, newValue) -> {
@@ -49,6 +47,7 @@ public class MembershipView implements Builder<Region> {
                             .add(new PersonTabView(this, personDTO).build()));
                     membershipModel.getInfoTabPane().getTabs().add(new SlipTabView(this).build());
                     membershipModel.getExtraTabPane().getTabs().add(new PropertiesTabView(this).build());
+                    membershipModel.getExtraTabPane().getTabs().add(new BoatTabView(this).build());
                 }
         );
         // not sure if this must be here, may be clearer if put elsewhere
