@@ -55,6 +55,14 @@ public class MembershipInteractor implements SlipUser {
             logger.info("set people, size: " +membershipModel.getPeople().size());
     }
 
+    public void getBoats(MembershipListDTO ml) {
+        BoatRepository boatRepo = new BoatRepositoryImpl(dataSource);
+        Platform.runLater(() -> {  // TODO need try catch blocks here
+                    membershipModel.getMembership().setBoatDTOS(FXCollections.observableArrayList(boatRepo.getBoatsByMsId(ml.getMsId())));
+                }
+        );
+    }
+
     public void getSlipInfo(MembershipListDTO ml) {
         SlipRepository slipRepository = new SlipRepositoryImpl(dataSource);
         Platform.runLater(() -> {
@@ -95,6 +103,7 @@ public class MembershipInteractor implements SlipUser {
     public void printPersonMessage(Messages.MessageType messages, Object o) {
         System.out.println(messages + " " + o + " " + membershipModel.getSelectedPerson());
     }
+
 
 
 }

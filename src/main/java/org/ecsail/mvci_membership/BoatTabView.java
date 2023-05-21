@@ -7,18 +7,13 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
-import org.ecsail.widgetfx.HBoxFx;
 import org.ecsail.widgetfx.VBoxFx;
-
-import java.util.Collection;
 
 public class BoatTabView implements Builder<Tab> {
     private final MembershipView membershipView;
 
     public BoatTabView(MembershipView membershipView) {
         this.membershipView = membershipView;
-
-
     }
 
     @Override
@@ -45,6 +40,7 @@ public class BoatTabView implements Builder<Tab> {
 
     private Node getTableView() {
         VBox vBox = new VBox();
+        System.out.println("boats size=" + membershipView.getMembershipModel().getMembership().getBoatDTOS().size());
         return vBox;
     }
 }

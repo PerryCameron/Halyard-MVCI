@@ -33,6 +33,7 @@ public class MembershipController extends Controller {
             protected Void call() {
                 membershipInteractor.getPersonLists(ml);
                 membershipInteractor.getSlipInfo(ml);
+                membershipInteractor.getBoats(ml);
                 return null;
             }
         };

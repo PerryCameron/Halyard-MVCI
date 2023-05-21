@@ -4,6 +4,8 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 public class MembershipListDTO {
 	private IntegerProperty msId; /// unique auto key for Membership
@@ -20,6 +22,8 @@ public class MembershipListDTO {
 	private StringProperty slip;
 	private IntegerProperty subLeaser;
 	private IntegerProperty selectedYear;
+
+	private ObservableList<BoatDTO> boatDTOS = FXCollections.observableArrayList();
 
 	public MembershipListDTO(Integer msId, Integer pId, Integer membershipId, String joinDate, String memType, String address, String city,
 							 String state, String zip, String lastName, String firstName, String slip, Integer subLeaser,
@@ -38,6 +42,15 @@ public class MembershipListDTO {
 		this.slip = new SimpleStringProperty(slip);
 		this.subLeaser = new SimpleIntegerProperty(subLeaser);
 		this.selectedYear = new SimpleIntegerProperty(selectedYear);
+	}
+
+
+	public ObservableList<BoatDTO> getBoatDTOS() {
+		return boatDTOS;
+	}
+
+	public void setBoatDTOS(ObservableList<BoatDTO> boatDTOS) {
+		this.boatDTOS = boatDTOS;
 	}
 
 	public MembershipListDTO() {
