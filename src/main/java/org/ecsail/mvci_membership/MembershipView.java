@@ -13,6 +13,7 @@ import javafx.util.Builder;
 import org.ecsail.interfaces.Messages;
 import org.ecsail.widgetfx.HBoxFx;
 import org.ecsail.widgetfx.TabPaneFx;
+import org.ecsail.widgetfx.TextFx;
 import org.ecsail.widgetfx.VBoxFx;
 
 import java.util.function.BiConsumer;
@@ -33,10 +34,13 @@ public class MembershipView implements Builder<Region> {
         borderPane.setTop(createHeader());
         borderPane.setLeft(createPeopleTabPane());
         borderPane.setCenter(createInfoTabPane());
+        borderPane.setBottom(createExtrasTabPane());
         vBox.getChildren().add(borderPane);
         listenForData();
         return vBox;
     }
+
+
 
     private void listenForData() {
         // waits for data to arrive before completing UI
@@ -44,6 +48,7 @@ public class MembershipView implements Builder<Region> {
                     membershipModel.getPeople().forEach(personDTO -> membershipModel.getPeopleTabPane().getTabs()
                             .add(new PersonTabView(this, personDTO).build()));
                     membershipModel.getInfoTabPane().getTabs().add(new SlipTabView(this).build());
+                    membershipModel.getExtraTabPane().getTabs().add(new PropertiesTabView(this).build());
                 }
         );
         // not sure if this must be here, may be clearer if put elsewhere
@@ -53,10 +58,19 @@ public class MembershipView implements Builder<Region> {
         });
     }
 
+    private Node createExtrasTabPane() {
+        HBox hBox = HBoxFx.hBoxOf(Pos.CENTER_LEFT, new Insets(0,0,0,0));
+        TabPane tabPane = TabPaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE, 100,"custom-tab-pane");
+        HBox.setHgrow(tabPane,Priority.ALWAYS);
+        VBox.setVgrow(tabPane,Priority.ALWAYS);
+        membershipModel.setExtraTabPane(tabPane);
+        hBox.getChildren().add(tabPane);
+        return hBox;
+    }
+
     private Node createInfoTabPane() {
         VBox vBox = VBoxFx.vBoxOf(new Insets(0,0,0,10)); // gives space between tabPanes
-        TabPane tabPane = TabPaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE, 498);
-        tabPane.setId("custom-tab-pane");
+        TabPane tabPane = TabPaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE, 498,"custom-tab-pane");
         VBox.setVgrow(tabPane,Priority.ALWAYS);  // this works in combo with Vgrow in SlapTabView
         membershipModel.setInfoTabPane(tabPane);
         vBox.getChildren().add(tabPane);
@@ -64,8 +78,7 @@ public class MembershipView implements Builder<Region> {
     }
 
     private Node createPeopleTabPane() {
-        TabPane tabPane = TabPaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE, 498);
-        tabPane.setId("custom-tab-pane");
+        TabPane tabPane = TabPaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE, 498,"custom-tab-pane");
         membershipModel.setPeopleTabPane(tabPane);
         return tabPane;
     }
@@ -80,11 +93,9 @@ public class MembershipView implements Builder<Region> {
     }
     private Node newBox(String s, Property<?> property) {
         HBox hBox = HBoxFx.hBoxOf(5.0, Pos.CENTER_LEFT);
-        Text labelText = new Text(s);
-        labelText.setId("invoice-text-label");
+        Text labelText = TextFx.textOf(s,"invoice-text-label");
         StringBinding valueBinding = Bindings.createStringBinding(() -> String.valueOf(property.getValue()), property);
-        Text valueText = new Text();
-        valueText.setId("invoice-text-number");
+        Text valueText = TextFx.textOf("", "invoice-text-number");
         valueText.textProperty().bind(valueBinding);
         hBox.getChildren().addAll(labelText,valueText);
         return hBox;

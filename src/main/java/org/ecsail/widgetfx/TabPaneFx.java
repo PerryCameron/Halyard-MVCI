@@ -10,4 +10,12 @@ public class TabPaneFx {
         tabPane.setPrefWidth(width);
         return tabPane;
     }
+
+    public static TabPane tabPaneOf(TabPane.TabClosingPolicy t, double width, String id) {
+        TabPane tabPane = new TabPane();
+        tabPane.setTabClosingPolicy(t);
+        tabPane.setPrefWidth(width);
+        tabPane.setId(id);
+        return tabPane;
+    }
 }

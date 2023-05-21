@@ -18,7 +18,7 @@ public class MembershipModel {
     private ObservableMap<PersonDTO, TableView<PhoneDTO>> phoneTableView = FXCollections.observableHashMap();
     private ObservableMap<PersonDTO, TableView<AwardDTO>> awardTableView = FXCollections.observableHashMap();
     private ObservableMap<PersonDTO, TableView<OfficerDTO>> officerTableView = FXCollections.observableHashMap();
-    private ObservableMap<PersonDTO,StackPane> stackPaneMap = FXCollections.observableHashMap();
+    private ObservableMap<PersonDTO, StackPane> stackPaneMap = FXCollections.observableHashMap();
     private ObservableMap<PersonDTO, RadioButton> selectedRadioForPerson = FXCollections.observableHashMap();
     private ObservableMap<PersonDTO, ComboBox<String>> personComboBox = FXCollections.observableHashMap();
     private ObservableMap<PersonDTO, Tab> selectedPropertiesTab = FXCollections.observableHashMap();
@@ -31,6 +31,7 @@ public class MembershipModel {
     private final SimpleObjectProperty<SlipDTO> slip = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TabPane> peopleTabPane = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TabPane> infoTabPane = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<TabPane> extraTabPane = new SimpleObjectProperty<>();
 
     // slip variables
     private final SimpleObjectProperty<SlipUser.slip> slipRelationStatus = new SimpleObjectProperty<>();
@@ -42,6 +43,19 @@ public class MembershipModel {
 
 
 
+
+
+    public TabPane getExtraTabPane() {
+        return extraTabPane.get();
+    }
+
+    public SimpleObjectProperty<TabPane> extraTabPaneProperty() {
+        return extraTabPane;
+    }
+
+    public void setExtraTabPane(TabPane extraTabPane) {
+        this.extraTabPane.set(extraTabPane);
+    }
 
     public ObservableMap<String, Control> getSlipControls() {
         return slipControls;
