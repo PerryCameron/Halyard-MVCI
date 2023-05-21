@@ -35,6 +35,7 @@ public class VBoxFx {
         return vBox;
     }
 
+
     public static VBox vBoxOf(Insets insets, Pos pos) {
         VBox vBox = new VBox();
         vBox.setAlignment(pos);

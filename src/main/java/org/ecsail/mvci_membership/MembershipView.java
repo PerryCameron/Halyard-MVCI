@@ -7,10 +7,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.TabPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.util.Builder;
 import org.ecsail.interfaces.Messages;
@@ -49,6 +46,7 @@ public class MembershipView implements Builder<Region> {
                     membershipModel.getInfoTabPane().getTabs().add(new SlipTabView(this).build());
                 }
         );
+        // not sure if this must be here, may be clearer if put elsewhere
         membershipModel.getPeopleTabPane().getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
             PersonTabView personTabView = (PersonTabView) newTab.getUserData();// Get the associated PersonTabView object
             membershipModel.setSelectedPerson(personTabView.getPerson());
@@ -59,6 +57,7 @@ public class MembershipView implements Builder<Region> {
         VBox vBox = VBoxFx.vBoxOf(new Insets(0,0,0,10)); // gives space between tabPanes
         TabPane tabPane = TabPaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE, 498);
         tabPane.setId("custom-tab-pane");
+        VBox.setVgrow(tabPane,Priority.ALWAYS);  // this works in combo with Vgrow in SlapTabView
         membershipModel.setInfoTabPane(tabPane);
         vBox.getChildren().add(tabPane);
         return vBox;
@@ -95,7 +94,7 @@ public class MembershipView implements Builder<Region> {
         return membershipModel;
     }
 
-    public BiConsumer<Messages.MessageType, Object> getPersonEdit() {
+    public BiConsumer<Messages.MessageType, Object> sendMessage() {
         return personEdit;
     }
 }

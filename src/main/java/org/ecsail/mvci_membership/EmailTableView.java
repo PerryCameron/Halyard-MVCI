@@ -4,7 +4,6 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Pos;
-import javafx.scene.control.Control;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
@@ -46,7 +45,7 @@ public class EmailTableView implements Builder<TableView<EmailDTO>> {
             if(StringTools.isValidEmail(t.getNewValue())) {
                 EmailDTO emailDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                 emailDTO.setEmail(t.getNewValue());
-                membershipView.getPersonEdit().accept(Messages.MessageType.UPDATE,emailDTO);
+                membershipView.sendMessage().accept(Messages.MessageType.UPDATE,emailDTO);
             } else {
                 person.getEmail().stream()
                         .filter(q -> q.getEmail_id() == email_id)
@@ -78,7 +77,7 @@ public class EmailTableView implements Builder<TableView<EmailDTO>> {
             // When "Listed?" column change.
             booleanProp.addListener((observable, oldValue, newValue) -> {
                 emailDTO.setIsListed(newValue);
-                membershipView.getPersonEdit().accept(Messages.MessageType.UPDATE,emailDTO);
+                membershipView.sendMessage().accept(Messages.MessageType.UPDATE,emailDTO);
             });
             return booleanProp;
         });

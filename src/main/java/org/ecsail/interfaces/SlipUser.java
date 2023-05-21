@@ -1,6 +1,6 @@
 package org.ecsail.interfaces;
 
-public interface SlipRelation {
+public interface SlipUser {
     enum slip {
         owner,
         subLeaser,

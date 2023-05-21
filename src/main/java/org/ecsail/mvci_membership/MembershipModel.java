@@ -7,7 +7,7 @@ import javafx.collections.ObservableMap;
 import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
 import org.ecsail.dto.*;
-import org.ecsail.interfaces.SlipRelation;
+import org.ecsail.interfaces.SlipUser;
 import org.ecsail.mvci_main.MainModel;
 
 public class MembershipModel {
@@ -33,13 +33,23 @@ public class MembershipModel {
     private final SimpleObjectProperty<TabPane> infoTabPane = new SimpleObjectProperty<>();
 
     // slip variables
-    private final SimpleObjectProperty<SlipRelation.slip> slipRelationStatus = new SimpleObjectProperty<>();
-
+    private final SimpleObjectProperty<SlipUser.slip> slipRelationStatus = new SimpleObjectProperty<>();
     private StringProperty sublease = new SimpleStringProperty("");
     private StringProperty membershipId = new SimpleStringProperty("");
     private final BooleanProperty listsLoaded = new SimpleBooleanProperty(false);
     private final MainModel mainModel;
+    private ObservableMap<String,Control> slipControls = FXCollections.observableHashMap();
 
+
+
+
+    public ObservableMap<String, Control> getSlipControls() {
+        return slipControls;
+    }
+
+    public void setSlipControls(ObservableMap<String, Control> slipControls) {
+        this.slipControls = slipControls;
+    }
 
     public String getMembershipId() {
         return membershipId.get();
@@ -65,15 +75,15 @@ public class MembershipModel {
         this.sublease.set(sublease);
     }
 
-    public SlipRelation.slip getSlipRelationStatus() {
+    public SlipUser.slip getSlipRelationStatus() {
         return slipRelationStatus.get();
     }
 
-    public SimpleObjectProperty<SlipRelation.slip> slipRelationStatusProperty() {
+    public SimpleObjectProperty<SlipUser.slip> slipRelationStatusProperty() {
         return slipRelationStatus;
     }
 
-    public void setSlipRelationStatus(SlipRelation.slip slipRelationStatus) {
+    public void setSlipRelationStatus(SlipUser.slip slipRelationStatus) {
         this.slipRelationStatus.set(slipRelationStatus);
     }
 
