@@ -59,6 +59,10 @@ public class SlipTabView implements Builder<Tab>, SlipUser, Messages {
         HBox hBox = HBoxFx.hBoxOf(Pos.CENTER_LEFT, new Insets(10,0,0,0), 10);
         CheckBox checkBox = new CheckBox("Slip Wait list");
         membershipModel.getSlipControls().put("waitList", checkBox);
+        checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue) membershipView.sendMessage().accept(MessageType.SET_WAIT_LIST, "yes");
+            else membershipView.sendMessage().accept(MessageType.SET_WAIT_LIST, "no");
+        });
         hBox.getChildren().add(checkBox);
         return hBox;
     }
