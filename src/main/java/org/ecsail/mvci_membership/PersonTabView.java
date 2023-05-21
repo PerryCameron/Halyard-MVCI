@@ -86,7 +86,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     }
 
     private Node handleAwardsTab() {
-        HBox hBox = HBoxFx.hBoxOf(new Insets(10,10,5,10),"box-background-light");
+        HBox hBox = HBoxFx.hBoxOf(new Insets(10,10,5,10),"box-background-light",false);
         hBox.setPrefHeight(130);
         VBox vBox = createButtonBox(createAddButton(), createDeleteButton());
         membershipModel.getAwardTableView().put(person, new AwardTableView(person, membershipView).build());
@@ -95,7 +95,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     }
 
     private Node handleOfficerTab() {
-        HBox hBox = HBoxFx.hBoxOf(new Insets(10,10,5,10),"box-background-light");
+        HBox hBox = HBoxFx.hBoxOf(new Insets(10,10,5,10),"box-background-light",false);
         hBox.setPrefHeight(130);
         VBox vBox = createButtonBox(createAddButton(), createDeleteButton());
         membershipModel.getOfficerTableView().put(person, new OfficerTableView(person, membershipView).build());
@@ -104,7 +104,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     }
 
     private Node handleEmailTab() {
-        HBox hBox = HBoxFx.hBoxOf(new Insets(10,10,5,10),"box-background-light");
+        HBox hBox = HBoxFx.hBoxOf(new Insets(10,10,5,10),"box-background-light",false);
         hBox.setPrefHeight(130);
         TableView<EmailDTO> tableView = new EmailTableView(person, membershipView).build();
         membershipModel.getEmailTableView().put(person, tableView);
@@ -114,7 +114,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     }
 
     private Node handlePropertiesTab() {
-        HBox hBox = HBoxFx.hBoxOf(new Insets(5,5,5,5),"box-background-light");
+        HBox hBox = HBoxFx.hBoxOf(new Insets(5,5,5,5),"box-background-light",false);
         hBox.getChildren().addAll(getInfoBox(), getRadioBox());
         return hBox;
     }
@@ -207,7 +207,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     }
 
     private Node handlePhoneTab() {
-        HBox hBox = HBoxFx.hBoxOf(new Insets(10,10,5,10),"box-background-light");
+        HBox hBox = HBoxFx.hBoxOf(new Insets(10,10,5,10),"box-background-light",false);
         hBox.setPrefHeight(130);
         VBox vBox = createButtonBox(createAddButton(), createDeleteButton(), createCopyButton());
         membershipModel.getPhoneTableView().put(person,new PhoneTableView(person, membershipView).build());

@@ -3,6 +3,8 @@ package org.ecsail.widgetfx;
 import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 public class VBoxFx {
@@ -32,6 +34,14 @@ public class VBoxFx {
     public static VBox vBoxOf(Insets insets) {
         VBox vBox = new VBox();
         vBox.setPadding(insets);
+        return vBox;
+    }
+
+    public static VBox vBoxOf(Insets padding, String id, boolean setHgrow) {
+        VBox vBox = new VBox();
+        vBox.setPadding(padding);
+        vBox.setId(id);
+        if(setHgrow) HBox.setHgrow(vBox, Priority.ALWAYS);
         return vBox;
     }
 

@@ -8,6 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
@@ -31,10 +32,11 @@ public class HBoxFx {
         return box;
     }
 
-    public static HBox hBoxOf(Insets padding, String id) {
+    public static HBox hBoxOf(Insets padding, String id, boolean setVgrow) {
         HBox hBox = new HBox();
         hBox.setPadding(padding);
         hBox.setId(id);
+        if(setVgrow) VBox.setVgrow(hBox, Priority.ALWAYS);
         return hBox;
     }
 

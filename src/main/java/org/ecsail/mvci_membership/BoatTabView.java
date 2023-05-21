@@ -36,7 +36,7 @@ public class BoatTabView implements Builder<Tab>, Messages {
     }
 
     private Node createTableViewAndButtonsBox() {
-        HBox hBox = HBoxFx.hBoxOf(new Insets(5,5,5,5),"box-background-light");
+        HBox hBox = HBoxFx.hBoxOf(new Insets(5,5,5,5),"box-background-light",false);
         hBox.setPrefHeight(200);
         hBox.getChildren().addAll(getTableView(), getButtonControls());
         return hBox;
