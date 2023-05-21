@@ -46,8 +46,8 @@ public class MembershipView implements Builder<Region> {
                     membershipModel.getPeople().forEach(personDTO -> membershipModel.getPeopleTabPane().getTabs()
                             .add(new PersonTabView(this, personDTO).build()));
                     membershipModel.getInfoTabPane().getTabs().add(new SlipTabView(this).build());
-                    membershipModel.getExtraTabPane().getTabs().add(new PropertiesTabView(this).build());
                     membershipModel.getExtraTabPane().getTabs().add(new BoatTabView(this).build());
+                    membershipModel.getExtraTabPane().getTabs().add(new PropertiesTabView(this).build());
                 }
         );
         // not sure if this must be here, may be clearer if put elsewhere
@@ -58,7 +58,7 @@ public class MembershipView implements Builder<Region> {
     }
 
     private Node createExtrasTabPane() {
-        HBox hBox = HBoxFx.hBoxOf(Pos.CENTER_LEFT, new Insets(0,0,0,0));
+        HBox hBox = HBoxFx.hBoxOf(Pos.CENTER_LEFT, new Insets(10,0,0,0));
         TabPane tabPane = TabPaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE, 100,"custom-tab-pane");
         HBox.setHgrow(tabPane,Priority.ALWAYS);
         VBox.setVgrow(tabPane,Priority.ALWAYS);

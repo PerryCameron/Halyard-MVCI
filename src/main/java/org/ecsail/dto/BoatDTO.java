@@ -316,4 +316,26 @@ public class BoatDTO {
 		this.lwlProperty().set(lwl);
 	}
 
+	@Override
+	public String toString() {
+		return "BoatDTO{" +
+				"boatId=" + boatId +
+				", msId=" + msId +
+				", manufacturer=" + manufacturer +
+				", manufactureYear=" + manufactureYear +
+				", registrationNum=" + registrationNum +
+				", model=" + model +
+				", boatName=" + boatName +
+				", sailNumber=" + sailNumber +
+				", hasTrailer=" + hasTrailer +
+				", loa=" + loa +
+				", displacement=" + displacement +
+				", keel=" + keel +
+				", phrf=" + phrf +
+				", draft=" + draft +
+				", beam=" + beam +
+				", lwl=" + lwl +
+				", aux=" + aux +
+				'}';
+	}
 }
