@@ -18,10 +18,7 @@ import org.ecsail.dto.*;
 import org.ecsail.interfaces.ConfigFilePaths;
 import org.ecsail.interfaces.Messages;
 import org.ecsail.static_calls.MathTools;
-import org.ecsail.widgetfx.ButtonFx;
-import org.ecsail.widgetfx.HBoxFx;
-import org.ecsail.widgetfx.TextFieldFx;
-import org.ecsail.widgetfx.VBoxFx;
+import org.ecsail.widgetfx.*;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -59,7 +56,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
 
     private Node createBottomTabs() {
         VBox vBox = VBoxFx.vBoxOf(new Insets(10,5,5,5)); // space between borders
-        TabPane tabPane = new TabPane();
+        TabPane tabPane = TabPaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE,"custom-tab-pane");
         tabPane.getTabs().add(detailsTab("Properties"));
         tabPane.getTabs().add(detailsTab("Phone"));
         tabPane.getTabs().add(detailsTab("Email"));
@@ -359,12 +356,6 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         VBox vBox = VBoxFx.vBoxOf(7.0, new Insets(0,5,5,15));
         Arrays.stream(buttons).iterator().forEachRemaining(button -> vBox.getChildren().add(button));
         return vBox;
-    }
-
-    private Node createTabContent(String tabType) { // selects correct content
-        HBox hBox = new HBox();
-        hBox.setId("box-background-light");
-        return hBox;
     }
 
     private Node createPictureFrame() {

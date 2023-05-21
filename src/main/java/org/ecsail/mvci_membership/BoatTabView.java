@@ -2,6 +2,7 @@ package org.ecsail.mvci_membership;
 
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -11,9 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import org.ecsail.dto.BoatDTO;
 import org.ecsail.interfaces.Messages;
-import org.ecsail.widgetfx.TableColumnFx;
-import org.ecsail.widgetfx.TableViewFx;
-import org.ecsail.widgetfx.VBoxFx;
+import org.ecsail.widgetfx.*;
 
 public class BoatTabView implements Builder<Tab>, Messages {
     private final MembershipView membershipView;
@@ -34,19 +33,45 @@ public class BoatTabView implements Builder<Tab>, Messages {
     }
 
     private Node createTableViewAndButtonsBox() {
-        HBox hBox = new HBox();
+        HBox hBox = HBoxFx.hBoxOf(new Insets(5,5,5,5),"box-background-light");
         hBox.setPrefHeight(200);
         hBox.getChildren().addAll(getTableView(), getButtonControls());
         return hBox;
     }
 
     private Node getButtonControls() {
-        VBox vBox = new VBox();
+        VBox vBox = VBoxFx.vBoxOf(5.0, new Insets(10,5,5,10));
+        vBox.getChildren().addAll(createButton1(),createButton2(),createButton3());
         return vBox;
+    }
+
+    private Node createButton3() {
+        Button button = ButtonFx.buttonOf("View", 60);
+        button.setOnAction(event -> {
+
+        });
+        return button;
+    }
+
+    private Node createButton2() {
+        Button button = ButtonFx.buttonOf("Delete", 60);
+        button.setOnAction(event -> {
+
+        });
+        return button;
+    }
+
+    private Node createButton1() {
+        Button button = ButtonFx.buttonOf("Add", 60);
+        button.setOnAction(event -> {
+
+        });
+        return button;
     }
 
     private Node getTableView() {
         VBox vBox = new VBox();
+        HBox.setHgrow(vBox,Priority.ALWAYS);
         TableView<BoatDTO> tableView = TableViewFx.tableViewOf(BoatDTO.class);
         tableView.setItems(membershipView.getMembershipModel().getMembership().getBoatDTOS());
         tableView.getColumns().addAll(col1(),col2(),col3(),col4(),col5(),col7(),col8(),col9(),col10());
@@ -106,7 +131,7 @@ public class BoatTabView implements Builder<Tab>, Messages {
     private TableColumn<BoatDTO, String> col2() {
         TableColumn<BoatDTO, String> col2 = TableColumnFx.tableColumnOf(BoatDTO::manufacturerProperty, "Manufacturer");
         col2.setOnEditCommit(t -> editAndUpdateCell(t,"setManufacturer"));
-        col2.setMaxWidth(1f * Integer.MAX_VALUE * 10);  // Manufacturer
+        col2.setMaxWidth(1f * Integer.MAX_VALUE * 15);  // Manufacturer
         return col2;
     }
 

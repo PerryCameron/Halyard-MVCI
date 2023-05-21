@@ -18,4 +18,11 @@ public class TabPaneFx {
         tabPane.setId(id);
         return tabPane;
     }
+
+    public static TabPane tabPaneOf(TabPane.TabClosingPolicy t, String id) {
+        TabPane tabPane = new TabPane();
+        tabPane.setTabClosingPolicy(t);
+        tabPane.setId(id);
+        return tabPane;
+    }
 }
