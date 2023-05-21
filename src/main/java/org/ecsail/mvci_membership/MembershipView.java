@@ -64,10 +64,9 @@ public class MembershipView implements Builder<Region> {
     }
 
     private Node createExtrasTabPane() {
-        HBox hBox = HBoxFx.hBoxOf(Pos.CENTER_LEFT, new Insets(10,0,0,0));
-        TabPane tabPane = TabPaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE, 100,"custom-tab-pane");
+        HBox hBox = HBoxFx.hBoxOf(new Insets(10,0,0,0)); // provides space between
+        TabPane tabPane = TabPaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE,"custom-tab-pane");
         HBox.setHgrow(tabPane,Priority.ALWAYS);
-        VBox.setVgrow(tabPane,Priority.ALWAYS);
         membershipModel.setExtraTabPane(tabPane);
         hBox.getChildren().add(tabPane);
         return hBox;

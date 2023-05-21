@@ -3,8 +3,8 @@ package org.ecsail.repository.implementations;
 
 import org.ecsail.dto.InvoiceWithMemberInfoDTO;
 import org.ecsail.dto.Memo2DTO;
-import org.ecsail.dto.MemoDTO;
-import org.ecsail.repository.interfaces.MemoRepository;
+import org.ecsail.dto.NotesDTO;
+import org.ecsail.repository.interfaces.NotesRepository;
 import org.ecsail.repository.rowmappers.Memo2RowMapper;
 import org.ecsail.repository.rowmappers.MemoRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,41 +12,41 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import javax.sql.DataSource;
 import java.util.List;
 
-public class MemoRepositoryImpl implements MemoRepository {
+public class NotesRepositoryImpl implements NotesRepository {
     private JdbcTemplate template;
 
-    public MemoRepositoryImpl(DataSource dataSource) {
+    public NotesRepositoryImpl(DataSource dataSource) {
         this.template = new JdbcTemplate(dataSource);
     }
 
     @Override
-    public List<MemoDTO> getMemosByMsId(int msId) {
+    public List<NotesDTO> getMemosByMsId(int msId) {
         String query = "SELECT * FROM memo";
         if (msId != 0) query += " WHERE ms_id=?";
-        List<MemoDTO> memoDTOs =
+        List<NotesDTO> notesDTOS =
                 template.query(query, new MemoRowMapper(), new Object[]{msId});
-        return memoDTOs;
+        return notesDTOS;
     }
 
     @Override
-    public List<MemoDTO> getMemosByBoatId(int boatId) {
+    public List<NotesDTO> getMemosByBoatId(int boatId) {
         String query = "SELECT * FROM memo WHERE boat_id=?";
-        List<MemoDTO> memoDTOs =
+        List<NotesDTO> notesDTOS =
                 template.query(query, new MemoRowMapper(), new Object[]{boatId});
-        return memoDTOs;
+        return notesDTOS;
     }
 
     @Override
-    public MemoDTO getMemoByInvoiceIdAndCategory(InvoiceWithMemberInfoDTO invoice, String category) {
+    public NotesDTO getMemoByInvoiceIdAndCategory(InvoiceWithMemberInfoDTO invoice, String category) {
                 String query = "SELECT * FROM memo WHERE INVOICE_ID=" + invoice.getId() + " AND category='" + category + "'";
 
 //        String query = "SELECT * FROM memo WHERE INVOICE_ID=:invoiceId AND category=:category";
 //        SqlParameterSource params = new MapSqlParameterSource()
 //                .addValue("invoiceId", invoice.getId())
 //                .addValue("category", category);
-        MemoDTO memoDTO =
+        NotesDTO notesDTO =
                 template.queryForObject(query, new MemoRowMapper());
-        return memoDTO;
+        return notesDTO;
     }
 
 //    @Override

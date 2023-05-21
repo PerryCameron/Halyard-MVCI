@@ -7,7 +7,6 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import org.ecsail.dto.BoatDTO;
@@ -27,17 +26,14 @@ public class BoatTabView implements Builder<Tab>, Messages {
     @Override
     public Tab build() {
         Tab tab = new Tab("Boats");
-        VBox vBox = VBoxFx.vBoxOf(new Insets(5,5,5,5)); // makes outer border
-        vBox.setId("custom-tap-pane-frame");
-        HBox.setHgrow(vBox, Priority.ALWAYS);
+        VBox vBox = VBoxFx.vBoxOf(new Insets(5,5,5,5),"custom-tap-pane-frame",true); // makes outer border
         vBox.getChildren().add(createTableViewAndButtonsBox());
         tab.setContent(vBox);
         return tab;
     }
 
     private Node createTableViewAndButtonsBox() {
-        HBox hBox = HBoxFx.hBoxOf(new Insets(5,5,5,5),"box-background-light",false);
-        hBox.setPrefHeight(200);
+        HBox hBox = HBoxFx.hBoxOf(new Insets(5,5,5,5),"box-background-light",true);
         hBox.getChildren().addAll(getTableView(), getButtonControls());
         return hBox;
     }
@@ -86,14 +82,12 @@ public class BoatTabView implements Builder<Tab>, Messages {
     }
 
     private Node getTableView() {
-        VBox vBox = new VBox();
-        HBox.setHgrow(vBox,Priority.ALWAYS);
         TableView<BoatDTO> tableView = TableViewFx.tableViewOf(BoatDTO.class);
+        tableView.setPrefHeight(200);
         membershipView.getMembershipModel().setBoatTableView(tableView);
         tableView.setItems(membershipView.getMembershipModel().getMembership().getBoatDTOS());
         tableView.getColumns().addAll(col1(),col2(),col3(),col4(),col5(),col7(),col8(),col9(),col10());
-        vBox.getChildren().add(tableView);
-        return vBox;
+        return tableView;
     }
 
     private TableColumn<BoatDTO,String> col10() {

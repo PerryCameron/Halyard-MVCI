@@ -34,6 +34,7 @@ public class MembershipController extends Controller {
                 membershipInteractor.getPersonLists(ml);
                 membershipInteractor.getSlipInfo(ml);
                 membershipInteractor.getBoats(ml);
+                membershipInteractor.getNotes(ml);
                 return null;
             }
         };

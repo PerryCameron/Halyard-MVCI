@@ -1,16 +1,16 @@
 package org.ecsail.repository.rowmappers;
 
-import org.ecsail.dto.MemoDTO;
+import org.ecsail.dto.NotesDTO;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class MemoRowMapper implements RowMapper<MemoDTO> {
+public class MemoRowMapper implements RowMapper<NotesDTO> {
 
     @Override
-    public MemoDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return new MemoDTO(
+    public NotesDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+        return new NotesDTO(
                 rs.getInt("MEMO_ID"),
                 rs.getInt("MS_ID"),
                 rs.getString("MEMO_DATE"),

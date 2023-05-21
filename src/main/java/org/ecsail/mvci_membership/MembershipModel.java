@@ -29,6 +29,7 @@ public class MembershipModel {
     private final SimpleObjectProperty<MembershipListDTO> membership = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<SlipDTO> slip = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TableView<BoatDTO>> boatTableView = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<TableView<NotesDTO>> notesTableView = new SimpleObjectProperty<>();
 
     // tab panes
     private final SimpleObjectProperty<TabPane> peopleTabPane = new SimpleObjectProperty<>();
@@ -45,6 +46,19 @@ public class MembershipModel {
 
 
 
+
+
+    public TableView<NotesDTO> getNotesTableView() {
+        return notesTableView.get();
+    }
+
+    public SimpleObjectProperty<TableView<NotesDTO>> notesTableViewProperty() {
+        return notesTableView;
+    }
+
+    public void setNotesTableView(TableView<NotesDTO> notesTableView) {
+        this.notesTableView.set(notesTableView);
+    }
 
     public TableView<BoatDTO> getBoatTableView() {
         return boatTableView.get();

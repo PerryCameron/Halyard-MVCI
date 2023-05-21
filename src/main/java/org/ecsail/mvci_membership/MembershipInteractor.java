@@ -58,9 +58,15 @@ public class MembershipInteractor implements SlipUser {
     public void getBoats(MembershipListDTO ml) {
         BoatRepository boatRepo = new BoatRepositoryImpl(dataSource);
         Platform.runLater(() -> {  // TODO need try catch blocks here
-                    membershipModel.getMembership().setBoatDTOS(FXCollections.observableArrayList(boatRepo.getBoatsByMsId(ml.getMsId())));
-                }
-        );
+            membershipModel.getMembership().setBoatDTOS(FXCollections.observableArrayList(boatRepo.getBoatsByMsId(ml.getMsId())));
+        });
+    }
+
+    public void getNotes(MembershipListDTO ml) {
+        NotesRepository noteRepo = new NotesRepositoryImpl(dataSource);
+        Platform.runLater(() -> {
+            membershipModel.getMembership().setNotesDTOS(FXCollections.observableArrayList(noteRepo.getMemosByMsId(ml.getMsId())));
+        });
     }
 
     public void getSlipInfo(MembershipListDTO ml) {

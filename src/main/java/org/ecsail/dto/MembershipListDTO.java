@@ -22,8 +22,8 @@ public class MembershipListDTO {
 	private StringProperty slip;
 	private IntegerProperty subLeaser;
 	private IntegerProperty selectedYear;
-
 	private ObservableList<BoatDTO> boatDTOS = FXCollections.observableArrayList();
+	private ObservableList<NotesDTO> notesDTOS = FXCollections.observableArrayList();
 
 	public MembershipListDTO(Integer msId, Integer pId, Integer membershipId, String joinDate, String memType, String address, String city,
 							 String state, String zip, String lastName, String firstName, String slip, Integer subLeaser,
@@ -44,6 +44,14 @@ public class MembershipListDTO {
 		this.selectedYear = new SimpleIntegerProperty(selectedYear);
 	}
 
+
+	public ObservableList<NotesDTO> getNotesDTOS() {
+		return notesDTOS;
+	}
+
+	public void setNotesDTOS(ObservableList<NotesDTO> notesDTOS) {
+		this.notesDTOS = notesDTOS;
+	}
 
 	public ObservableList<BoatDTO> getBoatDTOS() {
 		return boatDTOS;
