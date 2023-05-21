@@ -236,7 +236,22 @@ public class MembershipListDTO {
 	@Override
 	public String toString() {
 		return "MembershipListDTO{" +
-				"state=" + state +
+				"msId=" + msId +
+				", pId=" + pId +
+				", membershipId=" + membershipId +
+				", joinDate=" + joinDate +
+				", memType=" + memType +
+				", address=" + address +
+				", city=" + city +
+				", state=" + state +
+				", zip=" + zip +
+				", lastName=" + lastName +
+				", firstName=" + firstName +
+				", slip=" + slip +
+				", subLeaser=" + subLeaser +
+				", selectedYear=" + selectedYear +
+				", boatDTOS=" + boatDTOS +
+				", notesDTOS=" + notesDTOS +
 				'}';
 	}
 }

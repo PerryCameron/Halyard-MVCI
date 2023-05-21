@@ -48,6 +48,8 @@ public class MembershipView implements Builder<Region> {
                             .add(new PersonTabView(this, personDTO).build()));
                     // right tabPane
                     membershipModel.getInfoTabPane().getTabs().add(new SlipTabView(this).build());
+                    membershipModel.getInfoTabPane().getTabs().add(new MembershipIdView(this).build());
+                    membershipModel.getInfoTabPane().getTabs().add(new InvoiceListView(this).build());
                     // bottom tabPane
                     membershipModel.getExtraTabPane().getTabs().add(new BoatTabView(this).build());
                     membershipModel.getExtraTabPane().getTabs().add(new NotesTabView(this).build());
