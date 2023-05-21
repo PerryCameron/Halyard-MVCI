@@ -232,4 +232,11 @@ public class MembershipListDTO {
 	public void setSelectedYear(int selectedYear) {
 		this.selectedYear.set(selectedYear);
 	}
+
+	@Override
+	public String toString() {
+		return "MembershipListDTO{" +
+				"state=" + state +
+				'}';
+	}
 }
