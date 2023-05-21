@@ -43,11 +43,17 @@ public class MembershipView implements Builder<Region> {
     private void listenForData() {
         // waits for data to arrive before completing UI
         membershipModel.listsLoadedProperty().addListener((observable, oldValue, newValue) -> {
+                    // left tabPane
                     membershipModel.getPeople().forEach(personDTO -> membershipModel.getPeopleTabPane().getTabs()
                             .add(new PersonTabView(this, personDTO).build()));
+                    // right tabPane
                     membershipModel.getInfoTabPane().getTabs().add(new SlipTabView(this).build());
+                    // bottom tabPane
                     membershipModel.getExtraTabPane().getTabs().add(new BoatTabView(this).build());
+                    membershipModel.getExtraTabPane().getTabs().add(new NotesTabView(this).build());
                     membershipModel.getExtraTabPane().getTabs().add(new PropertiesTabView(this).build());
+                    membershipModel.getExtraTabPane().getTabs().add(new AttachmentsTabView(this).build());
+                    membershipModel.getExtraTabPane().getTabs().add(new AddressTabView(this).build());
                 }
         );
         // not sure if this must be here, may be clearer if put elsewhere
