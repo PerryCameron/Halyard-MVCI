@@ -62,9 +62,9 @@ public class BoatDTO {
 		this.aux = new SimpleBooleanProperty(aux);
 	}
 
-	public BoatDTO() {
+	public BoatDTO(int msId) {
 		this.boatId = new SimpleIntegerProperty(0);
-		this.msId = new SimpleIntegerProperty(0);
+		this.msId = new SimpleIntegerProperty(msId);
 		this.manufacturer = new SimpleStringProperty("");
 		this.manufactureYear = new SimpleStringProperty("");
 		this.registrationNum = new SimpleStringProperty("");

@@ -14,8 +14,11 @@ import org.ecsail.dto.BoatDTO;
 import org.ecsail.interfaces.Messages;
 import org.ecsail.widgetfx.*;
 
+import java.util.Comparator;
+
 public class BoatTabView implements Builder<Tab>, Messages {
     private final MembershipView membershipView;
+    private TableColumn<BoatDTO, String> column1;
 
     public BoatTabView(MembershipView membershipView) {
         this.membershipView = membershipView;
@@ -48,7 +51,7 @@ public class BoatTabView implements Builder<Tab>, Messages {
     private Node createButton3() {
         Button button = ButtonFx.buttonOf("View", 60);
         button.setOnAction(event -> {
-
+            // TODO
         });
         return button;
     }
@@ -56,15 +59,28 @@ public class BoatTabView implements Builder<Tab>, Messages {
     private Node createButton2() {
         Button button = ButtonFx.buttonOf("Delete", 60);
         button.setOnAction(event -> {
-
+            int selectedIndex = membershipView.getMembershipModel().getBoatTableView().getSelectionModel().getSelectedIndex();
+            if (selectedIndex >= 0) { // TODO add error checking and prompt
+                BoatDTO boatDTO = membershipView.getMembershipModel().getMembership().getBoatDTOS().get(selectedIndex);
+                membershipView.sendMessage().accept(MessageType.DELETE, boatDTO);
+                // can't I remove it from the list iteslf?
+                membershipView.getMembershipModel().getBoatTableView().getItems().remove(boatDTO);
+            }
         });
         return button;
     }
 
+    // TODO need to complete this correctly, it curretly doesn't assign boat_id, it does create the object and row
+    // into the TableView
     private Node createButton1() {
         Button button = ButtonFx.buttonOf("Add", 60);
         button.setOnAction(event -> {
-
+            BoatDTO boatDTO = new BoatDTO(membershipView.getMembershipModel().getMembership().getMsId());
+            membershipView.getMembershipModel().getMembership().getBoatDTOS().add(boatDTO);
+            membershipView.getMembershipModel().getMembership().getBoatDTOS().sort(Comparator.comparing(BoatDTO::getBoatId));
+            membershipView.getMembershipModel().getBoatTableView().layout();
+            membershipView.getMembershipModel().getBoatTableView().edit(0, column1);
+            membershipView.sendMessage().accept(MessageType.INSERT, boatDTO);
         });
         return button;
     }
@@ -73,6 +89,7 @@ public class BoatTabView implements Builder<Tab>, Messages {
         VBox vBox = new VBox();
         HBox.setHgrow(vBox,Priority.ALWAYS);
         TableView<BoatDTO> tableView = TableViewFx.tableViewOf(BoatDTO.class);
+        membershipView.getMembershipModel().setBoatTableView(tableView);
         tableView.setItems(membershipView.getMembershipModel().getMembership().getBoatDTOS());
         tableView.getColumns().addAll(col1(),col2(),col3(),col4(),col5(),col7(),col8(),col9(),col10());
         vBox.getChildren().add(tableView);
@@ -137,6 +154,7 @@ public class BoatTabView implements Builder<Tab>, Messages {
 
     private TableColumn<BoatDTO, String> col1() {
         TableColumn<BoatDTO, String> col1 = TableColumnFx.tableColumnOf(BoatDTO::boatNameProperty, "Boat Name");
+        column1 = col1;
         col1.setOnEditCommit(t -> editAndUpdateCell(t,"setBoatName"));
         col1.setMaxWidth(1f * Integer.MAX_VALUE * 15);  // Boat Name
         return col1;

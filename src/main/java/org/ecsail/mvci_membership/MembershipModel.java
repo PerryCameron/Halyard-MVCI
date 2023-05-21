@@ -13,7 +13,6 @@ import org.ecsail.mvci_main.MainModel;
 public class MembershipModel {
 
     // Person information for membership
-
     private ObservableMap<PersonDTO, TableView<EmailDTO>> emailTableView = FXCollections.observableHashMap();
     private ObservableMap<PersonDTO, TableView<PhoneDTO>> phoneTableView = FXCollections.observableHashMap();
     private ObservableMap<PersonDTO, TableView<AwardDTO>> awardTableView = FXCollections.observableHashMap();
@@ -29,6 +28,9 @@ public class MembershipModel {
     // general membership information
     private final SimpleObjectProperty<MembershipListDTO> membership = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<SlipDTO> slip = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<TableView<BoatDTO>> boatTableView = new SimpleObjectProperty<>();
+
+    // tab panes
     private final SimpleObjectProperty<TabPane> peopleTabPane = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TabPane> infoTabPane = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TabPane> extraTabPane = new SimpleObjectProperty<>();
@@ -44,6 +46,17 @@ public class MembershipModel {
 
 
 
+    public TableView<BoatDTO> getBoatTableView() {
+        return boatTableView.get();
+    }
+
+    public SimpleObjectProperty<TableView<BoatDTO>> boatTableViewProperty() {
+        return boatTableView;
+    }
+
+    public void setBoatTableView(TableView<BoatDTO> boatTableView) {
+        this.boatTableView.set(boatTableView);
+    }
 
     public TabPane getExtraTabPane() {
         return extraTabPane.get();
