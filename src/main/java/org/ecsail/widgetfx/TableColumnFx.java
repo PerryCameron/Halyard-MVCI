@@ -10,6 +10,6 @@ public class TableColumnFx {
         TableColumn<T, String> col = new TableColumn<>(label);
         col.setCellValueFactory(cellData -> property.apply(cellData.getValue()));
         col.setCellFactory(column -> EditCellFx.createStringEditCell());
-        return col ;
+        return col;
     }
 }

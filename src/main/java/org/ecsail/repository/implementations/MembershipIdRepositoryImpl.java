@@ -21,8 +21,9 @@ public class MembershipIdRepositoryImpl implements MembershipIdRepository {
     }
 
     @Override
-    public List<MembershipIdDTO> getIds(int ms_id) {
-        return null;
+    public List<MembershipIdDTO> getIds(int msId) {
+        String query = "SELECT * FROM membership_id WHERE MS_ID=?";
+        return template.query(query, new MembershipIdRowMapper(),msId);
     }
 
     @Override
