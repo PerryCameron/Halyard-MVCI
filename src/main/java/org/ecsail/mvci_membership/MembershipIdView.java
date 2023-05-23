@@ -19,6 +19,7 @@ import org.ecsail.widgetfx.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 
 public class MembershipIdView implements Builder<Tab> {
     private final MembershipView membershipView;
@@ -71,6 +72,8 @@ public class MembershipIdView implements Builder<Tab> {
 
     private Node addTable() {
         TableView tableView = TableViewFx.tableViewOf(MembershipIdDTO.class);
+        membershipView.getMembershipModel().getMembership().getMembershipIdDTOS()
+                .sort(Comparator.comparing(MembershipIdDTO::getFiscal_Year).reversed());
         tableView.setItems(membershipView.getMembershipModel().getMembership().getMembershipIdDTOS());
         tableView.getColumns().addAll(col1(),col2(),col3(),col4(),col5());
         return tableView;
