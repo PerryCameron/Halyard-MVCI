@@ -15,6 +15,7 @@ import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import org.ecsail.dto.MembershipIdDTO;
 import org.ecsail.enums.MembershipType;
+import org.ecsail.interfaces.Messages;
 import org.ecsail.widgetfx.*;
 
 import java.time.LocalDate;
@@ -85,18 +86,12 @@ public class MembershipIdView implements Builder<Tab> {
                 param -> {
                     MembershipIdDTO id = param.getValue();
                     SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(id.isLateRenew());
-                    // Note: singleCol.setOnEditCommit(): Not work for
-                    // CheckBoxTableCell.
-                    // When "isListed?" column change.
                     booleanProp.addListener((observable, oldValue, newValue) -> {
                         id.setIsLateRenew(newValue);
-
-//                        SqlUpdate.updateMembershipId(id.getMid(), "LATE_RENEW", newValue);
+                            membershipView.sendMessage().accept(Messages.MessageType.UPDATE, id);
                     });
                     return booleanProp;
                 });
-
-        //
         col5.setCellFactory(p -> {
             CheckBoxTableCell<MembershipIdDTO, Boolean> cell = new CheckBoxTableCell<>();
             cell.setAlignment(Pos.CENTER);
@@ -106,25 +101,18 @@ public class MembershipIdView implements Builder<Tab> {
         return col5;
     }
 
-
     private TableColumn<MembershipIdDTO, Boolean> col4() {
         TableColumn<MembershipIdDTO, Boolean> col4 = new TableColumn<>("Renewed");
         col4.setCellValueFactory(
                 param -> {
                     MembershipIdDTO id = param.getValue();
                     SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(id.isRenew());
-                    // Note: singleCol.setOnEditCommit(): Not work for
-                    // CheckBoxTableCell.
-                    // When "isListed?" column change.
                     booleanProp.addListener((observable, oldValue, newValue) -> {
                         id.setIsRenew(newValue);
-//                        // SqlUpdate.updateListed("phone_listed",phone.getPhone_ID(), newValue);
-//                        SqlUpdate.updateMembershipId(id.getMid(), "RENEW", newValue);
+                        membershipView.sendMessage().accept(Messages.MessageType.UPDATE, id);
                     });
                     return booleanProp;
                 });
-
-        //
         col4.setCellFactory(p -> {
             CheckBoxTableCell<MembershipIdDTO, Boolean> cell = new CheckBoxTableCell<>();
             cell.setAlignment(Pos.CENTER);
@@ -145,16 +133,14 @@ public class MembershipIdView implements Builder<Tab> {
                     MembershipType membershipType = MembershipType.getByCode(membershipCode);
                     return new SimpleObjectProperty<>(membershipType);
                 });
-
         col3.setCellFactory(ComboBoxTableCell.forTableColumn(MembershipTypeList));
-
         col3.setOnEditCommit((TableColumn.CellEditEvent<MembershipIdDTO, MembershipType> event) -> {
-//            TablePosition<MembershipIdDTO, MembershipType> pos = event.getTablePosition();
-//            MembershipType newMembershipType = event.getNewValue();
-//            int row = pos.getRow();
-//            MembershipIdDTO thisId = event.getTableView().getItems().get(row);
-//            SqlUpdate.updateMembershipId(thisId, "mem_type", newMembershipType.getCode());
-//            thisId.setMem_type(newMembershipType.getCode());
+            TablePosition<MembershipIdDTO, MembershipType> pos = event.getTablePosition();
+            MembershipType newMembershipType = event.getNewValue();
+            int row = pos.getRow();
+            MembershipIdDTO id = event.getTableView().getItems().get(row);
+            id.setMem_type(newMembershipType.getCode());
+            membershipView.sendMessage().accept(Messages.MessageType.UPDATE, id);
         });
         col3.setMaxWidth(1f * Integer.MAX_VALUE * 25);   // Mem Type
         return col3;
@@ -163,8 +149,9 @@ public class MembershipIdView implements Builder<Tab> {
     private TableColumn<MembershipIdDTO,String> col2() {
         TableColumn<MembershipIdDTO, String> col2 = TableColumnFx.tableColumnOf(MembershipIdDTO::membership_idProperty, "Mem ID");
         col2.setOnEditCommit(t -> {
-            MembershipIdDTO membershipIdDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
-            membershipIdDTO.setMembership_id(t.getNewValue());
+            MembershipIdDTO id = t.getTableView().getItems().get(t.getTablePosition().getRow());
+            id.setMembership_id(t.getNewValue());
+            membershipView.sendMessage().accept(Messages.MessageType.UPDATE, id);
         });
         col2.setMaxWidth(1f * Integer.MAX_VALUE * 15);  // Mem Id
         return col2;
@@ -173,8 +160,9 @@ public class MembershipIdView implements Builder<Tab> {
     private TableColumn<MembershipIdDTO,String> col1() {
         TableColumn<MembershipIdDTO, String> col1 = TableColumnFx.tableColumnOf(MembershipIdDTO::fiscal_YearProperty,"Year");
         col1.setOnEditCommit(t -> {
-            MembershipIdDTO membershipIdDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
-            membershipIdDTO.setFiscal_Year(t.getNewValue());
+            MembershipIdDTO id = t.getTableView().getItems().get(t.getTablePosition().getRow());
+            id.setFiscal_Year(t.getNewValue());
+            membershipView.sendMessage().accept(Messages.MessageType.UPDATE, id);
         });
         col1.setMaxWidth(1f * Integer.MAX_VALUE * 25);   // Year
         return col1;
