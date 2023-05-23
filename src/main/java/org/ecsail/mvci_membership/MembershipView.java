@@ -94,7 +94,7 @@ public class MembershipView implements Builder<Region> {
         hBox.getChildren().add(newBox("Record Year: ", membershipModel.getMembership().selectedYearProperty()));
         hBox.getChildren().add(newBox("Membership ID: ", membershipModel.getMembership().membershipIdProperty()));
         hBox.getChildren().add(newBox("Membership Type: ", membershipModel.getMembership().memTypeProperty()));
-        hBox.getChildren().add(newBox("Record Year: ", membershipModel.getMembership().joinDateProperty()));
+        hBox.getChildren().add(newBox("Join Date: ", membershipModel.getMembership().joinDateProperty()));
         return hBox;
     }
     private Node newBox(String s, Property<?> property) {

@@ -13,6 +13,7 @@ import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
+import org.ecsail.custom.CustomDatePicker;
 import org.ecsail.dto.MembershipIdDTO;
 import org.ecsail.enums.MembershipType;
 import org.ecsail.interfaces.Messages;
@@ -20,6 +21,7 @@ import org.ecsail.widgetfx.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Comparator;
 
 public class MembershipIdView implements Builder<Tab> {
@@ -48,8 +50,22 @@ public class MembershipIdView implements Builder<Tab> {
 
     private Node createTopControls() {
         HBox hBox = HBoxFx.hBoxOf(10, Pos.CENTER_LEFT);
-        DatePicker datePicker = new DatePicker();
+        CustomDatePicker datePicker = new CustomDatePicker();
         datePicker.setValue(getDate());
+        datePicker.focusedProperty().addListener((observable, wasFocused, isFocused) -> {
+            if (!isFocused){
+                try {
+                    datePicker.setValue(datePicker.getConverter().fromString(datePicker.getEditor().getText()));
+                } catch (DateTimeParseException e) {
+                    datePicker.getEditor().setText(datePicker.getConverter().toString(datePicker.getValue()));
+                }
+                LocalDate date = datePicker.getValue();
+                membershipView.getMembershipModel().getMembership().setJoinDate(date.toString());
+                membershipView.sendMessage()
+                        .accept(Messages.MessageType.UPDATE, membershipView.getMembershipModel().getMembership());
+                membershipView.getMembershipModel().getMembership().setJoinDate(date.toString());
+            }
+        });
         hBox.getChildren().addAll(TextFx.textOf("Join Date","text-white"), datePicker, createButtonBox());
         return hBox;
     }

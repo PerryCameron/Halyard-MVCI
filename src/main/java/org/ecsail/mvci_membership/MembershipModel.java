@@ -24,18 +24,16 @@ public class MembershipModel {
     private ObservableMap<PersonDTO, TextField> personTextField = FXCollections.observableHashMap();
     private ObservableList<PersonDTO> people = FXCollections.observableArrayList();
     private final SimpleObjectProperty<PersonDTO> selectedPerson = new SimpleObjectProperty<>();
-
     // general membership information
     private final SimpleObjectProperty<MembershipListDTO> membership = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<SlipDTO> slip = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TableView<BoatDTO>> boatTableView = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TableView<NotesDTO>> notesTableView = new SimpleObjectProperty<>();
-
+    private final SimpleObjectProperty<TableView<MembershipIdDTO>> idTableView = new SimpleObjectProperty<>();
     // tab panes
     private final SimpleObjectProperty<TabPane> peopleTabPane = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TabPane> infoTabPane = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TabPane> extraTabPane = new SimpleObjectProperty<>();
-
     // slip variables
     private final SimpleObjectProperty<SlipUser.slip> slipRelationStatus = new SimpleObjectProperty<>();
     private StringProperty sublease = new SimpleStringProperty("");
@@ -47,6 +45,19 @@ public class MembershipModel {
 
 
 
+
+
+    public TableView<MembershipIdDTO> getIdTableView() {
+        return idTableView.get();
+    }
+
+    public SimpleObjectProperty<TableView<MembershipIdDTO>> idTableViewProperty() {
+        return idTableView;
+    }
+
+    public void setIdTableView(TableView<MembershipIdDTO> idTableView) {
+        this.idTableView.set(idTableView);
+    }
 
     public TableView<NotesDTO> getNotesTableView() {
         return notesTableView.get();
