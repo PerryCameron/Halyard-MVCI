@@ -7,15 +7,15 @@ import javafx.scene.control.ComboBox;
 
 public class PhoneDTO {
 	
-	private IntegerProperty phone_ID;
+	private IntegerProperty phone_Id;
 	private IntegerProperty pid;
 	private BooleanProperty isListed;
 	private StringProperty phoneNumber;
 	private StringProperty phoneType;
 	private ObservableList<String> membershiptypes; 
 	private ComboBox<String> combo_box;
-	public PhoneDTO(Integer phone_ID, Integer pid, Boolean isListed, String phoneNumber, String phoneType) {
-		this.phone_ID = new SimpleIntegerProperty(phone_ID);
+	public PhoneDTO(Integer phone_Id, Integer pid, Boolean isListed, String phoneNumber, String phoneType) {
+		this.phone_Id = new SimpleIntegerProperty(phone_Id);
 		this.pid = new SimpleIntegerProperty(pid);
 		this.isListed = new SimpleBooleanProperty(isListed);
 		this.phoneNumber = new SimpleStringProperty(phoneNumber);
@@ -26,7 +26,7 @@ public class PhoneDTO {
 	}
 
 	public PhoneDTO(Integer pid) {
-		this.phone_ID = new SimpleIntegerProperty(0);
+		this.phone_Id = new SimpleIntegerProperty(0);
 		this.pid = new SimpleIntegerProperty(pid);
 		this.isListed = new SimpleBooleanProperty(true);
 		this.phoneNumber = new SimpleStringProperty("");
@@ -35,11 +35,6 @@ public class PhoneDTO {
 	
 	//final ComboBox<String> combo_box
 
-	
-	public final IntegerProperty phone_IDProperty() {
-		return this.phone_ID;
-	}
-	
 
 	public ComboBox<String> getCombo_box() {
 		return combo_box;
@@ -48,14 +43,17 @@ public class PhoneDTO {
 	public void setCombo_box(ComboBox<String> combo_box) {
 		this.combo_box = combo_box;
 	}
-
-	public final int getPhone_ID() {
-		return this.phone_IDProperty().get();
-	}
 	
+	public final IntegerProperty phone_IdProperty() {
+		return this.phone_Id;
+	}
 
-	public final void setPhone_ID(final int phone_ID) {
-		this.phone_IDProperty().set(phone_ID);
+	public final int getPhone_Id() {
+		return this.phone_IdProperty().get();
+	}
+
+	public final void setPhone_Id(final int phone_Id) {
+		this.phone_IdProperty().set(phone_Id);
 	}
 	
 
@@ -120,6 +118,6 @@ public class PhoneDTO {
 	@Override
 	public String toString() {
 		return "PhoneDTO " +
-				" phone_ID=" + phone_ID;
+				" phone_ID=" + phone_Id;
 	}
 }

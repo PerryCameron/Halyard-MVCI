@@ -13,5 +13,5 @@ public interface PhoneRepository {
     PhoneDTO getListedPhoneByType(PersonDTO p, String type);
 
     PhoneDTO getPhoneByType(String pid, String type);
-
+    int updatePhone(PhoneDTO o);
 }

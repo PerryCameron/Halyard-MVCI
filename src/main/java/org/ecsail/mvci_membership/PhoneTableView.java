@@ -53,7 +53,7 @@ public class PhoneTableView implements Builder<TableView> {
                         PhoneDTO phoneDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                         membershipView.sendMessage().apply(Messages.MessageType.UPDATE, phoneDTO);
                         person.getPhones().stream()
-                                .filter(p -> p.getPhone_ID() == phoneDTO.getPhone_ID())
+                                .filter(p -> p.getPhone_Id() == phoneDTO.getPhone_Id())
                                 .forEach(s -> s.setPhoneNumber(processedNumber));
                     }
 

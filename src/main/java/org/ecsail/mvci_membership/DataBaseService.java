@@ -1,6 +1,7 @@
 package org.ecsail.mvci_membership;
 
 import org.ecsail.dto.PersonDTO;
+import org.ecsail.dto.PhoneDTO;
 import org.ecsail.interfaces.Messages;
 import org.ecsail.repository.implementations.*;
 import org.ecsail.repository.interfaces.*;
@@ -31,9 +32,7 @@ public class DataBaseService {
             }
             case DELETE -> {
             }
-            case UPDATE -> {
-                return updateObject(o);
-            }
+            case UPDATE -> { return updateObject(o); }
             case NONE -> {
             }
             case CHANGE_MEMBER_TYPE -> {
@@ -57,6 +56,7 @@ public class DataBaseService {
 
     private int updateObject(Object o) {
         if(o instanceof PersonDTO) return peopleRepo.updatePerson((PersonDTO) o);
+        if(o instanceof PhoneDTO) return phoneRepo.updatePhone((PhoneDTO) o);
         else return 0;
     }
 

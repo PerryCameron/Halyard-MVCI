@@ -301,7 +301,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
                 case "Phone" -> {
                     PhoneDTO phoneDTO = new PhoneDTO(person.getP_id());
                     person.getPhones().add(phoneDTO);
-                    person.getPhones().sort(Comparator.comparing(PhoneDTO::getPhone_ID));
+                    person.getPhones().sort(Comparator.comparing(PhoneDTO::getPhone_Id));
                     membershipView.sendMessage().apply(MessageType.INSERT, phoneDTO);
                     requestFocusOnTable(membershipModel.getPhoneTableView().get(person));
                 }
