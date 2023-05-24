@@ -11,22 +11,29 @@ public class MainModel {
 
     private ObservableList<BoardPositionDTO> boardPositionDTOS = FXCollections.observableArrayList();
     private final StringProperty statusLabel = new SimpleStringProperty(""); // keeper here
+    private final StringProperty changeStatusLabel = new SimpleStringProperty(""); // keeper here
     private final ObjectProperty<TabPane> mainTabPane = new SimpleObjectProperty();
     private final BooleanProperty primaryStageComplete = new SimpleBooleanProperty(false);
 
 
-    public boolean isPrimaryStageComplete() {
-        return primaryStageComplete.get();
+    public String getChangeStatusLabel() {
+        return changeStatusLabel.get();
+    }
+
+    public StringProperty changeStatusLabelProperty() {
+        return changeStatusLabel;
+    }
+
+    public void setChangeStatusLabel(String changeStatusLabel) {
+        this.changeStatusLabel.set(changeStatusLabel);
     }
 
     public BooleanProperty primaryStageCompleteProperty() {
         return primaryStageComplete;
     }
-
     public void setPrimaryStageComplete(boolean primaryStageComplete) {
         this.primaryStageComplete.set(primaryStageComplete);
     }
-
     public ObservableList<BoardPositionDTO> getBoardPositionDTOS() {
         return boardPositionDTOS;
     }

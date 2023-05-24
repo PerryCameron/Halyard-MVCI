@@ -7,11 +7,13 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import org.ecsail.BaseApplication;
 import org.ecsail.dto.MembershipListDTO;
+import org.ecsail.widgetfx.HBoxFx;
 import org.ecsail.widgetfx.MenuFx;
 
 import java.util.Objects;
@@ -46,12 +48,20 @@ public class MainView implements Builder<Region> {
     }
 
     private Node setUpBottomPane() {
+        HBox hBox = new HBox(20);
+
         Label statusLabel = new Label();
         statusLabel.setPadding(new Insets(5.0f, 5.0f, 5.0f, 5.0f));
         statusLabel.setMaxWidth(Double.MAX_VALUE);
         statusLabel.textProperty().bind(mainModel.statusLabelProperty());
         mainModel.statusLabelProperty().set("(Not Connected) Ready.");
-        return statusLabel;
+        Label changeLabel = new Label();
+        changeLabel.setPadding(new Insets(5.0f, 5.0f, 5.0f, 5.0f));
+        changeLabel.setMaxWidth(Double.MAX_VALUE);
+        changeLabel.textProperty().bind(mainModel.changeStatusLabelProperty());
+        mainModel.changeStatusLabelProperty().set("Testing");
+        hBox.getChildren().addAll(statusLabel, changeLabel);
+        return hBox;
     }
 
     private Node setUpCenterPane() {
