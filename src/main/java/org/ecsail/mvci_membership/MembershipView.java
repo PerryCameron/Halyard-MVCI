@@ -16,13 +16,13 @@ import org.ecsail.widgetfx.TabPaneFx;
 import org.ecsail.widgetfx.TextFx;
 import org.ecsail.widgetfx.VBoxFx;
 
-import java.util.function.BiConsumer;
+import java.util.function.BiFunction;
 
 public class MembershipView implements Builder<Region> {
 
     private final MembershipModel membershipModel;
-    private final BiConsumer<Messages.MessageType, Object> personEdit;
-    protected MembershipView(MembershipModel mm, BiConsumer<Messages.MessageType, Object> personEdit) {
+    private final BiFunction<Messages.MessageType, Object, Integer> personEdit;
+    protected MembershipView(MembershipModel mm, BiFunction <Messages.MessageType, Object, Integer> personEdit) {
         membershipModel = mm;
         this.personEdit = personEdit;
     }
@@ -97,6 +97,7 @@ public class MembershipView implements Builder<Region> {
         hBox.getChildren().add(newBox("Join Date: ", membershipModel.getMembership().joinDateProperty()));
         return hBox;
     }
+
     private Node newBox(String s, Property<?> property) {
         HBox hBox = HBoxFx.hBoxOf(5.0, Pos.CENTER_LEFT);
         Text labelText = TextFx.textOf(s,"invoice-text-label");
@@ -111,7 +112,7 @@ public class MembershipView implements Builder<Region> {
         return membershipModel;
     }
 
-    public BiConsumer<Messages.MessageType, Object> sendMessage() {
+    public BiFunction<Messages.MessageType, Object, Integer> sendMessage() {
         return personEdit;
     }
 }

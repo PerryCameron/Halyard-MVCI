@@ -10,8 +10,7 @@ public interface PersonRepository {
 //    List<PersonDTO> getPeople(int ms_id);
 
     List<PersonDTO> getActivePeopleByMsId(int ms_id);
-//    List<PersonDTO> getActiveAuxBoats();
-//    List<PersonDTO> getAllSailBoats();
-//    List<PersonDTO> getAllAuxBoats();
-//    List<PersonDTO> getAllBoats();
+
+    int updatePerson(PersonDTO personDTO);
+
 }

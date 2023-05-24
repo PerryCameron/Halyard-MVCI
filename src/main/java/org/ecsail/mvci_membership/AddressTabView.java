@@ -89,7 +89,7 @@ public class AddressTabView implements Builder<Tab> {
             if (oldValue) {  // we have focused and unfocused
                 MembershipListDTO membershipListDTO = membershipView.getMembershipModel().getMembership();
                 membershipListDTO.setAddress(textField.getText());
-                membershipView.sendMessage().accept(Messages.MessageType.UPDATE, membershipListDTO);
+                membershipView.sendMessage().apply(Messages.MessageType.UPDATE, membershipListDTO);
             }
         });
     }
@@ -101,7 +101,7 @@ public class AddressTabView implements Builder<Tab> {
             if (oldValue) {  // we have focused and unfocused
                 MembershipListDTO membershipListDTO = membershipView.getMembershipModel().getMembership();
                 membershipListDTO.setZip(textField.getText());
-                membershipView.sendMessage().accept(Messages.MessageType.UPDATE, membershipListDTO);
+                membershipView.sendMessage().apply(Messages.MessageType.UPDATE, membershipListDTO);
             }
         });
     }
@@ -113,7 +113,7 @@ public class AddressTabView implements Builder<Tab> {
             if (oldValue) {  // we have focused and unfocused
                 MembershipListDTO membershipListDTO = membershipView.getMembershipModel().getMembership();
                 membershipListDTO.setCity(textField.getText());
-                membershipView.sendMessage().accept(Messages.MessageType.UPDATE, membershipListDTO);
+                membershipView.sendMessage().apply(Messages.MessageType.UPDATE, membershipListDTO);
             }
         });
     }
@@ -124,7 +124,7 @@ public class AddressTabView implements Builder<Tab> {
         comboBox.getSelectionModel().selectedItemProperty().addListener( (options, oldValue, newValue) -> {
             MembershipListDTO membershipListDTO = membershipView.getMembershipModel().getMembership();
             membershipListDTO.setState(newValue.toString());
-            membershipView.sendMessage().accept(Messages.MessageType.UPDATE, membershipListDTO);
+            membershipView.sendMessage().apply(Messages.MessageType.UPDATE, membershipListDTO);
         });
     }
 

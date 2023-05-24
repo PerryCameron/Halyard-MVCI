@@ -45,7 +45,7 @@ public class OfficerTableView implements Builder<TableView<OfficerDTO>> {
                     OfficerDTO officerDTO = t.getTableView().getItems().get(
                             t.getTablePosition().getRow());
                     officerDTO.setFiscal_year(t.getNewValue());
-                    membershipView.sendMessage().accept(Messages.MessageType.UPDATE, officerDTO);
+                    membershipView.sendMessage().apply(Messages.MessageType.UPDATE, officerDTO);
                 }
         );
         col1.setMaxWidth(1f * Integer.MAX_VALUE * 20);   // Phone
@@ -70,7 +70,7 @@ public class OfficerTableView implements Builder<TableView<OfficerDTO>> {
             int row = pos.getRow();
             OfficerDTO officerDTO = event.getTableView().getItems().get(row);
             officerDTO.setOfficer_type(newOfficer);
-            membershipView.sendMessage().accept(Messages.MessageType.UPDATE, officerDTO);
+            membershipView.sendMessage().apply(Messages.MessageType.UPDATE, officerDTO);
         });
         col2.setMaxWidth(1f * Integer.MAX_VALUE * 50);  // Type
         return col2;
@@ -82,7 +82,7 @@ public class OfficerTableView implements Builder<TableView<OfficerDTO>> {
                 t -> {
                     OfficerDTO officerDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                     officerDTO.setBoard_year(t.getNewValue());
-                    membershipView.sendMessage().accept(Messages.MessageType.UPDATE, officerDTO);
+                    membershipView.sendMessage().apply(Messages.MessageType.UPDATE, officerDTO);
                 }
         );
         col3.setMaxWidth( 1f * Integer.MAX_VALUE * 20 );  // Listed

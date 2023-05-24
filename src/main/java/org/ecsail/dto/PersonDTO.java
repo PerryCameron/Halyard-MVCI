@@ -214,10 +214,4 @@ public class PersonDTO {
 		this.nickNameProperty().set(nickName);
 	}
 
-	@Override
-	public String toString() {
-		return    p_id + " "
-				+ firstName + " "
-				+ lastName + "\n";
-	}
 }

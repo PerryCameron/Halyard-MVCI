@@ -62,7 +62,7 @@ public class MembershipIdView implements Builder<Tab> {
                 LocalDate date = datePicker.getValue();
                 membershipView.getMembershipModel().getMembership().setJoinDate(date.toString());
                 membershipView.sendMessage()
-                        .accept(Messages.MessageType.UPDATE, membershipView.getMembershipModel().getMembership());
+                        .apply(Messages.MessageType.UPDATE, membershipView.getMembershipModel().getMembership());
                 membershipView.getMembershipModel().getMembership().setJoinDate(date.toString());
             }
         });
@@ -72,10 +72,24 @@ public class MembershipIdView implements Builder<Tab> {
 
     private Node createButtonBox() {
         HBox hBox = HBoxFx.hBoxOf(new Insets(0,0,0,50), 5.0);
-        Button button1 = new Button("Add");
-        Button button2 = new Button("Delete");
-        hBox.getChildren().addAll(button1,button2);
+        hBox.getChildren().addAll(createAddButton(),addDeleteButton());
         return hBox;
+    }
+
+    private Node addDeleteButton() {
+        Button button = new Button("Delete");
+        button.setOnAction(event -> {
+
+        });
+        return button;
+    }
+
+    private Node createAddButton() {
+        Button button = new Button("Add");
+        button.setOnAction(event -> {
+
+        });
+        return button;
     }
 
     private LocalDate getDate() {
@@ -104,7 +118,7 @@ public class MembershipIdView implements Builder<Tab> {
                     SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(id.isLateRenew());
                     booleanProp.addListener((observable, oldValue, newValue) -> {
                         id.setIsLateRenew(newValue);
-                            membershipView.sendMessage().accept(Messages.MessageType.UPDATE, id);
+                            membershipView.sendMessage().apply(Messages.MessageType.UPDATE, id);
                     });
                     return booleanProp;
                 });
@@ -125,7 +139,7 @@ public class MembershipIdView implements Builder<Tab> {
                     SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(id.isRenew());
                     booleanProp.addListener((observable, oldValue, newValue) -> {
                         id.setIsRenew(newValue);
-                        membershipView.sendMessage().accept(Messages.MessageType.UPDATE, id);
+                        membershipView.sendMessage().apply(Messages.MessageType.UPDATE, id);
                     });
                     return booleanProp;
                 });
@@ -156,7 +170,7 @@ public class MembershipIdView implements Builder<Tab> {
             int row = pos.getRow();
             MembershipIdDTO id = event.getTableView().getItems().get(row);
             id.setMem_type(newMembershipType.getCode());
-            membershipView.sendMessage().accept(Messages.MessageType.UPDATE, id);
+            membershipView.sendMessage().apply(Messages.MessageType.UPDATE, id);
         });
         col3.setMaxWidth(1f * Integer.MAX_VALUE * 25);   // Mem Type
         return col3;
@@ -167,7 +181,7 @@ public class MembershipIdView implements Builder<Tab> {
         col2.setOnEditCommit(t -> {
             MembershipIdDTO id = t.getTableView().getItems().get(t.getTablePosition().getRow());
             id.setMembership_id(t.getNewValue());
-            membershipView.sendMessage().accept(Messages.MessageType.UPDATE, id);
+            membershipView.sendMessage().apply(Messages.MessageType.UPDATE, id);
         });
         col2.setMaxWidth(1f * Integer.MAX_VALUE * 15);  // Mem Id
         return col2;
@@ -178,7 +192,7 @@ public class MembershipIdView implements Builder<Tab> {
         col1.setOnEditCommit(t -> {
             MembershipIdDTO id = t.getTableView().getItems().get(t.getTablePosition().getRow());
             id.setFiscal_Year(t.getNewValue());
-            membershipView.sendMessage().accept(Messages.MessageType.UPDATE, id);
+            membershipView.sendMessage().apply(Messages.MessageType.UPDATE, id);
         });
         col1.setMaxWidth(1f * Integer.MAX_VALUE * 25);   // Year
         return col1;

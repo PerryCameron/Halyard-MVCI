@@ -17,15 +17,16 @@ import org.ecsail.static_calls.StringTools;
 import org.ecsail.widgetfx.TableColumnFx;
 import org.ecsail.widgetfx.TableViewFx;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class EmailTableView implements Builder<TableView<EmailDTO>> {
 
     private final PersonDTO person;
-    private final MembershipModel membershipModel;
     private final MembershipView membershipView;
 
     public EmailTableView(PersonDTO personDTO, MembershipView membershipView) {
         this.person = personDTO;
-        this.membershipModel = membershipView.getMembershipModel();
         this.membershipView = membershipView;
     }
 
@@ -33,7 +34,8 @@ public class EmailTableView implements Builder<TableView<EmailDTO>> {
     public TableView<EmailDTO> build() {
         TableView<EmailDTO> tableView = TableViewFx.tableViewOf(EmailDTO.class);
         tableView.setItems(person.getEmail());
-        tableView.getColumns().addAll(createColumn1(), createColumn2(), createColumn3());
+        List<TableColumn<EmailDTO, ?>> columns = Arrays.asList(createColumn1(), createColumn2(), createColumn3());
+        tableView.getColumns().setAll(columns);
         return tableView;
     }
 
@@ -45,7 +47,7 @@ public class EmailTableView implements Builder<TableView<EmailDTO>> {
             if(StringTools.isValidEmail(t.getNewValue())) {
                 EmailDTO emailDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                 emailDTO.setEmail(t.getNewValue());
-                membershipView.sendMessage().accept(Messages.MessageType.UPDATE,emailDTO);
+                membershipView.sendMessage().apply(Messages.MessageType.UPDATE,emailDTO);
             } else {
                 person.getEmail().stream()
                         .filter(q -> q.getEmail_id() == email_id)
@@ -77,7 +79,7 @@ public class EmailTableView implements Builder<TableView<EmailDTO>> {
             // When "Listed?" column change.
             booleanProp.addListener((observable, oldValue, newValue) -> {
                 emailDTO.setIsListed(newValue);
-                membershipView.sendMessage().accept(Messages.MessageType.UPDATE,emailDTO);
+                membershipView.sendMessage().apply(Messages.MessageType.UPDATE,emailDTO);
             });
             return booleanProp;
         });

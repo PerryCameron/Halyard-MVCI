@@ -24,10 +24,11 @@ public class MembershipInteractor implements SlipUser {
     private final AwardRepository awardRepo;
     private final OfficerRepository officerRepo;
     private final MembershipIdRepository membershipIdRepo;
-
+    private final DataBaseService dataBaseService;
 
     public MembershipInteractor(MembershipModel membershipModel, Connections connections) {
         this.membershipModel = membershipModel;
+        this.dataBaseService = new DataBaseService(connections.getDataSource());
         this.dataSource = connections.getDataSource();
         peopleRepo = new PersonRepositoryImpl(connections.getDataSource());
         phoneRepo = new PhoneRepositoryImpl(connections.getDataSource());
@@ -116,10 +117,8 @@ public class MembershipInteractor implements SlipUser {
         });
     }
 
-    public void printPersonMessage(Messages.MessageType messages, Object o) {
+    public int receiveMessage(Messages.MessageType messages, Object o) {
         System.out.println(messages + " " + o + " " + membershipModel.getSelectedPerson());
+        return dataBaseService.receiveMessage(messages,o);
     }
-
-
-
 }
