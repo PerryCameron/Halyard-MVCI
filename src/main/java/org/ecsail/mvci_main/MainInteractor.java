@@ -52,4 +52,10 @@ public class MainInteractor implements ConfigFilePaths {
         logger.info("primaryStage completed");
         Platform.runLater(() -> mainModel.setPrimaryStageComplete(true));
     }
+
+    public void setChangeStatus(String status) {
+        Platform.runLater(() -> {
+            mainModel.changeStatusLabelProperty().set(status);
+        });
+    }
 }

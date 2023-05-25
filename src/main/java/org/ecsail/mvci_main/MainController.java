@@ -103,4 +103,6 @@ public class MainController extends Controller {
     public Region getView() { return mainView.build(); }
 
     public void setStatus(String status) { mainInteractor.setStatus(status); }
+
+    public void setChangeStatus(String status) { mainInteractor.setChangeStatus(status); }
 }

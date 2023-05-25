@@ -2,19 +2,18 @@ package org.ecsail.mvci_main;
 
 
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.util.Builder;
 import org.ecsail.BaseApplication;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.widgetfx.HBoxFx;
 import org.ecsail.widgetfx.MenuFx;
+import org.ecsail.widgetfx.VBoxFx;
 
 import java.util.Objects;
 
@@ -48,20 +47,32 @@ public class MainView implements Builder<Region> {
     }
 
     private Node setUpBottomPane() {
-        HBox hBox = new HBox(20);
+        HBox hBox = new HBox();
+        hBox.getChildren().addAll(statusLabel(), changeLabel());
+        return hBox;
+    }
 
+    private Node changeLabel() {
+        VBox vBox = VBoxFx.vBoxOf(new Insets(0,0,0,0), Pos.CENTER_RIGHT);
+        vBox.setStyle("-fx-background-color: #4d6955;");
+        Label changeLabel = new Label();
+        HBox.setHgrow(vBox, Priority.ALWAYS);
+        changeLabel.setPadding(new Insets(5.0f, 5.0f, 5.0f, 5.0f));
+        changeLabel.textProperty().bind(mainModel.changeStatusLabelProperty());
+        vBox.getChildren().add(changeLabel);
+        return vBox;
+    }
+
+    private Node statusLabel() {
+        VBox vBox = new VBox();
+        vBox.setStyle("-fx-background-color: #e83115;");
+        vBox.setPrefWidth(400);
         Label statusLabel = new Label();
         statusLabel.setPadding(new Insets(5.0f, 5.0f, 5.0f, 5.0f));
-        statusLabel.setMaxWidth(Double.MAX_VALUE);
         statusLabel.textProperty().bind(mainModel.statusLabelProperty());
         mainModel.statusLabelProperty().set("(Not Connected) Ready.");
-        Label changeLabel = new Label();
-        changeLabel.setPadding(new Insets(5.0f, 5.0f, 5.0f, 5.0f));
-        changeLabel.setMaxWidth(Double.MAX_VALUE);
-        changeLabel.textProperty().bind(mainModel.changeStatusLabelProperty());
-        mainModel.changeStatusLabelProperty().set("Testing");
-        hBox.getChildren().addAll(statusLabel, changeLabel);
-        return hBox;
+        vBox.getChildren().add(statusLabel);
+        return vBox;
     }
 
     private Node setUpCenterPane() {
