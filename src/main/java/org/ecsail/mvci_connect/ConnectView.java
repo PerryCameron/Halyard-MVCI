@@ -221,7 +221,7 @@ public class ConnectView implements Builder<Region> {
     }
 
     private Node createEditButtonsBox() {
-        HBox hBox = HBoxFx.hBoxOf(Pos.CENTER, new Insets(20,0,20,0),10);
+        HBox hBox = HBoxFx.hBoxOf(new Insets(20,0,20,0),Pos.CENTER, 10);
         Button buttonSave = new Button("Save");
         buttonSave.setOnAction(event -> {
             updateSelectedLogin();

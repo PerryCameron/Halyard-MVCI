@@ -90,7 +90,7 @@ public class MembershipView implements Builder<Region> {
     }
 
     private Node createHeader() {
-        HBox hBox = HBoxFx.hBoxOf(Pos.TOP_CENTER, new Insets(15,15,10,15), 100);
+        HBox hBox = HBoxFx.hBoxOf(new Insets(15,15,10,15), Pos.TOP_CENTER, 100);
         hBox.getChildren().add(newBox("Record Year: ", membershipModel.getMembership().selectedYearProperty()));
         hBox.getChildren().add(newBox("Membership ID: ", membershipModel.getMembership().membershipIdProperty()));
         hBox.getChildren().add(newBox("Membership Type: ", membershipModel.getMembership().memTypeProperty()));
@@ -114,5 +114,10 @@ public class MembershipView implements Builder<Region> {
 
     public BiFunction<Messages.MessageType, Object, Integer> sendMessage() {
         return personEdit;
+    }
+
+    public void check(int rows) {
+        if(rows == 0) membershipModel.getMainModel().setChangeStatusLabel("No Update Made");
+        if(rows == 1) membershipModel.getMainModel().setChangeStatusLabel("Update Successful");
     }
 }

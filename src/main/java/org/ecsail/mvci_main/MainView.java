@@ -4,16 +4,23 @@ package org.ecsail.mvci_main;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Builder;
 import org.ecsail.BaseApplication;
-import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.widgetfx.HBoxFx;
 import org.ecsail.widgetfx.MenuFx;
+import org.ecsail.widgetfx.RectangleFX;
 import org.ecsail.widgetfx.VBoxFx;
+
 
 import java.util.Objects;
 
@@ -53,19 +60,19 @@ public class MainView implements Builder<Region> {
     }
 
     private Node changeLabel() {
-        VBox vBox = VBoxFx.vBoxOf(new Insets(0,0,0,0), Pos.CENTER_RIGHT);
-        vBox.setStyle("-fx-background-color: #4d6955;");
-        Label changeLabel = new Label();
-        HBox.setHgrow(vBox, Priority.ALWAYS);
-        changeLabel.setPadding(new Insets(5.0f, 5.0f, 5.0f, 5.0f));
-        changeLabel.textProperty().bind(mainModel.changeStatusLabelProperty());
-        vBox.getChildren().add(changeLabel);
-        return vBox;
+        HBox hBox = HBoxFx.hBoxOf(new Insets(0,15,0,0), Pos.CENTER_RIGHT, 10.0);
+        Rectangle receive = RectangleFX.rectangleOf();
+        Rectangle transmit = RectangleFX.rectangleOf();
+//        Label changeLabel = new Label();
+        HBox.setHgrow(hBox, Priority.ALWAYS);
+//        changeLabel.setPadding(new Insets(5.0f, 5.0f, 5.0f, 5.0f));
+//        changeLabel.textProperty().bind(mainModel.changeStatusLabelProperty());
+        hBox.getChildren().addAll(transmit, receive);
+        return hBox;
     }
 
     private Node statusLabel() {
         VBox vBox = new VBox();
-        vBox.setStyle("-fx-background-color: #e83115;");
         vBox.setPrefWidth(400);
         Label statusLabel = new Label();
         statusLabel.setPadding(new Insets(5.0f, 5.0f, 5.0f, 5.0f));

@@ -302,7 +302,8 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
                     PhoneDTO phoneDTO = new PhoneDTO(person.getP_id());
                     person.getPhones().add(phoneDTO);
                     person.getPhones().sort(Comparator.comparing(PhoneDTO::getPhone_Id));
-                    membershipView.sendMessage().apply(MessageType.INSERT, phoneDTO);
+                    int rows = membershipView.sendMessage().apply(MessageType.INSERT, phoneDTO);
+                    membershipView.check(rows);
                     requestFocusOnTable(membershipModel.getPhoneTableView().get(person));
                 }
                 case "Email" -> {
@@ -382,14 +383,14 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     }
 
     private Node fieldBox(Property<?> property, String label) {
-        HBox hBox = HBoxFx.hBoxOf(Pos.CENTER_LEFT, new Insets(0, 0, 10, 0), 10.0);
+        HBox hBox = HBoxFx.hBoxOf(new Insets(0, 0, 10, 0), Pos.CENTER_LEFT, 10.0);
         TextField textField = TextFieldFx.textFieldOf(150, property);
         textField.focusedProperty()
                 .addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
                     updatePersonDTO(label, textField.getText());
             if (oldValue) {
                 int rows = membershipView.sendMessage().apply(MessageType.UPDATE,person);
-                System.out.println("returned " + rows);
+                membershipView.check(rows);
             }
         });
         Text text = new Text(label);

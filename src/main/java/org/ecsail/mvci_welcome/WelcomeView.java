@@ -52,7 +52,7 @@ public class WelcomeView implements Builder<Region>, ChartConstants {
     }
 
     private Node addChartControls() {
-        HBox hBox = HBoxFx.hBoxOf(Pos.CENTER, new Insets(5,0,5,0),15.0);
+        HBox hBox = HBoxFx.hBoxOf(new Insets(5,0,5,0),Pos.CENTER,15.0);
         Node hBoxStart = HBoxFx.hBoxOf(5, Pos.CENTER_LEFT, new Label("Start"),createStartYearComboBox());
         Node hBoxStop = HBoxFx.hBoxOf(5, Pos.CENTER_LEFT, new Label("Year Span"), createYearSpanComboBox());
         Node hBoxTop = HBoxFx.hBoxOf(5, Pos.CENTER_LEFT, new Label("Bottom"),createChartSelectionComboBox());

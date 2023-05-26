@@ -141,7 +141,7 @@ public class RosterView implements Builder<Region> {
     }
 
     private Node setUpSearchBox() {
-        HBox hBox = HBoxFx.hBoxOf(Pos.CENTER_LEFT, new Insets(5,0,15,0),5.0);
+        HBox hBox = HBoxFx.hBoxOf(new Insets(5,0,15,0),Pos.CENTER_LEFT, 5.0);
         hBox.setAlignment(Pos.CENTER_LEFT);
         Text text = new Text("Search");
         text.setId("invoice-text-number");
@@ -160,7 +160,7 @@ public class RosterView implements Builder<Region> {
     }
 
     private Node setUpRecordCountBox() {
-        HBox hBox = HBoxFx.hBoxOf(Pos.CENTER_LEFT, new Insets(5,0,15,0),5.0);
+        HBox hBox = HBoxFx.hBoxOf(new Insets(5,0,15,0), Pos.CENTER_LEFT, 5.0);
         Text label = new Text("Records");
         label.setId("invoice-text-label");
         Text numberOfRecords = new Text(String.valueOf(rosterModel.getRosters().size()));
@@ -171,7 +171,7 @@ public class RosterView implements Builder<Region> {
     }
 
     private Node createYearBox() {
-        VBox vBox = VBoxFx.vBoxOf(Pos.CENTER,10.0, new Insets(0,10,0,0));
+        VBox vBox = VBoxFx.vBoxOf(new Insets(0,10,0,0), Pos.CENTER,10.0);
         ComboBox<Integer> comboBox = new ComboBox<>();
         for(int i = rosterModel.getSelectedYear() + 1; i > 1969; i--) { comboBox.getItems().add(i); }
         comboBox.getSelectionModel().select(1);

@@ -53,6 +53,14 @@ public class VBoxFx {
         return vBox;
     }
 
+    public static VBox vBoxOf(Insets insets, Pos pos, Double spacing) {
+        VBox vBox = new VBox();
+        vBox.setAlignment(pos);
+        vBox.setSpacing(spacing);
+        vBox.setPadding(insets);
+        return vBox;
+    }
+
     public static VBox vBoxOf(Insets insets, DoubleProperty doubleProperty) {
         VBox vBox = new VBox();
         vBox.setPadding(insets);
@@ -90,15 +98,5 @@ public class VBoxFx {
         vBox.setPadding(insets);
         return vBox;
     }
-
-    public static VBox vBoxOf(Pos pos, Double spacing, Insets insets) {
-        VBox vBox = new VBox();
-        vBox.setAlignment(pos);
-        vBox.setSpacing(spacing);
-        vBox.setPadding(insets);
-        return vBox;
-    }
-
-
 
 }

@@ -56,7 +56,7 @@ public class SlipTabView implements Builder<Tab>, SlipUser, Messages {
     }
 
     private Node addWaitList() {
-        HBox hBox = HBoxFx.hBoxOf(Pos.CENTER_LEFT, new Insets(10,0,0,0), 10);
+        HBox hBox = HBoxFx.hBoxOf(new Insets(10,0,0,0),Pos.CENTER_LEFT, 10);
         CheckBox checkBox = new CheckBox("Slip Wait list");
         membershipModel.getSlipControls().put("waitList", checkBox);
         checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
@@ -68,7 +68,7 @@ public class SlipTabView implements Builder<Tab>, SlipUser, Messages {
     }
 
     private Node setSubmissionButton() {
-        HBox hBox = HBoxFx.hBoxOf(Pos.CENTER_LEFT, new Insets(10,0,0,0), 10);
+        HBox hBox = HBoxFx.hBoxOf( new Insets(10,0,0,0),Pos.CENTER_LEFT, 10);
         TextField textField = TextFieldFx.textFieldOf(40, "ID");
         Button button = ButtonFx.buttonOf("Submit", 70);
         membershipModel.getSlipControls().put("button", button);
@@ -108,7 +108,7 @@ public class SlipTabView implements Builder<Tab>, SlipUser, Messages {
     }
 
     private Node setSubleaseInfo() {
-        HBox hBox = HBoxFx.hBoxOf(Pos.CENTER_LEFT, new Insets(0,0,0,0),10.0);
+        HBox hBox = HBoxFx.hBoxOf(new Insets(0,0,0,0),Pos.CENTER_LEFT,10.0);
         Text label = TextFx.textOf("","text-white",membershipModel.subleaseProperty());
         Text membership = TextFx.textOf("","text-blue", membershipModel.membershipIdProperty());
         hBox.getChildren().addAll(label, membership);
