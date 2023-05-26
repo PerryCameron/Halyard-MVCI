@@ -81,7 +81,8 @@ public class MainView implements Builder<Region> {
     private Timeline createTimeLine(Color color, Rectangle rect) {
         Timeline timeline = new Timeline(
                 new KeyFrame(Duration.ZERO, new KeyValue(rect.fillProperty(), Color.GRAY)),
-                new KeyFrame(Duration.millis(500), new KeyValue(rect.fillProperty(), color))
+                new KeyFrame(Duration.millis(50), new KeyValue(rect.fillProperty(), color)),
+                new KeyFrame(Duration.seconds(5), new KeyValue(rect.fillProperty(), Color.GRAY))
         );
         return timeline;
     }

@@ -112,11 +112,11 @@ public class MembershipView implements Builder<Region> {
         return membershipModel;
     }
 
-    public BiFunction<Messages.MessageType, Object, Integer> sendMessage() {
+    protected BiFunction<Messages.MessageType, Object, Integer> sendMessage() {
         return personEdit;
     }
 
-    public void checkTheCorrectNumberOfReturnedRows(int rows) { // WTF is going on here
+    protected void checkTheCorrectNumberOfReturnedRows(int rows) { // updates status lights
         if(rows == 0) membershipModel.getMainModel().getLightAnimationMap().get("receiveError").playFromStart();
         if(rows == 1) membershipModel.getMainModel().getLightAnimationMap().get("receiveSuccess").playFromStart();
     }
