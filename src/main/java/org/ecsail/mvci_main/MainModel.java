@@ -17,31 +17,13 @@ public class MainModel {
     private final StringProperty statusLabel = new SimpleStringProperty(""); // keeper here
     private final ObjectProperty<TabPane> mainTabPane = new SimpleObjectProperty();
     private final BooleanProperty primaryStageComplete = new SimpleBooleanProperty(false);
-//    private ObservableMap<String, Rectangle> txRxLights = FXCollections.observableHashMap();
-
     private ObservableMap<String, Timeline> LightAnimationMap = FXCollections.observableHashMap();
     private SimpleObjectProperty<Status.light> lightStatusProperty = new SimpleObjectProperty<>();
 
 
-//    public ObservableMap<String, Rectangle> getTxRxLights() {
-//        return txRxLights;
-//    }
-//
-//    public void setTxRxLights(ObservableMap<String, Rectangle> txRxLights) {
-//        this.txRxLights = txRxLights;
-//    }
-
 
     public ObservableMap<String, Timeline> getLightAnimationMap() {
         return LightAnimationMap;
-    }
-
-    public void setLightAnimationMap(ObservableMap<String, Timeline> lightAnimationMap) {
-        LightAnimationMap = lightAnimationMap;
-    }
-
-    public Status.light getLightStatusProperty() {
-        return lightStatusProperty.get();
     }
 
     public SimpleObjectProperty<Status.light> lightStatusPropertyProperty() {

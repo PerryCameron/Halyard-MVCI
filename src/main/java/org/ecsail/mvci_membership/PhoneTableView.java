@@ -51,7 +51,8 @@ public class PhoneTableView implements Builder<TableView> {
                                 t.getTablePosition().getRow()).setPhoneNumber(t.getNewValue());
                         String processedNumber = processNumber(t.getNewValue());
                         PhoneDTO phoneDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
-                        membershipView.sendMessage().apply(Messages.MessageType.UPDATE, phoneDTO);
+                        int returnedRows = membershipView.sendMessage().apply(Messages.MessageType.UPDATE, phoneDTO);
+//                        membershipView.checkTheCorrectNumberOfReturnedRows(returnedRows);
                         person.getPhones().stream()
                                 .filter(p -> p.getPhone_Id() == phoneDTO.getPhone_Id())
                                 .forEach(s -> s.setPhoneNumber(processedNumber));
@@ -114,8 +115,8 @@ public class PhoneTableView implements Builder<TableView> {
             PhoneType newPhoneType = event.getNewValue();
             int row = pos.getRow();
             PhoneDTO phoneDTO = event.getTableView().getItems().get(row);
-            // TODO add Consumer<Object> here
-            membershipView.sendMessage().apply(Messages.MessageType.UPDATE, phoneDTO);
+            int returnedRows = membershipView.sendMessage().apply(Messages.MessageType.UPDATE, phoneDTO);
+//            membershipView.checkTheCorrectNumberOfReturnedRows(returnedRows);
             phoneDTO.setPhoneType(newPhoneType.getCode());
         });
         Col2.setMaxWidth( 1f * Integer.MAX_VALUE * 30 );  // Type
@@ -132,9 +133,8 @@ public class PhoneTableView implements Builder<TableView> {
             // When "isListed?" column change.
             booleanProp.addListener((observable, oldValue, newValue) -> {
                 phoneDTO.setIsListed(newValue);
-                membershipView.sendMessage().apply(Messages.MessageType.UPDATE, phoneDTO);
-                // TODO Consumer<Object> here
-//                SqlUpdate.updateListed("phone_listed",phone.getPhone_ID(), newValue);
+                int returnedRows = membershipView.sendMessage().apply(Messages.MessageType.UPDATE, phoneDTO);
+//                membershipView.checkTheCorrectNumberOfReturnedRows(returnedRows);
             });
             return booleanProp;
         });

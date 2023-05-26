@@ -28,7 +28,7 @@ public class MembershipInteractor implements SlipUser {
 
     public MembershipInteractor(MembershipModel membershipModel, Connections connections) {
         this.membershipModel = membershipModel;
-        this.dataBaseService = new DataBaseService(connections.getDataSource());
+        this.dataBaseService = new DataBaseService(connections.getDataSource(), membershipModel);
         this.dataSource = connections.getDataSource();
         peopleRepo = new PersonRepositoryImpl(connections.getDataSource());
         phoneRepo = new PhoneRepositoryImpl(connections.getDataSource());

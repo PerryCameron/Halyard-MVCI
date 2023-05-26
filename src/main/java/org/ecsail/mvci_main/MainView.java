@@ -65,12 +65,12 @@ public class MainView implements Builder<Region> {
 
     private Node statusLights() {
         HBox hBox = HBoxFx.hBoxOf(new Insets(0,15,0,0), Pos.CENTER_RIGHT, 3.0);
-        Rectangle receive = RectangleFX.rectangleOf();
-        Rectangle transmit = RectangleFX.rectangleOf();
+        Rectangle receive = RectangleFX.rectangleOf(14,14);
+        Rectangle transmit = RectangleFX.rectangleOf(14,14);
         mainModel.getLightAnimationMap().put("receiveError", createTimeLine(Color.RED, receive));
-        mainModel.getLightAnimationMap().put("receiveSuccess", createTimeLine(Color.GREEN, receive));
+        mainModel.getLightAnimationMap().put("receiveSuccess", createTimeLine(Color.LIGHTGREEN, receive));
         mainModel.getLightAnimationMap().put("transmitError", createTimeLine(Color.RED, transmit));
-        mainModel.getLightAnimationMap().put("transmitSuccess", createTimeLine(Color.GREEN, transmit));
+        mainModel.getLightAnimationMap().put("transmitSuccess", createTimeLine(Color.LIGHTGREEN, transmit));
         mainModel.lightStatusPropertyProperty()
                 .addListener((observable, oldValue, newValue) -> updateStatusLights(newValue));
         HBox.setHgrow(hBox, Priority.ALWAYS);

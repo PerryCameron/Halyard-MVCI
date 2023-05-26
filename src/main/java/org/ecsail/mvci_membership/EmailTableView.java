@@ -47,7 +47,8 @@ public class EmailTableView implements Builder<TableView<EmailDTO>> {
             if(StringTools.isValidEmail(t.getNewValue())) {
                 EmailDTO emailDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                 emailDTO.setEmail(t.getNewValue());
-                membershipView.sendMessage().apply(Messages.MessageType.UPDATE,emailDTO);
+                int returnedRows = membershipView.sendMessage().apply(Messages.MessageType.UPDATE,emailDTO);
+//                membershipView.checkTheCorrectNumberOfReturnedRows(returnedRows);
             } else {
                 person.getEmail().stream()
                         .filter(q -> q.getEmail_id() == email_id)
@@ -63,7 +64,8 @@ public class EmailTableView implements Builder<TableView<EmailDTO>> {
         col2.setStyle( "-fx-alignment: CENTER;");
         col2.setCellValueFactory(new PropertyValueFactory<>("isPrimaryUse"));
         ObjectProperty<EmailDTO> previousEmailDTO = new SimpleObjectProperty<>();
-        previousEmailDTO.set(person.getEmail().stream().filter(EmailDTO::isPrimaryUse).findFirst().orElse(null));
+        previousEmailDTO.set(person.getEmail().stream().filter(EmailDTO::getIsPrimaryUse).findFirst().orElse(null));
+        // TODO make this fucking thing work
         col2.setCellFactory(c -> new RadioButtonCell(previousEmailDTO));
         col2.setMaxWidth(1f * Integer.MAX_VALUE * 25);  // Type
         return col2;
@@ -73,13 +75,14 @@ public class EmailTableView implements Builder<TableView<EmailDTO>> {
         TableColumn<EmailDTO, Boolean> col3 = new TableColumn<>("Listed");
         col3.setCellValueFactory(param -> {
             EmailDTO emailDTO = param.getValue();
-            SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(emailDTO.isListed());
+            SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(emailDTO.getIsListed());
             // Note: singleCol.setOnEditCommit(): Not work for
             // CheckBoxTableCell.
             // When "Listed?" column change.
             booleanProp.addListener((observable, oldValue, newValue) -> {
-                emailDTO.setIsListed(newValue);
-                membershipView.sendMessage().apply(Messages.MessageType.UPDATE,emailDTO);
+                emailDTO.setListed(newValue);
+                int returnedRows = membershipView.sendMessage().apply(Messages.MessageType.UPDATE,emailDTO);
+//                membershipView.checkTheCorrectNumberOfReturnedRows(returnedRows);
             });
             return booleanProp;
         });

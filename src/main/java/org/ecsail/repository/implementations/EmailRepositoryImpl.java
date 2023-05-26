@@ -6,6 +6,9 @@ import org.ecsail.dto.PersonDTO;
 import org.ecsail.repository.interfaces.EmailRepository;
 import org.ecsail.repository.rowmappers.EmailRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -13,9 +16,11 @@ import java.util.List;
 public class EmailRepositoryImpl implements EmailRepository {
 
     private final JdbcTemplate template;
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public EmailRepositoryImpl(DataSource dataSource) {
         this.template = new JdbcTemplate(dataSource);
+        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
 
     @Override
@@ -34,5 +39,17 @@ public class EmailRepositoryImpl implements EmailRepository {
     @Override
     public EmailDTO getEmail(PersonDTO person) {
         return null;
+    }
+
+    @Override
+    public int updateEmail(EmailDTO emailDTO) {
+        String query = "UPDATE email SET " +
+                "P_ID = :pId, " +
+                "PRIMARY_USE = :isPrimaryUse, " +
+                "EMAIL = :email, " +
+                "EMAIL_LISTED = :isListed " +
+                "WHERE EMAIL_ID = :email_id";
+        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(emailDTO);
+        return namedParameterJdbcTemplate.update(query, namedParameters);
     }
 }
