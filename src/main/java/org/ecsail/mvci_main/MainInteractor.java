@@ -1,15 +1,18 @@
 package org.ecsail.mvci_main;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.layout.Region;
+import javafx.scene.paint.Color;
+import javafx.util.Duration;
 import org.ecsail.connection.Connections;
-import org.ecsail.dto.BoardPositionDTO;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.fileio.FileIO;
 import org.ecsail.interfaces.ConfigFilePaths;
-import org.ecsail.mvci_connect.ConnectController;
+import org.ecsail.interfaces.Status;
 import org.ecsail.repository.implementations.BoardPositionsRepositoryImpl;
 import org.ecsail.repository.interfaces.BoardPositionsRepository;
 import org.slf4j.Logger;
@@ -53,9 +56,21 @@ public class MainInteractor implements ConfigFilePaths {
         Platform.runLater(() -> mainModel.setPrimaryStageComplete(true));
     }
 
-    public void setChangeStatus(String status) {
-        Platform.runLater(() -> {
-            mainModel.changeStatusLabelProperty().set(status);
-        });
+    public void setChangeStatus(Status.light status) {
+        // changing this property causes a listener to react which changes the lights
+        mainModel.setLightStatusProperty(status);
     }
+
+//    public void setChangeStatus(Status.light status) {
+//        Platform.runLater(() -> {
+//            switch (status) {
+//                case RX_RED -> setBlink(Color.RED, "receive");
+//                case TX_RED -> setBlink(Color.RED, "transmit");
+//                case RX_GREEN -> setBlink(Color.GREEN, "receive");
+//                case TX_GREEN -> setBlink(Color.GREEN, "transmit");
+//            }
+//        });
+//    }
+
+
 }

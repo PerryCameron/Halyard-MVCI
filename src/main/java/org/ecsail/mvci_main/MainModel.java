@@ -1,31 +1,55 @@
 package org.ecsail.mvci_main;
 
 
+import javafx.animation.Timeline;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 import javafx.scene.control.TabPane;
 import org.ecsail.dto.BoardPositionDTO;
+import org.ecsail.interfaces.Status;
+
 
 public class MainModel {
 
     private ObservableList<BoardPositionDTO> boardPositionDTOS = FXCollections.observableArrayList();
     private final StringProperty statusLabel = new SimpleStringProperty(""); // keeper here
-    private final StringProperty changeStatusLabel = new SimpleStringProperty(""); // keeper here
     private final ObjectProperty<TabPane> mainTabPane = new SimpleObjectProperty();
     private final BooleanProperty primaryStageComplete = new SimpleBooleanProperty(false);
+//    private ObservableMap<String, Rectangle> txRxLights = FXCollections.observableHashMap();
+
+    private ObservableMap<String, Timeline> LightAnimationMap = FXCollections.observableHashMap();
+    private SimpleObjectProperty<Status.light> lightStatusProperty = new SimpleObjectProperty<>();
 
 
-    public String getChangeStatusLabel() {
-        return changeStatusLabel.get();
+//    public ObservableMap<String, Rectangle> getTxRxLights() {
+//        return txRxLights;
+//    }
+//
+//    public void setTxRxLights(ObservableMap<String, Rectangle> txRxLights) {
+//        this.txRxLights = txRxLights;
+//    }
+
+
+    public ObservableMap<String, Timeline> getLightAnimationMap() {
+        return LightAnimationMap;
     }
 
-    public StringProperty changeStatusLabelProperty() {
-        return changeStatusLabel;
+    public void setLightAnimationMap(ObservableMap<String, Timeline> lightAnimationMap) {
+        LightAnimationMap = lightAnimationMap;
     }
 
-    public void setChangeStatusLabel(String changeStatusLabel) {
-        this.changeStatusLabel.set(changeStatusLabel);
+    public Status.light getLightStatusProperty() {
+        return lightStatusProperty.get();
+    }
+
+    public SimpleObjectProperty<Status.light> lightStatusPropertyProperty() {
+        return lightStatusProperty;
+    }
+
+    public void setLightStatusProperty(Status.light lightStatusProperty) {
+        this.lightStatusProperty.set(lightStatusProperty);
     }
 
     public BooleanProperty primaryStageCompleteProperty() {

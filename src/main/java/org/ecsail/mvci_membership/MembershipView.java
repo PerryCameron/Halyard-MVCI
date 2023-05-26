@@ -116,8 +116,8 @@ public class MembershipView implements Builder<Region> {
         return personEdit;
     }
 
-    public void check(int rows) {
-        if(rows == 0) membershipModel.getMainModel().setChangeStatusLabel("No Update Made");
-        if(rows == 1) membershipModel.getMainModel().setChangeStatusLabel("Update Successful");
+    public void checkTheCorrectNumberOfReturnedRows(int rows) { // WTF is going on here
+        if(rows == 0) membershipModel.getMainModel().getLightAnimationMap().get("receiveError").playFromStart();
+        if(rows == 1) membershipModel.getMainModel().getLightAnimationMap().get("receiveSuccess").playFromStart();
     }
 }

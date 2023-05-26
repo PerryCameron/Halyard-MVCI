@@ -1,6 +1,9 @@
 package org.ecsail.mvci_main;
 
 
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -15,11 +18,12 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Builder;
+import javafx.util.Duration;
 import org.ecsail.BaseApplication;
+import org.ecsail.interfaces.Status;
 import org.ecsail.widgetfx.HBoxFx;
 import org.ecsail.widgetfx.MenuFx;
 import org.ecsail.widgetfx.RectangleFX;
-import org.ecsail.widgetfx.VBoxFx;
 
 
 import java.util.Objects;
@@ -55,20 +59,31 @@ public class MainView implements Builder<Region> {
 
     private Node setUpBottomPane() {
         HBox hBox = new HBox();
-        hBox.getChildren().addAll(statusLabel(), changeLabel());
+        hBox.getChildren().addAll(statusLabel(), statusLights());
         return hBox;
     }
 
-    private Node changeLabel() {
-        HBox hBox = HBoxFx.hBoxOf(new Insets(0,15,0,0), Pos.CENTER_RIGHT, 10.0);
+    private Node statusLights() {
+        HBox hBox = HBoxFx.hBoxOf(new Insets(0,15,0,0), Pos.CENTER_RIGHT, 3.0);
         Rectangle receive = RectangleFX.rectangleOf();
         Rectangle transmit = RectangleFX.rectangleOf();
-//        Label changeLabel = new Label();
+        mainModel.getLightAnimationMap().put("receiveError", createTimeLine(Color.RED, receive));
+        mainModel.getLightAnimationMap().put("receiveSuccess", createTimeLine(Color.GREEN, receive));
+        mainModel.getLightAnimationMap().put("transmitError", createTimeLine(Color.RED, transmit));
+        mainModel.getLightAnimationMap().put("transmitSuccess", createTimeLine(Color.GREEN, transmit));
+        mainModel.lightStatusPropertyProperty()
+                .addListener((observable, oldValue, newValue) -> updateStatusLights(newValue));
         HBox.setHgrow(hBox, Priority.ALWAYS);
-//        changeLabel.setPadding(new Insets(5.0f, 5.0f, 5.0f, 5.0f));
-//        changeLabel.textProperty().bind(mainModel.changeStatusLabelProperty());
         hBox.getChildren().addAll(transmit, receive);
         return hBox;
+    }
+
+    private Timeline createTimeLine(Color color, Rectangle rect) {
+        Timeline timeline = new Timeline(
+                new KeyFrame(Duration.ZERO, new KeyValue(rect.fillProperty(), Color.GRAY)),
+                new KeyFrame(Duration.millis(500), new KeyValue(rect.fillProperty(), color))
+        );
+        return timeline;
     }
 
     private Node statusLabel() {
@@ -131,6 +146,17 @@ public class MainView implements Builder<Region> {
             if(newValue) createConnectController.run();
         });
     }
+
+    private void updateStatusLights(Status.light status) {
+        switch (status) {
+            case TX_GREEN -> mainModel.getLightAnimationMap().get("transmitSuccess").playFromStart();
+            case RX_GREEN -> mainModel.getLightAnimationMap().get("receiveSuccess").playFromStart();
+            case TX_RED -> mainModel.getLightAnimationMap().get("transmitError").playFromStart();
+            case RX_RED -> mainModel.getLightAnimationMap().get("receiveError").playFromStart();
+        }
+    }
+
+
 
 
 //    private static void startFileLogger() {

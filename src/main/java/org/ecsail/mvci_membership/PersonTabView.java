@@ -303,7 +303,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
                     person.getPhones().add(phoneDTO);
                     person.getPhones().sort(Comparator.comparing(PhoneDTO::getPhone_Id));
                     int rows = membershipView.sendMessage().apply(MessageType.INSERT, phoneDTO);
-                    membershipView.check(rows);
+                    membershipView.checkTheCorrectNumberOfReturnedRows(rows);
                     requestFocusOnTable(membershipModel.getPhoneTableView().get(person));
                 }
                 case "Email" -> {
@@ -390,7 +390,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
                     updatePersonDTO(label, textField.getText());
             if (oldValue) {
                 int rows = membershipView.sendMessage().apply(MessageType.UPDATE,person);
-                membershipView.check(rows);
+                membershipView.checkTheCorrectNumberOfReturnedRows(rows);
             }
         });
         Text text = new Text(label);

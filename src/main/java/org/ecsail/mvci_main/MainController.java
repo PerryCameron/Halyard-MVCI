@@ -10,13 +10,14 @@ import org.ecsail.BaseApplication;
 import org.ecsail.connection.Connections;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.interfaces.Controller;
+import org.ecsail.interfaces.Status;
 import org.ecsail.mvci_connect.ConnectController;
 import org.ecsail.mvci_loading.LoadingController;
 import org.ecsail.mvci_membership.MembershipController;
 import org.ecsail.mvci_roster.RosterController;
 import org.ecsail.mvci_welcome.WelcomeController;
 
-public class MainController extends Controller {
+public class MainController extends Controller implements Status {
 
     private final MainInteractor mainInteractor;
     private final MainView mainView;
@@ -104,5 +105,5 @@ public class MainController extends Controller {
 
     public void setStatus(String status) { mainInteractor.setStatus(status); }
 
-    public void setChangeStatus(String status) { mainInteractor.setChangeStatus(status); }
+    public void setChangeStatus(Status.light status) { mainInteractor.setChangeStatus(status); }
 }
