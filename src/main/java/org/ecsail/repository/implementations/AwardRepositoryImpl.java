@@ -55,4 +55,10 @@ public class AwardRepositoryImpl implements AwardRepository {
         awardDTO.setAwardId(keyHolder.getKey().intValue());
         return awardDTO;
     }
+
+    @Override
+    public int delete(AwardDTO awardDTO) {
+        String deleteSql = "DELETE FROM awards WHERE Award_ID = ?";
+        return template.update(deleteSql, awardDTO.getAwardId());
+    }
 }

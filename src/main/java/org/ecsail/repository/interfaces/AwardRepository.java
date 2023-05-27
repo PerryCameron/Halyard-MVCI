@@ -10,4 +10,6 @@ public interface AwardRepository {
     List<AwardDTO> getAwards();
     int updateAward(AwardDTO o);
     AwardDTO insert(AwardDTO o);
+
+    int delete(AwardDTO awardDTO);
 }

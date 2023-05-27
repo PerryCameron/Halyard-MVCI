@@ -307,17 +307,16 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
                 }
                 case "Email" -> {
                     EmailDTO emailDTO = new EmailDTO(person.getP_id());
+                    membershipView.getAddRow().apply(emailDTO);
                     person.getEmail().add(emailDTO);
-                    person.getEmail().sort(Comparator.comparing(EmailDTO::getEmail_id));
-                    membershipView.sendMessage().accept(MessageType.INSERT, emailDTO);
+                    person.getEmail().sort(Comparator.comparing(EmailDTO::getEmail_id).reversed());
                     requestFocusOnTable(membershipModel.getEmailTableView().get(person));
                 }
                 case "Awards" -> {
                     AwardDTO awardDTO = new AwardDTO(person.getP_id());
                     membershipView.getAddRow().apply(awardDTO);
                     person.getAwards().add(awardDTO);
-                    person.getAwards().sort(Comparator.comparing(AwardDTO::getAwardId));
-                    membershipView.sendMessage().accept(MessageType.INSERT, awardDTO);
+                    person.getAwards().sort(Comparator.comparing(AwardDTO::getAwardId).reversed());
                     requestFocusOnTable(membershipModel.getAwardTableView().get(person));
                 }
                 case "Officer" -> {

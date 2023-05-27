@@ -9,6 +9,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -51,5 +53,22 @@ public class EmailRepositoryImpl implements EmailRepository {
                 "WHERE EMAIL_ID = :email_id";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(emailDTO);
         return namedParameterJdbcTemplate.update(query, namedParameters);
+    }
+
+    @Override
+    public EmailDTO insert(EmailDTO emailDTO) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        String query = "INSERT INTO email (P_ID, PRIMARY_USE, EMAIL, EMAIL_LISTED) " +
+                "VALUES (:pId, :isPrimaryUse, :email, :isListed)";
+        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(emailDTO);
+        namedParameterJdbcTemplate.update(query, namedParameters, keyHolder);
+        emailDTO.setEmail_id(keyHolder.getKey().intValue());
+        return emailDTO;
+    }
+
+    @Override
+    public int delete(EmailDTO emailDTO) {
+        String deleteSql = "DELETE FROM email WHERE EMAIL_ID = ?";
+        return template.update(deleteSql, emailDTO.getEmail_id());
     }
 }

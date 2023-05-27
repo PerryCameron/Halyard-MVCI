@@ -9,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 
 import javax.sql.DataSource;
-import java.util.function.Predicate;
 
 public class DataBaseService {
 
@@ -21,7 +20,6 @@ public class DataBaseService {
     private OfficerRepository officerRepo;
     private MembershipIdRepository membershipIdRepo;
     private BoatRepository boatRepo;
-
     private static final Logger logger = LoggerFactory.getLogger(DataBaseService.class);
 
 
@@ -36,15 +34,22 @@ public class DataBaseService {
         boatRepo = new BoatRepositoryImpl(dataSource);
     }
 
-    public AwardDTO insertRow(Object o) {
-        if (o instanceof AwardDTO) return awardRepo.insert((AwardDTO) o);
+    public Object insertRow(Object o) {
+        boolean noError = true;
+        try {
+            if (o instanceof AwardDTO) return awardRepo.insert((AwardDTO) o);
+            if (o instanceof EmailDTO) return emailRepo.insert((EmailDTO) o);
+        } catch (DataAccessException e) {
+            logger.error(e.getMessage());
+            noError = false;
+        }
+        checkTheCorrectNumberOfReturnedRows(noError);
         return null;
     }
 
     public void receiveMessage(Messages.MessageType messages, Object o) {
         switch (messages) {
-            case DELETE -> {
-            }
+            case DELETE -> deleteObject(o);
             case UPDATE -> updateObject(o);
             case NONE -> {
             }
@@ -65,6 +70,19 @@ public class DataBaseService {
         }
     }
 
+    private void deleteObject(Object o) {
+        int rowsUpdated = 0;
+        try {
+            if (o instanceof AwardDTO) rowsUpdated = awardRepo.delete((AwardDTO) o);
+            if (o instanceof EmailDTO) rowsUpdated = emailRepo.delete((EmailDTO) o);
+
+        } catch (DataAccessException e) {
+            logger.error(e.getMessage());
+            // TODO do more stuff with this
+        }
+        checkTheCorrectNumberOfReturnedRows(rowsUpdated == 1);
+    }
+
     private int updateObject(Object o) {
         int rowsUpdated = 0;
         try {
@@ -79,13 +97,12 @@ public class DataBaseService {
             logger.error(e.getMessage());
             // TODO do more stuff with this
         }
-        Predicate<Integer> isOneRow = number -> number == 1;
-        checkTheCorrectNumberOfReturnedRows(rowsUpdated, isOneRow);
+        checkTheCorrectNumberOfReturnedRows(rowsUpdated == 1);
         return rowsUpdated;
     }
 
-    protected void checkTheCorrectNumberOfReturnedRows(int rowsUpdated, Predicate<Integer> condition) { // updates status lights
-        if(condition.test(rowsUpdated)) membershipModel.getMainModel().getLightAnimationMap().get("receiveSuccess").playFromStart();
+    protected void checkTheCorrectNumberOfReturnedRows(boolean returnOk) { // updates status lights
+        if(returnOk) membershipModel.getMainModel().getLightAnimationMap().get("receiveSuccess").playFromStart();
         else membershipModel.getMainModel().getLightAnimationMap().get("receiveError").playFromStart();
     }
 
