@@ -42,10 +42,10 @@ public class OfficerTableView implements Builder<TableView<OfficerDTO>> {
         col1.setSortType(TableColumn.SortType.DESCENDING);
         col1.setOnEditCommit(
                 t -> {
-                    OfficerDTO officerDTO = t.getTableView().getItems().get(
-                            t.getTablePosition().getRow());
+                    OfficerDTO officerDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                     officerDTO.setFiscal_year(t.getNewValue());
-                    membershipView.sendMessage().apply(Messages.MessageType.UPDATE, officerDTO);
+                    int returnedRows = membershipView.sendMessage().apply(Messages.MessageType.UPDATE, officerDTO);
+                    if(returnedRows != 1) officerDTO.setFiscal_year(t.getOldValue());
                 }
         );
         col1.setMaxWidth(1f * Integer.MAX_VALUE * 20);   // Phone
@@ -66,11 +66,10 @@ public class OfficerTableView implements Builder<TableView<OfficerDTO>> {
 
         col2.setOnEditCommit((TableColumn.CellEditEvent<OfficerDTO, String> event) -> {
             TablePosition<OfficerDTO, String> pos = event.getTablePosition();
-            String newOfficer = event.getNewValue();
-            int row = pos.getRow();
-            OfficerDTO officerDTO = event.getTableView().getItems().get(row);
-            officerDTO.setOfficer_type(newOfficer);
-            membershipView.sendMessage().apply(Messages.MessageType.UPDATE, officerDTO);
+            OfficerDTO officerDTO = event.getTableView().getItems().get(pos.getRow());
+            officerDTO.setOfficer_type(event.getNewValue());
+            int returnedRows = membershipView.sendMessage().apply(Messages.MessageType.UPDATE, officerDTO);
+            if(returnedRows != 1) officerDTO.setOfficer_type(event.getOldValue());
         });
         col2.setMaxWidth(1f * Integer.MAX_VALUE * 50);  // Type
         return col2;
@@ -82,10 +81,11 @@ public class OfficerTableView implements Builder<TableView<OfficerDTO>> {
                 t -> {
                     OfficerDTO officerDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                     officerDTO.setBoard_year(t.getNewValue());
-                    membershipView.sendMessage().apply(Messages.MessageType.UPDATE, officerDTO);
+                    int returnedRows = membershipView.sendMessage().apply(Messages.MessageType.UPDATE, officerDTO);
+                    if (returnedRows != 1) officerDTO.setBoard_year(t.getOldValue());
                 }
         );
-        col3.setMaxWidth( 1f * Integer.MAX_VALUE * 20 );  // Listed
+        col3.setMaxWidth(1f * Integer.MAX_VALUE * 20);  // Listed
         return col3;
     }
 }

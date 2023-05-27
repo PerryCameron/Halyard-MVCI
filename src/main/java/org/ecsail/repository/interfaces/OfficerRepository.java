@@ -12,4 +12,5 @@ public interface OfficerRepository {
     List<OfficerDTO> getOfficer(String field, int attribute);
     List<OfficerDTO> getOfficer(PersonDTO person);
     List<OfficerWithNameDTO> getOfficersWithNames(String type);
+    int updateOfficer(OfficerDTO o);
 }
