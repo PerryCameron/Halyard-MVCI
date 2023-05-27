@@ -11,6 +11,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.util.Builder;
+import org.apache.poi.ss.formula.functions.T;
 import org.ecsail.interfaces.Messages;
 import org.ecsail.widgetfx.HBoxFx;
 import org.ecsail.widgetfx.TabPaneFx;
@@ -19,14 +20,17 @@ import org.ecsail.widgetfx.VBoxFx;
 
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
+import java.util.function.UnaryOperator;
 
 public class MembershipView implements Builder<Region> {
 
     private final MembershipModel membershipModel;
     private final BiConsumer<Messages.MessageType, Object> personEdit;
-    protected MembershipView(MembershipModel mm, BiConsumer <Messages.MessageType, Object> personEdit) {
+    private final UnaryOperator<Object> addRow;
+    protected MembershipView(MembershipModel mm, BiConsumer <Messages.MessageType, Object> pe, UnaryOperator<Object> ar) {
         membershipModel = mm;
-        this.personEdit = personEdit;
+        this.personEdit = pe;
+        this.addRow = ar;
     }
 
     @Override
@@ -116,6 +120,10 @@ public class MembershipView implements Builder<Region> {
 
     protected BiConsumer<Messages.MessageType, Object> sendMessage() {
         return personEdit;
+    }
+
+    public UnaryOperator<Object> getAddRow() {
+        return addRow;
     }
 
     protected void checkTheCorrectNumberOfReturnedRows(int rows) { // updates status lights

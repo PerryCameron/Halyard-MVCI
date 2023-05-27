@@ -8,6 +8,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -42,5 +44,15 @@ public class AwardRepositoryImpl implements AwardRepository {
                 "WHERE AWARD_ID = :awardId ";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(awardDTO);
         return namedParameterJdbcTemplate.update(query, namedParameters);
+    }
+
+    @Override
+    public AwardDTO insert(AwardDTO awardDTO) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        String query = "INSERT INTO awards (P_ID, AWARD_YEAR, AWARD_TYPE) VALUES (:pId, :awardYear, :awardType)";
+        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(awardDTO);
+        namedParameterJdbcTemplate.update(query, namedParameters, keyHolder);
+        awardDTO.setAwardId(keyHolder.getKey().intValue());
+        return awardDTO;
     }
 }

@@ -3,6 +3,7 @@ package org.ecsail.mvci_membership;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.apache.poi.ss.formula.functions.T;
 import org.ecsail.connection.Connections;
 import org.ecsail.dto.*;
 import org.ecsail.interfaces.Messages;
@@ -115,5 +116,9 @@ public class MembershipInteractor implements SlipUser {
 
     public void receiveMessage(Messages.MessageType messages, Object o) {
         dataBaseService.receiveMessage(messages,o);
+    }
+
+    public DataBaseService getDataBaseService() {
+        return dataBaseService;
     }
 }

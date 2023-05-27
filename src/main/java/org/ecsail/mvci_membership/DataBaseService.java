@@ -36,10 +36,13 @@ public class DataBaseService {
         boatRepo = new BoatRepositoryImpl(dataSource);
     }
 
+    public AwardDTO insertRow(Object o) {
+        if (o instanceof AwardDTO) return awardRepo.insert((AwardDTO) o);
+        return null;
+    }
+
     public void receiveMessage(Messages.MessageType messages, Object o) {
         switch (messages) {
-            case INSERT -> {
-            }
             case DELETE -> {
             }
             case UPDATE -> updateObject(o);

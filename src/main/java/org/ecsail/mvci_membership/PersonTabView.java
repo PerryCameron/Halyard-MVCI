@@ -314,6 +314,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
                 }
                 case "Awards" -> {
                     AwardDTO awardDTO = new AwardDTO(person.getP_id());
+                    membershipView.getAddRow().apply(awardDTO);
                     person.getAwards().add(awardDTO);
                     person.getAwards().sort(Comparator.comparing(AwardDTO::getAwardId));
                     membershipView.sendMessage().accept(MessageType.INSERT, awardDTO);
