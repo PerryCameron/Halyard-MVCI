@@ -51,7 +51,7 @@ public class PhoneTableView implements Builder<TableView> {
                         PhoneDTO phoneDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                         phoneDTO.setPhoneNumber(t.getNewValue());
                         int returnedRows = membershipView.sendMessage().apply(Messages.MessageType.UPDATE, phoneDTO);
-                        if(returnedRows != 1) phoneDTO.setPhoneNumber("Error"); // we didn't save to db
+                        if(returnedRows != 1) phoneDTO.setPhoneNumber("Error"); // there was a problem saving to db
                         person.getPhones().stream()
                                 .filter(p -> p.getPhone_Id() == phoneDTO.getPhone_Id())
                                 .forEach(s -> s.setPhoneNumber(processedNumber));

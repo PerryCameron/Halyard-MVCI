@@ -40,7 +40,8 @@ public class AwardTableView implements Builder<TableView<AwardDTO>> {
                 t -> {
                     AwardDTO awardDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                     awardDTO.setAwardYear(t.getNewValue());
-                    membershipView.sendMessage().apply(Messages.MessageType.UPDATE, awardDTO);
+                    int returnedRows = membershipView.sendMessage().apply(Messages.MessageType.UPDATE, awardDTO);
+                    if(returnedRows != 1) awardDTO.setAwardYear(t.getOldValue()); // reset if db update fails
                 }
         );
         col1.setMaxWidth(1f * Integer.MAX_VALUE * 20);   // Phone
@@ -60,14 +61,14 @@ public class AwardTableView implements Builder<TableView<AwardDTO>> {
         col2.setOnEditCommit((TableColumn.CellEditEvent<AwardDTO, Awards> event) -> {
             // get the position on the table
             TablePosition<AwardDTO, Awards> pos = event.getTablePosition();
-            // use enum to convert DB value
-            Awards newAward = event.getNewValue();
             // give object a name to manipulate
             AwardDTO awardDTO = event.getTableView().getItems().get(pos.getRow());
+            // update the GUI (do this first so UI seems snappy)
+            awardDTO.setAwardType(event.getNewValue().getCode());
             // update the SQL
-            membershipView.sendMessage().apply(Messages.MessageType.UPDATE, awardDTO);
-            // update the GUI
-            awardDTO.setAwardType(newAward.getCode());
+            int returnedRows = membershipView.sendMessage().apply(Messages.MessageType.UPDATE, awardDTO);
+            // return the GUI to before if db update fails
+            if(returnedRows != 1) awardDTO.setAwardType(event.getOldValue().getCode());
         });
         col2.setMaxWidth(1f * Integer.MAX_VALUE * 50);  // Type
         return col2;

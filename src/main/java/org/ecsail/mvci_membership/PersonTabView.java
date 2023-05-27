@@ -389,8 +389,8 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
                 .addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
                     updatePersonDTO(label, textField.getText());
             if (oldValue) {
-                membershipView.sendMessage().apply(MessageType.UPDATE,person);
-//                membershipView.checkTheCorrectNumberOfReturnedRows(rows);
+                int returnedRows = membershipView.sendMessage().apply(MessageType.UPDATE,person);
+                if(returnedRows != 1) textField.setText("Error, Not saved");
             }
         });
         Text text = new Text(label);

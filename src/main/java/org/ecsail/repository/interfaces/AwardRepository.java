@@ -8,5 +8,5 @@ import java.util.List;
 public interface AwardRepository {
     List<AwardDTO> getAwards(PersonDTO p);
     List<AwardDTO> getAwards();
-
+    int updateAward(AwardDTO o);
 }

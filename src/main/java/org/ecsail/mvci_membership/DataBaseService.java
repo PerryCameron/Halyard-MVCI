@@ -1,5 +1,6 @@
 package org.ecsail.mvci_membership;
 
+import org.ecsail.dto.AwardDTO;
 import org.ecsail.dto.EmailDTO;
 import org.ecsail.dto.PersonDTO;
 import org.ecsail.dto.PhoneDTO;
@@ -63,6 +64,7 @@ public class DataBaseService {
         if(o instanceof PersonDTO) rowsUpdated = peopleRepo.updatePerson((PersonDTO) o);
         if(o instanceof PhoneDTO) rowsUpdated = phoneRepo.updatePhone((PhoneDTO) o);
         if(o instanceof EmailDTO) rowsUpdated = emailRepo.updateEmail((EmailDTO) o);
+        if(o instanceof AwardDTO) rowsUpdated = awardRepo.updateAward((AwardDTO) o);
         Predicate<Integer> isOneRow = number -> number == 1;
         checkTheCorrectNumberOfReturnedRows(rowsUpdated, isOneRow);
         return rowsUpdated;

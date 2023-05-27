@@ -48,7 +48,7 @@ public class EmailTableView implements Builder<TableView<EmailDTO>> {
                 EmailDTO emailDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                 emailDTO.setEmail(t.getNewValue());
                 int returnedRows = membershipView.sendMessage().apply(Messages.MessageType.UPDATE,emailDTO);
-//                membershipView.checkTheCorrectNumberOfReturnedRows(returnedRows);
+                if(returnedRows != 1) emailDTO.setEmail(t.getOldValue()); // problem writing to db changing back
             } else {
                 person.getEmail().stream()
                         .filter(q -> q.getEmail_id() == email_id)
@@ -76,13 +76,10 @@ public class EmailTableView implements Builder<TableView<EmailDTO>> {
         col3.setCellValueFactory(param -> {
             EmailDTO emailDTO = param.getValue();
             SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(emailDTO.getIsListed());
-            // Note: singleCol.setOnEditCommit(): Not work for
-            // CheckBoxTableCell.
-            // When "Listed?" column change.
             booleanProp.addListener((observable, oldValue, newValue) -> {
                 emailDTO.setListed(newValue);
                 int returnedRows = membershipView.sendMessage().apply(Messages.MessageType.UPDATE,emailDTO);
-//                membershipView.checkTheCorrectNumberOfReturnedRows(returnedRows);
+                if(returnedRows != 1) emailDTO.setListed(!newValue); // was an issue writing to database
             });
             return booleanProp;
         });
