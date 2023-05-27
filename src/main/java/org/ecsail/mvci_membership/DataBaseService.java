@@ -4,6 +4,9 @@ import org.ecsail.dto.*;
 import org.ecsail.interfaces.Messages;
 import org.ecsail.repository.implementations.*;
 import org.ecsail.repository.interfaces.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 
 import javax.sql.DataSource;
 import java.util.function.Predicate;
@@ -17,6 +20,10 @@ public class DataBaseService {
     private AwardRepository awardRepo;
     private OfficerRepository officerRepo;
     private MembershipIdRepository membershipIdRepo;
+    private BoatRepository boatRepo;
+
+    private static final Logger logger = LoggerFactory.getLogger(DataBaseService.class);
+
 
     public DataBaseService(DataSource dataSource, MembershipModel membershipModel) {
         this.membershipModel = membershipModel;
@@ -26,6 +33,7 @@ public class DataBaseService {
         awardRepo = new AwardRepositoryImpl(dataSource);
         officerRepo = new OfficerRepositoryImpl(dataSource);
         membershipIdRepo = new MembershipIdRepositoryImpl(dataSource);
+        boatRepo = new BoatRepositoryImpl(dataSource);
     }
 
     public int receiveMessage(Messages.MessageType messages, Object o) {
@@ -58,11 +66,16 @@ public class DataBaseService {
 
     private int updateObject(Object o) {
         int rowsUpdated = 0;
-        if(o instanceof PersonDTO) rowsUpdated = peopleRepo.updatePerson((PersonDTO) o);
-        if(o instanceof PhoneDTO) rowsUpdated = phoneRepo.updatePhone((PhoneDTO) o);
-        if(o instanceof EmailDTO) rowsUpdated = emailRepo.updateEmail((EmailDTO) o);
-        if(o instanceof AwardDTO) rowsUpdated = awardRepo.updateAward((AwardDTO) o);
-        if(o instanceof OfficerDTO) rowsUpdated = officerRepo.updateOfficer((OfficerDTO) o);
+        try {
+            if (o instanceof PersonDTO) rowsUpdated = peopleRepo.updatePerson((PersonDTO) o);
+            if (o instanceof PhoneDTO) rowsUpdated = phoneRepo.updatePhone((PhoneDTO) o);
+            if (o instanceof EmailDTO) rowsUpdated = emailRepo.updateEmail((EmailDTO) o);
+            if (o instanceof AwardDTO) rowsUpdated = awardRepo.updateAward((AwardDTO) o);
+            if (o instanceof OfficerDTO) rowsUpdated = officerRepo.updateOfficer((OfficerDTO) o);
+            if (o instanceof BoatDTO) rowsUpdated = boatRepo.updateBoat((BoatDTO) o);
+        } catch (DataAccessException e) {
+            logger.error(e.getMessage());
+        }
         Predicate<Integer> isOneRow = number -> number == 1;
         checkTheCorrectNumberOfReturnedRows(rowsUpdated, isOneRow);
         return rowsUpdated;

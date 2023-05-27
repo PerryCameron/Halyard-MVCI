@@ -3,6 +3,7 @@ package org.ecsail.mvci_membership;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.Property;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -16,13 +17,14 @@ import org.ecsail.widgetfx.TabPaneFx;
 import org.ecsail.widgetfx.TextFx;
 import org.ecsail.widgetfx.VBoxFx;
 
+import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 
 public class MembershipView implements Builder<Region> {
 
     private final MembershipModel membershipModel;
-    private final BiFunction<Messages.MessageType, Object, Integer> personEdit;
-    protected MembershipView(MembershipModel mm, BiFunction <Messages.MessageType, Object, Integer> personEdit) {
+    private final BiConsumer<Messages.MessageType, Object> personEdit;
+    protected MembershipView(MembershipModel mm, BiConsumer <Messages.MessageType, Object> personEdit) {
         membershipModel = mm;
         this.personEdit = personEdit;
     }
@@ -112,7 +114,7 @@ public class MembershipView implements Builder<Region> {
         return membershipModel;
     }
 
-    protected BiFunction<Messages.MessageType, Object, Integer> sendMessage() {
+    protected BiConsumer<Messages.MessageType, Object> sendMessage() {
         return personEdit;
     }
 

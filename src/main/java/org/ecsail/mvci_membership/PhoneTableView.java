@@ -50,8 +50,7 @@ public class PhoneTableView implements Builder<TableView> {
                         String processedNumber = processNumber(t.getNewValue());
                         PhoneDTO phoneDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                         phoneDTO.setPhoneNumber(t.getNewValue());
-                        int returnedRows = membershipView.sendMessage().apply(Messages.MessageType.UPDATE, phoneDTO);
-                        if(returnedRows != 1) phoneDTO.setPhoneNumber("Error"); // there was a problem saving to db
+                        membershipView.sendMessage().accept(Messages.MessageType.UPDATE, phoneDTO);
                         person.getPhones().stream()
                                 .filter(p -> p.getPhone_Id() == phoneDTO.getPhone_Id())
                                 .forEach(s -> s.setPhoneNumber(processedNumber));
@@ -116,8 +115,7 @@ public class PhoneTableView implements Builder<TableView> {
             int row = pos.getRow();
             PhoneDTO phoneDTO = event.getTableView().getItems().get(row);
             phoneDTO.setPhoneType(newPhoneType.getCode()); // makes UI feel snappy
-            int returnedRows = membershipView.sendMessage().apply(Messages.MessageType.UPDATE, phoneDTO);
-            if (returnedRows != 1) phoneDTO.setPhoneType(oldPhoneType.getCode()); // resets if database not updated
+            membershipView.sendMessage().accept(Messages.MessageType.UPDATE, phoneDTO);
         });
         Col2.setMaxWidth( 1f * Integer.MAX_VALUE * 30 );  // Type
         return Col2;
@@ -130,8 +128,7 @@ public class PhoneTableView implements Builder<TableView> {
             SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(phoneDTO.isIsListed());
             booleanProp.addListener((observable, oldValue, newValue) -> {
                 phoneDTO.setIsListed(newValue); // makes UI feel snappy
-                int returnedRows = membershipView.sendMessage().apply(Messages.MessageType.UPDATE, phoneDTO);
-                if(returnedRows != 1) phoneDTO.setIsListed(!newValue); // undoes if row not changed in db
+                membershipView.sendMessage().accept(Messages.MessageType.UPDATE, phoneDTO);
             });
             return booleanProp;
         });

@@ -58,7 +58,7 @@ public class BoatTabView implements Builder<Tab>, Messages {
             int selectedIndex = membershipView.getMembershipModel().getBoatTableView().getSelectionModel().getSelectedIndex();
             if (selectedIndex >= 0) { // TODO add error checking and prompt
                 BoatDTO boatDTO = membershipView.getMembershipModel().getMembership().getBoatDTOS().get(selectedIndex);
-                membershipView.sendMessage().apply(MessageType.DELETE, boatDTO);
+                membershipView.sendMessage().accept(MessageType.DELETE, boatDTO);
                 // can't I remove it from the list iteslf?
                 membershipView.getMembershipModel().getBoatTableView().getItems().remove(boatDTO);
             }
@@ -76,7 +76,7 @@ public class BoatTabView implements Builder<Tab>, Messages {
             membershipView.getMembershipModel().getMembership().getBoatDTOS().sort(Comparator.comparing(BoatDTO::getBoatId));
             membershipView.getMembershipModel().getBoatTableView().layout();
             membershipView.getMembershipModel().getBoatTableView().edit(0, column1);
-            membershipView.sendMessage().apply(MessageType.INSERT, boatDTO);
+            membershipView.sendMessage().accept(MessageType.INSERT, boatDTO);
         });
         return button;
     }
@@ -167,7 +167,7 @@ public class BoatTabView implements Builder<Tab>, Messages {
             case "setDraft" -> boatDTO.setDraft(t.getNewValue());
             case "setDisplacement" -> boatDTO.setDisplacement(t.getNewValue());
         }
-        membershipView.sendMessage().apply(MessageType.UPDATE, boatDTO);
+        membershipView.sendMessage().accept(MessageType.UPDATE, boatDTO);
     }
 
 

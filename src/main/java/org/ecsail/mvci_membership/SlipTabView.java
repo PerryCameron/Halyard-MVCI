@@ -60,8 +60,8 @@ public class SlipTabView implements Builder<Tab>, SlipUser, Messages {
         CheckBox checkBox = new CheckBox("Slip Wait list");
         membershipModel.getSlipControls().put("waitList", checkBox);
         checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue) membershipView.sendMessage().apply(MessageType.SET_WAIT_LIST, "yes");
-            else membershipView.sendMessage().apply(MessageType.SET_WAIT_LIST, "no");
+            if(newValue) membershipView.sendMessage().accept(MessageType.SET_WAIT_LIST, "yes");
+            else membershipView.sendMessage().accept(MessageType.SET_WAIT_LIST, "no");
         });
         hBox.getChildren().add(checkBox);
         return hBox;
@@ -83,16 +83,16 @@ public class SlipTabView implements Builder<Tab>, SlipUser, Messages {
         switch (membershipModel.getSlipRelationStatus()) {
             case subLeaser, ownAndSublease -> {
                 RadioButton rb = (RadioButton) membershipModel.getSlipControls().get("Release Sublease");
-                if(rb.isSelected()) membershipView.sendMessage().apply(MessageType.RELEASE_SUBLEASE, null);
+                if(rb.isSelected()) membershipView.sendMessage().accept(MessageType.RELEASE_SUBLEASE, null);
             }
             case owner -> {
                 RadioButton rb1 = (RadioButton) membershipModel.getSlipControls().get("Sublease Slip");
                 RadioButton rb2 = (RadioButton) membershipModel.getSlipControls().get("Reassign Slip");
                 if(rb1.isSelected()) {
-                    membershipView.sendMessage().apply(MessageType.SUBLEASE_SLIP, textField.getText());
+                    membershipView.sendMessage().accept(MessageType.SUBLEASE_SLIP, textField.getText());
                 }
                 if(rb2.isSelected()) {
-                    membershipView.sendMessage().apply(MessageType.REASSIGN_SLIP, textField.getText());
+                    membershipView.sendMessage().accept(MessageType.REASSIGN_SLIP, textField.getText());
                 }
             }
         }

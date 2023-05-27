@@ -86,7 +86,7 @@ public class BoatDTO {
 		return this.aux;
 	}
 
-	public boolean isAux() {
+	public boolean getAux() {
 		return auxProperty().get();
 	}
 
@@ -218,7 +218,7 @@ public class BoatDTO {
 	}
 	
 
-	public final boolean hasTrailer() {
+	public final boolean getHasTrailer() {
 		return this.hasTrailerProperty().get();
 	}
 	
@@ -331,6 +331,8 @@ public class BoatDTO {
 	public final void setLwl(final String lwl) {
 		this.lwlProperty().set(lwl);
 	}
+
+
 
 	@Override
 	public String toString() {

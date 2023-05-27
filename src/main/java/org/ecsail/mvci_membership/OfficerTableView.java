@@ -44,8 +44,7 @@ public class OfficerTableView implements Builder<TableView<OfficerDTO>> {
                 t -> {
                     OfficerDTO officerDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                     officerDTO.setFiscal_year(t.getNewValue());
-                    int returnedRows = membershipView.sendMessage().apply(Messages.MessageType.UPDATE, officerDTO);
-                    if(returnedRows != 1) officerDTO.setFiscal_year(t.getOldValue());
+                    membershipView.sendMessage().accept(Messages.MessageType.UPDATE, officerDTO);
                 }
         );
         col1.setMaxWidth(1f * Integer.MAX_VALUE * 20);   // Phone
@@ -68,8 +67,7 @@ public class OfficerTableView implements Builder<TableView<OfficerDTO>> {
             TablePosition<OfficerDTO, String> pos = event.getTablePosition();
             OfficerDTO officerDTO = event.getTableView().getItems().get(pos.getRow());
             officerDTO.setOfficer_type(event.getNewValue());
-            int returnedRows = membershipView.sendMessage().apply(Messages.MessageType.UPDATE, officerDTO);
-            if(returnedRows != 1) officerDTO.setOfficer_type(event.getOldValue());
+            membershipView.sendMessage().accept(Messages.MessageType.UPDATE, officerDTO);
         });
         col2.setMaxWidth(1f * Integer.MAX_VALUE * 50);  // Type
         return col2;
@@ -81,8 +79,7 @@ public class OfficerTableView implements Builder<TableView<OfficerDTO>> {
                 t -> {
                     OfficerDTO officerDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                     officerDTO.setBoard_year(t.getNewValue());
-                    int returnedRows = membershipView.sendMessage().apply(Messages.MessageType.UPDATE, officerDTO);
-                    if (returnedRows != 1) officerDTO.setBoard_year(t.getOldValue());
+                    membershipView.sendMessage().accept(Messages.MessageType.UPDATE, officerDTO);
                 }
         );
         col3.setMaxWidth(1f * Integer.MAX_VALUE * 20);  // Listed

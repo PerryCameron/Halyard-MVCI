@@ -78,7 +78,7 @@ public class NotesTabView implements Builder<Tab> {
         col3.setOnEditCommit(t -> {
                     NotesDTO notesDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                     notesDTO.setMemo(t.getNewValue());
-                    membershipView.sendMessage().apply(Messages.MessageType.UPDATE,notesDTO);
+                    membershipView.sendMessage().accept(Messages.MessageType.UPDATE,notesDTO);
         });
         col3.setMaxWidth( 1f * Integer.MAX_VALUE * 85 );   // Note
         return col3;
@@ -97,7 +97,7 @@ public class NotesTabView implements Builder<Tab> {
                 t -> {
                     NotesDTO notesDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                     notesDTO.setMemo_date(t.getNewValue());
-                    membershipView.sendMessage().apply(Messages.MessageType.UPDATE,notesDTO);
+                    membershipView.sendMessage().accept(Messages.MessageType.UPDATE,notesDTO);
                 });
         col1.setMaxWidth( 1f * Integer.MAX_VALUE * 10 );   // Date
         return col1;

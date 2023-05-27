@@ -9,15 +9,20 @@ import org.ecsail.repository.rowmappers.BoatListRowMapper;
 import org.ecsail.repository.rowmappers.BoatOwnerRowMapper;
 import org.ecsail.repository.rowmappers.BoatRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
 import javax.sql.DataSource;
 import java.util.List;
 
 public class BoatRepositoryImpl implements BoatRepository {
     private final JdbcTemplate template;
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public BoatRepositoryImpl(DataSource dataSource) {
         this.template = new JdbcTemplate(dataSource);
+        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
 
     @Override
@@ -127,5 +132,28 @@ public class BoatRepositoryImpl implements BoatRepository {
     public List<BoatOwnerDTO> getBoatOwners() {
         String query = "SELECT * FROM boat_owner";
         return template.query(query, new BoatOwnerRowMapper());
+    }
+
+    @Override
+    public int updateBoat(BoatDTO boatDTO) {
+        String query = "UPDATE boat SET " +
+                "MANUFACTURER = :manufacturer, " +
+                "MANUFACTURE_YEAR = :manufactureYear, " +
+                "REGISTRATION_NUM = :registrationNum, " +
+                "MODEL = :model, " +
+                "BOAT_NAME = :boatName, " +
+                "SAIL_NUMBER = :sailNumber, " +
+                "HAS_TRAILER = :hasTrailer, " +
+                "LENGTH = :loa, " +
+                "WEIGHT = :displacement, " +
+                "KEEL = :keel, " +
+                "PHRF = :phrf, " +
+                "DRAFT = :draft, " +
+                "BEAM = :beam, " +
+                "LWL = :lwl, " +
+                "AUX = :aux " +
+                "WHERE BOAT_ID = :boatId ";
+        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(boatDTO);
+        return namedParameterJdbcTemplate.update(query, namedParameters);
     }
 }

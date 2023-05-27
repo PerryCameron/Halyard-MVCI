@@ -118,7 +118,6 @@ public class MembershipInteractor implements SlipUser {
     }
 
     public int receiveMessage(Messages.MessageType messages, Object o) {
-        System.out.println(messages + " " + o + " " + membershipModel.getSelectedPerson());
         return dataBaseService.receiveMessage(messages,o);
     }
 }

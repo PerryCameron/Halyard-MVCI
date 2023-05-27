@@ -40,13 +40,16 @@ public class AwardTableView implements Builder<TableView<AwardDTO>> {
                 t -> {
                     AwardDTO awardDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                     awardDTO.setAwardYear(t.getNewValue());
-                    int returnedRows = membershipView.sendMessage().apply(Messages.MessageType.UPDATE, awardDTO);
-                    if(returnedRows != 1) awardDTO.setAwardYear(t.getOldValue()); // reset if db update fails
+                    membershipView.sendMessage()
+                            .accept(Messages.MessageType.UPDATE, awardDTO);
                 }
         );
         col1.setMaxWidth(1f * Integer.MAX_VALUE * 20);   // Phone
         return col1;
     }
+
+
+
 
     private TableColumn<AwardDTO,Awards> createColumn2() {
         ObservableList<Awards> awardsList = FXCollections.observableArrayList(Awards.values());
@@ -66,9 +69,7 @@ public class AwardTableView implements Builder<TableView<AwardDTO>> {
             // update the GUI (do this first so UI seems snappy)
             awardDTO.setAwardType(event.getNewValue().getCode());
             // update the SQL
-            int returnedRows = membershipView.sendMessage().apply(Messages.MessageType.UPDATE, awardDTO);
-            // return the GUI to before if db update fails
-            if(returnedRows != 1) awardDTO.setAwardType(event.getOldValue().getCode());
+            membershipView.sendMessage().accept(Messages.MessageType.UPDATE, awardDTO);
         });
         col2.setMaxWidth(1f * Integer.MAX_VALUE * 50);  // Type
         return col2;

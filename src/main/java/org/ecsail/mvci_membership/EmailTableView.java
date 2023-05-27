@@ -47,8 +47,7 @@ public class EmailTableView implements Builder<TableView<EmailDTO>> {
             if(StringTools.isValidEmail(t.getNewValue())) {
                 EmailDTO emailDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                 emailDTO.setEmail(t.getNewValue());
-                int returnedRows = membershipView.sendMessage().apply(Messages.MessageType.UPDATE,emailDTO);
-                if(returnedRows != 1) emailDTO.setEmail(t.getOldValue()); // problem writing to db changing back
+                membershipView.sendMessage().accept(Messages.MessageType.UPDATE,emailDTO);
             } else {
                 person.getEmail().stream()
                         .filter(q -> q.getEmail_id() == email_id)
@@ -78,8 +77,7 @@ public class EmailTableView implements Builder<TableView<EmailDTO>> {
             SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(emailDTO.getIsListed());
             booleanProp.addListener((observable, oldValue, newValue) -> {
                 emailDTO.setListed(newValue);
-                int returnedRows = membershipView.sendMessage().apply(Messages.MessageType.UPDATE,emailDTO);
-                if(returnedRows != 1) emailDTO.setListed(!newValue); // was an issue writing to database
+                membershipView.sendMessage().accept(Messages.MessageType.UPDATE,emailDTO);
             });
             return booleanProp;
         });
