@@ -17,7 +17,7 @@ import javax.sql.DataSource;
 public class MembershipInteractor implements SlipUser {
     private final MembershipModel membershipModel;
     private static final Logger logger = LoggerFactory.getLogger(MembershipInteractor.class);
-    private DataSource dataSource;
+    private final DataSource dataSource;
     private final PersonRepository peopleRepo;
     private final PhoneRepository phoneRepo;
     private final EmailRepository emailRepo;
@@ -58,10 +58,8 @@ public class MembershipInteractor implements SlipUser {
 
     public void getIds(MembershipListDTO ml) {
         MembershipIdRepository membershipIdRepo = new MembershipIdRepositoryImpl(dataSource);
-        Platform.runLater(() -> {
-            membershipModel.getMembership()
-                    .setMembershipIdDTOS(FXCollections.observableArrayList(membershipIdRepo.getIds(ml.getMsId())));
-        });
+        Platform.runLater(() -> membershipModel.getMembership()
+                .setMembershipIdDTOS(FXCollections.observableArrayList(membershipIdRepo.getIds(ml.getMsId()))));
     }
 
     public void getBoats(MembershipListDTO ml) {
@@ -74,10 +72,8 @@ public class MembershipInteractor implements SlipUser {
 
     public void getNotes(MembershipListDTO ml) {
         NotesRepository noteRepo = new NotesRepositoryImpl(dataSource);
-        Platform.runLater(() -> {
-            membershipModel.getMembership()
-                    .setNotesDTOS(FXCollections.observableArrayList(noteRepo.getMemosByMsId(ml.getMsId())));
-        });
+        Platform.runLater(() -> membershipModel.getMembership()
+                .setNotesDTOS(FXCollections.observableArrayList(noteRepo.getMemosByMsId(ml.getMsId()))));
     }
 
     public void getSlipInfo(MembershipListDTO ml) {
@@ -110,14 +106,14 @@ public class MembershipInteractor implements SlipUser {
         membershipModel.setMembershipId(String.valueOf(membershipIdRepo.getCurrentId(membershipModel.getSlip().getSubleased_to()).getMembership_id()));
     }
 
-    protected void setListsLoaded(boolean isLoaded) {
+    protected void setListsLoaded() {
         Platform.runLater(() -> {
             logger.debug("Lists are loaded");
-            membershipModel.setListsLoaded(isLoaded);
+            membershipModel.setListsLoaded(true);
         });
     }
 
-    public int receiveMessage(Messages.MessageType messages, Object o) {
-        return dataBaseService.receiveMessage(messages,o);
+    public void receiveMessage(Messages.MessageType messages, Object o) {
+        dataBaseService.receiveMessage(messages,o);
     }
 }

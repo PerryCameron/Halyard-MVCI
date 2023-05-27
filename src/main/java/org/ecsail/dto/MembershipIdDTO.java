@@ -10,21 +10,21 @@ public class MembershipIdDTO {
 	private SimpleStringProperty fiscal_Year;
 	private IntegerProperty ms_id;
 	private SimpleStringProperty membership_id;
-	private SimpleBooleanProperty isRenew;
+	private SimpleBooleanProperty renew;
 	private SimpleStringProperty mem_type;
 	private SimpleBooleanProperty selected;
-	private SimpleBooleanProperty isLateRenew;
+	private SimpleBooleanProperty lateRenew;
 	
 	public MembershipIdDTO(Integer mid, String fiscal_Year, Integer ms_id, String membership_id,
-                           Boolean isRenew, String mem_type, Boolean selected, Boolean isLateRenew) {
+						   Boolean renew, String mem_type, Boolean selected, Boolean lateRenew) {
 		this.mid = new SimpleIntegerProperty(mid);
 		this.fiscal_Year = new SimpleStringProperty(fiscal_Year);
 		this.ms_id = new SimpleIntegerProperty(ms_id);
 		this.membership_id = new SimpleStringProperty(membership_id);
-		this.isRenew = new SimpleBooleanProperty(isRenew);
+		this.renew = new SimpleBooleanProperty(renew);
 		this.mem_type = new SimpleStringProperty(mem_type);
 		this.selected = new SimpleBooleanProperty(selected);
-		this.isLateRenew = new SimpleBooleanProperty(isLateRenew);
+		this.lateRenew = new SimpleBooleanProperty(lateRenew);
 	}
 
 	public MembershipIdDTO(String fiscal_Year, Integer ms_id, String membership_id, String mem_type) {
@@ -32,10 +32,10 @@ public class MembershipIdDTO {
 		this.fiscal_Year = new SimpleStringProperty(fiscal_Year);
 		this.ms_id = new SimpleIntegerProperty(ms_id);
 		this.membership_id = new SimpleStringProperty(membership_id);
-		this.isRenew = new SimpleBooleanProperty(false);
+		this.renew = new SimpleBooleanProperty(false);
 		this.mem_type = new SimpleStringProperty(mem_type);
 		this.selected = new SimpleBooleanProperty(false);
-		this.isLateRenew = new SimpleBooleanProperty(false);
+		this.lateRenew = new SimpleBooleanProperty(false);
 	}
 
 
@@ -100,18 +100,18 @@ public class MembershipIdDTO {
 	}
 	
 
-	public final SimpleBooleanProperty isRenewProperty() {
-		return this.isRenew;
+	public final SimpleBooleanProperty renewProperty() {
+		return this.renew;
 	}
 	
 
-	public final boolean isRenew() {
-		return this.isRenewProperty().get();
+	public final boolean getIsRenew() {
+		return this.renewProperty().get();
 	}
 	
 
-	public final void setIsRenew(final boolean isRenew) {
-		this.isRenewProperty().set(isRenew);
+	public final void setIsRenew(final boolean renew) {
+		this.renewProperty().set(renew);
 	}
 	
 
@@ -144,18 +144,18 @@ public class MembershipIdDTO {
 		this.selectedProperty().set(selected);
 	}
 
-	public final SimpleBooleanProperty isLateRenewProperty() {
-		return this.isLateRenew;
+	public final SimpleBooleanProperty lateRenewProperty() {
+		return this.lateRenew;
 	}
 	
 
-	public final boolean isLateRenew() {
-		return this.isLateRenewProperty().get();
+	public final boolean getIsLateRenew() {
+		return this.lateRenewProperty().get();
 	}
 	
 
-	public final void setIsLateRenew(final boolean isLateRenew) {
-		this.isLateRenewProperty().set(isLateRenew);
+	public final void setIsLateRenew(final boolean lateRenew) {
+		this.lateRenewProperty().set(lateRenew);
 	}
 
 	@Override
@@ -165,10 +165,10 @@ public class MembershipIdDTO {
 				", fiscal_Year=" + fiscal_Year +
 				", ms_id=" + ms_id +
 				", membership_id=" + membership_id +
-				", isRenew=" + isRenew +
+				", isRenew=" + renew +
 				", mem_type=" + mem_type +
 				", selected=" + selected +
-				", isLateRenew=" + isLateRenew +
+				", isLateRenew=" + lateRenew +
 				'}';
 	}
 }

@@ -21,4 +21,5 @@ public interface MembershipIdRepository {
     List<MembershipIdDTO> getActiveMembershipIdsByYear(String year);
     int getNonRenewNumber(int year);
     int getMsidFromYearAndMembershipId(int year, String membershipId);
+    int updateId(MembershipIdDTO o);
 }

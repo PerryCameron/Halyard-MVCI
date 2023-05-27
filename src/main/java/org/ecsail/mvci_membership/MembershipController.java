@@ -1,6 +1,5 @@
 package org.ecsail.mvci_membership;
 
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.concurrent.Task;
 import javafx.scene.layout.Region;
 import org.ecsail.dto.MembershipListDTO;
@@ -23,16 +22,13 @@ public class MembershipController extends Controller {
     }
 
     private void membershipEdit(Messages.MessageType type, Object o) {
-        Task<Integer> task = new Task<>() {
+        Task<Void> task = new Task<>() {
             @Override
-            protected Integer call() {
-                return membershipInteractor.receiveMessage(type, o);
+            protected Void call() {
+                membershipInteractor.receiveMessage(type, o);
+                return null;
             }
         };
-        SimpleObjectProperty<Integer> result = new SimpleObjectProperty<>();
-//        task.setOnSucceeded(event -> {
-//            result.set(task.getValue());
-//        });
         new Thread(task).start();
     }
 
@@ -52,7 +48,7 @@ public class MembershipController extends Controller {
         };
         task.setOnSucceeded(e -> {
             mainController.showLoadingSpinner(false);
-            membershipInteractor.setListsLoaded(true);
+            membershipInteractor.setListsLoaded();
         });
         new Thread(task).start();
     }

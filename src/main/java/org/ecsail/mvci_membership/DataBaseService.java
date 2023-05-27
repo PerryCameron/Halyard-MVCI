@@ -36,13 +36,13 @@ public class DataBaseService {
         boatRepo = new BoatRepositoryImpl(dataSource);
     }
 
-    public int receiveMessage(Messages.MessageType messages, Object o) {
+    public void receiveMessage(Messages.MessageType messages, Object o) {
         switch (messages) {
             case INSERT -> {
             }
             case DELETE -> {
             }
-            case UPDATE -> { return updateObject(o); }
+            case UPDATE -> updateObject(o);
             case NONE -> {
             }
             case CHANGE_MEMBER_TYPE -> {
@@ -60,8 +60,6 @@ public class DataBaseService {
             case SET_WAIT_LIST -> {
             }
         }
-
-        return 0;
     }
 
     private int updateObject(Object o) {
@@ -73,8 +71,10 @@ public class DataBaseService {
             if (o instanceof AwardDTO) rowsUpdated = awardRepo.updateAward((AwardDTO) o);
             if (o instanceof OfficerDTO) rowsUpdated = officerRepo.updateOfficer((OfficerDTO) o);
             if (o instanceof BoatDTO) rowsUpdated = boatRepo.updateBoat((BoatDTO) o);
+            if (o instanceof MembershipIdDTO) rowsUpdated = membershipIdRepo.updateId((MembershipIdDTO) o);
         } catch (DataAccessException e) {
             logger.error(e.getMessage());
+            // TODO do more stuff with this
         }
         Predicate<Integer> isOneRow = number -> number == 1;
         checkTheCorrectNumberOfReturnedRows(rowsUpdated, isOneRow);

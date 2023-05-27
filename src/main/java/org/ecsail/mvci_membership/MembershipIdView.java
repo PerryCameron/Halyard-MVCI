@@ -115,7 +115,7 @@ public class MembershipIdView implements Builder<Tab> {
         col5.setCellValueFactory(
                 param -> {
                     MembershipIdDTO id = param.getValue();
-                    SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(id.isLateRenew());
+                    SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(id.getIsLateRenew());
                     booleanProp.addListener((observable, oldValue, newValue) -> {
                         id.setIsLateRenew(newValue);
                             membershipView.sendMessage().accept(Messages.MessageType.UPDATE, id);
@@ -136,7 +136,7 @@ public class MembershipIdView implements Builder<Tab> {
         col4.setCellValueFactory(
                 param -> {
                     MembershipIdDTO id = param.getValue();
-                    SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(id.isRenew());
+                    SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(id.getIsRenew());
                     booleanProp.addListener((observable, oldValue, newValue) -> {
                         id.setIsRenew(newValue);
                         membershipView.sendMessage().accept(Messages.MessageType.UPDATE, id);

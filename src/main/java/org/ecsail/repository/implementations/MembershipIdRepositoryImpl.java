@@ -4,15 +4,20 @@ import org.ecsail.dto.MembershipIdDTO;
 import org.ecsail.repository.interfaces.MembershipIdRepository;
 import org.ecsail.repository.rowmappers.MembershipIdRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
 import javax.sql.DataSource;
 import java.util.List;
 
 public class MembershipIdRepositoryImpl implements MembershipIdRepository {
     private final JdbcTemplate template;
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public MembershipIdRepositoryImpl(DataSource dataSource) {
         this.template = new JdbcTemplate(dataSource);
+        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
 
     @Override
@@ -85,5 +90,20 @@ public class MembershipIdRepositoryImpl implements MembershipIdRepository {
     @Override
     public int getMsidFromYearAndMembershipId(int year, String membershipId) {
         return 0;
+    }
+
+    @Override
+    public int updateId(MembershipIdDTO membershipIdDTO) {
+        String query = "UPDATE membership_id SET " +
+                "FISCAL_YEAR = :fiscal_Year, " +
+                "MS_ID = :ms_id, " +
+                "MEMBERSHIP_ID = :membership_id, " +
+                "RENEW = :isRenew, " +
+                "MEM_TYPE = :mem_type, " +
+                "SELECTED = :selected, " +
+                "LATE_RENEW = :isLateRenew " +
+                "WHERE MID = :mid ";
+        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(membershipIdDTO);
+        return namedParameterJdbcTemplate.update(query, namedParameters);
     }
 }
