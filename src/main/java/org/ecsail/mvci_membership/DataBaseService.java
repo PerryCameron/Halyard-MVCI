@@ -34,7 +34,7 @@ public class DataBaseService {
         boatRepo = new BoatRepositoryImpl(dataSource);
     }
 
-    public Object insert(Object o) {
+    public void insert(Object o) {
         int rowsUpdated = 0;
         try {
             if (o instanceof AwardDTO) rowsUpdated = awardRepo.insert((AwardDTO) o);
@@ -45,13 +45,13 @@ public class DataBaseService {
             illuminateStatusLight(false);
         }
         illuminateStatusLight(rowsUpdated == 1);
-        return o;
     }
 
     public void receiveMessage(Messages.MessageType messages, Object o) {
         switch (messages) {
             case DELETE -> delete(o);
             case UPDATE -> update(o);
+            case INSERT -> insert(o);
             case NONE -> {
             }
             case CHANGE_MEMBER_TYPE -> {

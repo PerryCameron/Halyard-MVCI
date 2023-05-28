@@ -26,11 +26,10 @@ public class MembershipView implements Builder<Region> {
 
     private final MembershipModel membershipModel;
     private final BiConsumer<Messages.MessageType, Object> personEdit;
-    private final UnaryOperator<Object> addRow;
-    protected MembershipView(MembershipModel mm, BiConsumer <Messages.MessageType, Object> pe, UnaryOperator<Object> ar) {
+
+    protected MembershipView(MembershipModel mm, BiConsumer <Messages.MessageType, Object> pe) {
         membershipModel = mm;
         this.personEdit = pe;
-        this.addRow = ar;
     }
 
     @Override
@@ -122,9 +121,6 @@ public class MembershipView implements Builder<Region> {
         return personEdit;
     }
 
-    public UnaryOperator<Object> getAddRow() {
-        return addRow;
-    }
 
     protected void checkTheCorrectNumberOfReturnedRows(int rows) { // updates status lights
         if(rows == 0) membershipModel.getMainModel().getLightAnimationMap().get("receiveError").playFromStart();

@@ -18,12 +18,9 @@ public class MembershipController extends Controller {
         MembershipModel membershipModel = new MembershipModel(ml , mainController.getMainModel());
         this.membershipInteractor = new MembershipInteractor(membershipModel,mainController.getConnections());
         getDataForMembership(ml);
-        membershipView = new MembershipView(membershipModel, this::editRow, this::addRow);
+        membershipView = new MembershipView(membershipModel, this::editRow);
     }
 
-    private Object addRow(Object o) {
-        return membershipInteractor.getDataBaseService().insert(o);
-    }
 
     private void editRow(Messages.MessageType type, Object o) {
         Task<Void> task = new Task<>() {

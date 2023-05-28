@@ -296,25 +296,25 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
 
     private Button createAddButton() {
         Button button = ButtonFx.buttonOf("Add", 60);
-        button.setOnAction(event -> {
+        button.setOnAction(event -> {  // TODO each case should have its own event, lot of overhead for each button otherwise
             switch (getSelectedTab()) {
                 case "Phone" -> {
                     PhoneDTO phoneDTO = new PhoneDTO(person.getP_id());
-                    membershipView.getAddRow().apply(phoneDTO);
+                    membershipView.sendMessage().accept(MessageType.INSERT, phoneDTO);
                     person.getPhones().add(phoneDTO);
                     person.getPhones().sort(Comparator.comparing(PhoneDTO::getPhoneId).reversed());
                     requestFocusOnTable(membershipModel.getPhoneTableView().get(person));
                 }
                 case "Email" -> {
                     EmailDTO emailDTO = new EmailDTO(person.getP_id());
-                    membershipView.getAddRow().apply(emailDTO);
+                    membershipView.sendMessage().accept(MessageType.INSERT, emailDTO);
                     person.getEmail().add(emailDTO);
                     person.getEmail().sort(Comparator.comparing(EmailDTO::getEmail_id).reversed());
                     requestFocusOnTable(membershipModel.getEmailTableView().get(person));
                 }
                 case "Awards" -> {
                     AwardDTO awardDTO = new AwardDTO(person.getP_id());
-                    membershipView.getAddRow().apply(awardDTO);
+                    membershipView.sendMessage().accept(MessageType.INSERT, awardDTO);
                     person.getAwards().add(awardDTO);
                     person.getAwards().sort(Comparator.comparing(AwardDTO::getAwardId).reversed());
                     requestFocusOnTable(membershipModel.getAwardTableView().get(person));
