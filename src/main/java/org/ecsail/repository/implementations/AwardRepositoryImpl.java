@@ -47,13 +47,13 @@ public class AwardRepositoryImpl implements AwardRepository {
     }
 
     @Override
-    public AwardDTO insert(AwardDTO awardDTO) {
+    public int insert(AwardDTO awardDTO) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String query = "INSERT INTO awards (P_ID, AWARD_YEAR, AWARD_TYPE) VALUES (:pId, :awardYear, :awardType)";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(awardDTO);
-        namedParameterJdbcTemplate.update(query, namedParameters, keyHolder);
+        int affectedRows = namedParameterJdbcTemplate.update(query, namedParameters, keyHolder);
         awardDTO.setAwardId(keyHolder.getKey().intValue());
-        return awardDTO;
+        return affectedRows;
     }
 
     @Override

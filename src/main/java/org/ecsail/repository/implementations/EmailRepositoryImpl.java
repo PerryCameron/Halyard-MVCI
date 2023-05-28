@@ -56,14 +56,14 @@ public class EmailRepositoryImpl implements EmailRepository {
     }
 
     @Override
-    public EmailDTO insert(EmailDTO emailDTO) {
+    public int insert(EmailDTO emailDTO) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String query = "INSERT INTO email (P_ID, PRIMARY_USE, EMAIL, EMAIL_LISTED) " +
                 "VALUES (:pId, :isPrimaryUse, :email, :isListed)";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(emailDTO);
-        namedParameterJdbcTemplate.update(query, namedParameters, keyHolder);
+        int affectedRows = namedParameterJdbcTemplate.update(query, namedParameters, keyHolder);
         emailDTO.setEmail_id(keyHolder.getKey().intValue());
-        return emailDTO;
+        return affectedRows;
     }
 
     @Override

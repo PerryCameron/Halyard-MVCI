@@ -35,16 +35,16 @@ public class DataBaseService {
     }
 
     public Object insert(Object o) {
-        boolean noError = true;
+        int rowsUpdated = 0;
         try {
-            if (o instanceof AwardDTO) return awardRepo.insert((AwardDTO) o);
-            if (o instanceof EmailDTO) return emailRepo.insert((EmailDTO) o);
-            if (o instanceof PhoneDTO) return phoneRepo.insert((PhoneDTO) o);
+            if (o instanceof AwardDTO) rowsUpdated = awardRepo.insert((AwardDTO) o);
+            if (o instanceof EmailDTO) rowsUpdated = emailRepo.insert((EmailDTO) o);
+            if (o instanceof PhoneDTO) rowsUpdated = phoneRepo.insert((PhoneDTO) o);
         } catch (DataAccessException e) {
             logger.error(e.getMessage());
-            noError = false;
+            illuminateStatusLight(false);
         }
-        illuminateStatusLight(noError == true);
+        illuminateStatusLight(rowsUpdated == 1);
         return o;
     }
 
@@ -77,11 +77,9 @@ public class DataBaseService {
             if (o instanceof AwardDTO) rowsUpdated = awardRepo.delete((AwardDTO) o);
             if (o instanceof EmailDTO) rowsUpdated = emailRepo.delete((EmailDTO) o);
             if (o instanceof PhoneDTO) rowsUpdated = phoneRepo.delete((PhoneDTO) o);
-
-
         } catch (DataAccessException e) {
             logger.error(e.getMessage());
-            // TODO do more stuff with this
+            illuminateStatusLight(false);
         }
         illuminateStatusLight(rowsUpdated == 1);
     }

@@ -26,9 +26,9 @@ public class PhoneDTO {
 		combo_box.setValue("none");
 	}
 
-	public PhoneDTO(Integer p_Id) {
+	public PhoneDTO(Integer pId) {
 		this.phoneId = new SimpleIntegerProperty(0);
-		this.pId = new SimpleIntegerProperty(p_Id);
+		this.pId = new SimpleIntegerProperty(pId);
 		this.phoneListed = new SimpleBooleanProperty(true);
 		this.phone = new SimpleStringProperty("");
 		this.phoneType = new SimpleStringProperty("");

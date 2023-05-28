@@ -71,13 +71,13 @@ public class PhoneRepositoryImpl implements PhoneRepository {
     }
 
     @Override
-    public Object insert(PhoneDTO phoneDTO) {
+    public int insert(PhoneDTO phoneDTO) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String query = "INSERT INTO phone (P_ID, PHONE, PHONE_TYPE, PHONE_LISTED) " +
                 "VALUES (:pId, :phone, :phoneType, :phoneListed)";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(phoneDTO);
-        namedParameterJdbcTemplate.update(query, namedParameters, keyHolder);
+        int affectedRows = namedParameterJdbcTemplate.update(query, namedParameters, keyHolder);
         phoneDTO.setPhoneId(keyHolder.getKey().intValue());
-        return phoneDTO;
+        return affectedRows;
     }
 }

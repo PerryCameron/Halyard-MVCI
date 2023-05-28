@@ -11,6 +11,6 @@ public interface EmailRepository {
     List<EmailDTO> getEmail(int p_id);
     EmailDTO getEmail(PersonDTO person);
     int updateEmail(EmailDTO o);
-    EmailDTO insert(EmailDTO emailDTO);
+    int insert(EmailDTO emailDTO);
     int delete(EmailDTO o);
 }
