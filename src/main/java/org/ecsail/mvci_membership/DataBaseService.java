@@ -50,14 +50,15 @@ public class DataBaseService {
                 person.setEmail(FXCollections.observableArrayList(emailRepo.getEmail(person.getP_id())));
                 person.setAwards(FXCollections.observableArrayList(awardRepo.getAwards(person)));
                 person.setOfficer(FXCollections.observableArrayList(officerRepo.getOfficer(person)));
-                retrieveLight(true);
             }
+            retrieveLight(true);
+            logger.info("Blink Green");
         } catch (DataAccessException e) {
             logger.error(e.getMessage());
             retrieveLight(false);
         }
         membershipModel.setPeople(personDTOS);
-        logger.info("set people, size: " +membershipModel.getPeople().size());
+        logger.info("set people, size: " + membershipModel.getPeople().size());
     }
 
     public void getIds(MembershipListDTO ml) {
@@ -65,6 +66,7 @@ public class DataBaseService {
             Platform.runLater(() -> membershipModel.getMembership()
                     .setMembershipIdDTOS(FXCollections.observableArrayList(membershipIdRepo.getIds(ml.getMsId()))));
             retrieveLight(true);
+            logger.info("Blink Green");
         } catch (DataAccessException e) {
             logger.error(e.getMessage());
             retrieveLight(false);
@@ -78,6 +80,7 @@ public class DataBaseService {
                         .setBoatDTOS(FXCollections.observableArrayList(boatRepo.getBoatsByMsId(ml.getMsId())));
                 retrieveLight(true);
             });
+            logger.info("Blink Green");
         } catch (DataAccessException e) {
             logger.error(e.getMessage());
             retrieveLight(false);
@@ -90,6 +93,7 @@ public class DataBaseService {
             Platform.runLater(() -> membershipModel.getMembership()
                     .setNotesDTOS(FXCollections.observableArrayList(notesRepo.getMemosByMsId(ml.getMsId()))));
             retrieveLight(true);
+            logger.info("Blink Green");
         } catch (DataAccessException e) {
             logger.error(e.getMessage());
             retrieveLight(false);
@@ -97,9 +101,19 @@ public class DataBaseService {
     }
 
     public void getSlipInfo(MembershipListDTO ml) {
+        SlipDTO slip = null;
+        try {
+            slip = slipRepo.getSlip(ml.getMsId());
+            logger.info("Blink Green");
+            retrieveLight(true);
+        } catch (DataAccessException e) {
+            logger.error(e.getMessage());
+            retrieveLight(false);
+        }
+        SlipDTO finalSlip = slip;
         Platform.runLater(() -> {
             logger.info("Slip is loaded");
-            membershipModel.setSlip(slipRepo.getSlip(ml.getMsId()));
+            membershipModel.setSlip(finalSlip);
             // member does not own a slip
             if (membershipModel.getSlip().getMs_id() == 0) membershipModel.setSlipRelationStatus(SlipUser.slip.noSlip);
                 // member owns a slip
@@ -193,7 +207,6 @@ public class DataBaseService {
             logger.error(e.getMessage());
             // TODO do more stuff with this
         }
-        System.out.println(rowsUpdated);
         changeLight(rowsUpdated == 1);
     }
 

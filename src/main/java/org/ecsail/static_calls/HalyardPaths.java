@@ -70,7 +70,6 @@ public class HalyardPaths {
 		if(f.exists() && !f.isDirectory()) { 
 		    return true;
 		}
-		System.out.println(file);
 		return false;
 	}
 

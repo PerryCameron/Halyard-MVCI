@@ -52,9 +52,7 @@ public class StatRepositoryImpl implements StatRepository {
                                 FROM membership_id id LEFT JOIN membership m on id.MS_ID=m.MS_ID
                                 WHERE fiscal_year=?;
                         """;
-        System.out.println("got query");
         StatsDTO statsDTO = template.queryForObject(query,new StatsSpecialRowMapper(), year, year, year, year, year, year);
-        System.out.println(statsDTO);
             return statsDTO;
     }
 

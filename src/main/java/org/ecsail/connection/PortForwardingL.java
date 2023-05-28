@@ -16,7 +16,6 @@ public class PortForwardingL {
     static String passwd;
     private Session session;
     private JSch jsch = new JSch();
-
     private static final Logger logger = LoggerFactory.getLogger(PortForwardingL.class);
     private static final boolean usePublicKey = true;
 

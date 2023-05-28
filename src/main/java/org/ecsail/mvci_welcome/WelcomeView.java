@@ -113,7 +113,6 @@ public class WelcomeView implements Builder<Region>, ChartConstants {
                 .sorted(Comparator.reverseOrder())
                 .forEach(comboBox.getItems()::add);
         comboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
-            System.out.println("combo box ");
             welcomeModel.setDefaultStartYear(newValue);
             reloadStats.run();
             welcomeModel.getMembershipBarChart().refreshChart();

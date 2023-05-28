@@ -58,7 +58,6 @@ public class Xls_roster implements ConfigFilePaths {
 		createRows(sheet);
 		// makes the columns nice widths for the data
 		setProperColumnWithToMatchDataSize(headers, sheet);
-		System.out.println("got here");
 		createFile(rosterModel, workBook);
 	}
 

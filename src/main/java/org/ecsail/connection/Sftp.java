@@ -27,6 +27,7 @@ public class Sftp {
             this.c=(ChannelSftp)channel;
         }
         catch(Exception e){
+            // TODO add this to log
             System.out.println(e);
         }
     }

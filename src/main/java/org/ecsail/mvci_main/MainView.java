@@ -67,10 +67,10 @@ public class MainView implements Builder<Region> {
         HBox hBox = HBoxFx.hBoxOf(new Insets(0,15,0,0), Pos.CENTER_RIGHT, 3.0);
         Rectangle receive = RectangleFX.rectangleOf(14,14);
         Rectangle transmit = RectangleFX.rectangleOf(14,14);
-        mainModel.getLightAnimationMap().put("receiveError", createTimeLine(Color.RED, receive));
-        mainModel.getLightAnimationMap().put("receiveSuccess", createTimeLine(Color.LIGHTGREEN, receive));
-        mainModel.getLightAnimationMap().put("transmitError", createTimeLine(Color.RED, transmit));
-        mainModel.getLightAnimationMap().put("transmitSuccess", createTimeLine(Color.LIGHTGREEN, transmit));
+        mainModel.getLightAnimationMap().put("receiveError", createTimeLine(Color.RED, receive,5000));
+        mainModel.getLightAnimationMap().put("receiveSuccess", createTimeLine(Color.LIGHTGREEN, receive,5000));
+        mainModel.getLightAnimationMap().put("transmitError", createTimeLine(Color.RED, transmit,100));
+        mainModel.getLightAnimationMap().put("transmitSuccess", createTimeLine(Color.LIGHTGREEN, transmit,100));
         mainModel.lightStatusPropertyProperty()
                 .addListener((observable, oldValue, newValue) -> updateStatusLights(newValue));
         HBox.setHgrow(hBox, Priority.ALWAYS);
@@ -78,11 +78,11 @@ public class MainView implements Builder<Region> {
         return hBox;
     }
 
-    private Timeline createTimeLine(Color color, Rectangle rect) {
+    private Timeline createTimeLine(Color color, Rectangle rect, double speed) {
         Timeline timeline = new Timeline(
                 new KeyFrame(Duration.ZERO, new KeyValue(rect.fillProperty(), Color.GRAY)),
-                new KeyFrame(Duration.millis(50), new KeyValue(rect.fillProperty(), color)),
-                new KeyFrame(Duration.seconds(5), new KeyValue(rect.fillProperty(), Color.GRAY))
+                new KeyFrame(Duration.millis(10), new KeyValue(rect.fillProperty(), color)),
+                new KeyFrame(Duration.millis(speed), new KeyValue(rect.fillProperty(), Color.GRAY))
         );
         return timeline;
     }

@@ -132,7 +132,6 @@ public class RosterView implements Builder<Region> {
     protected Node setAllCheckBoxes() {
         VBox checkVBox = new VBox(5);
         for(DbRosterSettingsDTO dto: rosterModel.getRosterSettings()) {
-            System.out.println(dto.getName() + " " + dto.isSearchable());
             SettingsCheckBox checkBox = new SettingsCheckBox(dto, "searchable");
             rosterModel.getCheckBoxes().add(checkBox);
             checkVBox.getChildren().add(checkBox);
