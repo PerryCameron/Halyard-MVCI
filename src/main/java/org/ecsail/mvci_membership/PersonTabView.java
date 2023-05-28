@@ -250,7 +250,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
                 case "Phone" -> {
                     int selectedIndex = membershipModel.getPhoneTableView().get(person).getSelectionModel().getSelectedIndex();
                     PhoneDTO phoneDTO = membershipModel.getPhoneTableView().get(person).getItems().get(selectedIndex);
-                    content.putString(phoneDTO.getPhoneNumber());
+                    content.putString(phoneDTO.getPhone());
                 }
             }
             clipboard.setContent(content);
@@ -300,9 +300,9 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
             switch (getSelectedTab()) {
                 case "Phone" -> {
                     PhoneDTO phoneDTO = new PhoneDTO(person.getP_id());
+                    membershipView.getAddRow().apply(phoneDTO);
                     person.getPhones().add(phoneDTO);
-                    person.getPhones().sort(Comparator.comparing(PhoneDTO::getPhone_Id));
-                    membershipView.sendMessage().accept(MessageType.INSERT, phoneDTO);
+                    person.getPhones().sort(Comparator.comparing(PhoneDTO::getPhoneId).reversed());
                     requestFocusOnTable(membershipModel.getPhoneTableView().get(person));
                 }
                 case "Email" -> {
@@ -322,7 +322,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
                 case "Officer" -> {
                     OfficerDTO officerDTO = new OfficerDTO(person.getP_id());
                     person.getOfficer().add(officerDTO);
-                    person.getOfficer().sort(Comparator.comparing(OfficerDTO::getOfficer_id));
+                    person.getOfficer().sort(Comparator.comparing(OfficerDTO::getOfficer_id).reversed());
                     membershipView.sendMessage().accept(MessageType.INSERT, officerDTO);
                     requestFocusOnTable(membershipModel.getOfficerTableView().get(person));
                 }

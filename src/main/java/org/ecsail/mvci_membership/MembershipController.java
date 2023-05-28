@@ -22,7 +22,7 @@ public class MembershipController extends Controller {
     }
 
     private Object addRow(Object o) {
-        return membershipInteractor.getDataBaseService().insertRow(o);
+        return membershipInteractor.getDataBaseService().insert(o);
     }
 
     private void editRow(Messages.MessageType type, Object o) {

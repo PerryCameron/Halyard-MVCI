@@ -14,4 +14,6 @@ public interface PhoneRepository {
 
     PhoneDTO getPhoneByType(String pid, String type);
     int updatePhone(PhoneDTO o);
+    int delete(PhoneDTO o);
+    Object insert(PhoneDTO o);
 }

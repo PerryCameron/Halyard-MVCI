@@ -34,23 +34,24 @@ public class DataBaseService {
         boatRepo = new BoatRepositoryImpl(dataSource);
     }
 
-    public Object insertRow(Object o) {
+    public Object insert(Object o) {
         boolean noError = true;
         try {
             if (o instanceof AwardDTO) return awardRepo.insert((AwardDTO) o);
             if (o instanceof EmailDTO) return emailRepo.insert((EmailDTO) o);
+            if (o instanceof PhoneDTO) return phoneRepo.insert((PhoneDTO) o);
         } catch (DataAccessException e) {
             logger.error(e.getMessage());
             noError = false;
         }
-        checkTheCorrectNumberOfReturnedRows(noError);
-        return null;
+        illuminateStatusLight(noError == true);
+        return o;
     }
 
     public void receiveMessage(Messages.MessageType messages, Object o) {
         switch (messages) {
-            case DELETE -> deleteObject(o);
-            case UPDATE -> updateObject(o);
+            case DELETE -> delete(o);
+            case UPDATE -> update(o);
             case NONE -> {
             }
             case CHANGE_MEMBER_TYPE -> {
@@ -70,20 +71,22 @@ public class DataBaseService {
         }
     }
 
-    private void deleteObject(Object o) {
+    private void delete(Object o) {
         int rowsUpdated = 0;
         try {
             if (o instanceof AwardDTO) rowsUpdated = awardRepo.delete((AwardDTO) o);
             if (o instanceof EmailDTO) rowsUpdated = emailRepo.delete((EmailDTO) o);
+            if (o instanceof PhoneDTO) rowsUpdated = phoneRepo.delete((PhoneDTO) o);
+
 
         } catch (DataAccessException e) {
             logger.error(e.getMessage());
             // TODO do more stuff with this
         }
-        checkTheCorrectNumberOfReturnedRows(rowsUpdated == 1);
+        illuminateStatusLight(rowsUpdated == 1);
     }
 
-    private int updateObject(Object o) {
+    private int update(Object o) {
         int rowsUpdated = 0;
         try {
             if (o instanceof PersonDTO) rowsUpdated = peopleRepo.updatePerson((PersonDTO) o);
@@ -97,11 +100,12 @@ public class DataBaseService {
             logger.error(e.getMessage());
             // TODO do more stuff with this
         }
-        checkTheCorrectNumberOfReturnedRows(rowsUpdated == 1);
+        System.out.println(rowsUpdated);
+        illuminateStatusLight(rowsUpdated == 1);
         return rowsUpdated;
     }
 
-    protected void checkTheCorrectNumberOfReturnedRows(boolean returnOk) { // updates status lights
+    protected void illuminateStatusLight(boolean returnOk) { // updates status lights
         if(returnOk) membershipModel.getMainModel().getLightAnimationMap().get("receiveSuccess").playFromStart();
         else membershipModel.getMainModel().getLightAnimationMap().get("receiveError").playFromStart();
     }

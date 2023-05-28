@@ -42,18 +42,18 @@ public class PhoneTableView implements Builder<TableView> {
     }
 
     private TableColumn<PhoneDTO,String> createColumn1() {
-        TableColumn<PhoneDTO, String> Col1 = TableColumnFx.tableColumnOf(PhoneDTO::phoneNumberProperty,"Phone");
+        TableColumn<PhoneDTO, String> Col1 = TableColumnFx.tableColumnOf(PhoneDTO::phoneProperty,"Phone");
         Col1.setOnEditCommit(
                 new EventHandler<>() {
                     @Override
                     public void handle(TableColumn.CellEditEvent<PhoneDTO, String> t) {
                         String processedNumber = processNumber(t.getNewValue());
                         PhoneDTO phoneDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
-                        phoneDTO.setPhoneNumber(t.getNewValue());
+                        phoneDTO.setPhone(t.getNewValue());
                         membershipView.sendMessage().accept(Messages.MessageType.UPDATE, phoneDTO);
                         person.getPhones().stream()
-                                .filter(p -> p.getPhone_Id() == phoneDTO.getPhone_Id())
-                                .forEach(s -> s.setPhoneNumber(processedNumber));
+                                .filter(p -> p.getPhoneId() == phoneDTO.getPhoneId())
+                                .forEach(s -> s.setPhone(processedNumber));
                     }
 
                     private String processNumber(String newValue) {
@@ -125,9 +125,9 @@ public class PhoneTableView implements Builder<TableView> {
         TableColumn<PhoneDTO, Boolean> Col3 = new TableColumn<>("Listed");
         Col3.setCellValueFactory(param -> {
             PhoneDTO phoneDTO = param.getValue();
-            SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(phoneDTO.isIsListed());
+            SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(phoneDTO.getPhoneListed());
             booleanProp.addListener((observable, oldValue, newValue) -> {
-                phoneDTO.setIsListed(newValue); // makes UI feel snappy
+                phoneDTO.setPhoneListed(newValue); // makes UI feel snappy
                 membershipView.sendMessage().accept(Messages.MessageType.UPDATE, phoneDTO);
             });
             return booleanProp;

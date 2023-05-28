@@ -32,9 +32,8 @@ public class AwardTableView implements Builder<TableView<AwardDTO>> {
         return tableView;
     }
 
-
-    private TableColumn<AwardDTO,String> createColumn1() {
-        TableColumn<AwardDTO, String> col1 = TableColumnFx.tableColumnOf(AwardDTO::awardYearProperty,"Year");
+    private TableColumn<AwardDTO, String> createColumn1() {
+        TableColumn<AwardDTO, String> col1 = TableColumnFx.tableColumnOf(AwardDTO::awardYearProperty, "Year");
         col1.setSortType(TableColumn.SortType.DESCENDING);
         col1.setOnEditCommit(
                 t -> {
@@ -47,9 +46,6 @@ public class AwardTableView implements Builder<TableView<AwardDTO>> {
         col1.setMaxWidth(1f * Integer.MAX_VALUE * 20);   // Phone
         return col1;
     }
-
-
-
 
     private TableColumn<AwardDTO,Awards> createColumn2() {
         ObservableList<Awards> awardsList = FXCollections.observableArrayList(Awards.values());

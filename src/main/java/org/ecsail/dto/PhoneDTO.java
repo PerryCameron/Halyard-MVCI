@@ -7,29 +7,30 @@ import javafx.scene.control.ComboBox;
 
 public class PhoneDTO {
 	
-	private IntegerProperty phone_Id;
-	private IntegerProperty pid;
-	private BooleanProperty isListed;
-	private StringProperty phoneNumber;
+	private IntegerProperty phoneId;
+	private IntegerProperty pId;
+	private BooleanProperty phoneListed;
+	private StringProperty phone;
 	private StringProperty phoneType;
-	private ObservableList<String> membershiptypes; 
+	private ObservableList<String> membershipTypes;
+
 	private ComboBox<String> combo_box;
-	public PhoneDTO(Integer phone_Id, Integer pid, Boolean isListed, String phoneNumber, String phoneType) {
-		this.phone_Id = new SimpleIntegerProperty(phone_Id);
-		this.pid = new SimpleIntegerProperty(pid);
-		this.isListed = new SimpleBooleanProperty(isListed);
-		this.phoneNumber = new SimpleStringProperty(phoneNumber);
+	public PhoneDTO(Integer phoneId, Integer pId, Boolean phoneListed, String phone, String phoneType) {
+		this.phoneId = new SimpleIntegerProperty(phoneId);
+		this.pId = new SimpleIntegerProperty(pId);
+		this.phoneListed = new SimpleBooleanProperty(phoneListed);
+		this.phone = new SimpleStringProperty(phone);
 		this.phoneType = new SimpleStringProperty(phoneType);
-		this.membershiptypes = FXCollections.observableArrayList("Home", "Cell", "Work", "Emergency");
-		this.combo_box = new ComboBox<String>(membershiptypes);
+		this.membershipTypes = FXCollections.observableArrayList("Home", "Cell", "Work", "Emergency");
+		this.combo_box = new ComboBox<String>(membershipTypes);
 		combo_box.setValue("none");
 	}
 
-	public PhoneDTO(Integer pid) {
-		this.phone_Id = new SimpleIntegerProperty(0);
-		this.pid = new SimpleIntegerProperty(pid);
-		this.isListed = new SimpleBooleanProperty(true);
-		this.phoneNumber = new SimpleStringProperty("");
+	public PhoneDTO(Integer p_Id) {
+		this.phoneId = new SimpleIntegerProperty(0);
+		this.pId = new SimpleIntegerProperty(p_Id);
+		this.phoneListed = new SimpleBooleanProperty(true);
+		this.phone = new SimpleStringProperty("");
 		this.phoneType = new SimpleStringProperty("");
 	}
 	
@@ -44,61 +45,60 @@ public class PhoneDTO {
 		this.combo_box = combo_box;
 	}
 	
-	public final IntegerProperty phone_IdProperty() {
-		return this.phone_Id;
+	public final IntegerProperty phoneIdProperty() {
+		return this.phoneId;
 	}
 
-	public final int getPhone_Id() {
-		return this.phone_IdProperty().get();
+	public final int getPhoneId() {
+		return this.phoneIdProperty().get();
 	}
 
-	public final void setPhone_Id(final int phone_Id) {
-		this.phone_IdProperty().set(phone_Id);
-	}
-	
-
-	public final IntegerProperty pidProperty() {
-		return this.pid;
+	public final void setPhoneId(final int phoneId) {
+		this.phoneIdProperty().set(phoneId);
 	}
 	
 
-	public final int getPid() {
-		return this.pidProperty().get();
+	public final IntegerProperty pIdProperty() {
+		return this.pId;
 	}
 	
 
-	public final void setPid(final int pid) {
-		this.pidProperty().set(pid);
+	public final int getpId() {
+		return this.pIdProperty().get();
+	}
+
+
+	public final void setpId(final int pId) {
+		this.pIdProperty().set(pId);
+	}
+
+	public final BooleanProperty phoneListedProperty() {
+		return this.phoneListed;
 	}
 	
 
-	public final BooleanProperty isListedProperty() {
-		return this.isListed;
+	public final boolean getPhoneListed() {
+		return this.phoneListedProperty().get();
 	}
 	
 
-	public final boolean isIsListed() {
-		return this.isListedProperty().get();
+	public final void setPhoneListed(final boolean phoneListed) {
+		this.phoneListedProperty().set(phoneListed);
 	}
 	
 
-	public final void setIsListed(final boolean isListed) {
-		this.isListedProperty().set(isListed);
+	public final StringProperty phoneProperty() {
+		return this.phone;
 	}
 	
 
-	public final StringProperty phoneNumberProperty() {
-		return this.phoneNumber;
+	public final String getPhone() {
+		return this.phoneProperty().get();
 	}
 	
 
-	public final String getPhoneNumber() {
-		return this.phoneNumberProperty().get();
-	}
-	
-
-	public final void setPhoneNumber(final String phoneNumber) {
-		this.phoneNumberProperty().set(phoneNumber);
+	public final void setPhone(final String phone) {
+		this.phoneProperty().set(phone);
 	}
 
 	public final StringProperty phoneTypeProperty() {
@@ -118,6 +118,6 @@ public class PhoneDTO {
 	@Override
 	public String toString() {
 		return "PhoneDTO " +
-				" phone_ID=" + phone_Id;
+				" phone_ID=" + phoneId;
 	}
 }

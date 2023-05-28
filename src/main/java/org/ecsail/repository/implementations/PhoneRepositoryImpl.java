@@ -1,19 +1,15 @@
 package org.ecsail.repository.implementations;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.ObservableList;
-import javafx.scene.control.ComboBox;
 import org.ecsail.dto.PersonDTO;
 import org.ecsail.dto.PhoneDTO;
 import org.ecsail.repository.interfaces.PhoneRepository;
-import org.ecsail.repository.rowmappers.MemoRowMapper;
 import org.ecsail.repository.rowmappers.PhoneRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -30,41 +26,58 @@ public class PhoneRepositoryImpl implements PhoneRepository {
     }
 
     @Override
-    public List<PhoneDTO> getPhoneByPid(int p_id) {
+    public List<PhoneDTO> getPhoneByPid(int pId) {
         String query = "SELECT * FROM phone";
-        if(p_id != 0)
-            query += " WHERE p_id=" + p_id;
+        if(pId != 0)
+            query += " WHERE p_id=" + pId;
         return template.query(query, new PhoneRowMapper());
     }
 
     @Override
-    public List<PhoneDTO> getPhoneByPerson(PersonDTO p) {
-        String query = "SELECT * FROM phone WHERE p_id=" + p.getP_id();
+    public List<PhoneDTO> getPhoneByPerson(PersonDTO personDTO) {
+        String query = "SELECT * FROM phone WHERE p_id=" + personDTO.getP_id();
         return template.query(query, new PhoneRowMapper());
     }
 
     @Override
-    public PhoneDTO getListedPhoneByType(PersonDTO p, String type) {
-        String query = "SELECT * FROM phone WHERE p_id=" + p.getP_id() + " AND phone_listed=true AND phone_type='" + type + "'";
+    public PhoneDTO getListedPhoneByType(PersonDTO p, String phoneType) {
+        String query = "SELECT * FROM phone WHERE p_id=" + p.getP_id() + " AND phone_listed=true AND phone_type='" + phoneType + "'";
         return template.queryForObject(query, new PhoneRowMapper());
     }
 
     @Override
-    public PhoneDTO getPhoneByType(String pid, String type) {
-        String query = "SELECT * FROM phone WHERE p_id=" + pid + " AND phone_type='" + type + "'";
+    public PhoneDTO getPhoneByType(String pId, String type) {
+        String query = "SELECT * FROM phone WHERE p_id=" + pId + " AND phone_type='" + type + "'";
         return template.queryForObject(query, new PhoneRowMapper());
     }
 
     @Override
     public int updatePhone(PhoneDTO phoneDTO) {
         String query = "UPDATE phone SET " +
-                "PHONE_ID = :phone_Id, " +
-                "P_ID = :pid," +
-                "PHONE = :phoneNumber, " +
+                "PHONE_ID = :phoneId, " +
+                "P_ID = :pId," +
+                "PHONE = :phone, " +
                 "PHONE_TYPE = :phoneType, " +
-                "PHONE_LISTED = :isListed " +
-                "WHERE PHONE_ID = :phone_Id";
+                "PHONE_LISTED = :phoneListed " +
+                "WHERE PHONE_ID = :phoneId";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(phoneDTO);
         return namedParameterJdbcTemplate.update(query, namedParameters);
+    }
+
+    @Override
+    public int delete(PhoneDTO phoneDTO) {
+        String deleteSql = "DELETE FROM phone WHERE PHONE_ID = ?";
+        return template.update(deleteSql, phoneDTO.getPhoneId());
+    }
+
+    @Override
+    public Object insert(PhoneDTO phoneDTO) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        String query = "INSERT INTO phone (P_ID, PHONE, PHONE_TYPE, PHONE_LISTED) " +
+                "VALUES (:pId, :phone, :phoneType, :phoneListed)";
+        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(phoneDTO);
+        namedParameterJdbcTemplate.update(query, namedParameters, keyHolder);
+        phoneDTO.setPhoneId(keyHolder.getKey().intValue());
+        return phoneDTO;
     }
 }
