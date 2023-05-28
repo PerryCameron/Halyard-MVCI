@@ -11,9 +11,9 @@ public class OfficerRowMapper implements RowMapper<OfficerDTO> {
     public OfficerDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new OfficerDTO(
                 rs.getInt("O_ID"),
-                rs.getInt("p_id"),
+                rs.getInt("P_ID"),
                 rs.getString("BOARD_YEAR"), // beginning of board term
-                rs.getString("off_type"),
-                rs.getString("off_year"));
+                rs.getString("OFF_TYPE"),
+                rs.getString("OFF_YEAR"));
     }
 }

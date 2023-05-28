@@ -52,7 +52,7 @@ public class PhoneRepositoryImpl implements PhoneRepository {
     }
 
     @Override
-    public int updatePhone(PhoneDTO phoneDTO) {
+    public int update(PhoneDTO phoneDTO) {
         String query = "UPDATE phone SET " +
                 "PHONE_ID = :phoneId, " +
                 "P_ID = :pId," +

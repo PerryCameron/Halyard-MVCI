@@ -36,7 +36,7 @@ public class AwardRepositoryImpl implements AwardRepository {
     }
 
     @Override
-    public int updateAward(AwardDTO awardDTO) {
+    public int update(AwardDTO awardDTO) {
         String query = "UPDATE awards SET " +
                 "P_ID = :pId, " +
                 "AWARD_YEAR = :awardYear, " +

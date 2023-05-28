@@ -21,7 +21,6 @@ public class MembershipController extends Controller {
         membershipView = new MembershipView(membershipModel, this::editRow);
     }
 
-
     private void editRow(Messages.MessageType type, Object o) {
         Task<Void> task = new Task<>() {
             @Override

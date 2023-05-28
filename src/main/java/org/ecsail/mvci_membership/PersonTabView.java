@@ -66,9 +66,8 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         tabPane.getTabs().add(detailsTab("Awards"));
         tabPane.getTabs().add(detailsTab("Officer"));
         vBox.getChildren().add(tabPane);
-        tabPane.getSelectionModel().selectedItemProperty().addListener((ov, oldTab, newTab) -> {
-            membershipModel.getSelectedPropertiesTab().put(person,newTab);
-        });
+        tabPane.getSelectionModel().selectedItemProperty()
+                .addListener((ov, oldTab, newTab) -> membershipModel.getSelectedPropertiesTab().put(person,newTab));
         return vBox;
     }
 
@@ -120,7 +119,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         HBox hBox = HBoxFx.hBoxOf(new Insets(10,10,5,10),"box-background-light",true);
         hBox.setPrefHeight(130);
         VBox vBox = createButtonBox(createAddButton(Phone), createDeleteButton(Phone), createCopyButton(Phone));
-        membershipModel.getPhoneTableView().put(person,new PhoneTableView(person, membershipView).build());
+        membershipModel.getPhoneTableView().put(person, new PhoneTableView(person, membershipView).build());
         hBox.getChildren().addAll(membershipModel.getPhoneTableView().get(person),vBox);
         return hBox;
     }
@@ -244,20 +243,16 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         final ClipboardContent content = new ClipboardContent();
         Button button = ButtonFx.buttonOf("Copy", 60);
         switch (type) {
-            case Email -> {
-                button.setOnAction(event -> {
-                    int selectedIndex = membershipModel.getEmailTableView().get(person).getSelectionModel().getSelectedIndex();
-                    EmailDTO emailDTO = membershipModel.getEmailTableView().get(person).getItems().get(selectedIndex);
-                    content.putString(emailDTO.getEmail());
-                });
-            }
-            case Phone -> {
-                button.setOnAction(event -> {
-                    int selectedIndex = membershipModel.getPhoneTableView().get(person).getSelectionModel().getSelectedIndex();
-                    PhoneDTO phoneDTO = membershipModel.getPhoneTableView().get(person).getItems().get(selectedIndex);
-                    content.putString(phoneDTO.getPhone());
-                });
-            }
+            case Email -> button.setOnAction(event -> {
+                int selectedIndex = membershipModel.getEmailTableView().get(person).getSelectionModel().getSelectedIndex();
+                EmailDTO emailDTO = membershipModel.getEmailTableView().get(person).getItems().get(selectedIndex);
+                content.putString(emailDTO.getEmail());
+            });
+            case Phone -> button.setOnAction(event -> {
+                int selectedIndex = membershipModel.getPhoneTableView().get(person).getSelectionModel().getSelectedIndex();
+                PhoneDTO phoneDTO = membershipModel.getPhoneTableView().get(person).getItems().get(selectedIndex);
+                content.putString(phoneDTO.getPhone());
+            });
         }
         clipboard.setContent(content);
         return button;
@@ -268,38 +263,30 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     private Button createDeleteButton(ObjectType.Dto type) {
         Button button = ButtonFx.buttonOf("Delete", 60);
         switch (type) {
-            case Phone -> {
-                button.setOnAction(event -> {
-                    int selectedIndex = membershipModel.getPhoneTableView().get(person).getSelectionModel().getSelectedIndex();
-                    PhoneDTO phoneDTO = membershipModel.getPhoneTableView().get(person).getItems().get(selectedIndex);
-                    membershipView.sendMessage().accept(MessageType.DELETE, phoneDTO);
-                    person.getPhones().remove(phoneDTO);
-                });
-            }
-            case Email -> {
-                button.setOnAction(event -> {
-                    int selectedIndex = membershipModel.getEmailTableView().get(person).getSelectionModel().getSelectedIndex();
-                    EmailDTO emailDTO = membershipModel.getEmailTableView().get(person).getItems().get(selectedIndex);
-                    membershipView.sendMessage().accept(MessageType.DELETE, emailDTO);
-                    person.getEmail().remove(emailDTO);
-                });
-            }
-            case Award -> {
-                button.setOnAction(event -> {
-                    int selectedIndex = membershipModel.getAwardTableView().get(person).getSelectionModel().getSelectedIndex();
-                    AwardDTO awardDTO = membershipModel.getAwardTableView().get(person).getItems().get(selectedIndex);
-                    membershipView.sendMessage().accept(MessageType.DELETE, awardDTO);
-                    person.getAwards().remove(awardDTO);
-                });
-            }
-            case Officer -> {
-                button.setOnAction(event -> {
-                    int selectedIndex = membershipModel.getOfficerTableView().get(person).getSelectionModel().getSelectedIndex();
-                    OfficerDTO officerDTO = membershipModel.getOfficerTableView().get(person).getItems().get(selectedIndex);
-                    membershipView.sendMessage().accept(MessageType.DELETE, officerDTO);
-                    person.getOfficer().remove(officerDTO);
-                });
-            }
+            case Phone -> button.setOnAction(event -> {
+                int selectedIndex = membershipModel.getPhoneTableView().get(person).getSelectionModel().getSelectedIndex();
+                PhoneDTO phoneDTO = membershipModel.getPhoneTableView().get(person).getItems().get(selectedIndex);
+                membershipView.sendMessage().accept(MessageType.DELETE, phoneDTO);
+                person.getPhones().remove(phoneDTO);
+            });
+            case Email -> button.setOnAction(event -> {
+                int selectedIndex = membershipModel.getEmailTableView().get(person).getSelectionModel().getSelectedIndex();
+                EmailDTO emailDTO = membershipModel.getEmailTableView().get(person).getItems().get(selectedIndex);
+                membershipView.sendMessage().accept(MessageType.DELETE, emailDTO);
+                person.getEmail().remove(emailDTO);
+            });
+            case Award -> button.setOnAction(event -> {
+                int selectedIndex = membershipModel.getAwardTableView().get(person).getSelectionModel().getSelectedIndex();
+                AwardDTO awardDTO = membershipModel.getAwardTableView().get(person).getItems().get(selectedIndex);
+                membershipView.sendMessage().accept(MessageType.DELETE, awardDTO);
+                person.getAwards().remove(awardDTO);
+            });
+            case Officer -> button.setOnAction(event -> {
+                int selectedIndex = membershipModel.getOfficerTableView().get(person).getSelectionModel().getSelectedIndex();
+                OfficerDTO officerDTO = membershipModel.getOfficerTableView().get(person).getItems().get(selectedIndex);
+                membershipView.sendMessage().accept(MessageType.DELETE, officerDTO);
+                person.getOfficer().remove(officerDTO);
+            });
         }
         return button;
     }
@@ -307,42 +294,34 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     private Button createAddButton(ObjectType.Dto type) {
         Button button = ButtonFx.buttonOf("Add", 60);
             switch (type) {
-                case Phone -> {
-                    button.setOnAction(event -> {
-                        PhoneDTO phoneDTO = new PhoneDTO(person.getP_id());
-                        membershipView.sendMessage().accept(MessageType.INSERT, phoneDTO);
-                        person.getPhones().add(phoneDTO);
-                        person.getPhones().sort(Comparator.comparing(PhoneDTO::getPhoneId).reversed());
-                        requestFocusOnTable(membershipModel.getPhoneTableView().get(person));
-                    });
-                }
-                case Email -> {
-                    button.setOnAction(event -> {
-                        EmailDTO emailDTO = new EmailDTO(person.getP_id());
-                        membershipView.sendMessage().accept(MessageType.INSERT, emailDTO);
-                        person.getEmail().add(emailDTO);
-                        person.getEmail().sort(Comparator.comparing(EmailDTO::getEmail_id).reversed());
-                        requestFocusOnTable(membershipModel.getEmailTableView().get(person));
-                    });
-                }
-                case Award -> {
-                    button.setOnAction(event -> {
-                        AwardDTO awardDTO = new AwardDTO(person.getP_id());
-                        membershipView.sendMessage().accept(MessageType.INSERT, awardDTO);
-                        person.getAwards().add(awardDTO);
-                        person.getAwards().sort(Comparator.comparing(AwardDTO::getAwardId).reversed());
-                        requestFocusOnTable(membershipModel.getAwardTableView().get(person));
-                    });
-                }
-                case Officer -> {
-                    button.setOnAction(event -> {
-                        OfficerDTO officerDTO = new OfficerDTO(person.getP_id());
-                        person.getOfficer().add(officerDTO);
-                        person.getOfficer().sort(Comparator.comparing(OfficerDTO::getOfficer_id).reversed());
-                        membershipView.sendMessage().accept(MessageType.INSERT, officerDTO);
-                        requestFocusOnTable(membershipModel.getOfficerTableView().get(person));
-                    });
-                }
+                case Phone -> button.setOnAction(event -> {
+                    PhoneDTO phoneDTO = new PhoneDTO(person.getP_id());
+                    membershipView.sendMessage().accept(MessageType.INSERT, phoneDTO);
+                    person.getPhones().add(phoneDTO);
+                    person.getPhones().sort(Comparator.comparing(PhoneDTO::getPhoneId));
+                    requestFocusOnTable(membershipModel.getPhoneTableView().get(person));
+                });
+                case Email -> button.setOnAction(event -> {
+                    EmailDTO emailDTO = new EmailDTO(person.getP_id());
+                    membershipView.sendMessage().accept(MessageType.INSERT, emailDTO);
+                    person.getEmail().add(emailDTO);
+                    person.getEmail().sort(Comparator.comparing(EmailDTO::getEmail_id));
+                    requestFocusOnTable(membershipModel.getEmailTableView().get(person));
+                });
+                case Award -> button.setOnAction(event -> {
+                    AwardDTO awardDTO = new AwardDTO(person.getP_id());
+                    membershipView.sendMessage().accept(MessageType.INSERT, awardDTO);
+                    person.getAwards().add(awardDTO);
+                    person.getAwards().sort(Comparator.comparing(AwardDTO::getAwardId));
+                    requestFocusOnTable(membershipModel.getAwardTableView().get(person));
+                });
+                case Officer -> button.setOnAction(event -> {
+                    OfficerDTO officerDTO = new OfficerDTO(person.getP_id());
+                    person.getOfficer().add(officerDTO);
+                    person.getOfficer().sort(Comparator.comparing(OfficerDTO::getOfficerId));
+                    membershipView.sendMessage().accept(MessageType.INSERT, officerDTO);
+                    requestFocusOnTable(membershipModel.getOfficerTableView().get(person));
+                });
             }
         return button;
     }

@@ -93,7 +93,7 @@ public class MembershipIdRepositoryImpl implements MembershipIdRepository {
     }
 
     @Override
-    public int updateId(MembershipIdDTO membershipIdDTO) {
+    public int update(MembershipIdDTO membershipIdDTO) {
         String query = "UPDATE membership_id SET " +
                 "FISCAL_YEAR = :fiscal_Year, " +
                 "MS_ID = :ms_id, " +

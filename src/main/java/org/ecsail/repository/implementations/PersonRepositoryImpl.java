@@ -29,7 +29,7 @@ public class PersonRepositoryImpl implements PersonRepository {
     }
 
     @Override
-    public int updatePerson(PersonDTO personDTO) {
+    public int update(PersonDTO personDTO) {
         String query = "UPDATE person SET " +
                 "MS_ID = :ms_id, " +
                 "member_type = :memberType, " +

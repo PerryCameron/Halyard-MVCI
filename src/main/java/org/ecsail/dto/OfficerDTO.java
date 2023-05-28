@@ -9,41 +9,41 @@ import java.time.Year;
 
 public class OfficerDTO {
 
-	private IntegerProperty officer_id;
+	private IntegerProperty officerId;
 	private IntegerProperty pId;
-	private StringProperty board_year;
-	private StringProperty officer_type;
-	private StringProperty fiscal_year;
+	private StringProperty boardYear;
+	private StringProperty officerType;
+	private StringProperty fiscalYear;
 	
-	public OfficerDTO(Integer officer_id, Integer pId, String board_year,
-					  String officer_type, String fiscal_year) {
-		this.officer_id = new SimpleIntegerProperty(officer_id);
+	public OfficerDTO(Integer officerId, Integer pId, String boardYear,
+					  String officerType, String fiscalYear) {
+		this.officerId = new SimpleIntegerProperty(officerId);
 		this.pId = new SimpleIntegerProperty(pId);
-		this.board_year = new SimpleStringProperty(board_year);
-		this.officer_type = new SimpleStringProperty(officer_type);
-		this.fiscal_year = new SimpleStringProperty(fiscal_year);
+		this.boardYear = new SimpleStringProperty(boardYear);
+		this.officerType = new SimpleStringProperty(officerType);
+		this.fiscalYear = new SimpleStringProperty(fiscalYear);
 	}
 
     public OfficerDTO(Integer pId) {
-		this.officer_id = new SimpleIntegerProperty(0);
+		this.officerId = new SimpleIntegerProperty(0);
 		this.pId = new SimpleIntegerProperty(pId);
-		this.board_year = new SimpleStringProperty("");
-		this.officer_type = new SimpleStringProperty("");
-		this.fiscal_year = new SimpleStringProperty(Year.now().toString());
+		this.boardYear = new SimpleStringProperty("");
+		this.officerType = new SimpleStringProperty("");
+		this.fiscalYear = new SimpleStringProperty(Year.now().toString());
     }
 
-    public final IntegerProperty officer_idProperty() {
-		return this.officer_id;
+    public final IntegerProperty officerIdProperty() {
+		return this.officerId;
 	}
 	
 
-	public final int getOfficer_id() {
-		return this.officer_idProperty().get();
+	public final int getOfficerId() {
+		return this.officerIdProperty().get();
 	}
 	
 
-	public final void setOfficer_id(final int officer_id) {
-		this.officer_idProperty().set(officer_id);
+	public final void setOfficerId(final int officerId) {
+		this.officerIdProperty().set(officerId);
 	}
 	
 
@@ -60,54 +60,51 @@ public class OfficerDTO {
 	public final void setpId(final int pId) {
 		this.pIdProperty().set(pId);
 	}
-	
 
-	public final StringProperty board_yearProperty() {
-		return this.board_year;
+
+	public String getBoardYear() {
+		return boardYear.get();
+	}
+
+	public StringProperty boardYearProperty() {
+		return boardYear;
+	}
+
+	public void setBoardYear(String boardYear) {
+		this.boardYear.set(boardYear);
+	}
+
+	public final StringProperty officerTypeProperty() {
+		return this.officerType;
 	}
 	
 
-	public final String getBoard_year() {
-		return this.board_yearProperty().get();
+	public final String getOfficerType() {
+		return this.officerTypeProperty().get();
 	}
 	
 
-	public final void setBoard_year(final String board_year) {
-		this.board_yearProperty().set(board_year);
+	public final void setOfficerType(final String officerType) {
+		this.officerTypeProperty().set(officerType);
 	}
 	
 
-	public final StringProperty officer_typeProperty() {
-		return this.officer_type;
+	public final StringProperty fiscalYearProperty() {
+		return this.fiscalYear;
 	}
 	
 
-	public final String getOfficer_type() {
-		return this.officer_typeProperty().get();
+	public final String getFiscalYear() {
+		return this.fiscalYearProperty().get();
 	}
 	
 
-	public final void setOfficer_type(final String officer_type) {
-		this.officer_typeProperty().set(officer_type);
-	}
-	
-
-	public final StringProperty fiscal_yearProperty() {
-		return this.fiscal_year;
-	}
-	
-
-	public final String getFiscal_year() {
-		return this.fiscal_yearProperty().get();
-	}
-	
-
-	public final void setFiscal_year(final String fiscal_year) {
-		this.fiscal_yearProperty().set(fiscal_year);
+	public final void setFiscalYear(final String fiscalYear) {
+		this.fiscalYearProperty().set(fiscalYear);
 	}
 
 	@Override
 	public String toString() {
-		return "Object_Officer [officer_id=" + officer_id +"]";
+		return "Object_Officer [officer_id=" + officerId +"]";
 	}
 }

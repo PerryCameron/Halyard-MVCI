@@ -11,6 +11,6 @@ public interface PersonRepository {
 
     List<PersonDTO> getActivePeopleByMsId(int ms_id);
 
-    int updatePerson(PersonDTO personDTO);
+    int update(PersonDTO personDTO);
 
 }

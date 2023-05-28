@@ -44,7 +44,7 @@ public class EmailRepositoryImpl implements EmailRepository {
     }
 
     @Override
-    public int updateEmail(EmailDTO emailDTO) {
+    public int update(EmailDTO emailDTO) {
         String query = "UPDATE email SET " +
                 "P_ID = :pId, " +
                 "PRIMARY_USE = :isPrimaryUse, " +

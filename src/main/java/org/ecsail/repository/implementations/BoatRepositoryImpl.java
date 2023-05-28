@@ -135,7 +135,7 @@ public class BoatRepositoryImpl implements BoatRepository {
     }
 
     @Override
-    public int updateBoat(BoatDTO boatDTO) {
+    public int update(BoatDTO boatDTO) {
         String query = "UPDATE boat SET " +
                 "MANUFACTURER = :manufacturer, " +
                 "MANUFACTURE_YEAR = :manufactureYear, " +

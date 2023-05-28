@@ -10,6 +10,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -32,30 +34,47 @@ public class OfficerRepositoryImpl implements OfficerRepository {
 
     @Override
     public List<OfficerDTO> getOfficer(String field, int attribute) {
-        String query = "SELECT * FROM officer WHERE " + field + "='" + attribute + "'";
-        return template.query(query,new OfficerRowMapper());    }
+        String query = "SELECT * FROM officer WHERE ? = ?";
+        return template.query(query,new OfficerRowMapper(),field,attribute);    }
 
     @Override
     public List<OfficerDTO> getOfficer(PersonDTO person) {
-        String query = "SELECT * FROM officer WHERE P_ID='" + person.getP_id() + "'";
-        return template.query(query,new OfficerRowMapper());
+        String query = "SELECT * FROM officer WHERE P_ID = ?";
+        return template.query(query,new OfficerRowMapper(), person.getP_id());
     }
 
     @Override
     public List<OfficerWithNameDTO> getOfficersWithNames(String type) {
-        String query = "SELECT f_name,L_NAME,off_year FROM officer o LEFT JOIN person p ON o.p_id=p.p_id WHERE off_type='"+type+"'";
-        return template.query(query,new OfficerWithNamesRowMapper());
+        String query = "SELECT f_name,L_NAME,off_year FROM officer o LEFT JOIN person p ON o.p_id=p.p_id WHERE off_type= ?";
+        return template.query(query,new OfficerWithNamesRowMapper(), type);
     }
 
     @Override
-    public int updateOfficer(OfficerDTO officerDTO) {
+    public int update(OfficerDTO officerDTO) {
         String query = "UPDATE officer SET " +
                 "P_ID = :pId, " +
-                "BOARD_YEAR = :board_year, " +
-                "OFF_TYPE = :officer_type, " +
-                "OFF_YEAR = :fiscal_year " +
-                "WHERE O_ID = :officer_id";
+                "BOARD_YEAR = :boardYear, " +
+                "OFF_TYPE = :officerType, " +
+                "OFF_YEAR = :fiscalYear " +
+                "WHERE O_ID = :officerId";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(officerDTO);
         return namedParameterJdbcTemplate.update(query, namedParameters);
+    }
+
+    @Override
+    public int insert(OfficerDTO officerDTO) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        String query = "INSERT INTO officer (P_ID, BOARD_YEAR, OFF_TYPE, OFF_YEAR) " +
+                "VALUES (:pId, :boardYear, :officerType, :fiscalYear)";
+        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(officerDTO);
+        int affectedRows = namedParameterJdbcTemplate.update(query, namedParameters, keyHolder);
+        officerDTO.setOfficerId(keyHolder.getKey().intValue());
+        return affectedRows;
+    }
+
+    @Override
+    public int delete(OfficerDTO officerDTO) {
+        String deleteSql = "DELETE FROM officer WHERE O_ID = ?";
+        return template.update(deleteSql, officerDTO.getOfficerId());
     }
 }

@@ -13,7 +13,7 @@ public interface PhoneRepository {
     PhoneDTO getListedPhoneByType(PersonDTO p, String type);
 
     PhoneDTO getPhoneByType(String pid, String type);
-    int updatePhone(PhoneDTO o);
+    int update(PhoneDTO o);
     int delete(PhoneDTO o);
     int insert(PhoneDTO o);
 }

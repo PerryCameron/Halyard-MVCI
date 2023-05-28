@@ -18,7 +18,9 @@ import org.ecsail.widgetfx.TableViewFx;
 
 import java.util.stream.Collectors;
 
-public class OfficerTableView implements Builder<TableView<OfficerDTO>> {
+
+
+public class OfficerTableView implements Builder<TableView<OfficerDTO>>,Messages {
     private final PersonDTO person;
     private final MembershipModel membershipModel;
     private final MembershipView membershipView;
@@ -37,13 +39,13 @@ public class OfficerTableView implements Builder<TableView<OfficerDTO>> {
         return tableView;
     }
 
-    private TableColumn<OfficerDTO, ?> createColumn1() {
-        TableColumn<OfficerDTO, String> col1 = TableColumnFx.tableColumnOf(OfficerDTO::fiscal_yearProperty, "Year");
+    private TableColumn<OfficerDTO, String> createColumn1() {
+        TableColumn<OfficerDTO, String> col1 = TableColumnFx.tableColumnOf(OfficerDTO::fiscalYearProperty, "Year");
         col1.setSortType(TableColumn.SortType.DESCENDING);
         col1.setOnEditCommit(
                 t -> {
                     OfficerDTO officerDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
-                    officerDTO.setFiscal_year(t.getNewValue());
+                    officerDTO.setFiscalYear(t.getNewValue());
                     membershipView.sendMessage().accept(Messages.MessageType.UPDATE, officerDTO);
                 }
         );
@@ -56,8 +58,8 @@ public class OfficerTableView implements Builder<TableView<OfficerDTO>> {
         ObservableList<String> officerList = FXCollections.observableArrayList(boardPositions.stream().map(BoardPositionDTO::position).collect(Collectors.toList()));
         final TableColumn<OfficerDTO, String> col2 = new TableColumn<>("Officers, Chairs and Board");
         col2.setCellValueFactory(param -> {
-            OfficerDTO thisOfficer = param.getValue();
-            String type = Officer.getByCode(thisOfficer.getOfficer_type(), boardPositions);
+            OfficerDTO officerDTO = param.getValue();
+            String type = Officer.getByCode(officerDTO.getOfficerType(), boardPositions);
             return new SimpleObjectProperty<>(type);
         });
 
@@ -66,7 +68,8 @@ public class OfficerTableView implements Builder<TableView<OfficerDTO>> {
         col2.setOnEditCommit((TableColumn.CellEditEvent<OfficerDTO, String> event) -> {
             TablePosition<OfficerDTO, String> pos = event.getTablePosition();
             OfficerDTO officerDTO = event.getTableView().getItems().get(pos.getRow());
-            officerDTO.setOfficer_type(event.getNewValue());
+//            officerDTO.setOfficerType(event.getNewValue());
+            officerDTO.setOfficerType(Officer.getByName(event.getNewValue(), boardPositions));
             membershipView.sendMessage().accept(Messages.MessageType.UPDATE, officerDTO);
         });
         col2.setMaxWidth(1f * Integer.MAX_VALUE * 50);  // Type
@@ -74,15 +77,15 @@ public class OfficerTableView implements Builder<TableView<OfficerDTO>> {
     }
 
     private TableColumn<OfficerDTO, String> createColumn3() {
-        TableColumn<OfficerDTO, String> col3 = TableColumnFx.tableColumnOf(OfficerDTO::board_yearProperty, "Exp");
-        col3.setOnEditCommit(
+        TableColumn<OfficerDTO, String> col1 = TableColumnFx.tableColumnOf(OfficerDTO::boardYearProperty, "Exp");
+        col1.setOnEditCommit(
                 t -> {
                     OfficerDTO officerDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
-                    officerDTO.setBoard_year(t.getNewValue());
+                    officerDTO.setBoardYear(t.getNewValue());
                     membershipView.sendMessage().accept(Messages.MessageType.UPDATE, officerDTO);
                 }
         );
-        col3.setMaxWidth(1f * Integer.MAX_VALUE * 20);  // Listed
-        return col3;
+        col1.setMaxWidth(1f * Integer.MAX_VALUE * 20);   // Phone
+        return col1;
     }
 }

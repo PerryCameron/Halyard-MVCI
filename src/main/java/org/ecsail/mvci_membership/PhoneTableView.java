@@ -19,25 +19,29 @@ import org.ecsail.interfaces.Messages;
 import org.ecsail.widgetfx.TableColumnFx;
 import org.ecsail.widgetfx.TableViewFx;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
-public class PhoneTableView implements Builder<TableView> {
+public class PhoneTableView implements Builder<TableView<PhoneDTO>> {
 
-    private final MembershipModel membershipModel;
     private final MembershipView membershipView;
     private final PersonDTO person;
 
     public PhoneTableView(PersonDTO personDTO, MembershipView membershipView) {
         this.person = personDTO;
-        this.membershipModel = membershipView.getMembershipModel();
         this.membershipView = membershipView;
     }
 
     @Override
-    public TableView build() {
+    public TableView<PhoneDTO> build() {
         TableView<PhoneDTO> tableView = TableViewFx.tableViewOf(PhoneDTO.class);
         tableView.setItems(person.getPhones());
-        tableView.getColumns().addAll(createColumn1(), createColumn2(), createColumn3());
+        List<TableColumn<PhoneDTO, ?>> columns = new ArrayList<>();
+        columns.add(createColumn1());
+        columns.add(createColumn2());
+        columns.add(createColumn3());
+        tableView.getColumns().addAll(columns);
         return tableView;
     }
 
@@ -111,7 +115,6 @@ public class PhoneTableView implements Builder<TableView> {
         Col2.setOnEditCommit((TableColumn.CellEditEvent<PhoneDTO, PhoneType> event) -> {
             TablePosition<PhoneDTO, PhoneType> pos = event.getTablePosition();
             PhoneType newPhoneType = event.getNewValue();
-            PhoneType oldPhoneType = event.getOldValue();
             int row = pos.getRow();
             PhoneDTO phoneDTO = event.getTableView().getItems().get(row);
             phoneDTO.setPhoneType(newPhoneType.getCode()); // makes UI feel snappy

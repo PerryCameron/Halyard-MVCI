@@ -10,7 +10,7 @@ public interface EmailRepository {
     List<Email_InformationDTO> getEmailInfo();
     List<EmailDTO> getEmail(int p_id);
     EmailDTO getEmail(PersonDTO person);
-    int updateEmail(EmailDTO o);
+    int update(EmailDTO o);
     int insert(EmailDTO emailDTO);
     int delete(EmailDTO o);
 }
