@@ -1,7 +1,11 @@
 package org.ecsail.mvci_membership;
 
+import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.ecsail.dto.*;
 import org.ecsail.interfaces.Messages;
+import org.ecsail.interfaces.SlipUser;
 import org.ecsail.repository.implementations.*;
 import org.ecsail.repository.interfaces.*;
 import org.slf4j.Logger;
@@ -20,6 +24,8 @@ public class DataBaseService {
     private final MembershipIdRepository membershipIdRepo;
     private final BoatRepository boatRepo;
     private static final Logger logger = LoggerFactory.getLogger(DataBaseService.class);
+    private final SlipRepository slipRepo;
+    private final NotesRepository notesRepo;
 
 
     public DataBaseService(DataSource dataSource, MembershipModel membershipModel) {
@@ -31,21 +37,95 @@ public class DataBaseService {
         officerRepo = new OfficerRepositoryImpl(dataSource);
         membershipIdRepo = new MembershipIdRepositoryImpl(dataSource);
         boatRepo = new BoatRepositoryImpl(dataSource);
+        slipRepo = new SlipRepositoryImpl(dataSource);
+        notesRepo = new NotesRepositoryImpl(dataSource);
     }
 
-    public void insert(Object o) {
-        int rowsUpdated = 0;
+    public void getPersonLists(MembershipListDTO ml) { // not on FX thread because lists added before UI is launched
+        ObservableList<PersonDTO> personDTOS = null;
         try {
-            if (o instanceof AwardDTO) rowsUpdated = awardRepo.insert((AwardDTO) o);
-            if (o instanceof EmailDTO) rowsUpdated = emailRepo.insert((EmailDTO) o);
-            if (o instanceof PhoneDTO) rowsUpdated = phoneRepo.insert((PhoneDTO) o);
-            if (o instanceof OfficerDTO) rowsUpdated = officerRepo.insert((OfficerDTO) o);
+            personDTOS = FXCollections.observableArrayList(peopleRepo.getActivePeopleByMsId(ml.getMsId()));
+            for (PersonDTO person : personDTOS) {
+                person.setPhones(FXCollections.observableArrayList(phoneRepo.getPhoneByPid(person.getP_id())));
+                person.setEmail(FXCollections.observableArrayList(emailRepo.getEmail(person.getP_id())));
+                person.setAwards(FXCollections.observableArrayList(awardRepo.getAwards(person)));
+                person.setOfficer(FXCollections.observableArrayList(officerRepo.getOfficer(person)));
+                retrieveLight(true);
+            }
         } catch (DataAccessException e) {
             logger.error(e.getMessage());
-            illuminateStatusLight(false);
+            retrieveLight(false);
         }
-        illuminateStatusLight(rowsUpdated == 1);
+        membershipModel.setPeople(personDTOS);
+        logger.info("set people, size: " +membershipModel.getPeople().size());
     }
+
+    public void getIds(MembershipListDTO ml) {
+        try {
+            Platform.runLater(() -> membershipModel.getMembership()
+                    .setMembershipIdDTOS(FXCollections.observableArrayList(membershipIdRepo.getIds(ml.getMsId()))));
+            retrieveLight(true);
+        } catch (DataAccessException e) {
+            logger.error(e.getMessage());
+            retrieveLight(false);
+        }
+    }
+
+    public void getBoats(MembershipListDTO ml) {
+        try {
+            Platform.runLater(() -> {
+                membershipModel.getMembership()
+                        .setBoatDTOS(FXCollections.observableArrayList(boatRepo.getBoatsByMsId(ml.getMsId())));
+                retrieveLight(true);
+            });
+        } catch (DataAccessException e) {
+            logger.error(e.getMessage());
+            retrieveLight(false);
+        }
+
+    }
+
+    public void getNotes(MembershipListDTO ml) {
+        try {
+            Platform.runLater(() -> membershipModel.getMembership()
+                    .setNotesDTOS(FXCollections.observableArrayList(notesRepo.getMemosByMsId(ml.getMsId()))));
+            retrieveLight(true);
+        } catch (DataAccessException e) {
+            logger.error(e.getMessage());
+            retrieveLight(false);
+        }
+    }
+
+    public void getSlipInfo(MembershipListDTO ml) {
+        Platform.runLater(() -> {
+            logger.info("Slip is loaded");
+            membershipModel.setSlip(slipRepo.getSlip(ml.getMsId()));
+            // member does not own a slip
+            if (membershipModel.getSlip().getMs_id() == 0) membershipModel.setSlipRelationStatus(SlipUser.slip.noSlip);
+                // member owns a slip
+            else if (membershipModel.getSlip().getMs_id() == membershipModel.getMembership().getMsId()) {
+                // member owns slip and is not subleasing
+                if(membershipModel.getSlip().getSubleased_to() == 0) membershipModel.setSlipRelationStatus(SlipUser.slip.owner);
+                    // member owns slip but is subleasing
+                else setOwnAndSublease();
+                // member does not own but is subleasing
+            } else setSubLeaser();
+        });
+    }
+
+    private void setSubLeaser() {
+        membershipModel.setSlipRelationStatus(SlipUser.slip.subLeaser);
+        // gets the current id of the slip owner
+        membershipModel.setMembershipId(String.valueOf(membershipIdRepo.getCurrentId(membershipModel.getSlip().getMs_id()).getMembership_id()));
+    }
+
+    private void setOwnAndSublease() {
+        membershipModel.setSlipRelationStatus(SlipUser.slip.ownAndSublease);
+        // gets the id of the subLeaser for the current year
+        membershipModel.setMembershipId(String.valueOf(membershipIdRepo.getCurrentId(membershipModel.getSlip().getSubleased_to()).getMembership_id()));
+    }
+
+
 
     public void receiveMessage(Messages.MessageType messages, Object o) {
         switch (messages) {
@@ -80,9 +160,23 @@ public class DataBaseService {
             if (o instanceof OfficerDTO) rowsUpdated = officerRepo.delete((OfficerDTO) o);
         } catch (DataAccessException e) {
             logger.error(e.getMessage());
-            illuminateStatusLight(false);
+            changeLight(false);
         }
-        illuminateStatusLight(rowsUpdated == 1);
+        changeLight(rowsUpdated == 1);
+    }
+
+    public void insert(Object o) {
+        int rowsUpdated = 0;
+        try {
+            if (o instanceof AwardDTO) rowsUpdated = awardRepo.insert((AwardDTO) o);
+            if (o instanceof EmailDTO) rowsUpdated = emailRepo.insert((EmailDTO) o);
+            if (o instanceof PhoneDTO) rowsUpdated = phoneRepo.insert((PhoneDTO) o);
+            if (o instanceof OfficerDTO) rowsUpdated = officerRepo.insert((OfficerDTO) o);
+        } catch (DataAccessException e) {
+            logger.error(e.getMessage());
+            changeLight(false);
+        }
+        changeLight(rowsUpdated == 1);
     }
 
     private void update(Object o) {
@@ -100,11 +194,16 @@ public class DataBaseService {
             // TODO do more stuff with this
         }
         System.out.println(rowsUpdated);
-        illuminateStatusLight(rowsUpdated == 1);
+        changeLight(rowsUpdated == 1);
     }
 
-    protected void illuminateStatusLight(boolean returnOk) { // updates status lights
+    protected void changeLight(boolean returnOk) { // updates status lights
         if(returnOk) membershipModel.getMainModel().getLightAnimationMap().get("receiveSuccess").playFromStart();
         else membershipModel.getMainModel().getLightAnimationMap().get("receiveError").playFromStart();
+    }
+
+    protected void retrieveLight(boolean returnOk) { // updates status lights
+        if(returnOk) membershipModel.getMainModel().getLightAnimationMap().get("transmitSuccess").playFromStart();
+        else membershipModel.getMainModel().getLightAnimationMap().get("transmitError").playFromStart();
     }
 }

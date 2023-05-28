@@ -38,11 +38,11 @@ public class MembershipController extends Controller {
         Task<Void> task = new Task<>() {
             @Override
             protected Void call() {
-                membershipInteractor.getPersonLists(ml);
-                membershipInteractor.getSlipInfo(ml);
-                membershipInteractor.getBoats(ml);
-                membershipInteractor.getNotes(ml);
-                membershipInteractor.getIds(ml);
+                membershipInteractor.getDataBaseService().getPersonLists(ml);
+                membershipInteractor.getDataBaseService().getSlipInfo(ml);
+                membershipInteractor.getDataBaseService().getBoats(ml);
+                membershipInteractor.getDataBaseService().getNotes(ml);
+                membershipInteractor.getDataBaseService().getIds(ml);
                 return null;
             }
         };

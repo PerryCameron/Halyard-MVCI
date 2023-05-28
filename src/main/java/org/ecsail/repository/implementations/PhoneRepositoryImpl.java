@@ -27,10 +27,8 @@ public class PhoneRepositoryImpl implements PhoneRepository {
 
     @Override
     public List<PhoneDTO> getPhoneByPid(int pId) {
-        String query = "SELECT * FROM phone";
-        if(pId != 0)
-            query += " WHERE p_id=" + pId;
-        return template.query(query, new PhoneRowMapper());
+        String query = "SELECT * FROM phone Where P_ID = ?";
+        return template.query(query, new PhoneRowMapper(), pId);
     }
 
     @Override
