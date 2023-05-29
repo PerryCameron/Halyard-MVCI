@@ -33,13 +33,13 @@ public class PhoneRepositoryImpl implements PhoneRepository {
 
     @Override
     public List<PhoneDTO> getPhoneByPerson(PersonDTO personDTO) {
-        String query = "SELECT * FROM phone WHERE p_id=" + personDTO.getP_id();
+        String query = "SELECT * FROM phone WHERE p_id=" + personDTO.getpId();
         return template.query(query, new PhoneRowMapper());
     }
 
     @Override
     public PhoneDTO getListedPhoneByType(PersonDTO p, String phoneType) {
-        String query = "SELECT * FROM phone WHERE p_id=" + p.getP_id() + " AND phone_listed=true AND phone_type='" + phoneType + "'";
+        String query = "SELECT * FROM phone WHERE p_id=" + p.getpId() + " AND phone_listed=true AND phone_type='" + phoneType + "'";
         return template.queryForObject(query, new PhoneRowMapper());
     }
 

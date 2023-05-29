@@ -157,9 +157,6 @@ public class MainView implements Builder<Region> {
         }
     }
 
-
-
-
 //    private static void startFileLogger() {
 //        try {
 //            outputFile = File.createTempFile("debug", ".log", new File(LOGFILEDIR));

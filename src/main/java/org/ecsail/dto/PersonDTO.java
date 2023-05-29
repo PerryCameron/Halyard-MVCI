@@ -5,8 +5,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class PersonDTO {
-	private IntegerProperty p_id;
-	private IntegerProperty ms_id;
+	private IntegerProperty pId;
+	private IntegerProperty msId;
 	private IntegerProperty memberType; // 1 == primary 2 == secondary 3 == dependant
 	private StringProperty firstName;
 	private StringProperty lastName;
@@ -24,8 +24,8 @@ public class PersonDTO {
 	public PersonDTO(Integer pid, Integer ms_id, Integer memberType, String firstName, String lastName,
                      String birthday, String occupation,
                      String business, Boolean isActive, String nickName, Integer oldMsid) {
-		this.p_id = new SimpleIntegerProperty(pid);
-		this.ms_id = new SimpleIntegerProperty(ms_id);
+		this.pId = new SimpleIntegerProperty(pid);
+		this.msId = new SimpleIntegerProperty(ms_id);
 		this.memberType = new SimpleIntegerProperty(memberType);
 		this.firstName = new SimpleStringProperty(firstName);
 		this.lastName = new SimpleStringProperty(lastName);
@@ -79,7 +79,7 @@ public class PersonDTO {
 	}
 
 	public String getNameWithInfo() {
-		return getFullName() + " (p_id " + getP_id() + ")";
+		return getFullName() + " (p_id " + getpId() + ")";
 	}
 
 	public final IntegerProperty oldMsidProperty( ) {
@@ -94,28 +94,28 @@ public class PersonDTO {
 		this.oldMsidProperty().set(oldMsid);
 	}
 
-	public final IntegerProperty p_idProperty() {
-		return this.p_id;
+	public final IntegerProperty pIdProperty() {
+		return this.pId;
 	}
 
-	public final int getP_id() {
-		return this.p_idProperty().get();
+	public final int getpId() {
+		return this.pIdProperty().get();
 	}
 
-	public final void setP_id(final int p_id) {
-		this.p_idProperty().set(p_id);
+	public final void setpId(final int pId) {
+		this.pIdProperty().set(pId);
 	}
 
-	public final IntegerProperty ms_idProperty() {
-		return this.ms_id;
+	public final IntegerProperty msIdProperty() {
+		return this.msId;
 	}
 
-	public final int getMs_id() {
-		return this.ms_idProperty().get();
+	public final int getMsId() {
+		return this.msIdProperty().get();
 	}
 
-	public final void setMs_id(final int ms_id) {
-		this.ms_idProperty().set(ms_id);
+	public final void setMsId(final int msId) {
+		this.msIdProperty().set(msId);
 	}
 
 	public final IntegerProperty memberTypeProperty() {

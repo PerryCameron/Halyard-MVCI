@@ -31,7 +31,7 @@ public class PersonRepositoryImpl implements PersonRepository {
     @Override
     public int update(PersonDTO personDTO) {
         String query = "UPDATE person SET " +
-                "MS_ID = :ms_id, " +
+                "MS_ID = :msId, " +
                 "member_type = :memberType, " +
                 "F_NAME = :firstName, " +
                 "L_NAME = :lastName, " +
@@ -41,7 +41,7 @@ public class PersonRepositoryImpl implements PersonRepository {
                 "IS_ACTIVE = :active, " +
                 "NICK_NAME = :nickName, " +
                 "OLD_MSID = :oldMsid " +
-                "WHERE p_id = :p_id";
+                "WHERE p_id = :pId";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(personDTO);
         return namedParameterJdbcTemplate.update(query, namedParameters);
     }

@@ -25,7 +25,7 @@ public class AwardRepositoryImpl implements AwardRepository {
 
     @Override
     public List<AwardDTO> getAwards(PersonDTO p) {
-        String query = "SELECT * FROM awards WHERE p_id=" + p.getP_id();
+        String query = "SELECT * FROM awards WHERE p_id=" + p.getpId();
         return template.query(query, new AwardsRowMapper());
     }
 

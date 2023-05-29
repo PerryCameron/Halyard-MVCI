@@ -46,8 +46,8 @@ public class DataBaseService {
         try {
             personDTOS = FXCollections.observableArrayList(peopleRepo.getActivePeopleByMsId(ml.getMsId()));
             for (PersonDTO person : personDTOS) {
-                person.setPhones(FXCollections.observableArrayList(phoneRepo.getPhoneByPid(person.getP_id())));
-                person.setEmail(FXCollections.observableArrayList(emailRepo.getEmail(person.getP_id())));
+                person.setPhones(FXCollections.observableArrayList(phoneRepo.getPhoneByPid(person.getpId())));
+                person.setEmail(FXCollections.observableArrayList(emailRepo.getEmail(person.getpId())));
                 person.setAwards(FXCollections.observableArrayList(awardRepo.getAwards(person)));
                 person.setOfficer(FXCollections.observableArrayList(officerRepo.getOfficer(person)));
             }

@@ -212,8 +212,8 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         VBox vBox = new VBox(7);
         vBox.getChildren().addAll(
                 new Label("Age: " + MathTools.calculateAge(person.getBirthday())),
-                new Label("Person ID: " + person.getP_id()),
-                new Label("MSID: " + person.getMs_id()));
+                new Label("Person ID: " + person.getpId()),
+                new Label("MSID: " + person.getMsId()));
         return vBox;
     }
 
@@ -295,28 +295,28 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         Button button = ButtonFx.buttonOf("Add", 60);
             switch (type) {
                 case Phone -> button.setOnAction(event -> {
-                    PhoneDTO phoneDTO = new PhoneDTO(person.getP_id());
+                    PhoneDTO phoneDTO = new PhoneDTO(person.getpId());
                     membershipView.sendMessage().accept(MessageType.INSERT, phoneDTO);
                     person.getPhones().add(phoneDTO);
                     person.getPhones().sort(Comparator.comparing(PhoneDTO::getPhoneId));
                     requestFocusOnTable(membershipModel.getPhoneTableView().get(person));
                 });
                 case Email -> button.setOnAction(event -> {
-                    EmailDTO emailDTO = new EmailDTO(person.getP_id());
+                    EmailDTO emailDTO = new EmailDTO(person.getpId());
                     membershipView.sendMessage().accept(MessageType.INSERT, emailDTO);
                     person.getEmail().add(emailDTO);
                     person.getEmail().sort(Comparator.comparing(EmailDTO::getEmail_id));
                     requestFocusOnTable(membershipModel.getEmailTableView().get(person));
                 });
                 case Award -> button.setOnAction(event -> {
-                    AwardDTO awardDTO = new AwardDTO(person.getP_id());
+                    AwardDTO awardDTO = new AwardDTO(person.getpId());
                     membershipView.sendMessage().accept(MessageType.INSERT, awardDTO);
                     person.getAwards().add(awardDTO);
                     person.getAwards().sort(Comparator.comparing(AwardDTO::getAwardId));
                     requestFocusOnTable(membershipModel.getAwardTableView().get(person));
                 });
                 case Officer -> button.setOnAction(event -> {
-                    OfficerDTO officerDTO = new OfficerDTO(person.getP_id());
+                    OfficerDTO officerDTO = new OfficerDTO(person.getpId());
                     person.getOfficer().add(officerDTO);
                     person.getOfficer().sort(Comparator.comparing(OfficerDTO::getOfficerId));
                     membershipView.sendMessage().accept(MessageType.INSERT, officerDTO);
