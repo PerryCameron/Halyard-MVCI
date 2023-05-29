@@ -2,6 +2,8 @@ package org.ecsail.mvci_membership;
 
 import javafx.beans.property.Property;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableMap;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -31,7 +33,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     private final PersonDTO person;
     private final MembershipModel membershipModel;
     private final MembershipView membershipView;
-
+    private ObservableMap<String, HBox> personInfoHBoxMap = FXCollections.observableHashMap();
 
     public PersonTabView(MembershipView membershipView, PersonDTO personDTO) {
         this.person = personDTO;
@@ -58,37 +60,64 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     }
 
     private Node createBottomTabs() {
-        VBox vBox = VBoxFx.vBoxOf(new Insets(10,5,5,5)); // space between borders
-        TabPane tabPane = TabPaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE,"custom-tab-pane");
-        tabPane.getTabs().add(detailsTab("Properties"));
-        tabPane.getTabs().add(detailsTab("Phone"));
-        tabPane.getTabs().add(detailsTab("Email"));
-        tabPane.getTabs().add(detailsTab("Awards"));
-        tabPane.getTabs().add(detailsTab("Officer"));
-        vBox.getChildren().add(tabPane);
-        tabPane.getSelectionModel().selectedItemProperty()
-                .addListener((ov, oldTab, newTab) -> membershipModel.getSelectedPropertiesTab().put(person,newTab));
+        HBox hBox = HBoxFx.hBoxOf(Pos.CENTER_LEFT, new Insets(10,5,5,5)); // space between borders
+        VBox.setVgrow(hBox,Priority.ALWAYS);  // didn't seem to work
+        personInfoHBoxMap.put("Properties", propertiesStack());
+        personInfoHBoxMap.put("Phone", phoneStack());
+        personInfoHBoxMap.put("Email", emailStack());
+        personInfoHBoxMap.put("Awards", awardsStack());
+        personInfoHBoxMap.put("Officer", officerStack());
+        hBox.getChildren().addAll(selectionButtons(), propertiesStackPane());
+        return hBox;
+    }
+
+    private Node propertiesStackPane() {
+        VBox vBoxBorder = VBoxFx.vBoxOf(new Insets(5,5,5,5)); // border for inner hbox
+        HBox.setHgrow(vBoxBorder, Priority.ALWAYS);
+        vBoxBorder.setId("custom-tap-pane-frame");
+        StackPane stackPane = new StackPane();
+        for (HBox hbox : personInfoHBoxMap.values()) { stackPane.getChildren().add(hbox); }
+        vBoxBorder.getChildren().add(stackPane);
+        return vBoxBorder;
+    }
+
+    private void setVisibleHBox(boolean properties, boolean phone, boolean email, boolean award, boolean officer) {
+        personInfoHBoxMap.get("Properties").setVisible(properties);
+        personInfoHBoxMap.get("Phone").setVisible(phone);
+        personInfoHBoxMap.get("Email").setVisible(email);
+        personInfoHBoxMap.get("Awards").setVisible(award);
+        personInfoHBoxMap.get("Officer").setVisible(officer);
+    }
+
+    private Node selectionButtons() {
+        VBox vBox = VBoxFx.vBoxOf(new Insets(0,0,0,0));
+        ToggleGroup tg = new ToggleGroup();
+        vBox.getChildren().add(buttonControl("Properties", tg));
+        vBox.getChildren().add(buttonControl("Phone", tg));
+        vBox.getChildren().add(buttonControl("Email", tg));
+        vBox.getChildren().add(buttonControl("Awards", tg));
+        vBox.getChildren().add(buttonControl("Officer", tg));
         return vBox;
     }
 
-    private Tab detailsTab(String tabType) { // common part of tabs
-        Tab tab = new Tab();
-        tab.setText(tabType);
-        VBox vBoxBorder = VBoxFx.vBoxOf(new Insets(5,5,5,5)); // border for inner tabpane
-        vBoxBorder.setId("custom-tap-pane-frame");
-        switch (tabType) {
-            case "Properties" -> vBoxBorder.getChildren().add(handlePropertiesTab());
-            case "Phone" -> vBoxBorder.getChildren().add(handlePhoneTab());
-            case "Email" -> vBoxBorder.getChildren().add(handleEmailTab());
-            case "Officer" -> vBoxBorder.getChildren().add(handleOfficerTab());
-            case "Awards" -> vBoxBorder.getChildren().add(handleAwardsTab());
+    private Node buttonControl(String label, ToggleGroup tg) {
+        ToggleButton button = ButtonFx.toggleButtonOf(label, 100, tg);
+        switch (label) {
+            case "Properties" -> {
+                button.setSelected(true);
+                button.setOnAction(event -> setVisibleHBox(true,false,false,false,false));
+            }
+            case "Phone" -> button.setOnAction(event -> setVisibleHBox(false,true,false,false,false));
+            case "Email" -> button.setOnAction(event -> setVisibleHBox(false,false,true,false,false));
+            case "Awards" -> button.setOnAction(event -> setVisibleHBox(false,false,false,true,false));
+            case "Officer" -> button.setOnAction(event -> setVisibleHBox(false,false,false,false,true));
         }
-        tab.setContent(vBoxBorder);
-        return tab;
+        button.setPrefHeight(30);
+        return button;
     }
 
-    private Node handleAwardsTab() {
-        HBox hBox = HBoxFx.hBoxOf(new Insets(10,10,5,10),"box-background-light",true);
+    private HBox awardsStack() {
+        HBox hBox = HBoxFx.hBoxOf(new Insets(5,5,5,5),"box-background-light",true);
         hBox.setPrefHeight(130);
         VBox vBox = createButtonBox(createAddButton(Award), createDeleteButton(Award));
         membershipModel.getAwardTableView().put(person, new AwardTableView(person, membershipView).build());
@@ -96,8 +125,8 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         return hBox;
     }
 
-    private Node handleOfficerTab() {
-        HBox hBox = HBoxFx.hBoxOf(new Insets(10,10,5,10),"box-background-light",true);
+    private HBox officerStack() {
+        HBox hBox = HBoxFx.hBoxOf(new Insets(5,5,5,5),"box-background-light",true);
         hBox.setPrefHeight(130);
         VBox vBox = createButtonBox(createAddButton(Officer), createDeleteButton(Officer));
         membershipModel.getOfficerTableView().put(person, new OfficerTableView(person, membershipView).build());
@@ -105,8 +134,8 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         return hBox;
     }
 
-    private Node handleEmailTab() {
-        HBox hBox = HBoxFx.hBoxOf(new Insets(10,10,5,10),"box-background-light",true);
+    private HBox emailStack() {
+        HBox hBox = HBoxFx.hBoxOf(new Insets(5,5,5,5),"box-background-light",true);
         hBox.setPrefHeight(130);
         TableView<EmailDTO> tableView = new EmailTableView(person, membershipView).build();
         membershipModel.getEmailTableView().put(person, tableView);
@@ -115,8 +144,8 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         return hBox;
     }
 
-    private Node handlePhoneTab() {
-        HBox hBox = HBoxFx.hBoxOf(new Insets(10,10,5,10),"box-background-light",true);
+    private HBox phoneStack() {
+        HBox hBox = HBoxFx.hBoxOf(new Insets(5,5,5,5),"box-background-light",true);
         hBox.setPrefHeight(130);
         VBox vBox = createButtonBox(createAddButton(Phone), createDeleteButton(Phone), createCopyButton(Phone));
         membershipModel.getPhoneTableView().put(person, new PhoneTableView(person, membershipView).build());
@@ -124,8 +153,9 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         return hBox;
     }
 
-    private Node handlePropertiesTab() {
+    private HBox propertiesStack() {
         HBox hBox = HBoxFx.hBoxOf(new Insets(5,5,5,5),"box-background-light",true);
+        VBox.setVgrow(hBox,Priority.ALWAYS);
         hBox.getChildren().addAll(getInfoBox(), getRadioBox());
         return hBox;
     }

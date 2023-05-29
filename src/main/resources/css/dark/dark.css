@@ -16,6 +16,25 @@
     -fx-text-fill:white;
 }
 
+.toggle-button {
+    -fx-text-fill: white;
+    -fx-wrap-text: true;
+    -fx-effect: dropshadow( three-pass-box, #1658e7, 2.0, 0.0, 0.0, 0.0);
+    -fx-cursor: hand;
+}
+
+.toggle-button:hover {
+    -fx-background-color: #1658e7;
+    -fx-text-fill: white;
+}
+
+.toggle-button:selected {
+    -fx-background-color: #1658e7;
+    -fx-text-fill: white;
+}
+
+
+
 .scroll-pane > .viewport {
     -fx-background-color: transparent;
 }

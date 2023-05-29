@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import org.ecsail.dto.*;
 import org.ecsail.interfaces.SlipUser;
@@ -41,8 +42,6 @@ public class MembershipModel {
     private final BooleanProperty listsLoaded = new SimpleBooleanProperty(false);
     private final MainModel mainModel;
     private ObservableMap<String,Control> slipControls = FXCollections.observableHashMap();
-
-
 
 
 
