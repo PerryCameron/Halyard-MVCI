@@ -4,43 +4,43 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
 public class BoatOwnerDTO {
-	private IntegerProperty msid;
-	private IntegerProperty boat_id;
+	private IntegerProperty msId;
+	private IntegerProperty boatId;
 	
 	public BoatOwnerDTO(Integer msid, Integer boat_id) {
 		super();
-		this.msid = new SimpleIntegerProperty(msid);
-		this.boat_id = new SimpleIntegerProperty(boat_id);
+		this.msId = new SimpleIntegerProperty(msid);
+		this.boatId = new SimpleIntegerProperty(boat_id);
 		
 	}
 
-	public final IntegerProperty msidProperty() {
-		return this.msid;
+	public final IntegerProperty msIdProperty() {
+		return this.msId;
 	}
 	
 
-	public final int getMsid() {
-		return this.msidProperty().get();
+	public final int getMsId() {
+		return this.msIdProperty().get();
 	}
 	
 
-	public final void setMsid(final int msid) {
-		this.msidProperty().set(msid);
+	public final void setMsId(final int msId) {
+		this.msIdProperty().set(msId);
 	}
 	
 
-	public final IntegerProperty boat_idProperty() {
-		return this.boat_id;
+	public final IntegerProperty boatIdProperty() {
+		return this.boatId;
 	}
 	
 
-	public final int getBoat_id() {
-		return this.boat_idProperty().get();
+	public final int getBoatId() {
+		return this.boatIdProperty().get();
 	}
 	
 
-	public final void setBoat_id(final int boat_id) {
-		this.boat_idProperty().set(boat_id);
+	public final void setBoatId(final int boatId) {
+		this.boatIdProperty().set(boatId);
 	}
 	
 }

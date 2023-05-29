@@ -12,6 +12,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -155,5 +157,47 @@ public class BoatRepositoryImpl implements BoatRepository {
                 "WHERE BOAT_ID = :boatId ";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(boatDTO);
         return namedParameterJdbcTemplate.update(query, namedParameters);
+    }
+
+    @Override
+    public int delete(BoatDTO boatDTO) {
+        String deleteSql = "DELETE FROM boat WHERE BOAT_ID = ?";
+        return template.update(deleteSql, boatDTO.getBoatId());
+    }
+
+    @Override
+    public int insert(BoatDTO boatDTO) {
+        validateObject(boatDTO);
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        String query = "INSERT INTO boat (MANUFACTURER, " +
+                "MANUFACTURE_YEAR, REGISTRATION_NUM, MODEL, BOAT_NAME, SAIL_NUMBER, HAS_TRAILER, LENGTH, " +
+                "WEIGHT, KEEL, PHRF, DRAFT, BEAM, LWL, AUX) " +
+                "VALUES (:manufacturer, :manufactureYear, :registrationNum, :model, :boatName, :sailNumber, " +
+                ":hasTrailer, :loa, :displacement, :keel, :phrf, :draft, :beam, :lwl, :aux)";
+        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(boatDTO);
+        int affectedRows = namedParameterJdbcTemplate.update(query, namedParameters, keyHolder);
+        boatDTO.setBoatId(keyHolder.getKey().intValue());
+        return affectedRows;
+    }
+
+    private static void validateObject(BoatDTO boatDTO) {
+        if (boatDTO.getPhrf() == null || boatDTO.getPhrf().isEmpty()) {
+            boatDTO.setPhrf("0");  // default value
+        } else {
+            try {
+                Integer.parseInt(boatDTO.getPhrf());
+            } catch (NumberFormatException e) {
+                boatDTO.setPhrf("0");  // default value
+            }
+        }
+    }
+
+    @Override
+    public int insertOwner(BoatOwnerDTO boatOwnerDTO) {
+        String query = "INSERT INTO boat_owner (MS_ID, BOAT_ID) " +
+                "VALUES (:msId, :boatId)";
+        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(boatOwnerDTO);
+        int affectedRows = namedParameterJdbcTemplate.update(query, namedParameters);
+        return affectedRows;
     }
 }

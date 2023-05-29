@@ -42,6 +42,7 @@ public class DataBaseService {
     }
 
     public void getPersonLists(MembershipListDTO ml) { // not on FX thread because lists added before UI is launched
+        System.out.println("getPersonLists()");
         ObservableList<PersonDTO> personDTOS = null;
         try {
             personDTOS = FXCollections.observableArrayList(peopleRepo.getActivePeopleByMsId(ml.getMsId()));
@@ -51,25 +52,26 @@ public class DataBaseService {
                 person.setAwards(FXCollections.observableArrayList(awardRepo.getAwards(person)));
                 person.setOfficer(FXCollections.observableArrayList(officerRepo.getOfficer(person)));
             }
-            retrieveLight(true);
+            retrievedFromIndicator(true);
             logger.info("Blink Green");
         } catch (DataAccessException e) {
             logger.error(e.getMessage());
-            retrieveLight(false);
+            retrievedFromIndicator(false);
         }
         membershipModel.setPeople(personDTOS);
         logger.info("set people, size: " + membershipModel.getPeople().size());
     }
 
     public void getIds(MembershipListDTO ml) {
+        System.out.println("getIds()");
         try {
             Platform.runLater(() -> membershipModel.getMembership()
                     .setMembershipIdDTOS(FXCollections.observableArrayList(membershipIdRepo.getIds(ml.getMsId()))));
-            retrieveLight(true);
+            retrievedFromIndicator(true);
             logger.info("Blink Green");
         } catch (DataAccessException e) {
             logger.error(e.getMessage());
-            retrieveLight(false);
+            retrievedFromIndicator(false);
         }
     }
 
@@ -78,12 +80,12 @@ public class DataBaseService {
             Platform.runLater(() -> {
                 membershipModel.getMembership()
                         .setBoatDTOS(FXCollections.observableArrayList(boatRepo.getBoatsByMsId(ml.getMsId())));
-                retrieveLight(true);
+                retrievedFromIndicator(true);
             });
             logger.info("Blink Green");
         } catch (DataAccessException e) {
             logger.error(e.getMessage());
-            retrieveLight(false);
+            retrievedFromIndicator(false);
         }
 
     }
@@ -92,11 +94,11 @@ public class DataBaseService {
         try {
             Platform.runLater(() -> membershipModel.getMembership()
                     .setNotesDTOS(FXCollections.observableArrayList(notesRepo.getMemosByMsId(ml.getMsId()))));
-            retrieveLight(true);
+            retrievedFromIndicator(true);
             logger.info("Blink Green");
         } catch (DataAccessException e) {
             logger.error(e.getMessage());
-            retrieveLight(false);
+            retrievedFromIndicator(false);
         }
     }
 
@@ -105,14 +107,14 @@ public class DataBaseService {
         try {
             slip = slipRepo.getSlip(ml.getMsId());
             logger.info("Blink Green");
-            retrieveLight(true);
+            retrievedFromIndicator(true);
         } catch (DataAccessException e) {
             logger.error(e.getMessage());
-            retrieveLight(false);
+            retrievedFromIndicator(false);
         }
         SlipDTO finalSlip = slip;
+        logger.info("Slip is loaded");
         Platform.runLater(() -> {
-            logger.info("Slip is loaded");
             membershipModel.setSlip(finalSlip);
             // member does not own a slip
             if (membershipModel.getSlip().getMs_id() == 0) membershipModel.setSlipRelationStatus(SlipUser.slip.noSlip);
@@ -138,8 +140,6 @@ public class DataBaseService {
         // gets the id of the subLeaser for the current year
         membershipModel.setMembershipId(String.valueOf(membershipIdRepo.getCurrentId(membershipModel.getSlip().getSubleased_to()).getMembership_id()));
     }
-
-
 
     public void receiveMessage(Messages.MessageType messages, Object o) {
         switch (messages) {
@@ -172,11 +172,12 @@ public class DataBaseService {
             if (o instanceof EmailDTO) rowsUpdated = emailRepo.delete((EmailDTO) o);
             if (o instanceof PhoneDTO) rowsUpdated = phoneRepo.delete((PhoneDTO) o);
             if (o instanceof OfficerDTO) rowsUpdated = officerRepo.delete((OfficerDTO) o);
+            if (o instanceof BoatDTO) rowsUpdated = boatRepo.delete((BoatDTO) o);
         } catch (DataAccessException e) {
             logger.error(e.getMessage());
-            changeLight(false);
+            savedToIndicator(false);
         }
-        changeLight(rowsUpdated == 1);
+        savedToIndicator(rowsUpdated == 1);
     }
 
     public void insert(Object o) {
@@ -186,11 +187,18 @@ public class DataBaseService {
             if (o instanceof EmailDTO) rowsUpdated = emailRepo.insert((EmailDTO) o);
             if (o instanceof PhoneDTO) rowsUpdated = phoneRepo.insert((PhoneDTO) o);
             if (o instanceof OfficerDTO) rowsUpdated = officerRepo.insert((OfficerDTO) o);
+            if (o instanceof BoatDTO) {
+                BoatDTO boatDTO = (BoatDTO) o;
+                rowsUpdated = boatRepo.insert(boatDTO);
+                BoatOwnerDTO boatOwnerDTO = new BoatOwnerDTO(boatDTO.getMsId(), boatDTO.getBoatId());
+                if(rowsUpdated == 1) rowsUpdated = boatRepo.insertOwner(boatOwnerDTO);
+                else rowsUpdated = 0;
+            }
         } catch (DataAccessException e) {
             logger.error(e.getMessage());
-            changeLight(false);
+            savedToIndicator(false);
         }
-        changeLight(rowsUpdated == 1);
+        savedToIndicator(rowsUpdated == 1);
     }
 
     private void update(Object o) {
@@ -205,17 +213,17 @@ public class DataBaseService {
             if (o instanceof MembershipIdDTO) rowsUpdated = membershipIdRepo.update((MembershipIdDTO) o);
         } catch (DataAccessException e) {
             logger.error(e.getMessage());
-            // TODO do more stuff with this
+            savedToIndicator(false);
         }
-        changeLight(rowsUpdated == 1);
+        savedToIndicator(rowsUpdated == 1);
     }
 
-    protected void changeLight(boolean returnOk) { // updates status lights
+    protected void savedToIndicator(boolean returnOk) { // updates status lights
         if(returnOk) membershipModel.getMainModel().getLightAnimationMap().get("receiveSuccess").playFromStart();
         else membershipModel.getMainModel().getLightAnimationMap().get("receiveError").playFromStart();
     }
 
-    protected void retrieveLight(boolean returnOk) { // updates status lights
+    protected void retrievedFromIndicator(boolean returnOk) { // updates status lights
         if(returnOk) membershipModel.getMainModel().getLightAnimationMap().get("transmitSuccess").playFromStart();
         else membershipModel.getMainModel().getLightAnimationMap().get("transmitError").playFromStart();
     }

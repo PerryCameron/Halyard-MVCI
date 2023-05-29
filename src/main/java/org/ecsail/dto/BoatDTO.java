@@ -6,6 +6,7 @@ import org.ecsail.annotation.ColumnName;
 public class BoatDTO {
 	@ColumnName(value = "BOAT_ID")
 	protected IntegerProperty boatId;
+	// this is here to carry value when passing object, not saved in db
 	protected IntegerProperty msId;
 	@ColumnName(value = "MANUFACTURER")
 	protected StringProperty manufacturer;
@@ -82,278 +83,207 @@ public class BoatDTO {
 		this.aux = new SimpleBooleanProperty(false);
 	}
 
-	public BooleanProperty auxProperty() {
-		return this.aux;
+	public int getBoatId() {
+		return boatId.get();
 	}
 
-	public boolean getAux() {
-		return auxProperty().get();
+	public IntegerProperty boatIdProperty() {
+		return boatId;
+	}
+
+	public void setBoatId(int boatId) {
+		this.boatId.set(boatId);
+	}
+
+	public int getMsId() {
+		return msId.get();
+	}
+
+	public IntegerProperty msIdProperty() {
+		return msId;
+	}
+
+	public void setMsId(int msId) {
+		this.msId.set(msId);
+	}
+
+	public String getManufacturer() {
+		return manufacturer.get();
+	}
+
+	public StringProperty manufacturerProperty() {
+		return manufacturer;
+	}
+
+	public void setManufacturer(String manufacturer) {
+		this.manufacturer.set(manufacturer);
+	}
+
+	public String getManufactureYear() {
+		return manufactureYear.get();
+	}
+
+	public StringProperty manufactureYearProperty() {
+		return manufactureYear;
+	}
+
+	public void setManufactureYear(String manufactureYear) {
+		this.manufactureYear.set(manufactureYear);
+	}
+
+	public String getRegistrationNum() {
+		return registrationNum.get();
+	}
+
+	public StringProperty registrationNumProperty() {
+		return registrationNum;
+	}
+
+	public void setRegistrationNum(String registrationNum) {
+		this.registrationNum.set(registrationNum);
+	}
+
+	public String getModel() {
+		return model.get();
+	}
+
+	public StringProperty modelProperty() {
+		return model;
+	}
+
+	public void setModel(String model) {
+		this.model.set(model);
+	}
+
+	public String getBoatName() {
+		return boatName.get();
+	}
+
+	public StringProperty boatNameProperty() {
+		return boatName;
+	}
+
+	public void setBoatName(String boatName) {
+		this.boatName.set(boatName);
+	}
+
+	public String getSailNumber() {
+		return sailNumber.get();
+	}
+
+	public StringProperty sailNumberProperty() {
+		return sailNumber;
+	}
+
+	public void setSailNumber(String sailNumber) {
+		this.sailNumber.set(sailNumber);
+	}
+
+	public boolean isHasTrailer() {
+		return hasTrailer.get();
+	}
+
+	public BooleanProperty hasTrailerProperty() {
+		return hasTrailer;
+	}
+
+	public void setHasTrailer(boolean hasTrailer) {
+		this.hasTrailer.set(hasTrailer);
+	}
+
+	public String getLoa() {
+		return loa.get();
+	}
+
+	public StringProperty loaProperty() {
+		return loa;
+	}
+
+	public void setLoa(String loa) {
+		this.loa.set(loa);
+	}
+
+	public String getDisplacement() {
+		return displacement.get();
+	}
+
+	public StringProperty displacementProperty() {
+		return displacement;
+	}
+
+	public void setDisplacement(String displacement) {
+		this.displacement.set(displacement);
+	}
+
+	public String getKeel() {
+		return keel.get();
+	}
+
+	public StringProperty keelProperty() {
+		return keel;
+	}
+
+	public void setKeel(String keel) {
+		this.keel.set(keel);
+	}
+
+	public String getPhrf() {
+		return phrf.get();
+	}
+
+	public StringProperty phrfProperty() {
+		return phrf;
+	}
+
+	public void setPhrf(String phrf) {
+		this.phrf.set(phrf);
+	}
+
+	public String getDraft() {
+		return draft.get();
+	}
+
+	public StringProperty draftProperty() {
+		return draft;
+	}
+
+	public void setDraft(String draft) {
+		this.draft.set(draft);
+	}
+
+	public String getBeam() {
+		return beam.get();
+	}
+
+	public StringProperty beamProperty() {
+		return beam;
+	}
+
+	public void setBeam(String beam) {
+		this.beam.set(beam);
+	}
+
+	public String getLwl() {
+		return lwl.get();
+	}
+
+	public StringProperty lwlProperty() {
+		return lwl;
+	}
+
+	public void setLwl(String lwl) {
+		this.lwl.set(lwl);
+	}
+
+	public boolean isAux() {
+		return aux.get();
+	}
+
+	public BooleanProperty auxProperty() {
+		return aux;
 	}
 
 	public void setAux(boolean aux) {
-		this.auxProperty().set(aux);
-	}
-
-	public final IntegerProperty boatIdProperty() {
-		return this.boatId;
-	}
-
-	public final int getBoatId() {
-		return this.boatIdProperty().get();
-	}
-	
-
-	public final void setBoatId(final int boatId) {
-		this.boatIdProperty().set(boatId);
-	}
-	
-
-	public final IntegerProperty msIdProperty() {
-		return this.msId;
-	}
-	
-
-	public final int getMsId() {
-		return this.msIdProperty().get();
-	}
-	
-
-	public final void setMsId(final int msId) {
-		this.msIdProperty().set(msId);
-	}
-	
-
-	public final StringProperty manufacturerProperty() {
-		return this.manufacturer;
-	}
-	
-
-	public final String getManufacturer() {
-		return this.manufacturerProperty().get();
-	}
-	
-
-	public final void setManufacturer(final String manufacturer) {
-		this.manufacturerProperty().set(manufacturer);
-	}
-	
-
-	public final StringProperty manufactureYearProperty() {
-		return this.manufactureYear;
-	}
-	
-
-	public final String getManufactureYear() {
-		return this.manufactureYearProperty().get();
-	}
-	
-
-	public final void setManufactureYear(final String manufactureYear) {
-		this.manufactureYearProperty().set(manufactureYear);
-	}
-	
-
-	public final StringProperty registrationNumProperty() {
-		return this.registrationNum;
-	}
-	
-
-	public final String getRegistrationNum() {
-		return this.registrationNumProperty().get();
-	}
-	
-
-	public final void setRegistrationNum(final String registrationNum) {
-		this.registrationNumProperty().set(registrationNum);
-	}
-	
-
-	public final StringProperty modelProperty() {
-		return this.model;
-	}
-	
-
-	public final String getModel() {
-		return this.modelProperty().get();
-	}
-	
-
-	public final void setModel(final String model) {
-		this.modelProperty().set(model);
-	}
-	
-
-	public final StringProperty boatNameProperty() {
-		return this.boatName;
-	}
-	
-
-	public final String getBoatName() {
-		return this.boatNameProperty().get();
-	}
-	
-
-	public final void setBoatName(final String boatName) {
-		this.boatNameProperty().set(boatName);
-	}
-	
-
-	public final StringProperty sailNumberProperty() {
-		return this.sailNumber;
-	}
-	
-
-	public final String getSailNumber() {
-		return this.sailNumberProperty().get();
-	}
-	
-
-	public final void setSailNumber(final String sailNumber) {
-		this.sailNumberProperty().set(sailNumber);
-	}
-	
-
-	public final BooleanProperty hasTrailerProperty() {
-		return this.hasTrailer;
-	}
-	
-
-	public final boolean getHasTrailer() {
-		return this.hasTrailerProperty().get();
-	}
-	
-
-	public final void setHasTrailer(final boolean hasTrailer) {
-		this.hasTrailerProperty().set(hasTrailer);
-	}
-	
-
-	public final StringProperty loaProperty() {
-		return this.loa;
-	}
-	
-
-	public final String getLoa() {
-		return this.loaProperty().get();
-	}
-	
-
-	public final void setLoa(final String loa) {
-		this.loaProperty().set(loa);
-	}
-	
-
-	public final StringProperty displacementProperty() {
-		return this.displacement;
-	}
-	
-
-	public final String getDisplacement() {
-		return this.displacementProperty().get();
-	}
-	
-
-	public final void setDisplacement(final String displacement) {
-		this.displacementProperty().set(displacement);
-	}
-	
-
-	public final StringProperty keelProperty() {
-		return this.keel;
-	}
-	
-
-	public final String getKeel() {
-		return this.keelProperty().get();
-	}
-	
-
-	public final void setKeel(final String keel) {
-		this.keelProperty().set(keel);
-	}
-	
-
-	public final StringProperty phrfProperty() {
-		return this.phrf;
-	}
-	
-
-	public final String getPhrf() {
-		return this.phrfProperty().get();
-	}
-	
-
-	public final void setPhrf(final String phrf) {
-		this.phrfProperty().set(phrf);
-	}
-	
-
-	public final StringProperty draftProperty() {
-		return this.draft;
-	}
-	
-
-	public final String getDraft() {
-		return this.draftProperty().get();
-	}
-	
-
-	public final void setDraft(final String draft) {
-		this.draftProperty().set(draft);
-	}
-	
-
-	public final StringProperty beamProperty() {
-		return this.beam;
-	}
-	
-
-	public final String getBeam() {
-		return this.beamProperty().get();
-	}
-	
-
-	public final void setBeam(final String beam) {
-		this.beamProperty().set(beam);
-	}
-	
-
-	public final StringProperty lwlProperty() {
-		return this.lwl;
-	}
-	
-
-	public final String getLwl() {
-		return this.lwlProperty().get();
-	}
-	
-
-	public final void setLwl(final String lwl) {
-		this.lwlProperty().set(lwl);
-	}
-
-
-
-	@Override
-	public String toString() {
-		return "BoatDTO{" +
-				"boatId=" + boatId +
-				", msId=" + msId +
-				", manufacturer=" + manufacturer +
-				", manufactureYear=" + manufactureYear +
-				", registrationNum=" + registrationNum +
-				", model=" + model +
-				", boatName=" + boatName +
-				", sailNumber=" + sailNumber +
-				", hasTrailer=" + hasTrailer +
-				", loa=" + loa +
-				", displacement=" + displacement +
-				", keel=" + keel +
-				", phrf=" + phrf +
-				", draft=" + draft +
-				", beam=" + beam +
-				", lwl=" + lwl +
-				", aux=" + aux +
-				'}';
+		this.aux.set(aux);
 	}
 }
