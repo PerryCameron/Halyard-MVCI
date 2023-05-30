@@ -32,6 +32,14 @@ public class HBoxFx {
         return box;
     }
 
+    public static HBox hBoxOf(Pos alignment, Insets padding, boolean vGrow) {
+        HBox box = new HBox();
+        box.setAlignment(alignment);
+        if(vGrow) VBox.setVgrow(box, Priority.ALWAYS);
+        box.setPadding(padding);
+        return box;
+    }
+
     public static HBox hBoxOf(Insets padding, String id, boolean setVgrow) {
         HBox hBox = new HBox();
         hBox.setPadding(padding);

@@ -2,8 +2,6 @@ package org.ecsail.mvci_membership;
 
 import javafx.beans.property.Property;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableMap;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -21,10 +19,14 @@ import org.ecsail.interfaces.ConfigFilePaths;
 import org.ecsail.interfaces.Messages;
 import org.ecsail.interfaces.ObjectType;
 import org.ecsail.static_calls.MathTools;
-import org.ecsail.widgetfx.*;
+import org.ecsail.widgetfx.ButtonFx;
+import org.ecsail.widgetfx.HBoxFx;
+import org.ecsail.widgetfx.TextFieldFx;
+import org.ecsail.widgetfx.VBoxFx;
 
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Objects;
 
 import static org.ecsail.interfaces.ObjectType.Dto.*;
@@ -33,7 +35,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     private final PersonDTO person;
     private final MembershipModel membershipModel;
     private final MembershipView membershipView;
-    private ObservableMap<String, HBox> personInfoHBoxMap = FXCollections.observableHashMap();
+    private final HashMap<String, HBox> personInfoHBoxMap = new HashMap<>();
 
     public PersonTabView(MembershipView membershipView, PersonDTO personDTO) {
         this.person = personDTO;
@@ -48,6 +50,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         tab.setText(getMemberType());
         tab.setUserData(this);
         VBox vBox = VBoxFx.vBoxOf(new Insets(5,5,5,5)); // makes outer border
+        vBox.setStyle("-fx-background-color: #feffab;");
         vBox.setId("custom-tap-pane-frame");
         BorderPane borderPane = new BorderPane();
         borderPane.setId("box-background-light");
@@ -60,13 +63,13 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     }
 
     private Node createBottomTabs() {
-        HBox hBox = HBoxFx.hBoxOf(Pos.CENTER_LEFT, new Insets(10,5,5,5)); // space between borders
-        VBox.setVgrow(hBox,Priority.ALWAYS);  // didn't seem to work
-        personInfoHBoxMap.put("Properties", propertiesStack());
-        personInfoHBoxMap.put("Phone", phoneStack());
-        personInfoHBoxMap.put("Email", emailStack());
-        personInfoHBoxMap.put("Awards", awardsStack());
-        personInfoHBoxMap.put("Officer", officerStack());
+        HBox hBox = HBoxFx.hBoxOf(Pos.CENTER_LEFT, new Insets(10,5,5,5), true); // space between borders
+        hBox.setStyle("-fx-background-color: #4d6955;");
+        personInfoHBoxMap.put("Properties", setStack(Properties));
+        personInfoHBoxMap.put("Phone", setStack(Phone));
+        personInfoHBoxMap.put("Email", setStack(Email));
+        personInfoHBoxMap.put("Awards", setStack(Award));
+        personInfoHBoxMap.put("Officer", setStack(Officer));
         hBox.getChildren().addAll(selectionButtons(), propertiesStackPane());
         return hBox;
     }
@@ -116,47 +119,35 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         return button;
     }
 
-    private HBox awardsStack() {
-        HBox hBox = HBoxFx.hBoxOf(new Insets(5,5,5,5),"box-background-light",true);
-        hBox.setPrefHeight(130);
-        VBox vBox = createButtonBox(createAddButton(Award), createDeleteButton(Award));
-        membershipModel.getAwardTableView().put(person, new AwardTableView(person, membershipView).build());
-        hBox.getChildren().addAll(membershipModel.getAwardTableView().get(person),vBox);
-        return hBox;
-    }
 
-    private HBox officerStack() {
+    private  HBox setStack(ObjectType.Dto type) {
         HBox hBox = HBoxFx.hBoxOf(new Insets(5,5,5,5),"box-background-light",true);
-        hBox.setPrefHeight(130);
-        VBox vBox = createButtonBox(createAddButton(Officer), createDeleteButton(Officer));
-        membershipModel.getOfficerTableView().put(person, new OfficerTableView(person, membershipView).build());
-        hBox.getChildren().addAll(membershipModel.getOfficerTableView().get(person),vBox);
-        return hBox;
-    }
-
-    private HBox emailStack() {
-        HBox hBox = HBoxFx.hBoxOf(new Insets(5,5,5,5),"box-background-light",true);
-        hBox.setPrefHeight(130);
-        TableView<EmailDTO> tableView = new EmailTableView(person, membershipView).build();
-        membershipModel.getEmailTableView().put(person, tableView);
-        VBox vBox = createButtonBox(createAddButton(Email), createDeleteButton(Email), createCopyButton(Email), createEmailButton());
-        hBox.getChildren().addAll(membershipModel.getEmailTableView().get(person),vBox);
-        return hBox;
-    }
-
-    private HBox phoneStack() {
-        HBox hBox = HBoxFx.hBoxOf(new Insets(5,5,5,5),"box-background-light",true);
-        hBox.setPrefHeight(130);
-        VBox vBox = createButtonBox(createAddButton(Phone), createDeleteButton(Phone), createCopyButton(Phone));
-        membershipModel.getPhoneTableView().put(person, new PhoneTableView(person, membershipView).build());
-        hBox.getChildren().addAll(membershipModel.getPhoneTableView().get(person),vBox);
-        return hBox;
-    }
-
-    private HBox propertiesStack() {
-        HBox hBox = HBoxFx.hBoxOf(new Insets(5,5,5,5),"box-background-light",true);
-        VBox.setVgrow(hBox,Priority.ALWAYS);
-        hBox.getChildren().addAll(getInfoBox(), getRadioBox());
+        hBox.setStyle("-fx-background-color: #201ac9;");
+//        hBox.setPrefHeight(130);
+        switch (type) {
+            case Officer -> {
+                VBox vBox = createButtonBox(createAddButton(Officer), createDeleteButton(Officer));
+                membershipModel.getOfficerTableView().put(person, new OfficerTableView(person, membershipView).build());
+                hBox.getChildren().addAll(membershipModel.getOfficerTableView().get(person), vBox);
+            }
+            case Award -> {
+                VBox vBox = createButtonBox(createAddButton(Award), createDeleteButton(Award));
+                membershipModel.getAwardTableView().put(person, new AwardTableView(person, membershipView).build());
+                hBox.getChildren().addAll(membershipModel.getAwardTableView().get(person),vBox);
+            }
+            case Email -> {
+                TableView<EmailDTO> tableView = new EmailTableView(person, membershipView).build();
+                membershipModel.getEmailTableView().put(person, tableView);
+                VBox vBox = createButtonBox(createAddButton(Email), createDeleteButton(Email), createCopyButton(Email), createEmailButton());
+                hBox.getChildren().addAll(membershipModel.getEmailTableView().get(person),vBox);
+            }
+            case Phone -> {
+                VBox vBox = createButtonBox(createAddButton(Phone), createDeleteButton(Phone), createCopyButton(Phone));
+                membershipModel.getPhoneTableView().put(person, new PhoneTableView(person, membershipView).build());
+                hBox.getChildren().addAll(membershipModel.getPhoneTableView().get(person),vBox);
+            }
+            case Properties -> hBox.getChildren().addAll(getInfoBox(), getRadioBox());
+        }
         return hBox;
     }
 
@@ -288,8 +279,6 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         return button;
     }
 
-    private String getSelectedTab() { return membershipModel.getSelectedPropertiesTab().get(person).getText(); }
-
     private Button createDeleteButton(ObjectType.Dto type) {
         Button button = ButtonFx.buttonOf("Delete", 60);
         switch (type) {
@@ -378,7 +367,8 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     }
 
     private VBox createButtonBox(Button... buttons) {
-        VBox vBox = VBoxFx.vBoxOf(7.0, new Insets(0,5,5,15));
+        VBox vBox = VBoxFx.vBoxOf(7.0, new Insets(5,5,5,5));
+        vBox.setStyle("-fx-background-color: #e89715;");
         Arrays.stream(buttons).iterator().forEachRemaining(button -> vBox.getChildren().add(button));
         return vBox;
     }

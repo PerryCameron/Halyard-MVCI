@@ -11,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import org.ecsail.custom.CustomDatePicker;
@@ -44,6 +45,8 @@ public class MembershipIdView implements Builder<Tab> {
     private Node innerVBox() {
         VBox vBox = VBoxFx.vBoxOf(new Insets(5,5,5,5),"box-background-light",true);
         vBox.setSpacing(10);
+        vBox.setStyle("-fx-background-color: #e83115;");
+        VBox.setVgrow(vBox, Priority.ALWAYS);
         vBox.getChildren().addAll(createTopControls(), addTable());
         return vBox;
     }

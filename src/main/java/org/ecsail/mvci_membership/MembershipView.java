@@ -17,7 +17,6 @@ import org.ecsail.widgetfx.TextFx;
 import org.ecsail.widgetfx.VBoxFx;
 
 import java.util.function.BiConsumer;
-import java.util.function.BiFunction;
 
 public class MembershipView implements Builder<Region> {
 
@@ -35,11 +34,18 @@ public class MembershipView implements Builder<Region> {
         BorderPane borderPane = new BorderPane();
         borderPane.setTop(createHeader());
         borderPane.setLeft(createPeopleTabPane());
-        borderPane.setCenter(createInfoTabPane());
+        borderPane.setRight(createInfoTabPane());
+        borderPane.setCenter(creteDivider());
         borderPane.setBottom(createExtrasTabPane());
         vBox.getChildren().add(borderPane);
         listenForData();
         return vBox;
+    }
+
+    private Node creteDivider() {
+        Region region = new Region();
+        region.setPrefWidth(10);
+        return region;
     }
 
     private void listenForData() {
@@ -77,12 +83,10 @@ public class MembershipView implements Builder<Region> {
     }
 
     private Node createInfoTabPane() {
-        VBox vBox = VBoxFx.vBoxOf(new Insets(0,0,0,10)); // gives space between tabPanes
         TabPane tabPane = TabPaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE, 498,"custom-tab-pane");
         VBox.setVgrow(tabPane,Priority.ALWAYS);  // this works in combo with Vgrow in SlapTabView
         membershipModel.setInfoTabPane(tabPane);
-        vBox.getChildren().add(tabPane);
-        return vBox;
+        return tabPane;
     }
 
     private Node createPeopleTabPane() {
@@ -118,9 +122,4 @@ public class MembershipView implements Builder<Region> {
         return personEdit;
     }
 
-
-    protected void checkTheCorrectNumberOfReturnedRows(int rows) { // updates status lights
-        if(rows == 0) membershipModel.getMainModel().getLightAnimationMap().get("receiveError").playFromStart();
-        if(rows == 1) membershipModel.getMainModel().getLightAnimationMap().get("receiveSuccess").playFromStart();
-    }
 }
