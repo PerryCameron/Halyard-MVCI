@@ -63,7 +63,6 @@ public class BoatTabView implements Builder<Tab>, Messages {
     }
 
     // TODO need to complete this correctly, it curretly doesn't assign boat_id, it does create the object and row
-    // into the TableView
     private Node createButton1() {
         Button button = ButtonFx.buttonOf("Add", 60);
         button.setOnAction(event -> {
@@ -78,8 +77,7 @@ public class BoatTabView implements Builder<Tab>, Messages {
     }
 
     private Node getTableView() {
-        TableView<BoatDTO> tableView = TableViewFx.tableViewOf(BoatDTO.class);
-//        tableView.setPrefHeight(200);
+        TableView<BoatDTO> tableView = TableViewFx.tableViewOf(BoatDTO.class, 200);
         membershipView.getMembershipModel().setBoatTableView(tableView);
         tableView.setItems(membershipView.getMembershipModel().getMembership().getBoatDTOS());
         tableView.getColumns().addAll(col1(),col2(),col3(),col4(),col5(),col7(),col8(),col9(),col10());

@@ -33,7 +33,7 @@ public class OfficerTableView implements Builder<TableView<OfficerDTO>>,Messages
 
     @Override
     public TableView<OfficerDTO> build() {
-        TableView<OfficerDTO> tableView = TableViewFx.tableViewOf(OfficerDTO.class);
+        TableView<OfficerDTO> tableView = TableViewFx.tableViewOf(OfficerDTO.class, 146);
         tableView.setItems(person.getOfficer());
         tableView.getColumns().addAll(createColumn1(), createColumn2(), createColumn3());
         return tableView;

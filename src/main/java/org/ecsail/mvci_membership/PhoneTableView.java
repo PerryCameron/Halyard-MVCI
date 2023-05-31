@@ -35,7 +35,7 @@ public class PhoneTableView implements Builder<TableView<PhoneDTO>> {
 
     @Override
     public TableView<PhoneDTO> build() {
-        TableView<PhoneDTO> tableView = TableViewFx.tableViewOf(PhoneDTO.class);
+        TableView<PhoneDTO> tableView = TableViewFx.tableViewOf(PhoneDTO.class, 146);
         tableView.setItems(person.getPhones());
         List<TableColumn<PhoneDTO, ?>> columns = new ArrayList<>();
         columns.add(createColumn1());

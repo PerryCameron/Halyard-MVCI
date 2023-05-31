@@ -26,7 +26,7 @@ public class AwardTableView implements Builder<TableView<AwardDTO>> {
 
     @Override
     public TableView<AwardDTO> build() {
-        TableView<AwardDTO> tableView = TableViewFx.tableViewOf(AwardDTO.class);
+        TableView<AwardDTO> tableView = TableViewFx.tableViewOf(AwardDTO.class, 146);
         tableView.setItems(person.getAwards());
         tableView.getColumns().addAll(createColumn1(), createColumn2());
         return tableView;

@@ -59,8 +59,7 @@ public class NotesTabView implements Builder<Tab> {
     }
 
     private Node addTable() {
-        TableView tableView = TableViewFx.tableViewOf(NotesDTO.class);
-//        tableView.setPrefHeight(200);
+        TableView tableView = TableViewFx.tableViewOf(NotesDTO.class, 200);
         tableView.setItems(membershipView.getMembershipModel().getMembership().getNotesDTOS());
         tableView.getColumns().addAll(col1(),col2(),col3());
         membershipView.getMembershipModel().setNotesTableView(tableView);
