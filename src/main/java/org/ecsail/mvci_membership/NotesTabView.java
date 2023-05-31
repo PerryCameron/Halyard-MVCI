@@ -27,11 +27,7 @@ public class NotesTabView implements Builder<Tab> {
 
     @Override
     public Tab build() {
-        Tab tab = new Tab("Notes");
-        VBox vBox = VBoxFx.vBoxOf(new Insets(2,2,2,2), "custom-tap-pane-frame", true); // makes outer border
-        vBox.getChildren().add(createTableAndButtonsBox());
-        tab.setContent(vBox);
-        return tab;
+        return TabFx.tabOf("Notes", createTableAndButtonsBox());
     }
 
     private Node createTableAndButtonsBox() {
@@ -64,7 +60,7 @@ public class NotesTabView implements Builder<Tab> {
 
     private Node addTable() {
         TableView tableView = TableViewFx.tableViewOf(NotesDTO.class);
-        tableView.setPrefHeight(200);
+//        tableView.setPrefHeight(200);
         tableView.setItems(membershipView.getMembershipModel().getMembership().getNotesDTOS());
         tableView.getColumns().addAll(col1(),col2(),col3());
         membershipView.getMembershipModel().setNotesTableView(tableView);

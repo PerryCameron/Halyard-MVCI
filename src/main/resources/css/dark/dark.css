@@ -33,8 +33,6 @@
     -fx-text-fill: white;
 }
 
-
-
 .scroll-pane > .viewport {
     -fx-background-color: transparent;
 }
@@ -98,7 +96,7 @@
 }
 
 #box-background-dark {
-    -fx-background-color: #383f45;
+    -fx-background-color: #25292D;
 }
 
 #sub-box-background-light {

@@ -59,6 +59,7 @@ public class MainView implements Builder<Region> {
 
     private Node setUpBottomPane() {
         HBox hBox = new HBox();
+        hBox.setStyle("-fx-background-color: #e89715;");
         hBox.getChildren().addAll(statusLabel(), statusLights());
         return hBox;
     }

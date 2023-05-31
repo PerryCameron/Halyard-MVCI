@@ -25,11 +25,7 @@ public class BoatTabView implements Builder<Tab>, Messages {
 
     @Override
     public Tab build() {
-        Tab tab = new Tab("Boats");
-        VBox vBox = VBoxFx.vBoxOf(new Insets(2,2,2,2),"custom-tap-pane-frame",true); // makes outer border
-        vBox.getChildren().add(createTableViewAndButtonsBox());
-        tab.setContent(vBox);
-        return tab;
+        return TabFx.tabOf("Boats", createTableViewAndButtonsBox());
     }
 
     private Node createTableViewAndButtonsBox() {
@@ -83,7 +79,7 @@ public class BoatTabView implements Builder<Tab>, Messages {
 
     private Node getTableView() {
         TableView<BoatDTO> tableView = TableViewFx.tableViewOf(BoatDTO.class);
-        tableView.setPrefHeight(200);
+//        tableView.setPrefHeight(200);
         membershipView.getMembershipModel().setBoatTableView(tableView);
         tableView.setItems(membershipView.getMembershipModel().getMembership().getBoatDTOS());
         tableView.getColumns().addAll(col1(),col2(),col3(),col4(),col5(),col7(),col8(),col9(),col10());

@@ -74,7 +74,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         HBox.setHgrow(vBoxBorder, Priority.ALWAYS);
         vBoxBorder.setId("custom-tap-pane-frame");
         StackPane stackPane = new StackPane();
-        for (HBox hbox : personInfoHBoxMap.values()) { stackPane.getChildren().add(hbox); }
+        for (HBox hbox : personInfoHBoxMap.values()) stackPane.getChildren().add(hbox);
         vBoxBorder.getChildren().add(stackPane);
         return vBoxBorder;
     }
@@ -147,7 +147,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     }
 
     private Node getRadioBox() {
-        VBox vBox = VBoxFx.vBoxOf(5.0, new Insets(5,5,5,15));
+        VBox vBox = VBoxFx.vBoxOf(5.0, new Insets(5,5,5,5));
         ToggleGroup tg = new ToggleGroup();
         vBox.getChildren().add(radioButton(tg, "Change " + person.getFirstName() + "'s member type"));
         vBox.getChildren().add(radioButton(tg, "Remove " + person.getFirstName() + " from this membership"));
@@ -225,7 +225,8 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     }
 
     private Node getInfoBox() {
-        VBox vBox = new VBox(7);
+        VBox vBox = VBoxFx.vBoxOf(7.0, new Insets(15,10,0,5));
+        vBox.setId("custom-tap-pane-frame");
         vBox.getChildren().addAll(
                 new Label("Age: " + MathTools.calculateAge(person.getBirthday())),
                 new Label("Person ID: " + person.getpId()),

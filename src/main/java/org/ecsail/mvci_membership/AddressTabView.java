@@ -15,10 +15,7 @@ import javafx.util.Builder;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.interfaces.Messages;
 import org.ecsail.static_calls.StringTools;
-import org.ecsail.widgetfx.HBoxFx;
-import org.ecsail.widgetfx.TextFieldFx;
-import org.ecsail.widgetfx.TextFx;
-import org.ecsail.widgetfx.VBoxFx;
+import org.ecsail.widgetfx.*;
 
 import java.sql.SQLOutput;
 
@@ -31,11 +28,7 @@ public class AddressTabView implements Builder<Tab> {
 
     @Override
     public Tab build() {
-        Tab tab = new Tab("Address");
-        VBox vBox = VBoxFx.vBoxOf(new Insets(2,2,2,2), "custom-tap-pane-frame", true); // makes outer border
-        vBox.getChildren().add(createMainHBox());
-        tab.setContent(vBox);
-        return tab;
+        return TabFx.tabOf("Attachments", createMainHBox());
     }
 
     private Node createMainHBox() {

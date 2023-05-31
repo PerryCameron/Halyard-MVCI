@@ -75,7 +75,8 @@ public class MembershipView implements Builder<Region> {
 
     private Node createExtrasTabPane() {
         HBox hBox = HBoxFx.hBoxOf(new Insets(10,0,0,0)); // provides space between
-        VBox.setVgrow(hBox,Priority.ALWAYS); // No Noticable change
+//        VBox.setVgrow(hBox,Priority.ALWAYS); // No Noticable change
+        hBox.setStyle("-fx-background-color: #201ac9;");
         TabPane tabPane = TabPaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE,"custom-tab-pane");
         HBox.setHgrow(tabPane,Priority.ALWAYS);
         membershipModel.setExtraTabPane(tabPane);
@@ -122,5 +123,4 @@ public class MembershipView implements Builder<Region> {
     protected BiConsumer<Messages.MessageType, Object> sendMessage() {
         return personEdit;
     }
-
 }
