@@ -32,7 +32,7 @@ public class AddressTabView implements Builder<Tab> {
     @Override
     public Tab build() {
         Tab tab = new Tab("Address");
-        VBox vBox = VBoxFx.vBoxOf(new Insets(5,5,5,5), "custom-tap-pane-frame", true); // makes outer border
+        VBox vBox = VBoxFx.vBoxOf(new Insets(2,2,2,2), "custom-tap-pane-frame", true); // makes outer border
         vBox.getChildren().add(createMainHBox());
         tab.setContent(vBox);
         return tab;

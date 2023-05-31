@@ -29,7 +29,7 @@ public class SlipTabView implements Builder<Tab>, SlipUser, Messages {
     public Tab build() {
         Tab tab = new Tab();
         tab.setText("Slip");
-        VBox vBox = VBoxFx.vBoxOf(new Insets(5,5,5,5)); // makes outer border
+        VBox vBox = VBoxFx.vBoxOf(new Insets(2,2,2,2)); // makes outer border
         vBox.setId("custom-tap-pane-frame");
         BorderPane borderPane = new BorderPane();
         borderPane.setLeft(setSlipInfo());

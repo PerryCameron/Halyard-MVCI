@@ -19,10 +19,7 @@ import org.ecsail.interfaces.ConfigFilePaths;
 import org.ecsail.interfaces.Messages;
 import org.ecsail.interfaces.ObjectType;
 import org.ecsail.static_calls.MathTools;
-import org.ecsail.widgetfx.ButtonFx;
-import org.ecsail.widgetfx.HBoxFx;
-import org.ecsail.widgetfx.TextFieldFx;
-import org.ecsail.widgetfx.VBoxFx;
+import org.ecsail.widgetfx.*;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -49,22 +46,20 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         Tab tab = new Tab();
         tab.setText(getMemberType());
         tab.setUserData(this);
-        VBox vBox = VBoxFx.vBoxOf(new Insets(5,5,5,5)); // makes outer border
-        vBox.setStyle("-fx-background-color: #feffab;");
+        VBox vBox = VBoxFx.vBoxOf(new Insets(2,2,2,2)); // makes outer border
         vBox.setId("custom-tap-pane-frame");
         BorderPane borderPane = new BorderPane();
         borderPane.setId("box-background-light");
         borderPane.setLeft(createFieldDetails());
         borderPane.setCenter(createPictureFrame());
-        borderPane.setBottom(createBottomTabs());
+        borderPane.setBottom(createBottomStacks());
         vBox.getChildren().add(borderPane);
         tab.setContent(vBox);
         return tab;
     }
 
-    private Node createBottomTabs() {
+    private Node createBottomStacks() {
         HBox hBox = HBoxFx.hBoxOf(Pos.CENTER_LEFT, new Insets(10,5,5,5), true); // space between borders
-        hBox.setStyle("-fx-background-color: #4d6955;");
         personInfoHBoxMap.put("Properties", setStack(Properties));
         personInfoHBoxMap.put("Phone", setStack(Phone));
         personInfoHBoxMap.put("Email", setStack(Email));
@@ -75,7 +70,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     }
 
     private Node propertiesStackPane() {
-        VBox vBoxBorder = VBoxFx.vBoxOf(new Insets(5,5,5,5)); // border for inner hbox
+        VBox vBoxBorder = VBoxFx.vBoxOf(new Insets(2,2,2,2)); // border for inner hbox
         HBox.setHgrow(vBoxBorder, Priority.ALWAYS);
         vBoxBorder.setId("custom-tap-pane-frame");
         StackPane stackPane = new StackPane();
@@ -95,6 +90,8 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     private Node selectionButtons() {
         VBox vBox = VBoxFx.vBoxOf(new Insets(0,0,0,0));
         ToggleGroup tg = new ToggleGroup();
+        Region region = RegionFx.regionOf(7);
+        vBox.getChildren().add(region);
         vBox.getChildren().add(buttonControl("Properties", tg));
         vBox.getChildren().add(buttonControl("Phone", tg));
         vBox.getChildren().add(buttonControl("Email", tg));
@@ -122,8 +119,6 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
 
     private  HBox setStack(ObjectType.Dto type) {
         HBox hBox = HBoxFx.hBoxOf(new Insets(5,5,5,5),"box-background-light",true);
-        hBox.setStyle("-fx-background-color: #201ac9;");
-//        hBox.setPrefHeight(130);
         switch (type) {
             case Officer -> {
                 VBox vBox = createButtonBox(createAddButton(Officer), createDeleteButton(Officer));
@@ -368,7 +363,6 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
 
     private VBox createButtonBox(Button... buttons) {
         VBox vBox = VBoxFx.vBoxOf(7.0, new Insets(5,5,5,5));
-        vBox.setStyle("-fx-background-color: #e89715;");
         Arrays.stream(buttons).iterator().forEachRemaining(button -> vBox.getChildren().add(button));
         return vBox;
     }

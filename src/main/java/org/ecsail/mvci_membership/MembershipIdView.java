@@ -36,7 +36,7 @@ public class MembershipIdView implements Builder<Tab> {
     public Tab build() {
         Tab tab = new Tab();
         tab.setText("History");
-        VBox vBox = VBoxFx.vBoxOf(new Insets(5,5,5,5),"custom-tap-pane-frame",true); // makes outer border
+        VBox vBox = VBoxFx.vBoxOf(new Insets(2,2,2,2),"custom-tap-pane-frame",true); // makes outer border
         vBox.getChildren().add(innerVBox());
         tab.setContent(vBox);
         return tab;
@@ -45,7 +45,6 @@ public class MembershipIdView implements Builder<Tab> {
     private Node innerVBox() {
         VBox vBox = VBoxFx.vBoxOf(new Insets(5,5,5,5),"box-background-light",true);
         vBox.setSpacing(10);
-        vBox.setStyle("-fx-background-color: #e83115;");
         VBox.setVgrow(vBox, Priority.ALWAYS);
         vBox.getChildren().addAll(createTopControls(), addTable());
         return vBox;

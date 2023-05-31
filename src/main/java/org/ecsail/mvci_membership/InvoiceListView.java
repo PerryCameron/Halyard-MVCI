@@ -19,7 +19,7 @@ public class InvoiceListView implements Builder<Tab> {
     public Tab build() {
         Tab tab = new Tab();
         tab.setText("Invoices");
-        VBox vBox = VBoxFx.vBoxOf(new Insets(5,5,5,5),"custom-tap-pane-frame",false); // makes outer border
+        VBox vBox = VBoxFx.vBoxOf(new Insets(2,2,2,2),"custom-tap-pane-frame",false); // makes outer border
         BorderPane borderPane = new BorderPane();
 //        borderPane.setLeft(setSlipInfo());
 //        borderPane.setCenter(setSlipImage());

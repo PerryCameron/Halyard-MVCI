@@ -26,7 +26,7 @@ public class BoatTabView implements Builder<Tab>, Messages {
     @Override
     public Tab build() {
         Tab tab = new Tab("Boats");
-        VBox vBox = VBoxFx.vBoxOf(new Insets(5,5,5,5),"custom-tap-pane-frame",true); // makes outer border
+        VBox vBox = VBoxFx.vBoxOf(new Insets(2,2,2,2),"custom-tap-pane-frame",true); // makes outer border
         vBox.getChildren().add(createTableViewAndButtonsBox());
         tab.setContent(vBox);
         return tab;
