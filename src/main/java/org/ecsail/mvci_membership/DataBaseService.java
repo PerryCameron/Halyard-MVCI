@@ -146,24 +146,49 @@ public class DataBaseService {
             case DELETE -> delete(o);
             case UPDATE -> update(o);
             case INSERT -> insert(o);
-//            case NONE -> {
-//            }
-//            case CHANGE_MEMBER_TYPE -> {
-//            }
-//            case REMOVE_MEMBER_FROM_MEMBERSHIP -> {
-//            }
-//            case DELETE_MEMBER_FROM_DATABASE -> {
-//            }
-//            case RELEASE_SUBLEASE -> {
-//            }
-//            case REASSIGN_SLIP -> {
-//            }
-//            case SUBLEASE_SLIP -> {
-//            }
-//            case SET_WAIT_LIST -> {
-//            }
+            case NONE -> none(o);
+            case CHANGE_MEMBER_TYPE -> changeMemberType(o);
+            case REMOVE_MEMBER_FROM_MEMBERSHIP -> removeFromMembership(o);
+            case DELETE_MEMBER_FROM_DATABASE -> removeFromDatabase(o);
+            case RELEASE_SUBLEASE -> releaseSublease(o);
+            case REASSIGN_SLIP -> reassignSlip(o);
+            case SUBLEASE_SLIP -> subleaseSlip(o);
+            case SET_WAIT_LIST -> setWaitList(o);
         }
     }
+
+    private void removeFromDatabase(Object o) {
+        System.out.println("Remove from Database " + o);
+    }
+
+    private void removeFromMembership(Object o) {
+        System.out.println("Remove from membership " + o);
+    }
+
+    private void changeMemberType(Object o) {
+        System.out.println("changeMemberType " + o);
+    }
+
+    private void none(Object o) {
+        System.out.println("none " + o);
+    }
+
+    private void setWaitList(Object o) {
+        System.out.println("Add to wait-list " + o);
+    }
+
+    private void subleaseSlip(Object o) {
+        System.out.println("Sublease Slip " + o);
+    }
+
+    private void reassignSlip(Object o) {
+        System.out.println("reassign Slip " + o);
+    }
+
+    private void releaseSublease(Object o) {
+        System.out.println("release Sublease " + o);
+    }
+
 
     private void delete(Object o) {
         int rowsUpdated = 0;

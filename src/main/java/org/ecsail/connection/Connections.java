@@ -15,7 +15,7 @@ public class Connections {
     private Sftp scp;
     private DataSource dataSource;
     private static final Logger logger = LoggerFactory.getLogger(Connections.class);
-    private ConnectModel connectModel;
+    private final ConnectModel connectModel;
     public Connections(ConnectModel connectModel) {
         this.connectModel = connectModel;
     }
@@ -31,21 +31,22 @@ public class Connections {
             logger.info("Server Alive interval: " + sshConnection.getSession().getServerAliveInterval());
         } else
             logger.info("SSH connection is not being used");
-        if(createConnection(connectModel.getUser(), connectModel.getPass(), loopback, connectModel.getLocalSqlPort())) {
+        if(createDataBaseConnection(connectModel.getUser(), connectModel.getPass(), loopback, connectModel.getLocalSqlPort())) {
             this.scp = new Sftp(sshConnection);
         } else {
             logger.error("Can not connect to SQL server");
-        }
-        return sshConnection.getSession().isConnected();
-    };
+        } // below prevents exception when sshConnection is null, example: if checked to not use.
+        if(sshConnection != null) return sshConnection.getSession().isConnected();
+        return false;
+    }
 
-    protected Boolean createConnection(String user, String password, String ip, int port) {
+    protected Boolean createDataBaseConnection(String user, String password, String ip, int port) {
         boolean successful = false;
         try {
             createDataSource(ip,port,user,password);
             setSqlConnection(dataSource.getConnection());
             successful = true;
-            logger.info("SQL Connection established." + dataSource);
+            logger.info("SQL Connection established  - " + dataSource);
         } catch (ClassNotFoundException | SQLException e) {
             logger.error(e.getMessage());
         }

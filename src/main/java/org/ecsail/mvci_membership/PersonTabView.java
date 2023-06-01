@@ -59,7 +59,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     }
 
     private Node createBottomStacks() {
-        HBox hBox = HBoxFx.hBoxOf(Pos.CENTER_LEFT, new Insets(10,5,5,5), true); // space between borders
+        HBox hBox = HBoxFx.hBoxOf(Pos.CENTER_LEFT, new Insets(22,5,20,5), true); // space between borders
         personInfoHBoxMap.put("Properties", setStack(Properties));
         personInfoHBoxMap.put("Phone", setStack(Phone));
         personInfoHBoxMap.put("Email", setStack(Email));
@@ -104,8 +104,8 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         ToggleButton button = ButtonFx.toggleButtonOf(label, 100, tg);
         switch (label) {
             case "Properties" -> {
-                button.setSelected(true);
                 button.setOnAction(event -> setVisibleHBox(true,false,false,false,false));
+                button.fire();
             }
             case "Phone" -> button.setOnAction(event -> setVisibleHBox(false,true,false,false,false));
             case "Email" -> button.setOnAction(event -> setVisibleHBox(false,false,true,false,false));

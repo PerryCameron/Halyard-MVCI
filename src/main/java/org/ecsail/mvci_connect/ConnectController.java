@@ -43,10 +43,12 @@ public class ConnectController extends Controller {
             @Override
             protected Boolean call() {
                 // Perform database connection here
+                System.out.println("before connect");
                 return connectInteractor.getConnections().connect();
             }
         };
         connectTask.setOnSucceeded(event -> {
+            System.out.println("getting to setOnSucceeded");
                 connectInteractor.setRotateShipWheel(false);
                 mainController.createLoadingController();
                 mainController.setStatus("(Connected) " + connectInteractor.getHost());
