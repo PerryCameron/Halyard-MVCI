@@ -43,7 +43,6 @@ public class ConnectController extends Controller {
             @Override
             protected Boolean call() {
                 // Perform database connection here
-                System.out.println("before connect");
                 return connectInteractor.getConnections().connect();
             }
         };
@@ -72,6 +71,7 @@ public class ConnectController extends Controller {
             PortForwardingL sshConnection = connectInteractor.getConnections().getSshConnection();
             // if ssh is connected then disconnect
             if (sshConnection != null && sshConnection.getSession().isConnected()) {
+                connectInteractor.logInfo("ssh connection is active: " + sshConnection.getSession().isConnected());
                 try {
                     sshConnection.getSession().delPortForwardingL(3306);
                     sshConnection.getSession().disconnect();

@@ -24,7 +24,8 @@ public class Connections {
         logger.info("Host is " + connectModel.getHost());
         String loopback = "127.0.0.1";
         // create ssh tunnel
-        if(connectModel.isSshUsed()) {
+        logger.info("SSH tunnel enabled: " + connectModel.sshUsedProperty().get());
+        if(connectModel.sshUsedProperty().get()) {
             logger.info("SSH tunnel enabled");
             logger.info("Attempting to connect to " + connectModel.getHost());
             setSshConnection(new PortForwardingL(connectModel.getComboBox().getValue()));

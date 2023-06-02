@@ -56,11 +56,7 @@ public class MembershipIdView implements Builder<Tab> {
         datePicker.setValue(getDate());
         datePicker.focusedProperty().addListener((observable, wasFocused, isFocused) -> {
             if (!isFocused){
-                try {
-                    datePicker.setValue(datePicker.getConverter().fromString(datePicker.getEditor().getText()));
-                } catch (DateTimeParseException e) {
-                    datePicker.getEditor().setText(datePicker.getConverter().toString(datePicker.getValue()));
-                }
+                datePicker.updateValue();
                 LocalDate date = datePicker.getValue();
                 membershipView.getMembershipModel().getMembership().setJoinDate(date.toString());
                 membershipView.sendMessage()

@@ -14,6 +14,7 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.util.Builder;
 import org.ecsail.connection.Mail;
+import org.ecsail.custom.CustomDatePicker;
 import org.ecsail.dto.*;
 import org.ecsail.interfaces.ConfigFilePaths;
 import org.ecsail.interfaces.Messages;
@@ -21,6 +22,9 @@ import org.ecsail.interfaces.ObjectType;
 import org.ecsail.static_calls.MathTools;
 import org.ecsail.widgetfx.*;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -115,7 +119,6 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         button.setPrefHeight(30);
         return button;
     }
-
 
     private  HBox setStack(ObjectType.Dto type) {
         HBox hBox = HBoxFx.hBoxOf(new Insets(5,5,5,5),"box-background-light",true);
@@ -387,8 +390,39 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         vBox.getChildren().add(fieldBox(person.nickNameProperty(), "Nickname"));
         vBox.getChildren().add(fieldBox(person.occupationProperty(), "Occupation"));
         vBox.getChildren().add(fieldBox(person.businessProperty(), "Business"));
-        vBox.getChildren().add(fieldBox(person.birthdayProperty(), "Birthday"));
+        vBox.getChildren().add(fieldDateBox(person.birthdayProperty(), "Birthday"));
         return vBox;
+    }
+
+    private Node fieldDateBox(Property<?> property, String label) {
+        HBox hBox = HBoxFx.hBoxOf(new Insets(0, 0, 10, 0), Pos.CENTER_LEFT, 10.0);
+        CustomDatePicker datePicker = new CustomDatePicker();
+        datePicker.setPrefWidth(150);
+        datePicker.setValue(stringToDate(property.getValue().toString()));
+        datePicker.focusedProperty().addListener((observable, wasFocused, isFocused) -> {
+            if (!isFocused){
+                datePicker.updateValue();
+                updatePersonDTO(label, datePicker.getValue().toString());
+                membershipView.sendMessage().accept(MessageType.UPDATE,person);
+            }
+        });
+        Text text = new Text(label);
+        text.setId("text-white");
+        HBox hBoxLabel = HBoxFx.hBoxOf(Pos.CENTER_LEFT, 80.0);
+        hBoxLabel.getChildren().add(text);
+        HBox hBoxTextField = HBoxFx.hBoxOf(Pos.CENTER_LEFT, 170.0);
+        hBoxTextField.getChildren().add(datePicker);
+        hBox.getChildren().addAll(hBoxLabel, hBoxTextField);
+        return hBox;
+    }
+
+    private LocalDate stringToDate(String stringDate) {
+        LocalDate date;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        if (membershipView.getMembershipModel().getMembership().getJoinDate() != null)
+            date = LocalDate.parse(stringDate, formatter);
+        else date = LocalDate.parse("1900-01-01", formatter);
+        return date;
     }
 
     private Node fieldBox(Property<?> property, String label) {

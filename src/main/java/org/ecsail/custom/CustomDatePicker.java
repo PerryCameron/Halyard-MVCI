@@ -5,6 +5,7 @@ import javafx.util.StringConverter;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class CustomDatePicker extends DatePicker {
 
@@ -39,5 +40,13 @@ public class CustomDatePicker extends DatePicker {
                 }
             }
         });
+    }
+
+    public void updateValue() {
+        try { // TODO couldn't this be a method inside the CustomDatePicker class?
+            this.setValue(this.getConverter().fromString(this.getEditor().getText()));
+        } catch (DateTimeParseException e) {
+            this.getEditor().setText(this.getConverter().toString(this.getValue()));
+        }
     }
 }
