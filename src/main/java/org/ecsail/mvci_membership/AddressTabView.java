@@ -28,7 +28,7 @@ public class AddressTabView implements Builder<Tab> {
 
     @Override
     public Tab build() {
-        return TabFx.tabOf("Attachments", createMainHBox());
+        return TabFx.tabOf("Address", createMainHBox());
     }
 
     private Node createMainHBox() {
