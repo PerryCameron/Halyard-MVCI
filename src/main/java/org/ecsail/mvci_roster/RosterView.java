@@ -114,6 +114,7 @@ public class RosterView implements Builder<Region> {
 
     private void setTabLaunchListener() {
         rosterModel.selectedMembershipListProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue != null);
             launchTab.accept(newValue);
         });
     }

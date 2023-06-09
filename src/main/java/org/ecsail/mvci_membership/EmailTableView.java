@@ -80,7 +80,6 @@ public class EmailTableView implements Builder<TableView<EmailDTO>> {
             });
             return booleanProp;
         });
-
         col3.setCellFactory(p12 -> {
             CheckBoxTableCell<EmailDTO, Boolean> cell = new CheckBoxTableCell<>();
             cell.setAlignment(Pos.CENTER);

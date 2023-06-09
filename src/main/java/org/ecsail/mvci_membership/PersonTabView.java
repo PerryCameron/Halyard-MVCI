@@ -394,7 +394,6 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     }
 
     private Node fieldDateBox(Property<?> property, String label) {
-        HBox hBox = HBoxFx.hBoxOf(new Insets(0, 0, 10, 0), Pos.CENTER_LEFT, 10.0);
         CustomDatePicker datePicker = new CustomDatePicker();
         datePicker.setPrefWidth(150);
         datePicker.setValue(stringToDate(property.getValue().toString()));
@@ -405,8 +404,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
                 membershipView.sendMessage().accept(MessageType.UPDATE,person);
             }
         });
-        createField(label, hBox, datePicker);
-        return hBox;
+        return labeledField(label, datePicker);
     }
 
     private LocalDate stringToDate(String stringDate) {
@@ -419,7 +417,6 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     }
 
     private Node fieldBox(Property<?> property, String label) {
-        HBox hBox = HBoxFx.hBoxOf(new Insets(0, 0, 10, 0), Pos.CENTER_LEFT, 10.0);
         TextField textField = TextFieldFx.textFieldOf(150, property);
         textField.focusedProperty()
                 .addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
@@ -428,11 +425,11 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
                 membershipView.sendMessage().accept(MessageType.UPDATE,person);
             }
         });
-        createField(label, hBox, textField);
-        return hBox;
+        return labeledField(label, textField);
     }
 
-    private static void createField(String label, HBox hBox, Node node) {
+    private Node labeledField(String label, Node node) {
+        HBox hBox = HBoxFx.hBoxOf(new Insets(0, 0, 10, 0), Pos.CENTER_LEFT, 10.0);
         Text text = new Text(label);
         text.setId("text-white");
         HBox hBoxLabel = HBoxFx.hBoxOf(Pos.CENTER_LEFT, 80.0);
@@ -440,6 +437,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         HBox hBoxTextField = HBoxFx.hBoxOf(Pos.CENTER_LEFT, 170.0);
         hBoxTextField.getChildren().add(node);
         hBox.getChildren().addAll(hBoxLabel, hBoxTextField);
+        return hBox;
     }
 
     private void updatePersonDTO(String label, String text) {

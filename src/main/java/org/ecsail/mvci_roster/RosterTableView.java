@@ -32,7 +32,7 @@ public class RosterTableView implements Builder<TableView> {
             TableRow<MembershipListDTO> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
-                    // int rowIndex = row.getIndex();
+                    rosterModel.setSelectedMembershipList(null); // allows listener in RosterView to change if same membership clicked
                     rosterModel.setSelectedMembershipList(row.getItem());
                 }
             });
