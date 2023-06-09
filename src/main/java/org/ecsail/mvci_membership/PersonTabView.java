@@ -24,7 +24,6 @@ import org.ecsail.widgetfx.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -406,13 +405,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
                 membershipView.sendMessage().accept(MessageType.UPDATE,person);
             }
         });
-        Text text = new Text(label);
-        text.setId("text-white");
-        HBox hBoxLabel = HBoxFx.hBoxOf(Pos.CENTER_LEFT, 80.0);
-        hBoxLabel.getChildren().add(text);
-        HBox hBoxTextField = HBoxFx.hBoxOf(Pos.CENTER_LEFT, 170.0);
-        hBoxTextField.getChildren().add(datePicker);
-        hBox.getChildren().addAll(hBoxLabel, hBoxTextField);
+        createField(label, hBox, datePicker);
         return hBox;
     }
 
@@ -435,14 +428,18 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
                 membershipView.sendMessage().accept(MessageType.UPDATE,person);
             }
         });
+        createField(label, hBox, textField);
+        return hBox;
+    }
+
+    private static void createField(String label, HBox hBox, Node node) {
         Text text = new Text(label);
         text.setId("text-white");
         HBox hBoxLabel = HBoxFx.hBoxOf(Pos.CENTER_LEFT, 80.0);
         hBoxLabel.getChildren().add(text);
         HBox hBoxTextField = HBoxFx.hBoxOf(Pos.CENTER_LEFT, 170.0);
-        hBoxTextField.getChildren().add(textField);
+        hBoxTextField.getChildren().add(node);
         hBox.getChildren().addAll(hBoxLabel, hBoxTextField);
-        return hBox;
     }
 
     private void updatePersonDTO(String label, String text) {

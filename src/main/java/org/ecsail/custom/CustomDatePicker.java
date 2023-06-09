@@ -43,7 +43,7 @@ public class CustomDatePicker extends DatePicker {
     }
 
     public void updateValue() {
-        try { // TODO couldn't this be a method inside the CustomDatePicker class?
+        try {
             this.setValue(this.getConverter().fromString(this.getEditor().getText()));
         } catch (DateTimeParseException e) {
             this.getEditor().setText(this.getConverter().toString(this.getValue()));
