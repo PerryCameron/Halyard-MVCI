@@ -154,7 +154,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         vBox.getChildren().add(radioButton(tg, "Change " + person.getFirstName() + "'s member type"));
         vBox.getChildren().add(radioButton(tg, "Remove " + person.getFirstName() + " from this membership"));
         vBox.getChildren().add(radioButton(tg, "Delete " + person.getFirstName() + " from database"));
-        vBox.getChildren().add(radioButton(tg, "Move " + person.getFirstName() + " to membership (MSID)"));
+        vBox.getChildren().add(radioButton(tg, "Move " + person.getFirstName() + " to membership ..."));
         vBox.getChildren().add(bottomControlBox());
         return vBox;
     }

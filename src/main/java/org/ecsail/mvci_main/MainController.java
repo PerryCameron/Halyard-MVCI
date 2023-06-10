@@ -11,6 +11,7 @@ import org.ecsail.connection.Connections;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.interfaces.Controller;
 import org.ecsail.interfaces.Status;
+import org.ecsail.mvci_boats.BoatListController;
 import org.ecsail.mvci_connect.ConnectController;
 import org.ecsail.mvci_loading.LoadingController;
 import org.ecsail.mvci_membership.MembershipController;
@@ -55,7 +56,7 @@ public class MainController extends Controller implements Status {
             case "Create New Membership" -> System.out.println("Creating new membership");
             case "Deposits" -> System.out.println("Displaying deposits");
             case "Rosters" -> region = new RosterController(this).getView();
-            case "Boats" -> System.out.println("Displaying boats");
+            case "Boats" -> region = new BoatListController(this).getView();
             case "Notes" -> System.out.println("Displaying notes");
             case "Jotform" -> System.out.println("Opening Jotform");
             default -> System.out.println("Invalid input");

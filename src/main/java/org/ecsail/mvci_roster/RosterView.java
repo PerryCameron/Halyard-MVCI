@@ -142,7 +142,6 @@ public class RosterView implements Builder<Region> {
 
     private Node setUpSearchBox() {
         HBox hBox = HBoxFx.hBoxOf(new Insets(5,0,15,0),Pos.CENTER_LEFT, 5.0);
-        hBox.setAlignment(Pos.CENTER_LEFT);
         Text text = new Text("Search");
         text.setId("invoice-text-number");
         TextField textField = new TextField();
