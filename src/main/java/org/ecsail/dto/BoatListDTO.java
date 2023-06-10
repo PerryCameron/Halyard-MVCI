@@ -1,11 +1,45 @@
 package org.ecsail.dto;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
+import org.ecsail.annotation.ColumnName;
 
-public class BoatListDTO extends BoatDTO {
+public class BoatListDTO {
+
+	@ColumnName(value = "BOAT_ID")
+	protected IntegerProperty boatId;
+	// this is here to carry value when passing object, not saved in db
+	protected IntegerProperty msId;
+	@ColumnName(value = "MANUFACTURER")
+	protected StringProperty manufacturer;
+	@ColumnName(value = "MANUFACTURE_YEAR")
+	protected StringProperty manufactureYear;
+	@ColumnName(value = "REGISTRATION_NUM")
+	protected StringProperty registrationNum;
+	@ColumnName(value = "MODEL")
+	protected StringProperty model;
+	@ColumnName(value = "BOAT_NAME")
+	protected StringProperty boatName;
+	@ColumnName(value = "SAIL_NUMBER")
+	protected StringProperty sailNumber;
+	@ColumnName(value = "HAS_TRAILER")
+	protected BooleanProperty hasTrailer;
+	@ColumnName(value = "LENGTH")
+	protected StringProperty loa;
+	@ColumnName(value = "WEIGHT")
+	protected StringProperty displacement;
+	@ColumnName(value = "KEEL")
+	protected StringProperty keel;
+	@ColumnName(value = "PHRF")
+	protected StringProperty phrf;
+	@ColumnName(value = "DRAFT")
+	protected StringProperty draft;
+	@ColumnName(value = "BEAM")
+	protected StringProperty beam;
+	@ColumnName(value = "LWL")
+	protected StringProperty lwl;
+	@ColumnName(value = "AUX")
+	protected BooleanProperty aux;
+
 	protected IntegerProperty membershipId;
 	protected StringProperty lName;
 	protected StringProperty fName;
@@ -16,9 +50,6 @@ public class BoatListDTO extends BoatDTO {
                        Boolean hasTrailer, String length, String weight, String keel, String phrf,
                        String draft, String beam, String lwl, Boolean aux, Integer membershipId,
                        String lName, String fName, Integer numberOfImages) {
-		
-		super(boat_id, ms_id, manufacturer, manufacture_year, registration_num, model, boat_name,
-				sail_number, hasTrailer, length, weight, keel, phrf, draft, beam, lwl, aux);
 		this.membershipId = new SimpleIntegerProperty(membershipId);
 		this.lName = new SimpleStringProperty(lName);
 		this.fName = new SimpleStringProperty(fName);
