@@ -19,7 +19,7 @@ public class RosterModel {
     private ObservableList<DbRosterSettingsDTO> rosterSettings = FXCollections.observableArrayList();
     private final ArrayList<SettingsCheckBox> checkBoxes = new ArrayList<>();
     private final SimpleObjectProperty<TableView<MembershipListDTO>> rosterTableView = new SimpleObjectProperty<>();
-    private final SimpleObjectProperty<RadioHBox> selectedRadioBox = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<RosterRadioHBox> selectedRadioBox = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<File> fileToSave = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<MembershipListDTO> selectedMembershipList = new SimpleObjectProperty<>();
     private final StringProperty numberOfRecords = new SimpleStringProperty("0");
@@ -65,13 +65,13 @@ public class RosterModel {
     public ObservableList<MembershipListDTO> getSearchedRosters() {
         return searchedRosters;
     }
-    public RadioHBox getSelectedRadioBox() {
+    public RosterRadioHBox getSelectedRadioBox() {
         return selectedRadioBox.get();
     }
-    public SimpleObjectProperty<RadioHBox> selectedRadioBoxProperty() {
+    public SimpleObjectProperty<RosterRadioHBox> selectedRadioBoxProperty() {
         return selectedRadioBox;
     }
-    public void setSelectedRadioBox(RadioHBox selectedRadioBox) {
+    public void setSelectedRadioBox(RosterRadioHBox selectedRadioBox) {
         this.selectedRadioBox.set(selectedRadioBox);
     }
     public ObservableList<MembershipListRadioDTO> getRadioChoices() {

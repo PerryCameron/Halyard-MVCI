@@ -100,9 +100,9 @@ public class RosterView implements Builder<Region> {
         rosterModel.listsLoadedProperty().addListener(observable -> {
             for (MembershipListRadioDTO radio : rosterModel.getRadioChoices()) {
                 if (!radio.getMethodName().equals("query")) {
-                    RadioHBox radioHBox = new RadioHBox(radio, rosterModel);
-                    vBox.getChildren().add(radioHBox);
-                    radioHBox.getRadioButton().setToggleGroup(tg);
+                    RosterRadioHBox rosterRadioHBox = new RosterRadioHBox(radio, rosterModel);
+                    vBox.getChildren().add(rosterRadioHBox);
+                    rosterRadioHBox.getRadioButton().setToggleGroup(tg);
                 }
             }
         });

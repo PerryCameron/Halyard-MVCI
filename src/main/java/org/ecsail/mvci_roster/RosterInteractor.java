@@ -34,18 +34,13 @@ public class RosterInteractor {
         rosterModel = rm;
         membershipRepo = new MembershipRepositoryImpl(connections.getDataSource());
         settingsRepo = new SettingsRepositoryImpl(connections.getDataSource());
-//        PhoneRepository phoneRepo = new PhoneRepositoryImpl(connections.getDataSource());
-//        EmailRepository emailRepo = new EmailRepositoryImpl(connections.getDataSource());
-//        MembershipIdRepository membershipIdRepo = new MembershipIdRepositoryImpl(connections.getDataSource());
     }
 
     protected ObservableList<MembershipListDTO> setSlipsForRoster(ObservableList<MembershipListDTO> updatedRoster) {
-//        List<Integer> subleases = new ArrayList<>();
         for(MembershipListDTO m: updatedRoster) {
             if(m.getSubLeaser() > 0) { // let's mark Sublease Owners
                     m.setSlip("O" + m.getSlip()); // put a 0 in front of owner
                     setSublease(m.getSlip(), m.getSubLeaser(), updatedRoster);
-//                    subleases.add(m.getSubLeaser());
             }
         }
         return updatedRoster;

@@ -4,7 +4,10 @@ import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import javafx.scene.control.TitledPane;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
@@ -12,12 +15,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Builder;
 import javafx.util.Duration;
-import org.ecsail.dto.MembershipListRadioDTO;
-import org.ecsail.mvci_roster.RadioHBox;
-import org.ecsail.mvci_roster.RosterTableView;
-import org.ecsail.mvci_roster.SettingsCheckBox;
-import org.ecsail.mvci_roster.export.SaveFileChooser;
-import org.ecsail.static_calls.HalyardPaths;
+import org.ecsail.dto.BoatListRadioDTO;
 import org.ecsail.widgetfx.HBoxFx;
 import org.ecsail.widgetfx.VBoxFx;
 
@@ -84,13 +82,13 @@ public class BoatListView implements Builder<Region> {
         ToggleGroup tg = new ToggleGroup();
         // reactive listener used at opening of tab only
 //        rosterModel.listsLoadedProperty().addListener(observable -> {
-//            for (MembershipListRadioDTO radio : rosterModel.getRadioChoices()) {
-//                if (!radio.getMethodName().equals("query")) {
-//                    RadioHBox radioHBox = new RadioHBox(radio, rosterModel);
-//                    vBox.getChildren().add(radioHBox);
-//                    radioHBox.getRadioButton().setToggleGroup(tg);
-//                }
-//            }
+        for(BoatListRadioDTO radio: boatListModel.getRadioChoices()) {
+            if(!radio.getMethod().equals("query")) {
+                BoatListRadioHBox radioHBox = new BoatListRadioHBox(radio, boatListModel);
+                vBox.getChildren().add(radioHBox);
+                radioHBox.getRadioButton().setToggleGroup(tg);
+            }
+        }
 //        });
         return vBox;
     }

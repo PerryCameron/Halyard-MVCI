@@ -14,7 +14,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.Builder;
 import org.ecsail.dto.BoatListDTO;
-import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.widgetfx.TableViewFx;
 
 public class BoatListTableView implements Builder<TableView> {

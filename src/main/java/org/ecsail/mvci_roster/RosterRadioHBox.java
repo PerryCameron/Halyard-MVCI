@@ -4,12 +4,12 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.layout.HBox;
 import org.ecsail.dto.MembershipListRadioDTO;
 
-public class RadioHBox extends HBox {
+public class RosterRadioHBox extends HBox {
     private final MembershipListRadioDTO membershipListRadioDTO;
     private final RadioButton radioButton;
     private final RosterModel rosterModel;
 
-    public RadioHBox(MembershipListRadioDTO r, RosterModel rm) {
+    public RosterRadioHBox(MembershipListRadioDTO r, RosterModel rm) {
         this.membershipListRadioDTO = r;
         rosterModel = rm;
         this.radioButton = new RadioButton(membershipListRadioDTO.getLabel());
