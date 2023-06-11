@@ -118,7 +118,7 @@ public class BoatListTableView implements Builder<TableView> {
 
     private TableColumn<BoatListDTO,String> col2() {
         var col = new TableColumn<BoatListDTO, String>("Boat");
-        col.setCellValueFactory(new PropertyValueFactory<>("col"));
+        col.setCellValueFactory(new PropertyValueFactory<>("boatId"));
         col.setStyle("-fx-alignment: top-center");
         col.setMaxWidth( 1f * Integer.MAX_VALUE * 5 );  // boat ID
         return col;
@@ -126,7 +126,7 @@ public class BoatListTableView implements Builder<TableView> {
 
     private TableColumn<BoatListDTO,String> col1() {
         var col = new TableColumn<BoatListDTO, String>("ID");
-        col.setCellValueFactory(new PropertyValueFactory<BoatListDTO, String>("membershipId"));
+        col.setCellValueFactory(new PropertyValueFactory<>("membershipId"));
         col.setStyle("-fx-alignment: top-center");
         col.setMaxWidth( 1f * Integer.MAX_VALUE * 5 );  // Membership ID
         return col;

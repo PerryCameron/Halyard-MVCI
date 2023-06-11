@@ -86,7 +86,7 @@ public class BoatRepositoryImpl implements BoatRepository {
     }
 
     @Override
-    public List<BoatListDTO> getAllBoatLists() {
+    public List<BoatListDTO> getAllBoats() {
         String query = """
                 SELECT id.membership_id,id.ms_id, p.l_name, p.f_name,b.*,nb.boat_count FROM boat b 
                 LEFT JOIN boat_owner bo on b.BOAT_ID = bo.BOAT_ID 
@@ -97,12 +97,6 @@ public class BoatRepositoryImpl implements BoatRepository {
                 GROUP BY BOAT_ID having count(BOAT_ID) > 0) nb on b.BOAT_ID=nb.BOAT_ID
                 """;
         return template.query(query, new BoatListRowMapper());
-    }
-
-    @Override
-    public List<BoatDTO> getAllBoats() {
-        String query = "SELECT * from boat";
-        return template.query(query, new BoatRowMapper());
     }
 
     @Override

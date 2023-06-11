@@ -7,7 +7,6 @@ import org.ecsail.connection.Connections;
 import org.ecsail.dto.BoatListDTO;
 import org.ecsail.dto.BoatListRadioDTO;
 import org.ecsail.dto.DbBoatSettingsDTO;
-import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.repository.implementations.BoatRepositoryImpl;
 import org.ecsail.repository.implementations.SettingsRepositoryImpl;
 import org.ecsail.repository.interfaces.BoatRepository;
@@ -39,13 +38,12 @@ public class BoatListInteractor {
         clearMainBoatList();
         Method method;
         try {
+            System.out.println("method: " + boatListModel.getSelectedRadioBox().getMethod());
             method = boatRepo.getClass().getMethod(boatListModel.getSelectedRadioBox().getMethod());
             ObservableList<BoatListDTO> updatedBoatList
                     = FXCollections.observableArrayList((List<BoatListDTO>) method.invoke(boatRepo));
-            System.out.println("before " + boatListModel.getBoats().size());
-            boatListModel.getBoats().setAll(updatedBoatList);
-            System.out.println("after " + boatListModel.getBoats().size());
             updateBoatList(updatedBoatList);
+            fillTableView();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -55,9 +53,9 @@ public class BoatListInteractor {
     }
 
     private void updateBoatList(ObservableList<BoatListDTO> updatedBoatList) {
-
-
+        Platform.runLater(() -> boatListModel.getBoats().setAll(updatedBoatList));
     }
+
 
     private void sortRoster() {
         Platform.runLater(() -> boatListModel.getBoats().sort(Comparator.comparing(BoatListDTO::getMembershipId)));
@@ -87,11 +85,8 @@ public class BoatListInteractor {
 
     private void fillWithResults() {
         Platform.runLater(() -> {
-            System.out.println("------------------------- Display Normal");
             logger.debug("TableView is set to display normal results");
-            System.out.println("----> List size= " + boatListModel.getBoats().size());
             boatListModel.getBoatListTableView().setItems(boatListModel.getBoats());
-            System.out.println("----> Items size= " + boatListModel.getBoatListTableView().getItems().size());
             boatListModel.setIsActiveSearch(false);
             boatListModel.getSearchedBoats().clear();
         });

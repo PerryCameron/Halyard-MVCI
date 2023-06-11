@@ -7,7 +7,6 @@ public class BoatListDTO {
 
 	@ColumnName(value = "BOAT_ID")
 	protected IntegerProperty boatId;
-	// this is here to carry value when passing object, not saved in db
 	protected IntegerProperty msId;
 	@ColumnName(value = "MANUFACTURER")
 	protected StringProperty manufacturer;

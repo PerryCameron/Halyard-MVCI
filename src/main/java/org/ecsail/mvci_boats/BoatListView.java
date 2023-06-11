@@ -34,7 +34,7 @@ public class BoatListView implements Builder<Region> {
     }
 
     private Node setUpRightPane() {
-        VBox vBox = VBoxFx.vBoxOf(220.0,10.0, new Insets(10,0,0,10));
+        VBox vBox = VBoxFx.vBoxOf(220.0,10.0, new Insets(10,10,0,10));
         vBox.getChildren().add(setUpRecordCountBox());
         vBox.getChildren().add(setUpSearchBox());
         vBox.getChildren().add(setUpFieldSelectedToSearchBox());
@@ -85,7 +85,6 @@ public class BoatListView implements Builder<Region> {
         ToggleGroup tg = new ToggleGroup();
         // reactive listener used at opening of tab only
         boatListModel.listsLoadedProperty().addListener(observable -> {
-            System.out.println("Triggered!!!!!!");
             for (BoatListRadioDTO radio : boatListModel.getRadioChoices()) {
 //            if(!radio.getMethod().equals("query")) {
                 BoatListRadioHBox radioHBox = new BoatListRadioHBox(radio, boatListModel);
