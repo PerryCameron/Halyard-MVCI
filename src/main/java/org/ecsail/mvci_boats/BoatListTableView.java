@@ -32,7 +32,6 @@ public class BoatListTableView implements Builder<TableView> {
             });
             return row;
         });
-
         return tableView;
     }
 

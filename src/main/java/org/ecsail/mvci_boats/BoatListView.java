@@ -4,10 +4,7 @@ import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TitledPane;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
@@ -22,8 +19,10 @@ import org.ecsail.widgetfx.VBoxFx;
 public class BoatListView implements Builder<Region> {
 
     BoatListModel boatListModel;
-    public BoatListView(BoatListModel rm) {
+    Runnable changeState;
+    public BoatListView(BoatListModel rm, Runnable cs) {
         boatListModel = rm;
+        changeState = cs;
     }
 
     @Override
@@ -51,12 +50,12 @@ public class BoatListView implements Builder<Region> {
         TitledPane titledPane = new TitledPane();
         titledPane.setText("Export to XLS");
         titledPane.setExpanded(false);
-//        rosterModel.listsLoadedProperty().addListener(observable -> {
-//            rosterModel.getRosterSettings().stream()
-//                    .map(dto -> new SettingsCheckBox(dto, "exportable"))
-//                    .peek(rosterModel.getCheckBoxes()::add)
-//                    .forEach(checkVBox.getChildren()::add);
-//        });
+        boatListModel.listsLoadedProperty().addListener(observable -> {
+            boatListModel.getBoatListSettings().stream()
+                    .map(dto -> new SettingsCheckBox(dto, "exportable"))
+//                    .peek(boatListModel.getCheckBoxes()::add)
+                    .forEach(checkVBox.getChildren()::add);
+        });
         buttonVBox.getChildren().add(createExportButton());
         checkVBox.getChildren().add(buttonVBox);
         titledPane.setContent(checkVBox);
@@ -77,19 +76,24 @@ public class BoatListView implements Builder<Region> {
         return button;
     }
 
+    protected void setRadioListener() {
+        boatListModel.selectedRadioBoxProperty().addListener(Observable -> changeState.run());
+    }
+
     private Node createRadioBox() {
-        VBox vBox = VBoxFx.vBoxOf(7.0, new Insets(20,0,0,20));
+        VBox vBox = VBoxFx.vBoxOf(7.0, new Insets(20, 0, 0, 20));
         ToggleGroup tg = new ToggleGroup();
         // reactive listener used at opening of tab only
-//        rosterModel.listsLoadedProperty().addListener(observable -> {
-        for(BoatListRadioDTO radio: boatListModel.getRadioChoices()) {
-            if(!radio.getMethod().equals("query")) {
+        boatListModel.listsLoadedProperty().addListener(observable -> {
+            System.out.println("Triggered!!!!!!");
+            for (BoatListRadioDTO radio : boatListModel.getRadioChoices()) {
+//            if(!radio.getMethod().equals("query")) {
                 BoatListRadioHBox radioHBox = new BoatListRadioHBox(radio, boatListModel);
                 vBox.getChildren().add(radioHBox);
                 radioHBox.getRadioButton().setToggleGroup(tg);
+//            }
             }
-        }
-//        });
+        });
         return vBox;
     }
 
@@ -137,9 +141,9 @@ public class BoatListView implements Builder<Region> {
 
     private Node setUpTableView() {
         VBox vBox = VBoxFx.vBoxOf(new Insets(5,5,0,10));
-//        TableView tableView = new RosterTableView(rosterModel).build();
-//        rosterModel.setRosterTableView(tableView);
-//        vBox.getChildren().add(tableView);
+        TableView tableView = new BoatListTableView().build();
+        boatListModel.setBoatListTableView(tableView);
+        vBox.getChildren().add(tableView);
 //        setTabLaunchListener();
         return vBox;
     }

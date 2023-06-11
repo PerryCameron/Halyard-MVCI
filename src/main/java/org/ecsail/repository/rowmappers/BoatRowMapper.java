@@ -13,7 +13,7 @@ public class BoatRowMapper implements RowMapper<BoatDTO> {
     public BoatDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new BoatDTO(
         rs.getInt("boat_id"),
-                rs.getInt("ms_id"),
+                0, // this is not in the database table
                 rs.getString("manufacturer"),
                 rs.getString("manufacture_year"),
                 rs.getString("registration_num"),

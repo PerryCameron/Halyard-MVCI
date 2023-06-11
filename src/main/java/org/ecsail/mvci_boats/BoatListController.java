@@ -14,8 +14,22 @@ public class BoatListController extends Controller {
         mainController = mc;
         BoatListModel boatListModel = new BoatListModel();
         boatListInteractor = new BoatListInteractor(boatListModel, mainController.getConnections());
-        boatListView = new BoatListView(boatListModel);
+        boatListView = new BoatListView(boatListModel, this::changeListType);
         getBoatListData();
+    }
+
+    private void changeListType() {
+        mainController.setSpinnerOffset(-175,-25);
+        mainController.showLoadingSpinner(true);
+        Task<Void> task = new Task<>() {
+            @Override
+            protected Void call() {
+                boatListInteractor.changeListType();
+                return null;
+            }
+        };
+        task.setOnSucceeded(e -> mainController.showLoadingSpinner(false));
+        new Thread(task).start();
     }
 
     private void getBoatListData() {
@@ -25,15 +39,16 @@ public class BoatListController extends Controller {
             @Override
             protected Void call() {
                 boatListInteractor.getRadioChoices();
-//                boatListInteractor.getRosterSettings();
+                boatListInteractor.getBoatListSettings();
                 return null;
             }
         };
         task.setOnSucceeded(e -> {
             mainController.showLoadingSpinner(false);
-//            boatListInteractor.setListsLoaded(true);
-//            boatListInteractor.setRosterToTableview();
-//            boatListView.setRadioListener(); // set last, so it doesn't fire, when radios are created.
+            boatListInteractor.setListsLoaded(true);
+            boatListInteractor.setBoatListToTableview();
+            boatListView.setRadioListener(); // set last, so it doesn't fire, when radios are created.
+            boatListInteractor.getListSize();
         });
         new Thread(task).start();
     }

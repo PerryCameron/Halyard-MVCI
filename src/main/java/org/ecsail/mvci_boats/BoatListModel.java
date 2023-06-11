@@ -1,22 +1,81 @@
 package org.ecsail.mvci_boats;
 
-import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.ecsail.dto.BoatListDTO;
-import org.ecsail.dto.BoatListRadioDTO;
+import javafx.scene.control.TableView;
+import org.ecsail.dto.*;
+import org.ecsail.mvci_roster.SettingsCheckBox;
+
+import java.util.ArrayList;
 
 public class BoatListModel {
 
     private ObservableList<BoatListDTO> boats = FXCollections.observableArrayList();
+    private final ObservableList<BoatListDTO> searchedBoats = FXCollections.observableArrayList();
     private final ObservableList<BoatListRadioDTO> radioChoices = FXCollections.observableArrayList();
+    private ObservableList<DbBoatSettingsDTO> boatListSettings = FXCollections.observableArrayList();
     private final StringProperty numberOfRecords = new SimpleStringProperty("0");
     private final StringProperty textFieldString = new SimpleStringProperty();
     private final SimpleObjectProperty<BoatListDTO> selectedBoatList = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<BoatListRadioHBox> selectedRadioBox = new SimpleObjectProperty<>();
+    private final BooleanProperty listsLoaded = new SimpleBooleanProperty(false);
+    private final ArrayList<SettingsCheckBox> checkBoxes = new ArrayList<>();
+    private final SimpleObjectProperty<TableView<BoatListDTO>> boatListTableView = new SimpleObjectProperty<>();
+    private final BooleanProperty isActiveSearch = new SimpleBooleanProperty(false);
 
+
+    public ObservableList<BoatListDTO> getSearchedBoats() {
+        return searchedBoats;
+    }
+
+    public boolean isSearchMode() {
+        return isActiveSearch.get();
+    }
+
+    public BooleanProperty isActiveSearchProperty() {
+        return isActiveSearch;
+    }
+
+    public void setIsActiveSearch(boolean isActiveSearch) {
+        this.isActiveSearch.set(isActiveSearch);
+    }
+
+    public TableView<BoatListDTO> getBoatListTableView() {
+        return boatListTableView.get();
+    }
+
+    public SimpleObjectProperty<TableView<BoatListDTO>> boatListTableViewProperty() {
+        return boatListTableView;
+    }
+
+    public void setBoatListTableView(TableView<BoatListDTO> boatListTableView) {
+        this.boatListTableView.set(boatListTableView);
+    }
+
+    public ArrayList<SettingsCheckBox> getCheckBoxes() {
+        return checkBoxes;
+    }
+
+    public ObservableList<DbBoatSettingsDTO> getBoatListSettings() {
+        return boatListSettings;
+    }
+
+    public void setBoatListSettings(ObservableList<DbBoatSettingsDTO> boatListSettings) {
+        this.boatListSettings = boatListSettings;
+    }
+
+    public boolean isListsLoaded() {
+        return listsLoaded.get();
+    }
+
+    public BooleanProperty listsLoadedProperty() {
+        return listsLoaded;
+    }
+
+    public void setListsLoaded(boolean listsLoaded) {
+        this.listsLoaded.set(listsLoaded);
+    }
 
     public BoatListRadioHBox getSelectedRadioBox() {
         return selectedRadioBox.get();
