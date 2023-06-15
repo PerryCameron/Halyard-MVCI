@@ -17,7 +17,7 @@ public class RosterModel {
     private final ObservableList<MembershipListDTO> searchedRosters = FXCollections.observableArrayList();
     private final ObservableList<MembershipListRadioDTO> radioChoices = FXCollections.observableArrayList();
     private ObservableList<DbRosterSettingsDTO> rosterSettings = FXCollections.observableArrayList();
-    private final ArrayList<SettingsCheckBox> checkBoxes = new ArrayList<>();
+    private final ArrayList<RosterSettingsCheckBox> checkBoxes = new ArrayList<>();
     private final SimpleObjectProperty<TableView<MembershipListDTO>> rosterTableView = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<RosterRadioHBox> selectedRadioBox = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<File> fileToSave = new SimpleObjectProperty<>();
@@ -47,7 +47,7 @@ public class RosterModel {
     public void setListsLoaded(boolean listsLoaded) {
         this.listsLoaded.set(listsLoaded);
     }
-    public ArrayList<SettingsCheckBox> getCheckBoxes() {
+    public ArrayList<RosterSettingsCheckBox> getCheckBoxes() {
         return checkBoxes;
     }
     public ObservableList<DbRosterSettingsDTO> getRosterSettings() {

@@ -11,13 +11,16 @@ import org.ecsail.repository.implementations.BoatRepositoryImpl;
 import org.ecsail.repository.implementations.SettingsRepositoryImpl;
 import org.ecsail.repository.interfaces.BoatRepository;
 import org.ecsail.repository.interfaces.SettingsRepository;
+import org.ecsail.static_calls.StringTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class BoatListInteractor {
 
@@ -67,21 +70,42 @@ public class BoatListInteractor {
     }
 
     protected void fillTableView() {
-//        if (!boatListModel.getTextFieldString().equals("")) fillWithSearchResults();
-//        else fillWithResults(); // search box cleared
+        if (!boatListModel.getTextFieldString().equals("")) fillWithSearchResults();
+        else fillWithResults(); // search box cleared
         fillWithResults();
         changeState();
     }
 
-//    private void fillWithSearchResults() {
-//        ObservableList<MembershipListDTO> list = searchString(rosterModel.getTextFieldString());
-//        Platform.runLater(() -> {
-//            rosterModel.getSearchedRosters().clear();
-//            rosterModel.getSearchedRosters().addAll(list);
-//            rosterModel.getRosterTableView().setItems(rosterModel.getSearchedRosters());
-//            rosterModel.setIsSearchMode(true);
-//        });
-//    }
+    private void fillWithSearchResults() {
+        ObservableList<BoatListDTO> list = searchString(boatListModel.getTextFieldString());
+        Platform.runLater(() -> {
+            boatListModel.getSearchedBoats().clear();
+            boatListModel.getSearchedBoats().addAll(list);
+            boatListModel.getBoatListTableView().setItems(boatListModel.getSearchedBoats());
+            boatListModel.setIsActiveSearch(true);
+        });
+    }
+
+    private ObservableList<BoatListDTO> searchString(String searchTerm) {
+        String searchTermToLowerCase = searchTerm.toLowerCase();
+        return boatListModel.getBoats().stream()
+                .filter(BoatListDTO -> Arrays.stream(BoatListDTO.getClass().getDeclaredFields())
+                        .filter(field -> fieldIsSearchable(field.getName()))
+                        .peek(field -> field.setAccessible(true))
+                        .anyMatch(field -> {
+                            String value = StringTools.returnFieldValueAsString(field, BoatListDTO).toLowerCase();
+                            return value.contains(searchTermToLowerCase);
+                        }))
+                .collect(Collectors.toCollection(FXCollections::observableArrayList));
+    }
+
+    private boolean fieldIsSearchable(String fieldName) {
+        return boatListModel.getCheckBoxes().stream()
+                .filter(dto -> dto.getDTOFieldName().equals(fieldName))
+                .findFirst()
+                .map(BoatListSettingsCheckBox::isSearchable)
+                .orElse(false);
+    }
 
     private void fillWithResults() {
         Platform.runLater(() -> {

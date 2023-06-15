@@ -15,6 +15,7 @@ import javafx.util.Duration;
 import org.ecsail.dto.DbRosterSettingsDTO;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.dto.MembershipListRadioDTO;
+import org.ecsail.interfaces.ListCallBack;
 import org.ecsail.mvci_roster.export.SaveFileChooser;
 import org.ecsail.static_calls.HalyardPaths;
 import org.ecsail.widgetfx.HBoxFx;
@@ -22,7 +23,7 @@ import org.ecsail.widgetfx.VBoxFx;
 
 import java.util.function.Consumer;
 
-public class RosterView implements Builder<Region> {
+public class RosterView implements Builder<Region>, ListCallBack {
 
     RosterModel rosterModel;
     Runnable changeState;
@@ -70,7 +71,7 @@ public class RosterView implements Builder<Region> {
         titledPane.setExpanded(false);
         rosterModel.listsLoadedProperty().addListener(observable -> {
             rosterModel.getRosterSettings().stream()
-                    .map(dto -> new SettingsCheckBox(dto, "exportable"))
+                    .map(dto -> new RosterSettingsCheckBox(dto, "exportable"))
                     .peek(rosterModel.getCheckBoxes()::add)
                     .forEach(checkVBox.getChildren()::add);
         });
@@ -133,7 +134,7 @@ public class RosterView implements Builder<Region> {
     protected Node setAllCheckBoxes() {
         VBox checkVBox = new VBox(5);
         for(DbRosterSettingsDTO dto: rosterModel.getRosterSettings()) {
-            SettingsCheckBox checkBox = new SettingsCheckBox(dto, "searchable");
+            RosterSettingsCheckBox checkBox = new RosterSettingsCheckBox(dto, "searchable");
             rosterModel.getCheckBoxes().add(checkBox);
             checkVBox.getChildren().add(checkBox);
         }

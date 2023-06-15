@@ -44,12 +44,10 @@ public class BoatListTableView implements Builder<TableView> {
             SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(boat.isAux());
             // Note: singleCol.setOnEditCommit(): Not work for
             // CheckBoxTableCell.
-
             // When "Listed?" column change.
             booleanProp.addListener((observable, oldValue, newValue) -> {
 //                boat.setAux(newValue);
 //                SqlUpdate.updateAux(String.valueOf(boat.getBoatId()), newValue);
-
             });
             return booleanProp;
         });

@@ -5,7 +5,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableView;
 import org.ecsail.dto.*;
-import org.ecsail.mvci_roster.SettingsCheckBox;
 
 import java.util.ArrayList;
 
@@ -20,7 +19,7 @@ public class BoatListModel {
     private final SimpleObjectProperty<BoatListDTO> selectedBoatList = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<BoatListRadioHBox> selectedRadioBox = new SimpleObjectProperty<>();
     private final BooleanProperty listsLoaded = new SimpleBooleanProperty(false);
-    private final ArrayList<SettingsCheckBox> checkBoxes = new ArrayList<>();
+    private final ArrayList<BoatListSettingsCheckBox> checkBoxes = new ArrayList<>();
     private final SimpleObjectProperty<TableView<BoatListDTO>> boatListTableView = new SimpleObjectProperty<>();
     private final BooleanProperty isActiveSearch = new SimpleBooleanProperty(false);
 
@@ -53,7 +52,7 @@ public class BoatListModel {
         this.boatListTableView.set(boatListTableView);
     }
 
-    public ArrayList<SettingsCheckBox> getCheckBoxes() {
+    public ArrayList<BoatListSettingsCheckBox> getCheckBoxes() {
         return checkBoxes;
     }
 

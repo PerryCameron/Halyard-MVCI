@@ -12,17 +12,25 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Builder;
 import javafx.util.Duration;
-import org.ecsail.dto.BoatListRadioDTO;
+import org.ecsail.dto.*;
 import org.ecsail.widgetfx.HBoxFx;
 import org.ecsail.widgetfx.VBoxFx;
+
+import java.util.function.Consumer;
 
 public class BoatListView implements Builder<Region> {
 
     BoatListModel boatListModel;
     Runnable changeState;
-    public BoatListView(BoatListModel rm, Runnable cs) {
+    Runnable search;
+    Runnable exportRoster;
+    Consumer<BoatListDTO> launchTab;
+    public BoatListView(BoatListModel rm, Runnable cs, Runnable s, Runnable cr, Consumer<BoatListDTO> lt) {
         boatListModel = rm;
         changeState = cs;
+        exportRoster =cr;
+        launchTab =lt;
+        search = s;
     }
 
     @Override
@@ -52,7 +60,7 @@ public class BoatListView implements Builder<Region> {
         titledPane.setExpanded(false);
         boatListModel.listsLoadedProperty().addListener(observable -> {
             boatListModel.getBoatListSettings().stream()
-                    .map(dto -> new SettingsCheckBox(dto, "exportable"))
+                    .map(dto -> new BoatListSettingsCheckBox(dto, "exportable"))
 //                    .peek(boatListModel.getCheckBoxes()::add)
                     .forEach(checkVBox.getChildren()::add);
         });
@@ -86,11 +94,9 @@ public class BoatListView implements Builder<Region> {
         // reactive listener used at opening of tab only
         boatListModel.listsLoadedProperty().addListener(observable -> {
             for (BoatListRadioDTO radio : boatListModel.getRadioChoices()) {
-//            if(!radio.getMethod().equals("query")) {
                 BoatListRadioHBox radioHBox = new BoatListRadioHBox(radio, boatListModel);
                 vBox.getChildren().add(radioHBox);
                 radioHBox.getRadioButton().setToggleGroup(tg);
-//            }
             }
         });
         return vBox;
@@ -101,11 +107,21 @@ public class BoatListView implements Builder<Region> {
         TitledPane titledPane = new TitledPane();
         titledPane.setText("Searchable Fields");
         titledPane.setExpanded(false);
-//        rosterModel.listsLoadedProperty().addListener(observable -> {
-//            titledPane.setContent(setAllCheckBoxes());
-//        });
+        boatListModel.listsLoadedProperty().addListener(observable -> {
+            titledPane.setContent(setAllCheckBoxes());
+        });
         vBox.getChildren().add(titledPane);
         return vBox;
+    }
+
+    protected Node setAllCheckBoxes() {
+        VBox checkVBox = new VBox(5);
+        for(DbBoatSettingsDTO dto: boatListModel.getBoatListSettings()) {
+            BoatListSettingsCheckBox checkBox = new BoatListSettingsCheckBox(dto, "searchable");
+            boatListModel.getCheckBoxes().add(checkBox);
+            checkVBox.getChildren().add(checkBox);
+        }
+        return checkVBox;
     }
 
     private Node setUpSearchBox() {
@@ -118,8 +134,8 @@ public class BoatListView implements Builder<Region> {
         PauseTransition pause = new PauseTransition(Duration.seconds(1));
         textField.textProperty().addListener(
                 (observable, oldValue, newValue) -> {
-//                    pause.setOnFinished(event -> search.run());
-//                    pause.playFromStart();
+                    pause.setOnFinished(event -> search.run());
+                    pause.playFromStart();
                 }
         );
         return hBox;

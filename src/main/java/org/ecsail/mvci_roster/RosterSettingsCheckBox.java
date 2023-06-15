@@ -3,10 +3,10 @@ package org.ecsail.mvci_roster;
 import javafx.scene.control.CheckBox;
 import org.ecsail.dto.DbRosterSettingsDTO;
 
-public class SettingsCheckBox extends CheckBox {
+public class RosterSettingsCheckBox extends CheckBox {
     private DbRosterSettingsDTO dbRosterSettingsDTO;
 
-    public SettingsCheckBox(DbRosterSettingsDTO db, String mode) {
+    public RosterSettingsCheckBox(DbRosterSettingsDTO db, String mode) {
         this.dbRosterSettingsDTO = db;
         this.setText(db.getName());
         setListener(mode);

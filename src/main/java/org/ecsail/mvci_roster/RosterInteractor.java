@@ -159,7 +159,7 @@ public class RosterInteractor {
         return rosterModel.getCheckBoxes().stream()
                 .filter(dto -> dto.getDTOFieldName().equals(fieldName))
                 .findFirst()
-                .map(SettingsCheckBox::isSearchable)
+                .map(RosterSettingsCheckBox::isSearchable)
                 .orElse(false);
     }
 

@@ -4,9 +4,9 @@ package org.ecsail.mvci_boats;
 import javafx.scene.control.CheckBox;
 import org.ecsail.dto.DbBoatSettingsDTO;
 
-public class SettingsCheckBox extends CheckBox {
+public class BoatListSettingsCheckBox extends CheckBox {
     private DbBoatSettingsDTO db;
-    public SettingsCheckBox(DbBoatSettingsDTO db, String mode) {
+    public BoatListSettingsCheckBox(DbBoatSettingsDTO db, String mode) {
         this.db = db;
         this.setText(db.getName());
         setListener(mode);

@@ -2,6 +2,7 @@ package org.ecsail.mvci_boats;
 
 import javafx.concurrent.Task;
 import javafx.scene.layout.Region;
+import org.ecsail.dto.BoatListDTO;
 import org.ecsail.interfaces.Controller;
 import org.ecsail.mvci_main.MainController;
 
@@ -14,12 +15,29 @@ public class BoatListController extends Controller {
         mainController = mc;
         BoatListModel boatListModel = new BoatListModel();
         boatListInteractor = new BoatListInteractor(boatListModel, mainController.getConnections());
-        boatListView = new BoatListView(boatListModel, this::changeListType);
+        boatListView = new BoatListView(boatListModel, this::changeListType, this::search, this::exportRoster, this::launchTab);
         getBoatListData();
     }
 
+    private void launchTab(BoatListDTO boatListDTO) {
+    }
+
+    private void exportRoster() {
+    }
+
+    private void search() {
+        Task<Void> task = new Task<>() {
+            @Override
+            protected Void call() {
+                boatListInteractor.fillTableView();
+                return null;
+            }
+        };
+        new Thread(task).start();
+    }
+
     private void changeListType() {
-        mainController.setSpinnerOffset(-175,-25);
+        mainController.setSpinnerOffset(225,25);
         mainController.showLoadingSpinner(true);
         Task<Void> task = new Task<>() {
             @Override
@@ -33,7 +51,7 @@ public class BoatListController extends Controller {
     }
 
     private void getBoatListData() {
-        mainController.setSpinnerOffset(-175,-25);
+        mainController.setSpinnerOffset(225,25);
         mainController.showLoadingSpinner(true);
         Task<Void> task = new Task<>() {
             @Override
