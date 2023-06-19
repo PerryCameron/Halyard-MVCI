@@ -14,7 +14,7 @@ public class BoatListController extends Controller implements ListCallBack {
 
     public BoatListController(MainController mc) {
         mainController = mc;
-        BoatListModel boatListModel = new BoatListModel();
+        BoatListModel boatListModel = new BoatListModel(mainController.getMainModel());
         boatListInteractor = new BoatListInteractor(boatListModel, mainController.getConnections());
         boatListView = new BoatListView(boatListModel, this::action);
         getBoatListData();

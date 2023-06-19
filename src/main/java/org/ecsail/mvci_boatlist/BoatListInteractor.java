@@ -155,6 +155,17 @@ public class BoatListInteractor {
     }
 
     public void updateBoat() {
-        boatRepo.updateAux(boatListModel.getSelectedBoatList().isAux(), boatListModel.getSelectedBoatList().getBoatId());
+        int rowsUpdated = boatRepo.updateAux(boatListModel.getSelectedBoatList().isAux(), boatListModel.getSelectedBoatList().getBoatId());
+        savedToIndicator(rowsUpdated == 1);
+    }
+
+    protected void savedToIndicator(boolean returnOk) { // updates status lights
+        if(returnOk) boatListModel.getMainModel().getLightAnimationMap().get("receiveSuccess").playFromStart();
+        else boatListModel.getMainModel().getLightAnimationMap().get("receiveError").playFromStart();
+    }
+
+    protected void retrievedFromIndicator(boolean returnOk) { // updates status lights
+        if(returnOk) boatListModel.getMainModel().getLightAnimationMap().get("transmitSuccess").playFromStart();
+        else boatListModel.getMainModel().getLightAnimationMap().get("transmitError").playFromStart();
     }
 }

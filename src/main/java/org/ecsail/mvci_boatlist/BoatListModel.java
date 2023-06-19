@@ -5,11 +5,13 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableView;
 import org.ecsail.dto.*;
+import org.ecsail.mvci_main.MainModel;
 
 import java.util.ArrayList;
 
 public class BoatListModel {
 
+    private final MainModel mainModel;
     private ObservableList<BoatListDTO> boats = FXCollections.observableArrayList();
     private final ObservableList<BoatListDTO> searchedBoats = FXCollections.observableArrayList();
     private final ObservableList<BoatListRadioDTO> radioChoices = FXCollections.observableArrayList();
@@ -23,7 +25,14 @@ public class BoatListModel {
     private final SimpleObjectProperty<TableView<BoatListDTO>> boatListTableView = new SimpleObjectProperty<>();
     private final BooleanProperty isActiveSearch = new SimpleBooleanProperty(false);
 
+    public BoatListModel(MainModel mainModel) {
+        this.mainModel = mainModel;
+    }
 
+
+    public MainModel getMainModel() {
+        return mainModel;
+    }
     public ObservableList<BoatListDTO> getSearchedBoats() {
         return searchedBoats;
     }
