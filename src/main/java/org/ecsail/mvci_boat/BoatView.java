@@ -37,9 +37,23 @@ public class BoatView implements Builder<Region>, ListCallBack {
     @Override
     public Region build() {
         BorderPane borderPane = new BorderPane();
-//        borderPane.setRight(setUpRightPane());
-//        borderPane.setCenter(setUpTableView());
+        borderPane.setRight(setUpPicture());
+//        borderPane.setCenter(setUpTableView()); this will be a spacer
+        borderPane.setLeft(setUpInfo());
+        borderPane.setBottom(setUpNotes());
         return borderPane;
+    }
+
+    private Node setUpNotes() {
+        return null;
+    }
+
+    private Node setUpInfo() {
+        return null;
+    }
+
+    private Node setUpPicture() {
+        return null;
     }
 
 

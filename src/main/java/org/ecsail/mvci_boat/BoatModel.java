@@ -16,6 +16,10 @@ import java.util.ArrayList;
 public class BoatModel {
 
     private final MainModel mainModel;
+    private final SimpleObjectProperty<BoatListDTO> selectedBoatList = new SimpleObjectProperty<>();
+
+
+
 
 
     public BoatModel(MainModel mainModel) {
