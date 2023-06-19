@@ -1,4 +1,4 @@
-package org.ecsail.mvci_boats;
+package org.ecsail.mvci_boatlist;
 
 import javafx.scene.control.RadioButton;
 import javafx.scene.layout.HBox;

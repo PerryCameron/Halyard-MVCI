@@ -1,4 +1,4 @@
-package org.ecsail.mvci_boats;
+package org.ecsail.mvci_boatlist;
 
 
 import javafx.scene.control.CheckBox;
@@ -33,5 +33,9 @@ public class BoatListSettingsCheckBox extends CheckBox {
 
     public boolean isSearchable() {
         return db.isSearchable();
+    }
+
+    public DbBoatSettingsDTO getDb() {
+        return db;
     }
 }

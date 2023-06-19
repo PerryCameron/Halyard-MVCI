@@ -1,4 +1,4 @@
-package org.ecsail.mvci_boats;
+package org.ecsail.mvci_boatlist;
 
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;

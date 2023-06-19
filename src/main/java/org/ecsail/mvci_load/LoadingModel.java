@@ -1,7 +1,6 @@
-package org.ecsail.mvci_loading;
+package org.ecsail.mvci_load;
 
 import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.stage.Stage;
 
 public class LoadingModel {

@@ -1,4 +1,4 @@
-package org.ecsail.mvci_boats;
+package org.ecsail.mvci_boatlist;
 
 import javafx.animation.PauseTransition;
 import javafx.geometry.Insets;
@@ -115,13 +115,14 @@ public class BoatListView implements Builder<Region> {
     }
 
     protected Node setAllCheckBoxes() {
-        VBox checkVBox = new VBox(5);
+        VBox vBox = new VBox(5);
         for(DbBoatSettingsDTO dto: boatListModel.getBoatListSettings()) {
+            System.out.println("Setting up " + dto.getFieldName() + " which is searchable: " + dto.isSearchable());
             BoatListSettingsCheckBox checkBox = new BoatListSettingsCheckBox(dto, "searchable");
             boatListModel.getCheckBoxes().add(checkBox);
-            checkVBox.getChildren().add(checkBox);
+            vBox.getChildren().add(checkBox);
         }
-        return checkVBox;
+        return vBox;
     }
 
     private Node setUpSearchBox() {

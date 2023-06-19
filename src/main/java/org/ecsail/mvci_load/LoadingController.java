@@ -1,4 +1,4 @@
-package org.ecsail.mvci_loading;
+package org.ecsail.mvci_load;
 
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;

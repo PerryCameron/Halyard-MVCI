@@ -1,4 +1,4 @@
-package org.ecsail.mvci_boats;
+package org.ecsail.mvci_boatlist;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -72,7 +72,6 @@ public class BoatListInteractor {
     protected void fillTableView() {
         if (!boatListModel.getTextFieldString().equals("")) fillWithSearchResults();
         else fillWithResults(); // search box cleared
-        fillWithResults();
         changeState();
     }
 
@@ -100,12 +99,28 @@ public class BoatListInteractor {
     }
 
     private boolean fieldIsSearchable(String fieldName) {
-        return boatListModel.getCheckBoxes().stream()
-                .filter(dto -> dto.getDTOFieldName().equals(fieldName))
+        boolean isSearchable = boatListModel.getCheckBoxes().stream()
+                .filter(dto -> dto.getDb().getPojoName().equals(fieldName))
                 .findFirst()
                 .map(BoatListSettingsCheckBox::isSearchable)
                 .orElse(false);
+        System.out.println("field: " + fieldName + " is searchable: " + isSearchable);
+        return isSearchable;
     }
+
+//    private boolean fieldIsSearchable(String fieldName) {
+//        boolean isSearchable = false;
+//        for (BoatListSettingsCheckBox dto : boatListModel.getCheckBoxes()) {
+//            System.out.println(dto.getDb().getPojoName() + " = " + fieldName);
+//            if (dto.getDb().getPojoName().equals(fieldName)) {
+//                isSearchable = dto.isSearchable();
+//                break;
+//            }
+//        }
+//        System.out.println("field: " + fieldName + " is searchable: " + isSearchable);
+//        return isSearchable;
+//    }
+
 
     private void fillWithResults() {
         Platform.runLater(() -> {
@@ -151,9 +166,5 @@ public class BoatListInteractor {
             else
                 boatListModel.setNumberOfRecords(String.valueOf(boatListModel.getBoats().size()));
         });
-    }
-
-    public void getListSize() {
-        logger.info("Size is " + String.valueOf(boatListModel.getBoats().size()));
     }
 }

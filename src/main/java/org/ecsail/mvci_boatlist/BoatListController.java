@@ -1,4 +1,4 @@
-package org.ecsail.mvci_boats;
+package org.ecsail.mvci_boatlist;
 
 import javafx.concurrent.Task;
 import javafx.scene.layout.Region;
@@ -66,7 +66,6 @@ public class BoatListController extends Controller {
             boatListInteractor.setListsLoaded(true);
             boatListInteractor.setBoatListToTableview();
             boatListView.setRadioListener(); // set last, so it doesn't fire, when radios are created.
-            boatListInteractor.getListSize();
         });
         new Thread(task).start();
     }
