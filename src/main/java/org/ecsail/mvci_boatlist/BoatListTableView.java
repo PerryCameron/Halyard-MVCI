@@ -14,9 +14,17 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.Builder;
 import org.ecsail.dto.BoatListDTO;
+import org.ecsail.interfaces.ListCallBack;
 import org.ecsail.widgetfx.TableViewFx;
 
 public class BoatListTableView implements Builder<TableView> {
+
+    private final BoatListView boatListView;
+
+    public BoatListTableView(BoatListView blv) {
+        this.boatListView = blv;
+    }
+
     @Override
     public TableView build() {
         TableView<BoatListDTO> tableView = TableViewFx.tableViewOf(BoatListDTO.class);
@@ -38,21 +46,16 @@ public class BoatListTableView implements Builder<TableView> {
     private TableColumn<BoatListDTO,Boolean> col9() {
         var col = new TableColumn<BoatListDTO, Boolean>("Aux");
         col.setCellValueFactory(new PropertyValueFactory<>("aux"));
-
         col.setCellValueFactory(param -> {
-            BoatListDTO boat = param.getValue();
-            SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(boat.isAux());
-            // Note: singleCol.setOnEditCommit(): Not work for
-            // CheckBoxTableCell.
-            // When "Listed?" column change.
+            BoatListDTO boatListDTO = param.getValue();
+            SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(boatListDTO.isAux());
             booleanProp.addListener((observable, oldValue, newValue) -> {
-//                boat.setAux(newValue);
-//                SqlUpdate.updateAux(String.valueOf(boat.getBoatId()), newValue);
+                boatListDTO.setAux(newValue); // update the object
+                boatListView.boatListModel.setSelectedBoatList(boatListDTO); // set object as selected object
+                boatListView.action.accept(ListCallBack.Mode.UPDATE); // send signal to update selected object in db
             });
             return booleanProp;
         });
-
-        //
         col.setCellFactory(p -> {
             CheckBoxTableCell<BoatListDTO, Boolean> cell = new CheckBoxTableCell<>();
             cell.setAlignment(Pos.CENTER);

@@ -13,24 +13,20 @@ import javafx.scene.text.Text;
 import javafx.util.Builder;
 import javafx.util.Duration;
 import org.ecsail.dto.*;
+import org.ecsail.interfaces.ListCallBack;
 import org.ecsail.widgetfx.HBoxFx;
 import org.ecsail.widgetfx.VBoxFx;
 
 import java.util.function.Consumer;
 
-public class BoatListView implements Builder<Region> {
+
+public class BoatListView implements Builder<Region>, ListCallBack {
 
     BoatListModel boatListModel;
-    Runnable changeState;
-    Runnable search;
-    Runnable exportRoster;
-    Consumer<BoatListDTO> launchTab;
-    public BoatListView(BoatListModel rm, Runnable cs, Runnable s, Runnable cr, Consumer<BoatListDTO> lt) {
+    Consumer<ListCallBack.Mode> action;
+    public BoatListView(BoatListModel rm, Consumer<ListCallBack.Mode> a) {
         boatListModel = rm;
-        changeState = cs;
-        exportRoster =cr;
-        launchTab =lt;
-        search = s;
+        action = a;
     }
 
     @Override
@@ -73,8 +69,9 @@ public class BoatListView implements Builder<Region> {
     }
 
     private Node createExportButton() {
-        Button button = new Button("Export to XLS");
+        Button button = new Button("Export");
         button.setOnAction((event) -> {
+            action.accept(Mode.EXPORT_XPS);
 //            rosterModel.setFileToSave(new SaveFileChooser(HalyardPaths.ROSTERS + "/",
 //                    rosterModel.getSelectedYear() + "_" +
 //                            rosterModel.getSelectedRadioBox().getRadioLabel().replace(" ", "_"),
@@ -85,7 +82,8 @@ public class BoatListView implements Builder<Region> {
     }
 
     protected void setRadioListener() {
-        boatListModel.selectedRadioBoxProperty().addListener(Observable -> changeState.run());
+//        boatListModel.selectedRadioBoxProperty().addListener(Observable -> changeState.run());
+        boatListModel.selectedRadioBoxProperty().addListener(Observable -> action.accept(Mode.CHANGE_STATE));
     }
 
     private Node createRadioBox() {
@@ -117,7 +115,6 @@ public class BoatListView implements Builder<Region> {
     protected Node setAllCheckBoxes() {
         VBox vBox = new VBox(5);
         for(DbBoatSettingsDTO dto: boatListModel.getBoatListSettings()) {
-            System.out.println("Setting up " + dto.getFieldName() + " which is searchable: " + dto.isSearchable());
             BoatListSettingsCheckBox checkBox = new BoatListSettingsCheckBox(dto, "searchable");
             boatListModel.getCheckBoxes().add(checkBox);
             vBox.getChildren().add(checkBox);
@@ -135,7 +132,7 @@ public class BoatListView implements Builder<Region> {
         PauseTransition pause = new PauseTransition(Duration.seconds(1));
         textField.textProperty().addListener(
                 (observable, oldValue, newValue) -> {
-                    pause.setOnFinished(event -> search.run());
+                    pause.setOnFinished(event -> action.accept(Mode.SEARCH));
                     pause.playFromStart();
                 }
         );
@@ -157,10 +154,18 @@ public class BoatListView implements Builder<Region> {
 
     private Node setUpTableView() {
         VBox vBox = VBoxFx.vBoxOf(new Insets(5,5,0,10));
-        TableView tableView = new BoatListTableView().build();
+        TableView tableView = new BoatListTableView(this).build();
         boatListModel.setBoatListTableView(tableView);
         vBox.getChildren().add(tableView);
 //        setTabLaunchListener();
         return vBox;
+    }
+
+    public Consumer<Mode> getAction() {
+        return action;
+    }
+
+    public void setAction(Consumer<Mode> action) {
+        this.action = action;
     }
 }

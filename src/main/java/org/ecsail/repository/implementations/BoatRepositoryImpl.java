@@ -154,6 +154,14 @@ public class BoatRepositoryImpl implements BoatRepository {
     }
 
     @Override
+    public int updateAux(boolean aux, int boatId) {
+        String query = "UPDATE boat SET " +
+                "AUX = ? " +
+                "WHERE BOAT_ID = ? ";
+        return template.update(query, aux, boatId);
+    }
+
+    @Override
     public int delete(BoatDTO boatDTO) {
         String deleteSql = "DELETE FROM boat WHERE BOAT_ID = ?";
         return template.update(deleteSql, boatDTO.getBoatId());

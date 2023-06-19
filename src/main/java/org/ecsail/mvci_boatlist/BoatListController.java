@@ -4,9 +4,10 @@ import javafx.concurrent.Task;
 import javafx.scene.layout.Region;
 import org.ecsail.dto.BoatListDTO;
 import org.ecsail.interfaces.Controller;
+import org.ecsail.interfaces.ListCallBack;
 import org.ecsail.mvci_main.MainController;
 
-public class BoatListController extends Controller {
+public class BoatListController extends Controller implements ListCallBack {
     MainController mainController;
     BoatListInteractor boatListInteractor;
     BoatListView boatListView;
@@ -15,14 +16,30 @@ public class BoatListController extends Controller {
         mainController = mc;
         BoatListModel boatListModel = new BoatListModel();
         boatListInteractor = new BoatListInteractor(boatListModel, mainController.getConnections());
-        boatListView = new BoatListView(boatListModel, this::changeListType, this::search, this::exportRoster, this::launchTab);
+        boatListView = new BoatListView(boatListModel, this::action);
         getBoatListData();
     }
 
-    private void launchTab(BoatListDTO boatListDTO) {
+    private void action(ListCallBack.Mode mode) {
+        switch (mode) {
+            case SEARCH -> search();
+            case CHANGE_STATE -> changeListType();
+            case EXPORT_XPS -> exportRoster();
+            case UPDATE -> updateBoatList();
+            case LAUNCH_TAB -> launchTab();
+        }
+    }
+
+    private void updateBoatList() {
+        boatListInteractor.updateBoat();
+    }
+
+    private void launchTab() {
+        System.out.println("Launch Tab");
     }
 
     private void exportRoster() {
+        System.out.println("Exporting Roster to XLS");
     }
 
     private void search() {

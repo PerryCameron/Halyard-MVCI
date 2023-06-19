@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.ecsail.connection.Connections;
+import org.ecsail.dto.BoatDTO;
 import org.ecsail.dto.BoatListDTO;
 import org.ecsail.dto.BoatListRadioDTO;
 import org.ecsail.dto.DbBoatSettingsDTO;
@@ -104,23 +105,8 @@ public class BoatListInteractor {
                 .findFirst()
                 .map(BoatListSettingsCheckBox::isSearchable)
                 .orElse(false);
-        System.out.println("field: " + fieldName + " is searchable: " + isSearchable);
         return isSearchable;
     }
-
-//    private boolean fieldIsSearchable(String fieldName) {
-//        boolean isSearchable = false;
-//        for (BoatListSettingsCheckBox dto : boatListModel.getCheckBoxes()) {
-//            System.out.println(dto.getDb().getPojoName() + " = " + fieldName);
-//            if (dto.getDb().getPojoName().equals(fieldName)) {
-//                isSearchable = dto.isSearchable();
-//                break;
-//            }
-//        }
-//        System.out.println("field: " + fieldName + " is searchable: " + isSearchable);
-//        return isSearchable;
-//    }
-
 
     private void fillWithResults() {
         Platform.runLater(() -> {
@@ -166,5 +152,9 @@ public class BoatListInteractor {
             else
                 boatListModel.setNumberOfRecords(String.valueOf(boatListModel.getBoats().size()));
         });
+    }
+
+    public void updateBoat() {
+        boatRepo.updateAux(boatListModel.getSelectedBoatList().isAux(), boatListModel.getSelectedBoatList().getBoatId());
     }
 }

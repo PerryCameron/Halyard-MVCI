@@ -4,6 +4,8 @@ public interface ListCallBack {
     enum Mode {
         CHANGE_STATE,
         SEARCH,
-        EXPORT_XPS
+        EXPORT_XPS,
+        UPDATE,
+        LAUNCH_TAB
     }
 }
