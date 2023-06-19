@@ -4,7 +4,6 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.ecsail.connection.Connections;
-import org.ecsail.dto.BoatDTO;
 import org.ecsail.dto.BoatListDTO;
 import org.ecsail.dto.BoatListRadioDTO;
 import org.ecsail.dto.DbBoatSettingsDTO;
@@ -167,5 +166,10 @@ public class BoatListInteractor {
     protected void retrievedFromIndicator(boolean returnOk) { // updates status lights
         if(returnOk) boatListModel.getMainModel().getLightAnimationMap().get("transmitSuccess").playFromStart();
         else boatListModel.getMainModel().getLightAnimationMap().get("transmitError").playFromStart();
+    }
+
+    public void launchBoatListTab() {
+        System.out.println("launch new boat list tab");
+        System.out.println(boatListModel.getSelectedBoatList());
     }
 }

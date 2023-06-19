@@ -323,4 +323,11 @@ public class BoatListDTO {
 	public void setNumberOfImages(int numberOfImages) {
 		this.numberOfImages.set(numberOfImages);
 	}
+
+	@Override
+	public String toString() {
+		return "BoatListDTO{" +
+				"boatId=" + boatId +
+				'}';
+	}
 }

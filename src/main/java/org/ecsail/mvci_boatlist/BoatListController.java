@@ -34,9 +34,7 @@ public class BoatListController extends Controller implements ListCallBack {
         boatListInteractor.updateBoat();
     }
 
-    private void launchTab() {
-        System.out.println("Launch Tab");
-    }
+    private void launchTab() { boatListInteractor.launchBoatListTab(); }
 
     private void exportRoster() {
         System.out.println("Exporting Roster to XLS");

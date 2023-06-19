@@ -34,8 +34,8 @@ public class BoatListTableView implements Builder<TableView> {
             TableRow<BoatListDTO> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
-//                    rosterModel.setSelectedMembershipList(null); // allows listener in RosterView to change if same membership clicked
-//                    rosterModel.setSelectedMembershipList(row.getItem());
+                    boatListView.boatListModel.setSelectedBoatList(row.getItem());
+                    boatListView.action.accept(ListCallBack.Mode.LAUNCH_TAB); // send signal to update selected object in db
                 }
             });
             return row;
