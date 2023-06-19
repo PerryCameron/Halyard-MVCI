@@ -77,13 +77,6 @@ public class VBoxFx {
         return vBox;
     }
 
-    public static VBox vBoxOf(Double width, Double spacing) {
-        VBox vBox = new VBox();
-        vBox.setPrefWidth(width);
-        vBox.setSpacing(spacing);
-        return vBox;
-    }
-
     public static VBox vBoxOf(Double spacing, Insets insets) {
         VBox vBox = new VBox();
         vBox.setSpacing(spacing);

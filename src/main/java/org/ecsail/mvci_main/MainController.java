@@ -7,9 +7,11 @@ import javafx.scene.Scene;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import org.ecsail.connection.Connections;
+import org.ecsail.dto.BoatListDTO;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.interfaces.Controller;
 import org.ecsail.interfaces.Status;
+import org.ecsail.mvci_boat.BoatController;
 import org.ecsail.mvci_boatlist.BoatListController;
 import org.ecsail.mvci_connect.ConnectController;
 import org.ecsail.mvci_load.LoadingController;
@@ -44,6 +46,10 @@ public class MainController extends Controller implements Status {
 
     public void openMembershipMVCI(MembershipListDTO ml) {
         mainView.addTab("Mem " + ml.getMembershipId(), new MembershipController(this, ml).getView());
+    }
+
+    public void openBoatMVCI(BoatListDTO bl) {
+        mainView.addTab("Boat " + bl.getBoatId(), new BoatController(this, bl).getView());
     }
 
     public void openTab(String tabName) {

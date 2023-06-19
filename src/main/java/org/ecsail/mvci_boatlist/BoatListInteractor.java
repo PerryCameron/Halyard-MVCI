@@ -7,6 +7,7 @@ import org.ecsail.connection.Connections;
 import org.ecsail.dto.BoatListDTO;
 import org.ecsail.dto.BoatListRadioDTO;
 import org.ecsail.dto.DbBoatSettingsDTO;
+import org.ecsail.mvci_main.MainController;
 import org.ecsail.repository.implementations.BoatRepositoryImpl;
 import org.ecsail.repository.implementations.SettingsRepositoryImpl;
 import org.ecsail.repository.interfaces.BoatRepository;
@@ -168,8 +169,7 @@ public class BoatListInteractor {
         else boatListModel.getMainModel().getLightAnimationMap().get("transmitError").playFromStart();
     }
 
-    public void launchBoatListTab() {
-        System.out.println("launch new boat list tab");
-        System.out.println(boatListModel.getSelectedBoatList());
+    public void launchBoatTab(MainController mainController) {
+        mainController.openBoatMVCI(boatListModel.getSelectedBoatList());
     }
 }

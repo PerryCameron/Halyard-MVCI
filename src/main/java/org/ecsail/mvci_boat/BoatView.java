@@ -5,10 +5,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.util.Builder;
 import javafx.util.Duration;
@@ -22,6 +19,7 @@ import org.ecsail.mvci_boatlist.BoatListTableView;
 import org.ecsail.widgetfx.HBoxFx;
 import org.ecsail.widgetfx.VBoxFx;
 
+import java.util.Collection;
 import java.util.function.Consumer;
 
 
@@ -49,7 +47,24 @@ public class BoatView implements Builder<Region>, ListCallBack {
     }
 
     private Node setUpInfo() {
-        return null;
+        VBox vBox = VBoxFx.vBoxOf(350.0,10.0, new Insets(0,0,0,0));
+
+        vBox.getChildren().addAll(boatInfoTitlePane(), ownerTitlePane());
+        return vBox;
+    }
+
+    private Node ownerTitlePane() {
+        TitledPane titledPane = new TitledPane();
+        VBox.setVgrow(titledPane, Priority.ALWAYS);
+        titledPane.setText("Owner(s)");
+        // TODO see line 277
+        return titledPane;
+    }
+
+    private Node boatInfoTitlePane() {
+        TitledPane titledPane = new TitledPane();
+        titledPane.setText("Boat Information");
+        return titledPane;
     }
 
     private Node setUpPicture() {
