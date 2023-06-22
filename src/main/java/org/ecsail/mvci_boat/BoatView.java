@@ -39,7 +39,14 @@ public class BoatView implements Builder<Region>, ListCallBack {
 //        borderPane.setCenter(setUpTableView()); this will be a spacer
         borderPane.setLeft(setUpInfo());
         borderPane.setBottom(setUpNotes());
+//        listenForData();
         return borderPane;
+    }
+
+    private void listenForData() {
+        boatModel.dataLoadedProperty().addListener((observable, oldValue, newValue) -> {
+
+        });
     }
 
     private Node setUpNotes() {
@@ -63,6 +70,15 @@ public class BoatView implements Builder<Region>, ListCallBack {
 
     private Node boatInfoTitlePane() {
         TitledPane titledPane = new TitledPane();
+        var vBox = new VBox();
+        vBox.setId("box-grey");
+        boatModel.dataLoadedProperty().addListener((observable, oldValue, newValue) -> {
+            for(DbBoatSettingsDTO dbBoatSettingsDTO: boatModel.getBoatSettings()) {
+                vBox.getChildren().add(new Row(boatModel, dbBoatSettingsDTO));
+                System.out.println("Creating Row");
+            }
+        });
+        titledPane.setContent(vBox);
         titledPane.setText("Boat Information");
         return titledPane;
     }

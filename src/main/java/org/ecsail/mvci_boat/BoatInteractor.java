@@ -19,6 +19,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -50,4 +51,11 @@ public class BoatInteractor {
         else boatModel.getMainModel().getLightAnimationMap().get("transmitError").playFromStart();
     }
 
+    public void getBoatSettings() {
+        boatModel.setBoatSettings((ArrayList<DbBoatSettingsDTO>) settingsRepo.getBoatSettings());
+    }
+
+    public void setDataLoaded(boolean dataLoaded) {
+        boatModel.setDataLoaded(dataLoaded);
+    }
 }

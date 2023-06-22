@@ -22,7 +22,6 @@ import org.ecsail.widgetfx.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import java.util.Comparator;
 
 public class MembershipIdView implements Builder<Tab> {

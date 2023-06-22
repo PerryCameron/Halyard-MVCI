@@ -19,7 +19,6 @@ public class MembershipInteractor implements SlipUser {
 
     protected void setListsLoaded() {
         Platform.runLater(() -> {
-            logger.debug("Lists are loaded");
             membershipModel.setListsLoaded(true);
         });
     }

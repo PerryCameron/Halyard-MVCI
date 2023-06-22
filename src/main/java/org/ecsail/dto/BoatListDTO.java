@@ -168,7 +168,7 @@ public class BoatListDTO {
 		this.sailNumber.set(sailNumber);
 	}
 
-	public boolean isHasTrailer() {
+	public boolean hasTrailer() {
 		return hasTrailer.get();
 	}
 
