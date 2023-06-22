@@ -1,6 +1,7 @@
 package org.ecsail.mvci_roster;
 
 import javafx.animation.PauseTransition;
+import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -12,13 +13,16 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Builder;
 import javafx.util.Duration;
+import org.ecsail.dto.DbBoatSettingsDTO;
 import org.ecsail.dto.DbRosterSettingsDTO;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.dto.MembershipListRadioDTO;
 import org.ecsail.interfaces.ListCallBack;
+import org.ecsail.mvci_boat.Row;
 import org.ecsail.mvci_roster.export.SaveFileChooser;
 import org.ecsail.static_calls.HalyardPaths;
 import org.ecsail.widgetfx.HBoxFx;
+import org.ecsail.widgetfx.ListenerFx;
 import org.ecsail.widgetfx.VBoxFx;
 
 import java.util.function.Consumer;
@@ -69,12 +73,13 @@ public class RosterView implements Builder<Region>, ListCallBack {
         TitledPane titledPane = new TitledPane();
         titledPane.setText("Export to XLS");
         titledPane.setExpanded(false);
-        rosterModel.listsLoadedProperty().addListener(observable -> {
+        ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(rosterModel.listsLoadedProperty(), () -> {
             rosterModel.getRosterSettings().stream()
                     .map(dto -> new RosterSettingsCheckBox(dto, "exportable"))
                     .peek(rosterModel.getCheckBoxes()::add)
                     .forEach(checkVBox.getChildren()::add);
         });
+        rosterModel.listsLoadedProperty().addListener(dataLoadedListener);
         buttonVBox.getChildren().add(createExportButton());
         checkVBox.getChildren().add(buttonVBox);
         titledPane.setContent(checkVBox);
@@ -97,8 +102,7 @@ public class RosterView implements Builder<Region>, ListCallBack {
     private Node createRadioBox() {
         VBox vBox = VBoxFx.vBoxOf(7.0, new Insets(20,0,0,20));
         ToggleGroup tg = new ToggleGroup();
-        // reactive listener used at opening of tab only
-        rosterModel.listsLoadedProperty().addListener(observable -> {
+        ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(rosterModel.listsLoadedProperty(), () -> {
             for (MembershipListRadioDTO radio : rosterModel.getRadioChoices()) {
                 if (!radio.getMethodName().equals("query")) {
                     RosterRadioHBox rosterRadioHBox = new RosterRadioHBox(radio, rosterModel);
@@ -107,6 +111,7 @@ public class RosterView implements Builder<Region>, ListCallBack {
                 }
             }
         });
+        rosterModel.listsLoadedProperty().addListener(dataLoadedListener);
         return vBox;
     }
     protected void setRadioListener() {
@@ -124,9 +129,10 @@ public class RosterView implements Builder<Region>, ListCallBack {
         TitledPane titledPane = new TitledPane();
         titledPane.setText("Searchable Fields");
         titledPane.setExpanded(false);
-        rosterModel.listsLoadedProperty().addListener(observable -> {
-            titledPane.setContent(setAllCheckBoxes());
-        });
+        ChangeListener<Boolean> dataLoadedListener =
+                ListenerFx.createSingleUseListener(rosterModel.listsLoadedProperty(),
+                        () -> titledPane.setContent(setAllCheckBoxes()));
+        rosterModel.listsLoadedProperty().addListener(dataLoadedListener);
         vBox.getChildren().add(titledPane);
         return vBox;
     }
