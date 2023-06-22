@@ -1,25 +1,20 @@
 package org.ecsail.mvci_boat;
 
-import javafx.animation.PauseTransition;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.*;
-import javafx.scene.layout.*;
-import javafx.scene.text.Text;
+import javafx.scene.control.TitledPane;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.util.Builder;
-import javafx.util.Duration;
-import org.ecsail.dto.BoatListRadioDTO;
 import org.ecsail.dto.DbBoatSettingsDTO;
 import org.ecsail.interfaces.ListCallBack;
-import org.ecsail.mvci_boatlist.BoatListModel;
-import org.ecsail.mvci_boatlist.BoatListRadioHBox;
-import org.ecsail.mvci_boatlist.BoatListSettingsCheckBox;
-import org.ecsail.mvci_boatlist.BoatListTableView;
-import org.ecsail.widgetfx.HBoxFx;
+import org.ecsail.widgetfx.ListenerFx;
 import org.ecsail.widgetfx.VBoxFx;
 
-import java.util.Collection;
 import java.util.function.Consumer;
 
 
@@ -72,12 +67,11 @@ public class BoatView implements Builder<Region>, ListCallBack {
         TitledPane titledPane = new TitledPane();
         var vBox = new VBox();
         vBox.setId("box-grey");
-        boatModel.dataLoadedProperty().addListener((observable, oldValue, newValue) -> {
-            for(DbBoatSettingsDTO dbBoatSettingsDTO: boatModel.getBoatSettings()) {
+        ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(boatModel.dataLoadedProperty(), () -> {
+            for (DbBoatSettingsDTO dbBoatSettingsDTO : boatModel.getBoatSettings())
                 vBox.getChildren().add(new Row(boatModel, dbBoatSettingsDTO));
-                System.out.println("Creating Row");
-            }
         });
+        boatModel.dataLoadedProperty().addListener(dataLoadedListener);
         titledPane.setContent(vBox);
         titledPane.setText("Boat Information");
         return titledPane;
