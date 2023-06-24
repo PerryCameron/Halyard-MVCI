@@ -3,6 +3,7 @@ package org.ecsail.mvci_membership;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.Property;
+import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -11,10 +12,7 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.util.Builder;
 import org.ecsail.interfaces.Messages;
-import org.ecsail.widgetfx.HBoxFx;
-import org.ecsail.widgetfx.TabPaneFx;
-import org.ecsail.widgetfx.TextFx;
-import org.ecsail.widgetfx.VBoxFx;
+import org.ecsail.widgetfx.*;
 
 import java.util.function.BiConsumer;
 
@@ -50,27 +48,21 @@ public class MembershipView implements Builder<Region> {
 
     private void listenForData() {
         // waits for data to arrive before completing UI
-        membershipModel.listsLoadedProperty().addListener((observable, oldValue, newValue) -> {
-                    // left tabPane
-                    membershipModel.getPeople().forEach(personDTO -> membershipModel.getPeopleTabPane().getTabs()
-                            .add(new PersonTabView(this, personDTO).build()));
-                    // right tabPane
-                    membershipModel.getInfoTabPane().getTabs().add(new SlipTabView(this).build());
-                    membershipModel.getInfoTabPane().getTabs().add(new MembershipIdView(this).build());
-                    membershipModel.getInfoTabPane().getTabs().add(new InvoiceListView(this).build());
-                    // bottom tabPane
-                    membershipModel.getExtraTabPane().getTabs().add(new BoatTabView(this).build());
-                    membershipModel.getExtraTabPane().getTabs().add(new NotesTabView(this).build());
-                    membershipModel.getExtraTabPane().getTabs().add(new PropertiesTabView(this).build());
-                    membershipModel.getExtraTabPane().getTabs().add(new AttachmentsTabView(this).build());
-                    membershipModel.getExtraTabPane().getTabs().add(new AddressTabView(this).build());
-                }
-        );
-        // not sure if this must be here, may be clearer if put elsewhere
-        membershipModel.getPeopleTabPane().getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
-            PersonTabView personTabView = (PersonTabView) newTab.getUserData();// Get the associated PersonTabView object
-            membershipModel.setSelectedPerson(personTabView.getPerson());
+        ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(membershipModel.listsLoadedProperty(), () -> {
+            membershipModel.getPeople().forEach(personDTO -> membershipModel.getPeopleTabPane().getTabs()
+                    .add(new PersonTabView(this, personDTO).build()));
+            // right tabPane
+            membershipModel.getInfoTabPane().getTabs().add(new SlipTabView(this).build());
+            membershipModel.getInfoTabPane().getTabs().add(new MembershipIdView(this).build());
+            membershipModel.getInfoTabPane().getTabs().add(new InvoiceListView(this).build());
+            // bottom tabPane
+            membershipModel.getExtraTabPane().getTabs().add(new BoatTabView(this).build());
+            membershipModel.getExtraTabPane().getTabs().add(new NotesTabView(this).build());
+            membershipModel.getExtraTabPane().getTabs().add(new PropertiesTabView(this).build());
+            membershipModel.getExtraTabPane().getTabs().add(new AttachmentsTabView(this).build());
+            membershipModel.getExtraTabPane().getTabs().add(new AddressTabView(this).build());
         });
+        membershipModel.listsLoadedProperty().addListener(dataLoadedListener);
     }
 
     private Node createExtrasTabPane() {
@@ -91,7 +83,11 @@ public class MembershipView implements Builder<Region> {
 
     private Node createPeopleTabPane() {
         TabPane tabPane = TabPaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE, 498,"custom-tab-pane");
-        membershipModel.setPeopleTabPane(tabPane);
+        membershipModel.setPeopleTabPane(tabPane);  // TODO does anything else use this besides below???
+        membershipModel.getPeopleTabPane().getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
+            PersonTabView personTabView = (PersonTabView) newTab.getUserData();// Get the associated PersonTabView object
+            membershipModel.setSelectedPerson(personTabView.getPerson());
+        });
         return tabPane;
     }
 

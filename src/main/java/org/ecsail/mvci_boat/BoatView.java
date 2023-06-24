@@ -49,7 +49,7 @@ public class BoatView implements Builder<Region>, ListCallBack {
     }
 
     private Node setUpInfo() {
-        VBox vBox = VBoxFx.vBoxOf(350.0,10.0, new Insets(0,0,0,0));
+        VBox vBox = VBoxFx.vBoxOf(350.0,10.0, new Insets(10,0,0,10));
 
         vBox.getChildren().addAll(boatInfoTitlePane(), ownerTitlePane());
         return vBox;
