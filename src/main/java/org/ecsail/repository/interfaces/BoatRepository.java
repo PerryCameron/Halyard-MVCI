@@ -16,7 +16,7 @@ public interface BoatRepository {
     List<BoatListDTO> getAllBoats();
     List<BoatDTO> getBoatsByMsId(int msId);
     List<BoatDTO> getOnlySailboatsByMsId(int msId);
-    List<BoatOwnerDTO> getBoatOwners();
+    List<BoatOwnerDTO> getBoatOwnersByBoatId(int boatId);
     int update(BoatDTO o);
     int updateAux(boolean aux, int boatId);
     int delete(BoatDTO o);

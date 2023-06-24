@@ -81,7 +81,7 @@ public class BoatView implements Builder<Region>, ListCallBack {
         VBox vBoxTable = VBoxFx.vBoxOf(new Insets(0,10,0,0));
         VBox vBoxButtons = VBoxFx.vBoxOf(80.0,5.0,new Insets(0,0,0,5));
         vBoxButtons.getChildren().addAll(createButton("Add"), createButton("Delete"));
-        vBoxTable.getChildren().add(new BoatOwnerTableView().build());
+        vBoxTable.getChildren().add(new BoatOwnerTableView(boatModel).build());
         hBox.getChildren().addAll(vBoxTable,vBoxButtons);
         return hBox;
     }

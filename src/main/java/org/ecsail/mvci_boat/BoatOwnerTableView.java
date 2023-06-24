@@ -8,10 +8,16 @@ import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.widgetfx.TableViewFx;
 
 public class BoatOwnerTableView implements Builder<TableView<MembershipListDTO>> {
+    private final BoatModel boatModel;
+
+    public BoatOwnerTableView(BoatModel boatModel) {
+        this.boatModel = boatModel;
+    }
+
     @Override
     public TableView<MembershipListDTO> build() {
         TableView<MembershipListDTO> tableView = TableViewFx.tableViewOf(MembershipListDTO.class);
-//        tableView.setItems(person.getOfficer());
+        tableView.setItems(boatModel.getBoatOwners());
         tableView.getColumns().addAll(createColumn1(), createColumn2(), createColumn3());
         return tableView;
     }

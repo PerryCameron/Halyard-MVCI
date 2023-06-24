@@ -3,6 +3,7 @@ package org.ecsail.repository.implementations;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.repository.interfaces.MembershipRepository;
 import org.ecsail.repository.rowmappers.MembershipListRowMapper;
+import org.ecsail.repository.rowmappers.MembershipListRowMapper1;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
@@ -124,6 +125,18 @@ public class MembershipRepositoryImpl implements MembershipRepository {
                 """;
         List<MembershipListDTO> membershipListDTOS
                 = template.query(query, new MembershipListRowMapper(), new Object[]{selectedYear.intValue()});
+        return membershipListDTOS;
+    }
+
+    @Override
+    public List<MembershipListDTO> getMembershipByBoatId(Integer boatId) {
+        String query = """
+                select m.ms_id,m.p_id,m.join_date,p.l_name,p.f_name,m.address,m.city,m.state,m.zip from membership m
+                join person p on m.P_ID = p.P_ID
+                join boat_owner bo on m.MS_ID = bo.MS_ID where BOAT_ID=?;
+                """;
+        List<MembershipListDTO> membershipListDTOS
+                = template.query(query, new MembershipListRowMapper1(), boatId);
         return membershipListDTOS;
     }
 }

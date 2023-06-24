@@ -125,9 +125,9 @@ public class BoatRepositoryImpl implements BoatRepository {
     }
 
     @Override
-    public List<BoatOwnerDTO> getBoatOwners() {
-        String query = "SELECT * FROM boat_owner";
-        return template.query(query, new BoatOwnerRowMapper());
+    public List<BoatOwnerDTO> getBoatOwnersByBoatId(int boatId) {
+        String query = "SELECT * FROM boat_owner WHERE BOAT_ID=?";
+        return template.query(query, new BoatOwnerRowMapper(), boatId);
     }
 
     @Override

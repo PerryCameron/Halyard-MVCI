@@ -27,8 +27,7 @@ public class BoatController extends Controller implements ListCallBack {
             Task<Void> task = new Task<>() {
                 @Override
                 protected Void call() {
-//                    boatListInteractor.getRadioChoices();
-//                    boatListInteractor.getBoatListSettings();
+                    boatInteractor.getBoatOwners();
                     boatInteractor.getBoatSettings();
                     boatInteractor.getBoatNotes();
                     return null;
@@ -37,9 +36,6 @@ public class BoatController extends Controller implements ListCallBack {
             task.setOnSucceeded(e -> {
                 mainController.showLoadingSpinner(false);
                 boatInteractor.setDataLoaded(true);
-//                boatListInteractor.setListsLoaded(true);
-//                boatListInteractor.setBoatListToTableview();
-//                boatListView.setRadioListener(); // set last, so it doesn't fire, when radios are created.
             });
             new Thread(task).start();
     }
