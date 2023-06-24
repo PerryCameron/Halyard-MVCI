@@ -1,19 +1,18 @@
 package org.ecsail.mvci_boat;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.TitledPane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.*;
 import javafx.util.Builder;
 import org.ecsail.dto.DbBoatSettingsDTO;
 import org.ecsail.interfaces.ListCallBack;
-import org.ecsail.widgetfx.ListenerFx;
-import org.ecsail.widgetfx.VBoxFx;
+import org.ecsail.widgetfx.*;
 
 import java.util.function.Consumer;
 
@@ -31,36 +30,69 @@ public class BoatView implements Builder<Region>, ListCallBack {
     public Region build() {
         BorderPane borderPane = new BorderPane();
         borderPane.setRight(setUpPicture());
-//        borderPane.setCenter(setUpTableView()); this will be a spacer
+        borderPane.setCenter(createSpacer());
         borderPane.setLeft(setUpInfo());
         borderPane.setBottom(setUpNotes());
-//        listenForData();
         return borderPane;
     }
 
-    private void listenForData() {
-        boatModel.dataLoadedProperty().addListener((observable, oldValue, newValue) -> {
-
-        });
+    private Node createSpacer() {
+        return RegionFx.regionWidthOf(10.1);
     }
 
     private Node setUpNotes() {
-        return null;
+        HBox hBoxOuter = HBoxFx.hBoxOf(new Insets(10,10,5,10));
+        TitledPane titledPane = TitledPaneFx.titledPaneOf("Notes");
+        HBox hBox = new HBox();
+        VBox vBoxTable = VBoxFx.vBoxOf(new Insets(0,0,0,0));
+        VBox vBoxButtons = VBoxFx.vBoxOf(80.0,5.0,new Insets(0,0,0,5));
+        vBoxButtons.getChildren().addAll(createButton("Add"), createButton("Delete"));
+        vBoxTable.getChildren().add(new NotesTableView().build());
+        hBox.getChildren().addAll(vBoxTable,vBoxButtons);
+        titledPane.setContent(hBox);
+        hBoxOuter.getChildren().add(titledPane);
+        // After adding the titledPane to its parent, set Hgrow to ALWAYS
+        HBox.setHgrow(titledPane, Priority.ALWAYS);
+        // After adding the vBoxTable to its parent, set Hgrow to ALWAYS
+        HBox.setHgrow(vBoxTable, Priority.ALWAYS);
+        return hBoxOuter;
     }
 
     private Node setUpInfo() {
         VBox vBox = VBoxFx.vBoxOf(350.0,10.0, new Insets(10,0,0,10));
-
         vBox.getChildren().addAll(boatInfoTitlePane(), ownerTitlePane());
         return vBox;
     }
 
     private Node ownerTitlePane() {
-        TitledPane titledPane = new TitledPane();
-        VBox.setVgrow(titledPane, Priority.ALWAYS);
-        titledPane.setText("Owner(s)");
-        // TODO see line 277
+        TitledPane titledPane = TitledPaneFx.titledPaneOf("Owner(s)");
+        VBox vBox = VBoxFx.vBoxOf(new Insets(10,10,10,10));
+        vBox.setId("box-grey");
+        vBox.getChildren().add(addTableAndButtons());
+        titledPane.setContent(vBox);
         return titledPane;
+    }
+
+    private Node addTableAndButtons() {
+        HBox hBox = new HBox();
+        VBox vBoxTable = VBoxFx.vBoxOf(new Insets(0,10,0,0));
+        VBox vBoxButtons = VBoxFx.vBoxOf(80.0,5.0,new Insets(0,0,0,5));
+        vBoxButtons.getChildren().addAll(createButton("Add"), createButton("Delete"));
+        vBoxTable.getChildren().add(new BoatOwnerTableView().build());
+        hBox.getChildren().addAll(vBoxTable,vBoxButtons);
+        return hBox;
+    }
+
+    private Node createButton(String name) {
+        Button button = ButtonFx.buttonOf(name, 60.0);
+        switch (name) {
+            case "Add" -> System.out.println("Adding owner");
+            case "Delete" -> System.out.println("Deleting Owner");
+            case ">" -> System.out.println(">");
+            case "<" -> System.out.println("<");
+            case "Set As Default" -> System.out.println("Set as Default");
+        }
+        return button;
     }
 
     private Node boatInfoTitlePane() {
@@ -78,7 +110,25 @@ public class BoatView implements Builder<Region>, ListCallBack {
     }
 
     private Node setUpPicture() {
-        return null;
+        VBox vBox = new VBox();
+        HBox.setHgrow(vBox, Priority.ALWAYS);
+        vBox.getChildren().addAll(addPictureControls(), addPicture());
+        return vBox;
+    }
+
+    private Node addPictureControls() {
+        HBox hBox = HBoxFx.hBoxOf(Pos.CENTER, 10.0);
+        hBox.setPrefHeight(40);
+        hBox.setSpacing(7);
+        String[] buttonLabels = { "<",">","Add","Delete","Default"};
+        for(String label: buttonLabels) hBox.getChildren().add(createButton(label));
+        return hBox;
+    }
+
+    private Node addPicture() {
+        VBox vBox = VBoxFx.vBoxOf(630,489, true, true);
+        vBox.getChildren().add(new ImageViewPane(new ImageView()));
+        return vBox;
     }
 
 

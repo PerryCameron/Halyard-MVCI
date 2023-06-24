@@ -93,7 +93,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     private Node selectionButtons() {
         VBox vBox = VBoxFx.vBoxOf(new Insets(0,0,0,0));
         ToggleGroup tg = new ToggleGroup();
-        Region region = RegionFx.regionOf(7);
+        Region region = RegionFx.regionHeightOf(7);
         vBox.getChildren().add(region);
         vBox.getChildren().add(buttonControl("Properties", tg));
         vBox.getChildren().add(buttonControl("Phone", tg));

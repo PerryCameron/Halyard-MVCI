@@ -8,15 +8,11 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
-import org.ecsail.dto.BoatDTO;
 import org.ecsail.dto.NotesDTO;
 import org.ecsail.interfaces.Messages;
 import org.ecsail.widgetfx.*;
-
-import java.util.Collection;
 
 public class NotesTabView implements Builder<Tab> {
     private final MembershipView membershipView;
@@ -86,11 +82,11 @@ public class NotesTabView implements Builder<Tab> {
     }
 
     private TableColumn<NotesDTO,String> col1() {
-        TableColumn<NotesDTO, String> col1 = TableColumnFx.tableColumnOf(NotesDTO::memo_dateProperty,"Date");
+        TableColumn<NotesDTO, String> col1 = TableColumnFx.tableColumnOf(NotesDTO::memoDateProperty,"Date");
         col1.setOnEditCommit(
                 t -> {
                     NotesDTO notesDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
-                    notesDTO.setMemo_date(t.getNewValue());
+                    notesDTO.setMemoDate(t.getNewValue());
                     membershipView.sendMessage().accept(Messages.MessageType.UPDATE,notesDTO);
                 });
         col1.setMaxWidth( 1f * Integer.MAX_VALUE * 10 );   // Date

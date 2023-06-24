@@ -15,11 +15,26 @@ public class VBoxFx {
         return vBox;
     }
 
-    public static VBox vBoxOf(double width, Insets insets, String style) {
+    public static VBox vBoxOf(double width, double height, boolean setHgrow, boolean setVgrow) {
+        VBox vBox = new VBox();
+        vBox.setPrefSize(width, height);
+        if(setHgrow) HBox.setHgrow(vBox, Priority.ALWAYS);
+        if(setVgrow) VBox.setVgrow(vBox, Priority.ALWAYS);
+        return vBox;
+    }
+
+    public static VBox vBoxOf(double width, Insets insets, String id) {
         VBox vBox = new VBox();
         vBox.setPrefWidth(width);
         vBox.setPadding(insets);
-        vBox.setId(style);
+        vBox.setId(id);
+        return vBox;
+    }
+
+    public static VBox vBoxOf(Insets insets, String id) {
+        VBox vBox = new VBox();
+        vBox.setPadding(insets);
+        vBox.setId(id);
         return vBox;
     }
 
