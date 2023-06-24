@@ -14,10 +14,17 @@ import org.ecsail.widgetfx.TableColumnFx;
 import org.ecsail.widgetfx.TableViewFx;
 
 public class NotesTableView implements Builder<TableView<NotesDTO>> {
+    private final BoatModel boatModel;
+
+    public NotesTableView(BoatModel m) {
+        this.boatModel = m;
+    }
+
     @Override
     public TableView<NotesDTO> build() {
         TableView<NotesDTO> tableView = TableViewFx.tableViewOf(NotesDTO.class);
-//        tableView.setItems(person.getOfficer());
+        System.out.println("setting items " + boatModel.getNotesDTOS().size());
+        tableView.setItems(boatModel.getNotesDTOS());
         tableView.setPrefHeight(100);
         tableView.getColumns().addAll(createColumn1(), createColumn2());
         return tableView;

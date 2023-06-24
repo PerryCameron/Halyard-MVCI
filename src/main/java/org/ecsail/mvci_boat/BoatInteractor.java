@@ -10,8 +10,10 @@ import org.ecsail.dto.DbBoatSettingsDTO;
 import org.ecsail.mvci_boatlist.BoatListModel;
 import org.ecsail.mvci_boatlist.BoatListSettingsCheckBox;
 import org.ecsail.repository.implementations.BoatRepositoryImpl;
+import org.ecsail.repository.implementations.NotesRepositoryImpl;
 import org.ecsail.repository.implementations.SettingsRepositoryImpl;
 import org.ecsail.repository.interfaces.BoatRepository;
+import org.ecsail.repository.interfaces.NotesRepository;
 import org.ecsail.repository.interfaces.SettingsRepository;
 import org.ecsail.static_calls.StringTools;
 import org.slf4j.Logger;
@@ -31,6 +33,8 @@ public class BoatInteractor {
     private final BoatModel boatModel;
     private final DataSource dataSource;
     private final SettingsRepository settingsRepo;
+
+    private final NotesRepository noteRepo;
     private final BoatRepository boatRepo;
 
     public BoatInteractor(BoatModel boatModel, Connections connections) {
@@ -38,6 +42,7 @@ public class BoatInteractor {
         this.dataSource = connections.getDataSource();
         settingsRepo = new SettingsRepositoryImpl(connections.getDataSource());
         boatRepo = new BoatRepositoryImpl(connections.getDataSource());
+        noteRepo = new NotesRepositoryImpl(connections.getDataSource());
     }
 
 
@@ -57,5 +62,12 @@ public class BoatInteractor {
 
     public void setDataLoaded(boolean dataLoaded) {
         boatModel.setDataLoaded(dataLoaded);
+    }
+
+    public void getBoatNotes() {
+        System.out.println("getting boats notes, current size: " + boatModel.getNotesDTOS().size());
+        System.out.println("boat id = " + boatModel.getBoatListDTO().getBoatId());
+        boatModel.setNotesDTOS(FXCollections.observableArrayList(noteRepo.getMemosByBoatId(boatModel.getBoatListDTO().getBoatId())));
+        System.out.println("retrieved them current size: " + boatModel.getNotesDTOS().size());
     }
 }

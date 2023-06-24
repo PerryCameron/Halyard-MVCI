@@ -1,6 +1,5 @@
 package org.ecsail.mvci_boat;
 
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -29,10 +28,13 @@ public class BoatView implements Builder<Region>, ListCallBack {
     @Override
     public Region build() {
         BorderPane borderPane = new BorderPane();
-        borderPane.setRight(setUpPicture());
-        borderPane.setCenter(createSpacer());
-        borderPane.setLeft(setUpInfo());
-        borderPane.setBottom(setUpNotes());
+        ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(boatModel.dataLoadedProperty(), () -> {
+            borderPane.setRight(setUpPicture());
+            borderPane.setCenter(createSpacer());
+            borderPane.setLeft(setUpInfo());
+            borderPane.setBottom(setUpNotes());
+        });
+        boatModel.dataLoadedProperty().addListener(dataLoadedListener);
         return borderPane;
     }
 
@@ -47,7 +49,7 @@ public class BoatView implements Builder<Region>, ListCallBack {
         VBox vBoxTable = VBoxFx.vBoxOf(new Insets(0,0,0,0));
         VBox vBoxButtons = VBoxFx.vBoxOf(80.0,5.0,new Insets(0,0,0,5));
         vBoxButtons.getChildren().addAll(createButton("Add"), createButton("Delete"));
-        vBoxTable.getChildren().add(new NotesTableView().build());
+        vBoxTable.getChildren().add(new NotesTableView(boatModel).build());
         hBox.getChildren().addAll(vBoxTable,vBoxButtons);
         titledPane.setContent(hBox);
         hBoxOuter.getChildren().add(titledPane);
@@ -55,6 +57,7 @@ public class BoatView implements Builder<Region>, ListCallBack {
         HBox.setHgrow(titledPane, Priority.ALWAYS);
         // After adding the vBoxTable to its parent, set Hgrow to ALWAYS
         HBox.setHgrow(vBoxTable, Priority.ALWAYS);
+        System.out.println("Size is " + boatModel.getNotesDTOS().size());
         return hBoxOuter;
     }
 
@@ -99,11 +102,8 @@ public class BoatView implements Builder<Region>, ListCallBack {
         TitledPane titledPane = new TitledPane();
         var vBox = new VBox();
         vBox.setId("box-grey");
-        ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(boatModel.dataLoadedProperty(), () -> {
-            for (DbBoatSettingsDTO dbBoatSettingsDTO : boatModel.getBoatSettings())
-                vBox.getChildren().add(new Row(boatModel, dbBoatSettingsDTO));
-        });
-        boatModel.dataLoadedProperty().addListener(dataLoadedListener);
+        for (DbBoatSettingsDTO dbBoatSettingsDTO : boatModel.getBoatSettings())
+            vBox.getChildren().add(new Row(boatModel, dbBoatSettingsDTO));
         titledPane.setContent(vBox);
         titledPane.setText("Boat Information");
         return titledPane;
@@ -131,5 +131,7 @@ public class BoatView implements Builder<Region>, ListCallBack {
         return vBox;
     }
 
-
+    public BoatModel getBoatModel() {
+        return boatModel;
+    }
 }

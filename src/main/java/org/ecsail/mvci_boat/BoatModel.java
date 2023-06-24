@@ -3,9 +3,7 @@ package org.ecsail.mvci_boat;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.ecsail.dto.BoatListDTO;
-import org.ecsail.dto.DbBoatSettingsDTO;
-import org.ecsail.dto.MembershipListDTO;
+import org.ecsail.dto.*;
 import org.ecsail.mvci_main.MainModel;
 
 import java.util.ArrayList;
@@ -17,10 +15,36 @@ public class BoatModel {
     private ObservableList<MembershipListDTO> boatOwners = FXCollections.observableArrayList();
     private ArrayList<DbBoatSettingsDTO> boatSettings = new ArrayList<>();
     private final BooleanProperty dataLoaded = new SimpleBooleanProperty(false);
+    private ArrayList<BoatPhotosDTO> images = new ArrayList<BoatPhotosDTO>();
+    private ObservableList<NotesDTO> notesDTOS = FXCollections.observableArrayList();
 
 
 
 
+
+    public ObservableList<NotesDTO> getNotesDTOS() {
+        return notesDTOS;
+    }
+
+    public void setNotesDTOS(ObservableList<NotesDTO> notesDTOS) {
+        this.notesDTOS = notesDTOS;
+    }
+
+    public ObservableList<MembershipListDTO> getBoatOwners() {
+        return boatOwners;
+    }
+
+    public void setBoatOwners(ObservableList<MembershipListDTO> boatOwners) {
+        this.boatOwners = boatOwners;
+    }
+
+    public ArrayList<BoatPhotosDTO> getImages() {
+        return images;
+    }
+
+    public void setImages(ArrayList<BoatPhotosDTO> images) {
+        this.images = images;
+    }
 
     public boolean isDataLoaded() {
         return dataLoaded.get();

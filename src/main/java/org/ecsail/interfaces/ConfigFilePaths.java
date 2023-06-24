@@ -11,5 +11,7 @@ public interface ConfigFilePaths {
     String FILE_EXTENSION = ".";
     String ROSTERS = System.getProperty("user.home") + "/Documents/ECSC/Rosters";
     String DEFAULT_PHOTO = "/personimg.png";
+    String BOAT_REMOTE_PATH = "/home/ecsc/ecsc_files/boat_images/";
+    String BOAT_LOCAL_PATH = System.getProperty("user.home") + "/.ecsc/boat_images/";
 
 }
