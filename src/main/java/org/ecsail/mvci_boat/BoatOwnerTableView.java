@@ -1,10 +1,12 @@
 package org.ecsail.mvci_boat;
 
+import javafx.beans.value.ChangeListener;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Builder;
 import org.ecsail.dto.MembershipListDTO;
+import org.ecsail.widgetfx.ListenerFx;
 import org.ecsail.widgetfx.TableViewFx;
 
 public class BoatOwnerTableView implements Builder<TableView<MembershipListDTO>> {
@@ -17,7 +19,10 @@ public class BoatOwnerTableView implements Builder<TableView<MembershipListDTO>>
     @Override
     public TableView<MembershipListDTO> build() {
         TableView<MembershipListDTO> tableView = TableViewFx.tableViewOf(MembershipListDTO.class);
-        tableView.setItems(boatModel.getBoatOwners());
+        ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(boatModel.dataLoadedProperty(), () -> {
+            tableView.setItems(boatModel.getBoatOwners());
+        });
+        boatModel.dataLoadedProperty().addListener(dataLoadedListener);
         tableView.getColumns().addAll(createColumn1(), createColumn2(), createColumn3());
         return tableView;
     }

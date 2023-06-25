@@ -40,6 +40,15 @@ public class FileIO implements ConfigFilePaths {
 		}
 	}
 
+	public static boolean fileExists(String file) {
+		File f = new File(file);
+		if(f.exists() && !f.isDirectory()) {
+			return true;
+		}
+		System.out.println(file);
+		return false;
+	}
+
 	public static void copyFile(File srcFile, File destFile) {
 		InputStream is = null;
 		OutputStream os = null;

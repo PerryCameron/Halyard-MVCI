@@ -6,17 +6,23 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TitledPane;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.util.Builder;
+import org.ecsail.dto.BoatPhotosDTO;
 import org.ecsail.dto.DbBoatSettingsDTO;
+import org.ecsail.fileio.FileIO;
+import org.ecsail.interfaces.ConfigFilePaths;
 import org.ecsail.interfaces.ListCallBack;
 import org.ecsail.widgetfx.*;
 
+import java.util.Comparator;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 
-public class BoatView implements Builder<Region>, ListCallBack {
+public class BoatView implements Builder<Region>, ListCallBack, ConfigFilePaths {
 
     BoatModel boatModel;
     Consumer<Mode> action;
@@ -28,13 +34,10 @@ public class BoatView implements Builder<Region>, ListCallBack {
     @Override
     public Region build() {
         BorderPane borderPane = new BorderPane();
-        ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(boatModel.dataLoadedProperty(), () -> {
-            borderPane.setRight(setUpPicture());
-            borderPane.setCenter(createSpacer());
-            borderPane.setLeft(setUpInfo());
-            borderPane.setBottom(setUpNotes());
-        });
-        boatModel.dataLoadedProperty().addListener(dataLoadedListener);
+        borderPane.setRight(setUpPicture());
+        borderPane.setCenter(createSpacer());
+        borderPane.setLeft(setUpInfo());
+        borderPane.setBottom(setUpNotes());
         return borderPane;
     }
 
@@ -91,8 +94,16 @@ public class BoatView implements Builder<Region>, ListCallBack {
         switch (name) {
             case "Add" -> System.out.println("Adding owner");
             case "Delete" -> System.out.println("Deleting Owner");
-            case ">" -> System.out.println(">");
-            case "<" -> System.out.println("<");
+            case ">" -> {
+                button.setOnAction((event) -> {
+                    moveToNextImage(true);
+                });
+            }
+            case "<" -> {
+                button.setOnAction((event) -> {
+                    moveToNextImage(false);
+                });
+            }
             case "Set As Default" -> System.out.println("Set as Default");
         }
         return button;
@@ -102,8 +113,11 @@ public class BoatView implements Builder<Region>, ListCallBack {
         TitledPane titledPane = new TitledPane();
         var vBox = new VBox();
         vBox.setId("box-grey");
-        for (DbBoatSettingsDTO dbBoatSettingsDTO : boatModel.getBoatSettings())
-            vBox.getChildren().add(new Row(boatModel, dbBoatSettingsDTO));
+        ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(boatModel.dataLoadedProperty(), () -> {
+            for (DbBoatSettingsDTO dbBoatSettingsDTO : boatModel.getBoatSettings())
+                vBox.getChildren().add(new Row(boatModel, dbBoatSettingsDTO));
+        });
+        boatModel.dataLoadedProperty().addListener(dataLoadedListener);
         titledPane.setContent(vBox);
         titledPane.setText("Boat Information");
         return titledPane;
@@ -131,9 +145,60 @@ public class BoatView implements Builder<Region>, ListCallBack {
         imageView.setSmooth(true);
         imageView.setPreserveRatio(true);
         imageView.setCache(true);
+        boatModel.setImageView(imageView);
+        ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(boatModel.dataLoadedProperty(), () -> {
+            boatModel.setSelectedImage(getDefaultBoatPhotoDTO());
+            setDefaultImage();
+        });
+        boatModel.dataLoadedProperty().addListener(dataLoadedListener);
         vBox.getChildren().add(new ImageViewPane(imageView));
         return vBox;
     }
+
+    private BoatPhotosDTO getDefaultBoatPhotoDTO() {
+        BoatPhotosDTO boatPhotosDTO1 = boatModel.getImages().stream()
+                .filter(boatPhotosDTO -> boatPhotosDTO.isDefault())
+                .findFirst()
+                .orElse(new BoatPhotosDTO(0, 0, "", "no_image.png", 0, true));
+        return boatPhotosDTO1;
+    }
+
+    private void moveToNextImage(boolean moveForward) {
+        // put them in ascending order, in case a new image has recently been added
+        boatModel.getImages().sort(Comparator.comparingInt(BoatPhotosDTO::getFileNumber));
+        // find index of current image
+        int index = boatModel.getImages().indexOf(boatModel.getSelectedImage());
+        if (moveForward) {
+            if (index < boatModel.getImages().size() - 1) index++;
+            else index = 0;
+        } else { // we are moving backwards
+            if (index == 0) index = boatModel.getImages().size() - 1;
+            else index--;
+        }
+        boatModel.setSelectedImage(boatModel.getImages().get(index));
+        String localFile = BOAT_LOCAL_PATH + boatModel.getSelectedImage().getFilename();
+        String remoteFile = BOAT_REMOTE_PATH + boatModel.getSelectedImage().getFilename();
+        // if we don't have file on local computer then retrieve it
+//        if (!FileIO.fileExists(localFile)) scp.getFile(remoteFile, localFile);
+        Image image = new Image("file:" + localFile);
+        boatModel.getImageView().setImage(image);
+    }
+
+    private void setDefaultImage() {
+        Image image = null;
+        String localFile = BOAT_LOCAL_PATH + boatModel.getSelectedImage().getFilename();
+        String remoteFile = BOAT_REMOTE_PATH + boatModel.getSelectedImage().getFilename();
+        if(boatModel.getSelectedImage().getFilename().equals("no_image.png")) {
+            image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/no_image.png")));
+        } else if(FileIO.fileExists(localFile)) {
+            image = new Image("file:" + localFile);
+        } else {
+//   TODO         scp.getFile(remoteFile,localFile);
+            image = new Image("file:" + localFile);
+        }
+        boatModel.getImageView().setImage(image);
+    }
+
 
     public BoatModel getBoatModel() {
         return boatModel;

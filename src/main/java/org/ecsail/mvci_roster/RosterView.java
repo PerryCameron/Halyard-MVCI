@@ -45,8 +45,11 @@ public class RosterView implements Builder<Region>, ListCallBack {
     @Override
     public Region build() {
         BorderPane borderPane = new BorderPane();
-        borderPane.setLeft(setUpLeftPane());
-        borderPane.setCenter(setUpTableView());
+        ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(rosterModel.listsLoadedProperty(), () -> {
+            borderPane.setLeft(setUpLeftPane());
+            borderPane.setCenter(setUpTableView());
+        });
+        rosterModel.listsLoadedProperty().addListener(dataLoadedListener);
         return borderPane;
     }
 
@@ -67,19 +70,16 @@ public class RosterView implements Builder<Region>, ListCallBack {
     }
 
     private Node setUpFieldSelectedToExport() {
-        VBox vBox = VBoxFx.vBoxOf(new Insets(15,15,0,0));
+        VBox vBox = VBoxFx.vBoxOf(new Insets(15, 15, 0, 0));
         VBox checkVBox = new VBox(5);
-        VBox buttonVBox = VBoxFx.vBoxOf(new Insets(10,0,0,0),Pos.CENTER);
+        VBox buttonVBox = VBoxFx.vBoxOf(new Insets(10, 0, 0, 0), Pos.CENTER);
         TitledPane titledPane = new TitledPane();
         titledPane.setText("Export to XLS");
         titledPane.setExpanded(false);
-        ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(rosterModel.listsLoadedProperty(), () -> {
-            rosterModel.getRosterSettings().stream()
-                    .map(dto -> new RosterSettingsCheckBox(dto, "exportable"))
-                    .peek(rosterModel.getCheckBoxes()::add)
-                    .forEach(checkVBox.getChildren()::add);
-        });
-        rosterModel.listsLoadedProperty().addListener(dataLoadedListener);
+        rosterModel.getRosterSettings().stream()
+                .map(dto -> new RosterSettingsCheckBox(dto, "exportable"))
+                .peek(rosterModel.getCheckBoxes()::add)
+                .forEach(checkVBox.getChildren()::add);
         buttonVBox.getChildren().add(createExportButton());
         checkVBox.getChildren().add(buttonVBox);
         titledPane.setContent(checkVBox);
@@ -100,18 +100,15 @@ public class RosterView implements Builder<Region>, ListCallBack {
     }
 
     private Node createRadioBox() {
-        VBox vBox = VBoxFx.vBoxOf(7.0, new Insets(20,0,0,20));
+        VBox vBox = VBoxFx.vBoxOf(7.0, new Insets(20, 0, 0, 20));
         ToggleGroup tg = new ToggleGroup();
-        ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(rosterModel.listsLoadedProperty(), () -> {
-            for (MembershipListRadioDTO radio : rosterModel.getRadioChoices()) {
-                if (!radio.getMethodName().equals("query")) {
-                    RosterRadioHBox rosterRadioHBox = new RosterRadioHBox(radio, rosterModel);
-                    vBox.getChildren().add(rosterRadioHBox);
-                    rosterRadioHBox.getRadioButton().setToggleGroup(tg);
-                }
+        for (MembershipListRadioDTO radio : rosterModel.getRadioChoices()) {
+            if (!radio.getMethodName().equals("query")) {
+                RosterRadioHBox rosterRadioHBox = new RosterRadioHBox(radio, rosterModel);
+                vBox.getChildren().add(rosterRadioHBox);
+                rosterRadioHBox.getRadioButton().setToggleGroup(tg);
             }
-        });
-        rosterModel.listsLoadedProperty().addListener(dataLoadedListener);
+        }
         return vBox;
     }
     protected void setRadioListener() {
@@ -129,10 +126,7 @@ public class RosterView implements Builder<Region>, ListCallBack {
         TitledPane titledPane = new TitledPane();
         titledPane.setText("Searchable Fields");
         titledPane.setExpanded(false);
-        ChangeListener<Boolean> dataLoadedListener =
-                ListenerFx.createSingleUseListener(rosterModel.listsLoadedProperty(),
-                        () -> titledPane.setContent(setAllCheckBoxes()));
-        rosterModel.listsLoadedProperty().addListener(dataLoadedListener);
+        titledPane.setContent(setAllCheckBoxes());
         vBox.getChildren().add(titledPane);
         return vBox;
     }

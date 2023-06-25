@@ -1,5 +1,6 @@
 package org.ecsail.mvci_boat;
 
+import javafx.beans.value.ChangeListener;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -10,6 +11,7 @@ import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.dto.NotesDTO;
 import org.ecsail.dto.OfficerDTO;
 import org.ecsail.widgetfx.HBoxFx;
+import org.ecsail.widgetfx.ListenerFx;
 import org.ecsail.widgetfx.TableColumnFx;
 import org.ecsail.widgetfx.TableViewFx;
 
@@ -23,8 +25,10 @@ public class NotesTableView implements Builder<TableView<NotesDTO>> {
     @Override
     public TableView<NotesDTO> build() {
         TableView<NotesDTO> tableView = TableViewFx.tableViewOf(NotesDTO.class);
-        System.out.println("setting items " + boatModel.getNotesDTOS().size());
-        tableView.setItems(boatModel.getNotesDTOS());
+        ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(boatModel.dataLoadedProperty(), () -> {
+            tableView.setItems(boatModel.getNotesDTOS());
+        });
+        boatModel.dataLoadedProperty().addListener(dataLoadedListener);
         tableView.setPrefHeight(100);
         tableView.getColumns().addAll(createColumn1(), createColumn2());
         return tableView;

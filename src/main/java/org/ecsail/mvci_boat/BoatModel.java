@@ -3,6 +3,7 @@ package org.ecsail.mvci_boat;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.image.ImageView;
 import org.ecsail.dto.*;
 import org.ecsail.mvci_main.MainModel;
 
@@ -17,14 +18,35 @@ public class BoatModel {
     private final BooleanProperty dataLoaded = new SimpleBooleanProperty(false);
     private ArrayList<BoatPhotosDTO> images = new ArrayList<BoatPhotosDTO>();
     protected SimpleObjectProperty<BoatPhotosDTO> selectedImage = new SimpleObjectProperty<>();
+    protected SimpleObjectProperty<ImageView> imageView = new SimpleObjectProperty<>();
     private ObservableList<NotesDTO> notesDTOS = FXCollections.observableArrayList();
 
 
 
 
+    public ImageView getImageView() {
+        return imageView.get();
+    }
 
+    public SimpleObjectProperty<ImageView> imageViewProperty() {
+        return imageView;
+    }
 
+    public void setImageView(ImageView imageView) {
+        this.imageView.set(imageView);
+    }
 
+    public BoatPhotosDTO getSelectedImage() {
+        return selectedImage.get();
+    }
+
+    public SimpleObjectProperty<BoatPhotosDTO> selectedImageProperty() {
+        return selectedImage;
+    }
+
+    public void setSelectedImage(BoatPhotosDTO selectedImage) {
+        this.selectedImage.set(selectedImage);
+    }
 
     public ObservableList<NotesDTO> getNotesDTOS() {
         return notesDTOS;
