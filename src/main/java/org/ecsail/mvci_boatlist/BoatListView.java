@@ -36,8 +36,11 @@ public class BoatListView implements Builder<Region>, ListCallBack {
     @Override
     public Region build() {
         BorderPane borderPane = new BorderPane();
-        borderPane.setRight(setUpRightPane());
-        borderPane.setCenter(setUpTableView());
+        ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(boatListModel.listsLoadedProperty(), () -> {
+            borderPane.setRight(setUpRightPane());
+            borderPane.setCenter(setUpTableView());
+        });
+        boatListModel.listsLoadedProperty().addListener(dataLoadedListener);
         return borderPane;
     }
 
@@ -52,24 +55,20 @@ public class BoatListView implements Builder<Region>, ListCallBack {
     }
 
     private Node setUpFieldSelectedToExport() {
-        VBox vBox = VBoxFx.vBoxOf(new Insets(15,15,0,0));
+        VBox vBox = VBoxFx.vBoxOf(new Insets(15, 15, 0, 0));
         VBox checkVBox = new VBox(5);
-        VBox buttonVBox = VBoxFx.vBoxOf(new Insets(10,0,0,0),Pos.CENTER);
+        VBox buttonVBox = VBoxFx.vBoxOf(new Insets(10, 0, 0, 0), Pos.CENTER);
         TitledPane titledPane = new TitledPane();
         titledPane.setText("Export to XLS");
         titledPane.setExpanded(false);
-        ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(boatListModel.listsLoadedProperty(),
-                () -> boatListModel.getBoatListSettings().stream()
+        boatListModel.getBoatListSettings().stream()
                 .map(dto -> new BoatListSettingsCheckBox(dto, "exportable"))
-//                    .peek(boatListModel.getCheckBoxes()::add)
-                .forEach(checkVBox.getChildren()::add));
-        boatListModel.listsLoadedProperty().addListener(dataLoadedListener);
+                .forEach(checkVBox.getChildren()::add);
         buttonVBox.getChildren().add(createExportButton());
         checkVBox.getChildren().add(buttonVBox);
         titledPane.setContent(checkVBox);
         vBox.getChildren().add(titledPane);
         return vBox;
-
     }
 
     private Node createExportButton() {
@@ -93,15 +92,11 @@ public class BoatListView implements Builder<Region>, ListCallBack {
     private Node createRadioBox() {
         VBox vBox = VBoxFx.vBoxOf(7.0, new Insets(20, 0, 0, 20));
         ToggleGroup tg = new ToggleGroup();
-        // reactive listener used at opening of tab only
-        ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(boatListModel.listsLoadedProperty(), () -> {
-            for (BoatListRadioDTO radio : boatListModel.getRadioChoices()) {
+          for (BoatListRadioDTO radio : boatListModel.getRadioChoices()) {
                 BoatListRadioHBox radioHBox = new BoatListRadioHBox(radio, boatListModel);
                 vBox.getChildren().add(radioHBox);
                 radioHBox.getRadioButton().setToggleGroup(tg);
-            }
-        });
-        boatListModel.listsLoadedProperty().addListener(dataLoadedListener);
+        };
         return vBox;
     }
 
@@ -110,9 +105,7 @@ public class BoatListView implements Builder<Region>, ListCallBack {
         TitledPane titledPane = new TitledPane();
         titledPane.setText("Searchable Fields");
         titledPane.setExpanded(false);
-        ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(boatListModel.listsLoadedProperty(),
-                () -> titledPane.setContent(setAllCheckBoxes()));
-        boatListModel.listsLoadedProperty().addListener(dataLoadedListener);
+        titledPane.setContent(setAllCheckBoxes()); // must be set after data retrieved
         vBox.getChildren().add(titledPane);
         return vBox;
     }
