@@ -30,6 +30,7 @@ public class BoatController extends Controller implements ListCallBack {
                     boatInteractor.getBoatOwners();
                     boatInteractor.getBoatSettings();
                     boatInteractor.getBoatNotes();
+                    boatInteractor.getBoatPhotos();
                     return null;
                 }
             };

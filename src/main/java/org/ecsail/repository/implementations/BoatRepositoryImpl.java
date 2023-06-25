@@ -4,9 +4,11 @@ package org.ecsail.repository.implementations;
 import org.ecsail.dto.BoatDTO;
 import org.ecsail.dto.BoatListDTO;
 import org.ecsail.dto.BoatOwnerDTO;
+import org.ecsail.dto.BoatPhotosDTO;
 import org.ecsail.repository.interfaces.BoatRepository;
 import org.ecsail.repository.rowmappers.BoatListRowMapper;
 import org.ecsail.repository.rowmappers.BoatOwnerRowMapper;
+import org.ecsail.repository.rowmappers.BoatPhotosRowMapper;
 import org.ecsail.repository.rowmappers.BoatRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
@@ -128,6 +130,12 @@ public class BoatRepositoryImpl implements BoatRepository {
     public List<BoatOwnerDTO> getBoatOwnersByBoatId(int boatId) {
         String query = "SELECT * FROM boat_owner WHERE BOAT_ID=?";
         return template.query(query, new BoatOwnerRowMapper(), boatId);
+    }
+
+    @Override
+    public List<BoatPhotosDTO> getImagesByBoatId(int boatId) {
+        String query = "SELECT * FROM boat_photos WHERE BOAT_ID=?";
+        return template.query(query, new BoatPhotosRowMapper(), boatId);
     }
 
     @Override

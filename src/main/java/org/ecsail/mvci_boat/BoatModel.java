@@ -16,7 +16,11 @@ public class BoatModel {
     private ArrayList<DbBoatSettingsDTO> boatSettings = new ArrayList<>();
     private final BooleanProperty dataLoaded = new SimpleBooleanProperty(false);
     private ArrayList<BoatPhotosDTO> images = new ArrayList<BoatPhotosDTO>();
+    protected SimpleObjectProperty<BoatPhotosDTO> selectedImage = new SimpleObjectProperty<>();
     private ObservableList<NotesDTO> notesDTOS = FXCollections.observableArrayList();
+
+
+
 
 
 

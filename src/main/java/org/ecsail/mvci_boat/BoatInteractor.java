@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.ecsail.connection.Connections;
+import org.ecsail.connection.Sftp;
 import org.ecsail.dto.*;
 import org.ecsail.mvci_boatlist.BoatListModel;
 import org.ecsail.mvci_boatlist.BoatListSettingsCheckBox;
@@ -36,6 +37,7 @@ public class BoatInteractor {
     private final NotesRepository noteRepo;
     private final BoatRepository boatRepo;
     private final MembershipRepository membershipRepository;
+    private Sftp scp;
 
     public BoatInteractor(BoatModel boatModel, Connections connections) {
         this.boatModel = boatModel;
@@ -44,8 +46,8 @@ public class BoatInteractor {
         boatRepo = new BoatRepositoryImpl(connections.getDataSource());
         noteRepo = new NotesRepositoryImpl(connections.getDataSource());
         membershipRepository = new MembershipRepositoryImpl(connections.getDataSource());
+        scp = connections.getScp();
     }
-
 
     protected void savedToIndicator(boolean returnOk) { // updates status lights
         if(returnOk) boatModel.getMainModel().getLightAnimationMap().get("receiveSuccess").playFromStart();
@@ -79,5 +81,9 @@ public class BoatInteractor {
         Platform.runLater(() -> {
             boatModel.setBoatOwners(boatOwnerDTOS);
         });
+    }
+
+    public void getBoatPhotos() {
+        boatModel.setImages((ArrayList<BoatPhotosDTO>) boatRepo.getImagesByBoatId(boatModel.getBoatListDTO().getBoatId()));
     }
 }

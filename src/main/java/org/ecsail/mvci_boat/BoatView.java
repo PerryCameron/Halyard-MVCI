@@ -127,7 +127,11 @@ public class BoatView implements Builder<Region>, ListCallBack {
 
     private Node addPicture() {
         VBox vBox = VBoxFx.vBoxOf(630,489, true, true);
-        vBox.getChildren().add(new ImageViewPane(new ImageView()));
+        ImageView imageView = new ImageView();
+        imageView.setSmooth(true);
+        imageView.setPreserveRatio(true);
+        imageView.setCache(true);
+        vBox.getChildren().add(new ImageViewPane(imageView));
         return vBox;
     }
 
