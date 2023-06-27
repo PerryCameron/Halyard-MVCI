@@ -1,8 +1,8 @@
-package org.ecsail.interfaces;
+package org.ecsail.mvci_boatlist;
 
-public interface ListCallBack {
+public interface BoatListMessages {
     enum Mode {
-        CHANGE_STATE,
+        CHANGE_LIST,
         SEARCH,
         EXPORT_XPS,
         UPDATE,

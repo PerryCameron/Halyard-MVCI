@@ -2,12 +2,10 @@ package org.ecsail.mvci_boatlist;
 
 import javafx.concurrent.Task;
 import javafx.scene.layout.Region;
-import org.ecsail.dto.BoatListDTO;
 import org.ecsail.interfaces.Controller;
-import org.ecsail.interfaces.ListCallBack;
 import org.ecsail.mvci_main.MainController;
 
-public class BoatListController extends Controller implements ListCallBack {
+public class BoatListController extends Controller implements BoatListMessages {
     MainController mainController;
     BoatListInteractor boatListInteractor;
     BoatListView boatListView;
@@ -20,10 +18,10 @@ public class BoatListController extends Controller implements ListCallBack {
         getBoatListData();
     }
 
-    private void action(ListCallBack.Mode mode) {
+    private void action(BoatListMessages.Mode mode) {
         switch (mode) {
             case SEARCH -> search();
-            case CHANGE_STATE -> changeListType();
+            case CHANGE_LIST -> changeList();
             case EXPORT_XPS -> exportRoster();
             case UPDATE -> updateBoatList();
             case LAUNCH_TAB -> launchTab();
@@ -51,7 +49,7 @@ public class BoatListController extends Controller implements ListCallBack {
         new Thread(task).start();
     }
 
-    private void changeListType() {
+    private void changeList() {
         mainController.setSpinnerOffset(225,25);
         mainController.showLoadingSpinner(true);
         Task<Void> task = new Task<>() {

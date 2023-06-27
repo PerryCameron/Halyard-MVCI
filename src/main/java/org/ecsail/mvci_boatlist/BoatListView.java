@@ -16,7 +16,6 @@ import javafx.util.Duration;
 import org.ecsail.dto.BoatListDTO;
 import org.ecsail.dto.BoatListRadioDTO;
 import org.ecsail.dto.DbBoatSettingsDTO;
-import org.ecsail.interfaces.ListCallBack;
 import org.ecsail.widgetfx.HBoxFx;
 import org.ecsail.widgetfx.ListenerFx;
 import org.ecsail.widgetfx.VBoxFx;
@@ -24,11 +23,11 @@ import org.ecsail.widgetfx.VBoxFx;
 import java.util.function.Consumer;
 
 
-public class BoatListView implements Builder<Region>, ListCallBack {
+public class BoatListView implements Builder<Region>, BoatListMessages {
 
     BoatListModel boatListModel;
-    Consumer<ListCallBack.Mode> action;
-    public BoatListView(BoatListModel rm, Consumer<ListCallBack.Mode> a) {
+    Consumer<BoatListMessages.Mode> action;
+    public BoatListView(BoatListModel rm, Consumer<BoatListMessages.Mode> a) {
         boatListModel = rm;
         action = a;
     }
@@ -86,7 +85,7 @@ public class BoatListView implements Builder<Region>, ListCallBack {
 
     protected void setRadioListener() {
 //        boatListModel.selectedRadioBoxProperty().addListener(Observable -> changeState.run());
-        boatListModel.selectedRadioBoxProperty().addListener(Observable -> action.accept(Mode.CHANGE_STATE));
+        boatListModel.selectedRadioBoxProperty().addListener(Observable -> action.accept(Mode.CHANGE_LIST));
     }
 
     private Node createRadioBox() {

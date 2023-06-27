@@ -14,7 +14,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.Builder;
 import org.ecsail.dto.BoatListDTO;
-import org.ecsail.interfaces.ListCallBack;
 import org.ecsail.widgetfx.TableViewFx;
 
 public class BoatListTableView implements Builder<TableView> {
@@ -35,7 +34,7 @@ public class BoatListTableView implements Builder<TableView> {
             row.setOnMouseClicked(event -> {
                 if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
                     boatListView.boatListModel.setSelectedBoatList(row.getItem());
-                    boatListView.action.accept(ListCallBack.Mode.LAUNCH_TAB); // send signal to update selected object in db
+                    boatListView.action.accept(BoatListMessages.Mode.LAUNCH_TAB); // send signal to update selected object in db
                 }
             });
             return row;
@@ -52,7 +51,7 @@ public class BoatListTableView implements Builder<TableView> {
             booleanProp.addListener((observable, oldValue, newValue) -> {
                 boatListDTO.setAux(newValue); // update the object
                 boatListView.boatListModel.setSelectedBoatList(boatListDTO); // set object as selected object
-                boatListView.action.accept(ListCallBack.Mode.UPDATE); // send signal to update selected object in db
+                boatListView.action.accept(BoatListMessages.Mode.UPDATE); // send signal to update selected object in db
             });
             return booleanProp;
         });
