@@ -86,4 +86,9 @@ public class BoatInteractor {
     public void getBoatPhotos() {
         boatModel.setImages((ArrayList<BoatPhotosDTO>) boatRepo.getImagesByBoatId(boatModel.getBoatListDTO().getBoatId()));
     }
+
+    public void perform(BoatMessages.action action) {
+
+
+    }
 }

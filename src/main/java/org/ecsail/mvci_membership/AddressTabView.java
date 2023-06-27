@@ -10,14 +10,10 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import javafx.util.Builder;
 import org.ecsail.dto.MembershipListDTO;
-import org.ecsail.interfaces.Messages;
 import org.ecsail.static_calls.StringTools;
 import org.ecsail.widgetfx.*;
-
-import java.sql.SQLOutput;
 
 public class AddressTabView implements Builder<Tab> {
     private final MembershipView membershipView;
@@ -82,7 +78,7 @@ public class AddressTabView implements Builder<Tab> {
             if (oldValue) {  // we have focused and unfocused
                 MembershipListDTO membershipListDTO = membershipView.getMembershipModel().getMembership();
                 membershipListDTO.setAddress(textField.getText());
-                membershipView.sendMessage().accept(Messages.MessageType.UPDATE, membershipListDTO);
+                membershipView.sendMessage().accept(MembershipMessages.action.UPDATE, membershipListDTO);
             }
         });
     }
@@ -94,7 +90,7 @@ public class AddressTabView implements Builder<Tab> {
             if (oldValue) {  // we have focused and unfocused
                 MembershipListDTO membershipListDTO = membershipView.getMembershipModel().getMembership();
                 membershipListDTO.setZip(textField.getText());
-                membershipView.sendMessage().accept(Messages.MessageType.UPDATE, membershipListDTO);
+                membershipView.sendMessage().accept(MembershipMessages.action.UPDATE, membershipListDTO);
             }
         });
     }
@@ -106,7 +102,7 @@ public class AddressTabView implements Builder<Tab> {
             if (oldValue) {  // we have focused and unfocused
                 MembershipListDTO membershipListDTO = membershipView.getMembershipModel().getMembership();
                 membershipListDTO.setCity(textField.getText());
-                membershipView.sendMessage().accept(Messages.MessageType.UPDATE, membershipListDTO);
+                membershipView.sendMessage().accept(MembershipMessages.action.UPDATE, membershipListDTO);
             }
         });
     }
@@ -117,7 +113,7 @@ public class AddressTabView implements Builder<Tab> {
         comboBox.getSelectionModel().selectedItemProperty().addListener( (options, oldValue, newValue) -> {
             MembershipListDTO membershipListDTO = membershipView.getMembershipModel().getMembership();
             membershipListDTO.setState(newValue.toString());
-            membershipView.sendMessage().accept(Messages.MessageType.UPDATE, membershipListDTO);
+            membershipView.sendMessage().accept(MembershipMessages.action.UPDATE, membershipListDTO);
         });
     }
 

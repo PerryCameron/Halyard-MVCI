@@ -11,7 +11,6 @@ import javafx.util.Builder;
 import org.ecsail.dto.AwardDTO;
 import org.ecsail.dto.PersonDTO;
 import org.ecsail.enums.Awards;
-import org.ecsail.interfaces.Messages;
 import org.ecsail.widgetfx.TableColumnFx;
 import org.ecsail.widgetfx.TableViewFx;
 
@@ -40,7 +39,7 @@ public class AwardTableView implements Builder<TableView<AwardDTO>> {
                     AwardDTO awardDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                     awardDTO.setAwardYear(t.getNewValue());
                     membershipView.sendMessage()
-                            .accept(Messages.MessageType.UPDATE, awardDTO);
+                            .accept(MembershipMessages.action.UPDATE, awardDTO);
                 }
         );
         col1.setMaxWidth(1f * Integer.MAX_VALUE * 20);   // Phone
@@ -65,7 +64,7 @@ public class AwardTableView implements Builder<TableView<AwardDTO>> {
             // update the GUI (do this first so UI seems snappy)
             awardDTO.setAwardType(event.getNewValue().getCode());
             // update the SQL
-            membershipView.sendMessage().accept(Messages.MessageType.UPDATE, awardDTO);
+            membershipView.sendMessage().accept(MembershipMessages.action.UPDATE, awardDTO);
         });
         col2.setMaxWidth(1f * Integer.MAX_VALUE * 50);  // Type
         return col2;

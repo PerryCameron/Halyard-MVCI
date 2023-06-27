@@ -10,12 +10,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import org.ecsail.dto.BoatDTO;
-import org.ecsail.interfaces.Messages;
 import org.ecsail.widgetfx.*;
 
 import java.util.Comparator;
 
-public class BoatTabView implements Builder<Tab>, Messages {
+public class BoatTabView implements Builder<Tab>, MembershipMessages {
     private final MembershipView membershipView;
     private TableColumn<BoatDTO, String> column1;
 
@@ -54,7 +53,7 @@ public class BoatTabView implements Builder<Tab>, Messages {
             int selectedIndex = membershipView.getMembershipModel().getBoatTableView().getSelectionModel().getSelectedIndex();
             if (selectedIndex >= 0) { // TODO add error checking and prompt
                 BoatDTO boatDTO = membershipView.getMembershipModel().getMembership().getBoatDTOS().get(selectedIndex);
-                membershipView.sendMessage().accept(MessageType.DELETE, boatDTO);
+                membershipView.sendMessage().accept(action.DELETE, boatDTO);
                 // can't I remove it from the list iteslf?
                 membershipView.getMembershipModel().getBoatTableView().getItems().remove(boatDTO);
             }
@@ -71,7 +70,7 @@ public class BoatTabView implements Builder<Tab>, Messages {
             membershipView.getMembershipModel().getMembership().getBoatDTOS().sort(Comparator.comparing(BoatDTO::getBoatId));
             membershipView.getMembershipModel().getBoatTableView().layout();
             membershipView.getMembershipModel().getBoatTableView().edit(0, column1);
-            membershipView.sendMessage().accept(MessageType.INSERT, boatDTO);
+            membershipView.sendMessage().accept(action.INSERT, boatDTO);
         });
         return button;
     }
@@ -161,7 +160,7 @@ public class BoatTabView implements Builder<Tab>, Messages {
             case "setDraft" -> boatDTO.setDraft(t.getNewValue());
             case "setDisplacement" -> boatDTO.setDisplacement(t.getNewValue());
         }
-        membershipView.sendMessage().accept(MessageType.UPDATE, boatDTO);
+        membershipView.sendMessage().accept(action.UPDATE, boatDTO);
     }
 
 

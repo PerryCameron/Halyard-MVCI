@@ -1,4 +1,4 @@
---type msi
+--action msi
 --name ${app.name}
 --win-menu
 --win-menu-group ${windows.vendor}

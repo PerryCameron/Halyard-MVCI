@@ -19,7 +19,7 @@ FROM
      WHERE id.FISCAL_YEAR=2022 and id.RENEW=1 and p.MEMBER_TYPE = 3 and p.IS_ACTIVE=1) AS derived;
 
 
-### Counts number of memberships per type for a given year
+### Counts number of memberships per action for a given year
 
 SELECT
     id.FISCAL_YEAR AS 'YEAR',

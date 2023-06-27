@@ -4,7 +4,6 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.ecsail.dto.*;
-import org.ecsail.interfaces.Messages;
 import org.ecsail.interfaces.SlipUser;
 import org.ecsail.repository.implementations.*;
 import org.ecsail.repository.interfaces.*;
@@ -13,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 
 import javax.sql.DataSource;
+import java.util.List;
 
 public class DataBaseService {
     private final MembershipModel membershipModel;
@@ -63,10 +63,10 @@ public class DataBaseService {
     }
 
     public void getIds(MembershipListDTO ml) {
-        System.out.println("getIds()");
+        List<MembershipIdDTO> membershipIdDTOS = membershipIdRepo.getIds(ml.getMsId());
         try {
             Platform.runLater(() -> membershipModel.getMembership()
-                    .setMembershipIdDTOS(FXCollections.observableArrayList(membershipIdRepo.getIds(ml.getMsId()))));
+                    .setMembershipIdDTOS(FXCollections.observableArrayList(membershipIdDTOS)));
             retrievedFromIndicator(true);
             logger.info("Blink Green");
         } catch (DataAccessException e) {
@@ -77,9 +77,10 @@ public class DataBaseService {
 
     public void getBoats(MembershipListDTO ml) {
         try {
+            List<BoatDTO> boats = boatRepo.getBoatsByMsId(ml.getMsId());
             Platform.runLater(() -> {
                 membershipModel.getMembership()
-                        .setBoatDTOS(FXCollections.observableArrayList(boatRepo.getBoatsByMsId(ml.getMsId())));
+                        .setBoatDTOS(FXCollections.observableArrayList(boats));
                 retrievedFromIndicator(true);
             });
             logger.info("Blink Green");
@@ -87,13 +88,13 @@ public class DataBaseService {
             logger.error(e.getMessage());
             retrievedFromIndicator(false);
         }
-
     }
 
     public void getNotes(MembershipListDTO ml) {
         try {
+            List<NotesDTO> notesDTOS = notesRepo.getMemosByMsId(ml.getMsId());
             Platform.runLater(() -> membershipModel.getMembership()
-                    .setNotesDTOS(FXCollections.observableArrayList(notesRepo.getMemosByMsId(ml.getMsId()))));
+                    .setNotesDTOS(FXCollections.observableArrayList(notesDTOS)));
             retrievedFromIndicator(true);
             logger.info("Blink Green");
         } catch (DataAccessException e) {
@@ -141,7 +142,7 @@ public class DataBaseService {
         membershipModel.setMembershipId(String.valueOf(membershipIdRepo.getCurrentId(membershipModel.getSlip().getSubleased_to()).getMembership_id()));
     }
 
-    public void receiveMessage(Messages.MessageType messages, Object o) {
+    public void receiveMessage(MembershipMessages.action messages, Object o) {
         switch (messages) {
             case DELETE -> delete(o);
             case UPDATE -> update(o);

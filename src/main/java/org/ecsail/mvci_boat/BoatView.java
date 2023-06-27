@@ -14,7 +14,6 @@ import org.ecsail.dto.BoatPhotosDTO;
 import org.ecsail.dto.DbBoatSettingsDTO;
 import org.ecsail.fileio.FileIO;
 import org.ecsail.interfaces.ConfigFilePaths;
-import org.ecsail.interfaces.ListCallBack;
 import org.ecsail.widgetfx.*;
 
 import java.util.Comparator;
@@ -22,11 +21,11 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 
-public class BoatView implements Builder<Region>, ListCallBack, ConfigFilePaths {
+public class BoatView implements Builder<Region>, BoatMessages, ConfigFilePaths {
 
     BoatModel boatModel;
-    Consumer<Mode> action;
-    public BoatView(BoatModel rm, Consumer<Mode> a) {
+    Consumer<BoatMessages.action> action;
+    public BoatView(BoatModel rm, Consumer<BoatMessages.action> a) {
         boatModel = rm;
         action = a;
     }
@@ -42,7 +41,7 @@ public class BoatView implements Builder<Region>, ListCallBack, ConfigFilePaths 
     }
 
     private Node createSpacer() {
-        return RegionFx.regionWidthOf(10.1);
+        return RegionFx.regionWidthOf(0);
     }
 
     private Node setUpNotes() {
@@ -94,17 +93,14 @@ public class BoatView implements Builder<Region>, ListCallBack, ConfigFilePaths 
         switch (name) {
             case "Add" -> System.out.println("Adding owner");
             case "Delete" -> System.out.println("Deleting Owner");
-            case ">" -> {
-                button.setOnAction((event) -> {
-                    moveToNextImage(true);
-                });
-            }
-            case "<" -> {
-                button.setOnAction((event) -> {
-                    moveToNextImage(false);
-                });
-            }
-            case "Set As Default" -> System.out.println("Set as Default");
+            case ">" -> button.setOnAction((event) -> moveToNextImage(true));
+            case "<" -> button.setOnAction((event) -> moveToNextImage(false));
+            case "Default" -> button.setOnAction((event) -> {
+                for(BoatPhotosDTO photo: boatModel.getImages()) {
+                    photo.setDefault(photo.getId() == boatModel.getSelectedImage().getId());
+//             TODO           SqlUpdate.updateBoatImages(photo);
+                }
+            });
         }
         return button;
     }
@@ -141,6 +137,7 @@ public class BoatView implements Builder<Region>, ListCallBack, ConfigFilePaths 
 
     private Node addPicture() {
         VBox vBox = VBoxFx.vBoxOf(630,489, true, true);
+        vBox.setAlignment(Pos.CENTER_LEFT);
         ImageView imageView = new ImageView();
         imageView.setSmooth(true);
         imageView.setPreserveRatio(true);
@@ -157,7 +154,7 @@ public class BoatView implements Builder<Region>, ListCallBack, ConfigFilePaths 
 
     private BoatPhotosDTO getDefaultBoatPhotoDTO() {
         BoatPhotosDTO boatPhotosDTO1 = boatModel.getImages().stream()
-                .filter(boatPhotosDTO -> boatPhotosDTO.isDefault())
+                .filter(BoatPhotosDTO::isDefault)
                 .findFirst()
                 .orElse(new BoatPhotosDTO(0, 0, "", "no_image.png", 0, true));
         return boatPhotosDTO1;
@@ -185,7 +182,7 @@ public class BoatView implements Builder<Region>, ListCallBack, ConfigFilePaths 
     }
 
     private void setDefaultImage() {
-        Image image = null;
+        Image image;
         String localFile = BOAT_LOCAL_PATH + boatModel.getSelectedImage().getFilename();
         String remoteFile = BOAT_REMOTE_PATH + boatModel.getSelectedImage().getFilename();
         if(boatModel.getSelectedImage().getFilename().equals("no_image.png")) {
@@ -198,7 +195,6 @@ public class BoatView implements Builder<Region>, ListCallBack, ConfigFilePaths 
         }
         boatModel.getImageView().setImage(image);
     }
-
 
     public BoatModel getBoatModel() {
         return boatModel;

@@ -11,7 +11,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import org.ecsail.dto.NotesDTO;
-import org.ecsail.interfaces.Messages;
 import org.ecsail.widgetfx.*;
 
 public class NotesTabView implements Builder<Tab> {
@@ -68,7 +67,7 @@ public class NotesTabView implements Builder<Tab> {
         col3.setOnEditCommit(t -> {
                     NotesDTO notesDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                     notesDTO.setMemo(t.getNewValue());
-                    membershipView.sendMessage().accept(Messages.MessageType.UPDATE,notesDTO);
+                    membershipView.sendMessage().accept(MembershipMessages.action.UPDATE,notesDTO);
         });
         col3.setMaxWidth( 1f * Integer.MAX_VALUE * 85 );   // Note
         return col3;
@@ -87,7 +86,7 @@ public class NotesTabView implements Builder<Tab> {
                 t -> {
                     NotesDTO notesDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                     notesDTO.setMemoDate(t.getNewValue());
-                    membershipView.sendMessage().accept(Messages.MessageType.UPDATE,notesDTO);
+                    membershipView.sendMessage().accept(MembershipMessages.action.UPDATE,notesDTO);
                 });
         col1.setMaxWidth( 1f * Integer.MAX_VALUE * 10 );   // Date
         return col1;

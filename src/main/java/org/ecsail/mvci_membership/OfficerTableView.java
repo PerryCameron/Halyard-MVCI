@@ -12,7 +12,6 @@ import org.ecsail.dto.BoardPositionDTO;
 import org.ecsail.dto.OfficerDTO;
 import org.ecsail.dto.PersonDTO;
 import org.ecsail.enums.Officer;
-import org.ecsail.interfaces.Messages;
 import org.ecsail.widgetfx.TableColumnFx;
 import org.ecsail.widgetfx.TableViewFx;
 
@@ -20,7 +19,7 @@ import java.util.stream.Collectors;
 
 
 
-public class OfficerTableView implements Builder<TableView<OfficerDTO>>,Messages {
+public class OfficerTableView implements Builder<TableView<OfficerDTO>>, MembershipMessages {
     private final PersonDTO person;
     private final MembershipModel membershipModel;
     private final MembershipView membershipView;
@@ -46,7 +45,7 @@ public class OfficerTableView implements Builder<TableView<OfficerDTO>>,Messages
                 t -> {
                     OfficerDTO officerDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                     officerDTO.setFiscalYear(t.getNewValue());
-                    membershipView.sendMessage().accept(Messages.MessageType.UPDATE, officerDTO);
+                    membershipView.sendMessage().accept(action.UPDATE, officerDTO);
                 }
         );
         col1.setMaxWidth(1f * Integer.MAX_VALUE * 20);   // Phone
@@ -70,7 +69,7 @@ public class OfficerTableView implements Builder<TableView<OfficerDTO>>,Messages
             OfficerDTO officerDTO = event.getTableView().getItems().get(pos.getRow());
 //            officerDTO.setOfficerType(event.getNewValue());
             officerDTO.setOfficerType(Officer.getByName(event.getNewValue(), boardPositions));
-            membershipView.sendMessage().accept(Messages.MessageType.UPDATE, officerDTO);
+            membershipView.sendMessage().accept(action.UPDATE, officerDTO);
         });
         col2.setMaxWidth(1f * Integer.MAX_VALUE * 50);  // Type
         return col2;
@@ -82,7 +81,7 @@ public class OfficerTableView implements Builder<TableView<OfficerDTO>>,Messages
                 t -> {
                     OfficerDTO officerDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                     officerDTO.setBoardYear(t.getNewValue());
-                    membershipView.sendMessage().accept(Messages.MessageType.UPDATE, officerDTO);
+                    membershipView.sendMessage().accept(action.UPDATE, officerDTO);
                 }
         );
         col1.setMaxWidth(1f * Integer.MAX_VALUE * 20);   // Phone

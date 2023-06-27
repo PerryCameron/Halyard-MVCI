@@ -1,8 +1,8 @@
-package org.ecsail.interfaces;
+package org.ecsail.mvci_membership;
 
-public interface Messages {
+public interface MembershipMessages {
 
-    enum MessageType {
+    enum action {
         INSERT,
         DELETE,
         UPDATE,

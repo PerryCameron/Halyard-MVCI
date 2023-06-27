@@ -4,7 +4,6 @@ import javafx.concurrent.Task;
 import javafx.scene.layout.Region;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.interfaces.Controller;
-import org.ecsail.interfaces.Messages;
 import org.ecsail.mvci_main.MainController;
 
 public class MembershipController extends Controller {
@@ -21,7 +20,7 @@ public class MembershipController extends Controller {
         membershipView = new MembershipView(membershipModel, this::editRow);
     }
 
-    private void editRow(Messages.MessageType type, Object o) {
+    private void editRow(MembershipMessages.action type, Object o) {
         Task<Void> task = new Task<>() {
             @Override
             protected Void call() {

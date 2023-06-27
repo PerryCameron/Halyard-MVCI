@@ -21,6 +21,10 @@ public class BoatController extends Controller implements ListCallBack {
         getBoatData();
     }
 
+    private void action(BoatMessages.action action) {
+        boatInteractor.perform(action);
+    }
+
     private void getBoatData() {
             mainController.setSpinnerOffset(225,25);
             mainController.showLoadingSpinner(true);
@@ -39,12 +43,6 @@ public class BoatController extends Controller implements ListCallBack {
                 boatInteractor.setDataLoaded(true);
             });
             new Thread(task).start();
-    }
-
-    private void action(Mode mode) {
-        switch (mode) {
-            case SEARCH -> System.out.println("");
-        }
     }
 
     @Override

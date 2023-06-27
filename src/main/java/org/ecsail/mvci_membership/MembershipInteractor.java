@@ -2,7 +2,6 @@ package org.ecsail.mvci_membership;
 
 import javafx.application.Platform;
 import org.ecsail.connection.Connections;
-import org.ecsail.interfaces.Messages;
 import org.ecsail.interfaces.SlipUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +22,7 @@ public class MembershipInteractor implements SlipUser {
         });
     }
 
-    public void receiveMessage(Messages.MessageType messages, Object o) {
+    public void receiveMessage(MembershipMessages.action messages, Object o) {
         dataBaseService.receiveMessage(messages,o);
     }
 

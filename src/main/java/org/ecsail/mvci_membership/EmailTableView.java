@@ -12,7 +12,6 @@ import javafx.util.Builder;
 import org.ecsail.custom.RadioButtonCell;
 import org.ecsail.dto.EmailDTO;
 import org.ecsail.dto.PersonDTO;
-import org.ecsail.interfaces.Messages;
 import org.ecsail.static_calls.StringTools;
 import org.ecsail.widgetfx.TableColumnFx;
 import org.ecsail.widgetfx.TableViewFx;
@@ -46,7 +45,7 @@ public class EmailTableView implements Builder<TableView<EmailDTO>> {
             if(StringTools.isValidEmail(t.getNewValue())) {
                 EmailDTO emailDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                 emailDTO.setEmail(t.getNewValue());
-                membershipView.sendMessage().accept(Messages.MessageType.UPDATE,emailDTO);
+                membershipView.sendMessage().accept(MembershipMessages.action.UPDATE,emailDTO);
             } else {
                 person.getEmail().stream()
                         .filter(q -> q.getEmail_id() == email_id)
@@ -76,7 +75,7 @@ public class EmailTableView implements Builder<TableView<EmailDTO>> {
             SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(emailDTO.getIsListed());
             booleanProp.addListener((observable, oldValue, newValue) -> {
                 emailDTO.setListed(newValue);
-                membershipView.sendMessage().accept(Messages.MessageType.UPDATE,emailDTO);
+                membershipView.sendMessage().accept(MembershipMessages.action.UPDATE,emailDTO);
             });
             return booleanProp;
         });

@@ -11,7 +11,6 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.util.Builder;
-import org.ecsail.interfaces.Messages;
 import org.ecsail.widgetfx.*;
 
 import java.util.function.BiConsumer;
@@ -19,9 +18,9 @@ import java.util.function.BiConsumer;
 public class MembershipView implements Builder<Region> {
 
     private final MembershipModel membershipModel;
-    private final BiConsumer<Messages.MessageType, Object> personEdit;
+    private final BiConsumer<MembershipMessages.action, Object> personEdit;
 
-    protected MembershipView(MembershipModel mm, BiConsumer<Messages.MessageType, Object> pe) {
+    protected MembershipView(MembershipModel mm, BiConsumer<MembershipMessages.action, Object> pe) {
         membershipModel = mm;
         this.personEdit = pe;
     }
@@ -114,7 +113,7 @@ public class MembershipView implements Builder<Region> {
         return membershipModel;
     }
 
-    protected BiConsumer<Messages.MessageType, Object> sendMessage() {
+    protected BiConsumer<MembershipMessages.action, Object> sendMessage() {
         return personEdit;
     }
 }

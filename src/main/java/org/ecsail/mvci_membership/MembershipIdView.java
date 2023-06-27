@@ -17,7 +17,6 @@ import javafx.util.Builder;
 import org.ecsail.custom.CustomDatePicker;
 import org.ecsail.dto.MembershipIdDTO;
 import org.ecsail.enums.MembershipType;
-import org.ecsail.interfaces.Messages;
 import org.ecsail.widgetfx.*;
 
 import java.time.LocalDate;
@@ -59,7 +58,7 @@ public class MembershipIdView implements Builder<Tab> {
                 LocalDate date = datePicker.getValue();
                 membershipView.getMembershipModel().getMembership().setJoinDate(date.toString());
                 membershipView.sendMessage()
-                        .accept(Messages.MessageType.UPDATE, membershipView.getMembershipModel().getMembership());
+                        .accept(MembershipMessages.action.UPDATE, membershipView.getMembershipModel().getMembership());
                 membershipView.getMembershipModel().getMembership().setJoinDate(date.toString());
             }
         });
@@ -115,7 +114,7 @@ public class MembershipIdView implements Builder<Tab> {
                     SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(id.getIsLateRenew());
                     booleanProp.addListener((observable, oldValue, newValue) -> {
                         id.setIsLateRenew(newValue);
-                            membershipView.sendMessage().accept(Messages.MessageType.UPDATE, id);
+                            membershipView.sendMessage().accept(MembershipMessages.action.UPDATE, id);
                     });
                     return booleanProp;
                 });
@@ -136,7 +135,7 @@ public class MembershipIdView implements Builder<Tab> {
                     SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(id.getIsRenew());
                     booleanProp.addListener((observable, oldValue, newValue) -> {
                         id.setIsRenew(newValue);
-                        membershipView.sendMessage().accept(Messages.MessageType.UPDATE, id);
+                        membershipView.sendMessage().accept(MembershipMessages.action.UPDATE, id);
                     });
                     return booleanProp;
                 });
@@ -167,7 +166,7 @@ public class MembershipIdView implements Builder<Tab> {
             int row = pos.getRow();
             MembershipIdDTO id = event.getTableView().getItems().get(row);
             id.setMem_type(newMembershipType.getCode());
-            membershipView.sendMessage().accept(Messages.MessageType.UPDATE, id);
+            membershipView.sendMessage().accept(MembershipMessages.action.UPDATE, id);
         });
         col3.setMaxWidth(1f * Integer.MAX_VALUE * 25);   // Mem Type
         return col3;
@@ -178,7 +177,7 @@ public class MembershipIdView implements Builder<Tab> {
         col2.setOnEditCommit(t -> {
             MembershipIdDTO id = t.getTableView().getItems().get(t.getTablePosition().getRow());
             id.setMembership_id(t.getNewValue());
-            membershipView.sendMessage().accept(Messages.MessageType.UPDATE, id);
+            membershipView.sendMessage().accept(MembershipMessages.action.UPDATE, id);
         });
         col2.setMaxWidth(1f * Integer.MAX_VALUE * 15);  // Mem Id
         return col2;
@@ -189,7 +188,7 @@ public class MembershipIdView implements Builder<Tab> {
         col1.setOnEditCommit(t -> {
             MembershipIdDTO id = t.getTableView().getItems().get(t.getTablePosition().getRow());
             id.setFiscal_Year(t.getNewValue());
-            membershipView.sendMessage().accept(Messages.MessageType.UPDATE, id);
+            membershipView.sendMessage().accept(MembershipMessages.action.UPDATE, id);
         });
         col1.setMaxWidth(1f * Integer.MAX_VALUE * 25);   // Year
         return col1;
