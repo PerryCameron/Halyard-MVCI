@@ -88,7 +88,12 @@ public class BoatInteractor {
     }
 
     public void perform(BoatMessages.action action) {
-
+        switch (action) {
+            case UPDATE -> System.out.println("Update");
+            case INSERT -> System.out.println("Insert");
+            case DELETE -> System.out.println("Delete");
+            case NONE -> System.out.println("None");
+        }
 
     }
 }

@@ -4,10 +4,9 @@ import javafx.concurrent.Task;
 import javafx.scene.layout.Region;
 import org.ecsail.dto.BoatListDTO;
 import org.ecsail.interfaces.Controller;
-import org.ecsail.interfaces.ListCallBack;
 import org.ecsail.mvci_main.MainController;
 
-public class BoatController extends Controller implements ListCallBack {
+public class BoatController extends Controller implements BoatMessages {
     MainController mainController;
     BoatInteractor boatInteractor;
     BoatView boatView;

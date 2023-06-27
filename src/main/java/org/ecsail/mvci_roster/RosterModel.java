@@ -29,6 +29,10 @@ public class RosterModel {
     private final BooleanProperty listsLoaded = new SimpleBooleanProperty(false);
 
 
+    public MembershipListDTO getSelectedMembershipList() {
+        return selectedMembershipList.get();
+    }
+
     public SimpleObjectProperty<MembershipListDTO> selectedMembershipListProperty() {
         return selectedMembershipList;
     }

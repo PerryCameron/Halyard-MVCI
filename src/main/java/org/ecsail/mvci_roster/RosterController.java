@@ -2,7 +2,6 @@ package org.ecsail.mvci_roster;
 
 import javafx.concurrent.Task;
 import javafx.scene.layout.Region;
-import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.interfaces.Controller;
 import org.ecsail.mvci_main.MainController;
 
@@ -15,12 +14,22 @@ public class RosterController extends Controller {
         mainController = mc;
         RosterModel rosterModel = new RosterModel();
         rosterInteractor = new RosterInteractor(rosterModel,mainController.getConnections());
-        rosterView = new RosterView(rosterModel, this::changeListType, this::search, this::exportRoster, this::launchTab);
+        rosterView = new RosterView(rosterModel, this::action);
         getRosterData();
     }
 
-    private void launchTab(MembershipListDTO membershipListDTO) {
-        mainController.openMembershipMVCI(membershipListDTO);
+    private void action(RosterMessages.action action) {
+        switch(action) {
+            case UPDATE -> System.out.println("Update?");
+            case LAUNCH_TAB -> launchTab();
+            case SEARCH -> search();
+            case EXPORT_XPS -> exportRoster();
+            case CHANGE_LIST_TYPE -> changeListType();
+        }
+    }
+
+    private void launchTab() {
+        mainController.openMembershipMVCI(rosterInteractor.getMembership());
     }
 
     private void exportRoster() {

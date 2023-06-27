@@ -171,4 +171,8 @@ public class RosterInteractor {
     protected void setListsLoaded(boolean isLoaded) {
         Platform.runLater(() -> rosterModel.setListsLoaded(isLoaded));
     }
+
+    public MembershipListDTO getMembership() {
+        return rosterModel.getSelectedMembershipList();
+    }
 }

@@ -13,12 +13,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Builder;
 import javafx.util.Duration;
-import org.ecsail.dto.DbBoatSettingsDTO;
 import org.ecsail.dto.DbRosterSettingsDTO;
-import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.dto.MembershipListRadioDTO;
-import org.ecsail.interfaces.ListCallBack;
-import org.ecsail.mvci_boat.Row;
+import org.ecsail.mvci_boat.BoatMessages;
 import org.ecsail.mvci_roster.export.SaveFileChooser;
 import org.ecsail.static_calls.HalyardPaths;
 import org.ecsail.widgetfx.HBoxFx;
@@ -27,19 +24,18 @@ import org.ecsail.widgetfx.VBoxFx;
 
 import java.util.function.Consumer;
 
-public class RosterView implements Builder<Region>, ListCallBack {
+
+public class RosterView implements Builder<Region>, RosterMessages {
 
     RosterModel rosterModel;
-    Runnable changeState;
-    Runnable search;
-    Runnable exportRoster;
-    Consumer<MembershipListDTO> launchTab;
-    public RosterView(RosterModel rm, Runnable cy, Runnable s, Runnable cr, Consumer<MembershipListDTO> lt) {
+//    Runnable changeState;
+//    Runnable search;
+//    Runnable exportRoster;
+//    Consumer<MembershipListDTO> launchTab;
+    Consumer<RosterMessages.action> action;
+    public RosterView(RosterModel rm, Consumer<RosterMessages.action> a) {
         rosterModel = rm;
-        changeState = cy;
-        exportRoster =cr;
-        launchTab =lt;
-        search = s;
+        action = a;
     }
 
     @Override
@@ -94,7 +90,7 @@ public class RosterView implements Builder<Region>, ListCallBack {
                 rosterModel.getSelectedYear() + "_" +
                         rosterModel.getSelectedRadioBox().getRadioLabel().replace(" ", "_"),
                 "Excel Files", "*.xlsx").getFile());
-            exportRoster.run();
+            action.accept(RosterMessages.action.EXPORT_XPS);
         });
         return button;
     }
@@ -112,13 +108,13 @@ public class RosterView implements Builder<Region>, ListCallBack {
         return vBox;
     }
     protected void setRadioListener() {
-        rosterModel.selectedRadioBoxProperty().addListener(Observable -> changeState.run());
+        rosterModel.selectedRadioBoxProperty().addListener(Observable -> action.accept(RosterMessages.action.CHANGE_LIST_TYPE));
     }
 
     private void setTabLaunchListener() {
         rosterModel.selectedMembershipListProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue != null);
-            launchTab.accept(newValue);
+            action.accept(RosterMessages.action.LAUNCH_TAB);
         });
     }
     private Node setUpFieldSelectedToSearchBox() {
@@ -152,7 +148,7 @@ public class RosterView implements Builder<Region>, ListCallBack {
         // this is awesome, stole from stackoverflow.com
         textField.textProperty().addListener(
                 (observable, oldValue, newValue) -> {
-                    pause.setOnFinished(event -> search.run());
+                    pause.setOnFinished(event -> action.accept(RosterMessages.action.SEARCH));
                     pause.playFromStart();
                 }
         );
@@ -177,7 +173,7 @@ public class RosterView implements Builder<Region>, ListCallBack {
         comboBox.getSelectionModel().select(1);
         comboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             rosterModel.setSelectedYear(newValue);
-            changeState.run();
+            Consumer<BoatMessages.action> action;
         });
         vBox.getChildren().add(comboBox);
         return vBox;
