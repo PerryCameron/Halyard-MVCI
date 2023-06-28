@@ -24,8 +24,8 @@ import java.util.function.Consumer;
 public class BoatView implements Builder<Region>, BoatMessages, ConfigFilePaths {
 
     BoatModel boatModel;
-    Consumer<BoatMessages.action> action;
-    public BoatView(BoatModel rm, Consumer<BoatMessages.action> a) {
+    Consumer<BoatMessage> action;
+    public BoatView(BoatModel rm, Consumer<BoatMessage> a) {
         boatModel = rm;
         action = a;
     }

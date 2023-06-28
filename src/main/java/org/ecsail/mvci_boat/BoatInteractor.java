@@ -87,13 +87,5 @@ public class BoatInteractor {
         boatModel.setImages((ArrayList<BoatPhotosDTO>) boatRepo.getImagesByBoatId(boatModel.getBoatListDTO().getBoatId()));
     }
 
-    public void perform(BoatMessages.action action) {
-        switch (action) {
-            case UPDATE -> System.out.println("Update");
-            case INSERT -> System.out.println("Insert");
-            case DELETE -> System.out.println("Delete");
-            case NONE -> System.out.println("None");
-        }
 
-    }
 }

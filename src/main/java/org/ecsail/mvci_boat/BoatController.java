@@ -6,7 +6,7 @@ import org.ecsail.dto.BoatListDTO;
 import org.ecsail.interfaces.Controller;
 import org.ecsail.mvci_main.MainController;
 
-public class BoatController extends Controller implements BoatMessages {
+public class BoatController extends Controller {
     MainController mainController;
     BoatInteractor boatInteractor;
     BoatView boatView;
@@ -20,8 +20,13 @@ public class BoatController extends Controller implements BoatMessages {
         getBoatData();
     }
 
-    private void action(BoatMessages.action action) {
-        boatInteractor.perform(action);
+    private void action(BoatMessage action) {
+        switch (action) {
+            case UPDATE -> System.out.println("Update");
+            case INSERT -> System.out.println("Insert");
+            case DELETE -> System.out.println("Delete");
+            case NONE -> System.out.println("None");
+        }
     }
 
     private void getBoatData() {

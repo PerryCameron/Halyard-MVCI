@@ -15,7 +15,7 @@ import javafx.util.Builder;
 import javafx.util.Duration;
 import org.ecsail.dto.DbRosterSettingsDTO;
 import org.ecsail.dto.MembershipListRadioDTO;
-import org.ecsail.mvci_boat.BoatMessages;
+import org.ecsail.mvci_boat.BoatMessage;
 import org.ecsail.mvci_roster.export.SaveFileChooser;
 import org.ecsail.static_calls.HalyardPaths;
 import org.ecsail.widgetfx.HBoxFx;
@@ -172,7 +172,7 @@ public class RosterView implements Builder<Region>  {
         comboBox.getSelectionModel().select(1);
         comboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             rosterModel.setSelectedYear(newValue);
-            Consumer<BoatMessages.action> action;
+//            Consumer<BoatMessage> action; TODO
         });
         vBox.getChildren().add(comboBox);
         return vBox;
