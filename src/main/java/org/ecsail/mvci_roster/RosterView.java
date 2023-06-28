@@ -24,16 +24,15 @@ import org.ecsail.widgetfx.VBoxFx;
 
 import java.util.function.Consumer;
 
+import static org.ecsail.mvci_roster.RosterMessage.*;
 
-public class RosterView implements Builder<Region>, RosterMessages {
+
+
+public class RosterView implements Builder<Region>  {
 
     RosterModel rosterModel;
-//    Runnable changeState;
-//    Runnable search;
-//    Runnable exportRoster;
-//    Consumer<MembershipListDTO> launchTab;
-    Consumer<RosterMessages.action> action;
-    public RosterView(RosterModel rm, Consumer<RosterMessages.action> a) {
+    Consumer<RosterMessage> action;
+    public RosterView(RosterModel rm, Consumer<RosterMessage> a) {
         rosterModel = rm;
         action = a;
     }
@@ -90,7 +89,7 @@ public class RosterView implements Builder<Region>, RosterMessages {
                 rosterModel.getSelectedYear() + "_" +
                         rosterModel.getSelectedRadioBox().getRadioLabel().replace(" ", "_"),
                 "Excel Files", "*.xlsx").getFile());
-            action.accept(RosterMessages.action.EXPORT_XPS);
+            action.accept(EXPORT_XPS);
         });
         return button;
     }
@@ -108,13 +107,13 @@ public class RosterView implements Builder<Region>, RosterMessages {
         return vBox;
     }
     protected void setRadioListener() {
-        rosterModel.selectedRadioBoxProperty().addListener(Observable -> action.accept(RosterMessages.action.CHANGE_LIST_TYPE));
+        rosterModel.selectedRadioBoxProperty().addListener(Observable -> action.accept(CHANGE_LIST_TYPE));
     }
 
     private void setTabLaunchListener() {
         rosterModel.selectedMembershipListProperty().addListener((observable, oldValue, newValue) -> {
             if(newValue != null);
-            action.accept(RosterMessages.action.LAUNCH_TAB);
+            action.accept(LAUNCH_TAB);
         });
     }
     private Node setUpFieldSelectedToSearchBox() {
@@ -148,7 +147,7 @@ public class RosterView implements Builder<Region>, RosterMessages {
         // this is awesome, stole from stackoverflow.com
         textField.textProperty().addListener(
                 (observable, oldValue, newValue) -> {
-                    pause.setOnFinished(event -> action.accept(RosterMessages.action.SEARCH));
+                    pause.setOnFinished(event -> action.accept(SEARCH));
                     pause.playFromStart();
                 }
         );

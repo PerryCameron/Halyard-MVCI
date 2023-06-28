@@ -18,7 +18,7 @@ public class RosterController extends Controller {
         getRosterData();
     }
 
-    private void action(RosterMessages.action action) {
+    private void action(RosterMessage action) {
         switch(action) {
             case UPDATE -> System.out.println("Update?");
             case LAUNCH_TAB -> launchTab();
