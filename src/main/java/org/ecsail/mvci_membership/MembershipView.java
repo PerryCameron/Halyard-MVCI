@@ -18,9 +18,9 @@ import java.util.function.BiConsumer;
 public class MembershipView implements Builder<Region> {
 
     private final MembershipModel membershipModel;
-    private final BiConsumer<MembershipMessages.action, Object> personEdit;
+    private final BiConsumer<MembershipMessage, Object> personEdit;
 
-    protected MembershipView(MembershipModel mm, BiConsumer<MembershipMessages.action, Object> pe) {
+    protected MembershipView(MembershipModel mm, BiConsumer<MembershipMessage, Object> pe) {
         membershipModel = mm;
         this.personEdit = pe;
     }
@@ -113,7 +113,7 @@ public class MembershipView implements Builder<Region> {
         return membershipModel;
     }
 
-    protected BiConsumer<MembershipMessages.action, Object> sendMessage() {
+    protected BiConsumer<MembershipMessage, Object> sendMessage() {
         return personEdit;
     }
 }

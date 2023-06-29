@@ -14,7 +14,7 @@ import org.ecsail.widgetfx.*;
 
 import java.util.Comparator;
 
-public class BoatTabView implements Builder<Tab>, MembershipMessages {
+public class BoatTabView implements Builder<Tab> {
     private final MembershipView membershipView;
     private TableColumn<BoatDTO, String> column1;
 
@@ -53,7 +53,7 @@ public class BoatTabView implements Builder<Tab>, MembershipMessages {
             int selectedIndex = membershipView.getMembershipModel().getBoatTableView().getSelectionModel().getSelectedIndex();
             if (selectedIndex >= 0) { // TODO add error checking and prompt
                 BoatDTO boatDTO = membershipView.getMembershipModel().getMembership().getBoatDTOS().get(selectedIndex);
-                membershipView.sendMessage().accept(action.DELETE, boatDTO);
+                membershipView.sendMessage().accept(MembershipMessage.DELETE, boatDTO);
                 // can't I remove it from the list iteslf?
                 membershipView.getMembershipModel().getBoatTableView().getItems().remove(boatDTO);
             }
@@ -70,7 +70,7 @@ public class BoatTabView implements Builder<Tab>, MembershipMessages {
             membershipView.getMembershipModel().getMembership().getBoatDTOS().sort(Comparator.comparing(BoatDTO::getBoatId));
             membershipView.getMembershipModel().getBoatTableView().layout();
             membershipView.getMembershipModel().getBoatTableView().edit(0, column1);
-            membershipView.sendMessage().accept(action.INSERT, boatDTO);
+            membershipView.sendMessage().accept(MembershipMessage.INSERT, boatDTO);
         });
         return button;
     }
@@ -160,7 +160,7 @@ public class BoatTabView implements Builder<Tab>, MembershipMessages {
             case "setDraft" -> boatDTO.setDraft(t.getNewValue());
             case "setDisplacement" -> boatDTO.setDisplacement(t.getNewValue());
         }
-        membershipView.sendMessage().accept(action.UPDATE, boatDTO);
+        membershipView.sendMessage().accept(MembershipMessage.UPDATE, boatDTO);
     }
 
 

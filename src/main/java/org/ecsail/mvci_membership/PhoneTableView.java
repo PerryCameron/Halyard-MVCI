@@ -53,7 +53,7 @@ public class PhoneTableView implements Builder<TableView<PhoneDTO>> {
                         String processedNumber = processNumber(t.getNewValue());
                         PhoneDTO phoneDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                         phoneDTO.setPhone(t.getNewValue());
-                        membershipView.sendMessage().accept(MembershipMessages.action.UPDATE, phoneDTO);
+                        membershipView.sendMessage().accept(MembershipMessage.UPDATE, phoneDTO);
                         person.getPhones().stream()
                                 .filter(p -> p.getPhoneId() == phoneDTO.getPhoneId())
                                 .forEach(s -> s.setPhone(processedNumber));
@@ -117,7 +117,7 @@ public class PhoneTableView implements Builder<TableView<PhoneDTO>> {
             int row = pos.getRow();
             PhoneDTO phoneDTO = event.getTableView().getItems().get(row);
             phoneDTO.setPhoneType(newPhoneType.getCode()); // makes UI feel snappy
-            membershipView.sendMessage().accept(MembershipMessages.action.UPDATE, phoneDTO);
+            membershipView.sendMessage().accept(MembershipMessage.UPDATE, phoneDTO);
         });
         Col2.setMaxWidth( 1f * Integer.MAX_VALUE * 30 );  // Type
         return Col2;
@@ -130,7 +130,7 @@ public class PhoneTableView implements Builder<TableView<PhoneDTO>> {
             SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(phoneDTO.getPhoneListed());
             booleanProp.addListener((observable, oldValue, newValue) -> {
                 phoneDTO.setPhoneListed(newValue); // makes UI feel snappy
-                membershipView.sendMessage().accept(MembershipMessages.action.UPDATE, phoneDTO);
+                membershipView.sendMessage().accept(MembershipMessage.UPDATE, phoneDTO);
             });
             return booleanProp;
         });

@@ -20,7 +20,7 @@ public class MembershipController extends Controller {
         membershipView = new MembershipView(membershipModel, this::editRow);
     }
 
-    private void editRow(MembershipMessages.action type, Object o) {
+    private void editRow(MembershipMessage type, Object o) {
         Task<Void> task = new Task<>() {
             @Override
             protected Void call() {

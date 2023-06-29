@@ -39,7 +39,7 @@ public class AwardTableView implements Builder<TableView<AwardDTO>> {
                     AwardDTO awardDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                     awardDTO.setAwardYear(t.getNewValue());
                     membershipView.sendMessage()
-                            .accept(MembershipMessages.action.UPDATE, awardDTO);
+                            .accept(MembershipMessage.UPDATE, awardDTO);
                 }
         );
         col1.setMaxWidth(1f * Integer.MAX_VALUE * 20);   // Phone
@@ -64,7 +64,7 @@ public class AwardTableView implements Builder<TableView<AwardDTO>> {
             // update the GUI (do this first so UI seems snappy)
             awardDTO.setAwardType(event.getNewValue().getCode());
             // update the SQL
-            membershipView.sendMessage().accept(MembershipMessages.action.UPDATE, awardDTO);
+            membershipView.sendMessage().accept(MembershipMessage.UPDATE, awardDTO);
         });
         col2.setMaxWidth(1f * Integer.MAX_VALUE * 50);  // Type
         return col2;

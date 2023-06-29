@@ -142,7 +142,7 @@ public class DataBaseService {
         membershipModel.setMembershipId(String.valueOf(membershipIdRepo.getCurrentId(membershipModel.getSlip().getSubleased_to()).getMembership_id()));
     }
 
-    public void receiveMessage(MembershipMessages.action messages, Object o) {
+    public void receiveMessage(MembershipMessage messages, Object o) {
         switch (messages) {
             case DELETE -> delete(o);
             case UPDATE -> update(o);

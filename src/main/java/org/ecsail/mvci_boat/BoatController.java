@@ -22,7 +22,7 @@ public class BoatController extends Controller {
 
     private void action(BoatMessage action) {
         switch (action) {
-            case UPDATE -> System.out.println("Update");
+            case UPDATE -> boatInteractor.updateBoat();
             case INSERT -> System.out.println("Insert");
             case DELETE -> System.out.println("Delete");
             case NONE -> System.out.println("None");

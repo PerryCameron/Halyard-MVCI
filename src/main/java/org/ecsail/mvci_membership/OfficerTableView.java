@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 
 
 
-public class OfficerTableView implements Builder<TableView<OfficerDTO>>, MembershipMessages {
+public class OfficerTableView implements Builder<TableView<OfficerDTO>> {
     private final PersonDTO person;
     private final MembershipModel membershipModel;
     private final MembershipView membershipView;
@@ -45,7 +45,7 @@ public class OfficerTableView implements Builder<TableView<OfficerDTO>>, Members
                 t -> {
                     OfficerDTO officerDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                     officerDTO.setFiscalYear(t.getNewValue());
-                    membershipView.sendMessage().accept(action.UPDATE, officerDTO);
+                    membershipView.sendMessage().accept(MembershipMessage.UPDATE, officerDTO);
                 }
         );
         col1.setMaxWidth(1f * Integer.MAX_VALUE * 20);   // Phone
@@ -69,7 +69,7 @@ public class OfficerTableView implements Builder<TableView<OfficerDTO>>, Members
             OfficerDTO officerDTO = event.getTableView().getItems().get(pos.getRow());
 //            officerDTO.setOfficerType(event.getNewValue());
             officerDTO.setOfficerType(Officer.getByName(event.getNewValue(), boardPositions));
-            membershipView.sendMessage().accept(action.UPDATE, officerDTO);
+            membershipView.sendMessage().accept(MembershipMessage.UPDATE, officerDTO);
         });
         col2.setMaxWidth(1f * Integer.MAX_VALUE * 50);  // Type
         return col2;
@@ -81,7 +81,7 @@ public class OfficerTableView implements Builder<TableView<OfficerDTO>>, Members
                 t -> {
                     OfficerDTO officerDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                     officerDTO.setBoardYear(t.getNewValue());
-                    membershipView.sendMessage().accept(action.UPDATE, officerDTO);
+                    membershipView.sendMessage().accept(MembershipMessage.UPDATE, officerDTO);
                 }
         );
         col1.setMaxWidth(1f * Integer.MAX_VALUE * 20);   // Phone

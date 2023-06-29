@@ -45,7 +45,7 @@ public class EmailTableView implements Builder<TableView<EmailDTO>> {
             if(StringTools.isValidEmail(t.getNewValue())) {
                 EmailDTO emailDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                 emailDTO.setEmail(t.getNewValue());
-                membershipView.sendMessage().accept(MembershipMessages.action.UPDATE,emailDTO);
+                membershipView.sendMessage().accept(MembershipMessage.UPDATE,emailDTO);
             } else {
                 person.getEmail().stream()
                         .filter(q -> q.getEmail_id() == email_id)
@@ -75,7 +75,7 @@ public class EmailTableView implements Builder<TableView<EmailDTO>> {
             SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(emailDTO.getIsListed());
             booleanProp.addListener((observable, oldValue, newValue) -> {
                 emailDTO.setListed(newValue);
-                membershipView.sendMessage().accept(MembershipMessages.action.UPDATE,emailDTO);
+                membershipView.sendMessage().accept(MembershipMessage.UPDATE,emailDTO);
             });
             return booleanProp;
         });
