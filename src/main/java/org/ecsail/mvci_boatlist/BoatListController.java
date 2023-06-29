@@ -5,7 +5,7 @@ import javafx.scene.layout.Region;
 import org.ecsail.interfaces.Controller;
 import org.ecsail.mvci_main.MainController;
 
-public class BoatListController extends Controller implements BoatListMessages {
+public class BoatListController extends Controller {
     MainController mainController;
     BoatListInteractor boatListInteractor;
     BoatListView boatListView;
@@ -18,8 +18,8 @@ public class BoatListController extends Controller implements BoatListMessages {
         getBoatListData();
     }
 
-    private void action(BoatListMessages.Mode mode) {
-        switch (mode) {
+    private void action(BoatListMessage action) {
+        switch (action) {
             case SEARCH -> search();
             case CHANGE_LIST -> changeList();
             case EXPORT_XPS -> exportRoster();

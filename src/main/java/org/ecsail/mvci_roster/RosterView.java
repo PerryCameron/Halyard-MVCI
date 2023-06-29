@@ -15,7 +15,6 @@ import javafx.util.Builder;
 import javafx.util.Duration;
 import org.ecsail.dto.DbRosterSettingsDTO;
 import org.ecsail.dto.MembershipListRadioDTO;
-import org.ecsail.mvci_boat.BoatMessage;
 import org.ecsail.mvci_roster.export.SaveFileChooser;
 import org.ecsail.static_calls.HalyardPaths;
 import org.ecsail.widgetfx.HBoxFx;

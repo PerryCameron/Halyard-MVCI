@@ -22,14 +22,16 @@ import org.ecsail.widgetfx.VBoxFx;
 
 import java.util.function.Consumer;
 
+import static org.ecsail.mvci_boatlist.BoatListMessage.*;
 
-public class BoatListView implements Builder<Region>, BoatListMessages {
+
+public class BoatListView implements Builder<Region> {
 
     BoatListModel boatListModel;
-    Consumer<BoatListMessages.Mode> action;
-    public BoatListView(BoatListModel rm, Consumer<BoatListMessages.Mode> a) {
+    Consumer<BoatListMessage> action;
+    public BoatListView(BoatListModel rm, Consumer<BoatListMessage> m) {
         boatListModel = rm;
-        action = a;
+        action = m;
     }
 
     @Override
@@ -73,7 +75,7 @@ public class BoatListView implements Builder<Region>, BoatListMessages {
     private Node createExportButton() {
         Button button = new Button("Export");
         button.setOnAction((event) -> {
-            action.accept(Mode.EXPORT_XPS);
+            action.accept(EXPORT_XPS);
 //            rosterModel.setFileToSave(new SaveFileChooser(HalyardPaths.ROSTERS + "/",
 //                    rosterModel.getSelectedYear() + "_" +
 //                            rosterModel.getSelectedRadioBox().getRadioLabel().replace(" ", "_"),
@@ -85,7 +87,7 @@ public class BoatListView implements Builder<Region>, BoatListMessages {
 
     protected void setRadioListener() {
 //        boatListModel.selectedRadioBoxProperty().addListener(Observable -> changeState.run());
-        boatListModel.selectedRadioBoxProperty().addListener(Observable -> action.accept(Mode.CHANGE_LIST));
+        boatListModel.selectedRadioBoxProperty().addListener(Observable -> action.accept(CHANGE_LIST));
     }
 
     private Node createRadioBox() {
@@ -129,7 +131,7 @@ public class BoatListView implements Builder<Region>, BoatListMessages {
         PauseTransition pause = new PauseTransition(Duration.seconds(1));
         textField.textProperty().addListener(
                 (observable, oldValue, newValue) -> {
-                    pause.setOnFinished(event -> action.accept(Mode.SEARCH));
+                    pause.setOnFinished(event -> action.accept(SEARCH));
                     pause.playFromStart();
                 }
         );
@@ -158,11 +160,11 @@ public class BoatListView implements Builder<Region>, BoatListMessages {
         return vBox;
     }
 
-    public Consumer<Mode> getAction() {
+    public Consumer<BoatListMessage> getAction() {
         return action;
     }
 
-    public void setAction(Consumer<Mode> action) {
+    public void setAction(Consumer<BoatListMessage> action) {
         this.action = action;
     }
 }
