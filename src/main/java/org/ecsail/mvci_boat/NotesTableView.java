@@ -17,9 +17,10 @@ import org.ecsail.widgetfx.TableViewFx;
 
 public class NotesTableView implements Builder<TableView<NotesDTO>> {
     private final BoatModel boatModel;
-
-    public NotesTableView(BoatModel m) {
-        this.boatModel = m;
+    private final BoatView boatView;
+    public NotesTableView(BoatView bv) {
+        this.boatView = bv;
+        this.boatModel = boatView.getBoatModel();
     }
 
     @Override
@@ -36,13 +37,12 @@ public class NotesTableView implements Builder<TableView<NotesDTO>> {
 
     private TableColumn<NotesDTO,String> createColumn1() {
         TableColumn<NotesDTO, String> col1 = TableColumnFx.tableColumnOf(NotesDTO::memoDateProperty, "Year");
-//        col1.setCellValueFactory(new PropertyValueFactory<>("membershipId"));
         col1.setOnEditCommit(
                 t -> {
-                    t.getTableView().getItems().get(
-                            t.getTablePosition().getRow()).setMemoDate(t.getNewValue());
-                    int memo_id = t.getTableView().getItems().get(t.getTablePosition().getRow()).getBoatId();
-//                    note.updateMemo(memo_id, "memo_date", t.getNewValue());
+                    NotesDTO note = t.getTableView().getItems().get(t.getTablePosition().getRow());
+                    note.setMemoDate(t.getNewValue());
+                    boatModel.setSelectedNote(note);
+                    boatView.sendMessage().accept(BoatMessage.UPDATE_NOTE);
                 }
         );
         col1.setMaxWidth( 1f * Integer.MAX_VALUE * 15 );   // Date
@@ -51,12 +51,12 @@ public class NotesTableView implements Builder<TableView<NotesDTO>> {
 
     private TableColumn<NotesDTO,String> createColumn2() {
         TableColumn<NotesDTO, String> col2 = TableColumnFx.tableColumnOf(NotesDTO::memoProperty, "Note");
-//        col2.setCellValueFactory(new PropertyValueFactory<>("lastName"));
         col2.setOnEditCommit(
                 t -> {
-                    t.getTableView().getItems().get(t.getTablePosition().getRow()).setMemo(t.getNewValue());
-                    int memo_id = t.getTableView().getItems().get(t.getTablePosition().getRow()).getMemoId();
-//                    note.updateMemo(memo_id, "memo", t.getNewValue());
+                    NotesDTO note = t.getTableView().getItems().get(t.getTablePosition().getRow());
+                    note.setMemo(t.getNewValue());
+                    boatModel.setSelectedNote(note);
+                    boatView.sendMessage().accept(BoatMessage.UPDATE_NOTE);
                 }
         );
         col2.setMaxWidth( 1f * Integer.MAX_VALUE * 85 );   // Note

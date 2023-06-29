@@ -90,5 +90,11 @@ public class BoatInteractor {
 
     public void updateBoat() {
         System.out.println("Updating boat");
+        System.out.println(boatModel.getBoatListDTO());
+    }
+
+    public void updateNote() {
+        System.out.println("Updating note");
+        System.out.println(boatModel.getSelectedNote());
     }
 }

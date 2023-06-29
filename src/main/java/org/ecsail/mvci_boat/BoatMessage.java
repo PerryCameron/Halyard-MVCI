@@ -4,5 +4,7 @@ public enum BoatMessage {
     INSERT,
     DELETE,
     UPDATE,
-    NONE,
+    UPDATE_NOTE,
+    UPDATE_BOAT,
+    NONE
 }

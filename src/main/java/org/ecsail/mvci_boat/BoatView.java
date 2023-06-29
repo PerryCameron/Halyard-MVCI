@@ -14,10 +14,12 @@ import org.ecsail.dto.BoatPhotosDTO;
 import org.ecsail.dto.DbBoatSettingsDTO;
 import org.ecsail.fileio.FileIO;
 import org.ecsail.interfaces.ConfigFilePaths;
+import org.ecsail.mvci_membership.MembershipMessage;
 import org.ecsail.widgetfx.*;
 
 import java.util.Comparator;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 
@@ -51,7 +53,7 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
         VBox vBoxTable = VBoxFx.vBoxOf(new Insets(0,0,0,0));
         VBox vBoxButtons = VBoxFx.vBoxOf(80.0,5.0,new Insets(0,0,0,5));
         vBoxButtons.getChildren().addAll(createButton("Add"), createButton("Delete"));
-        vBoxTable.getChildren().add(new NotesTableView(boatModel).build());
+        vBoxTable.getChildren().add(new NotesTableView(this).build());
         hBox.getChildren().addAll(vBoxTable,vBoxButtons);
         titledPane.setContent(hBox);
         hBoxOuter.getChildren().add(titledPane);
@@ -111,7 +113,7 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
         vBox.setId("box-grey");
         ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(boatModel.dataLoadedProperty(), () -> {
             for (DbBoatSettingsDTO dbBoatSettingsDTO : boatModel.getBoatSettings())
-                vBox.getChildren().add(new Row(boatModel, dbBoatSettingsDTO));
+                vBox.getChildren().add(new Row(this, dbBoatSettingsDTO));
         });
         boatModel.dataLoadedProperty().addListener(dataLoadedListener);
         titledPane.setContent(vBox);
@@ -196,7 +198,12 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
         boatModel.getImageView().setImage(image);
     }
 
-    public BoatModel getBoatModel() {
+    protected BoatModel getBoatModel() {
         return boatModel;
     }
+
+    protected Consumer<BoatMessage> sendMessage() {
+        return action;
+    }
+
 }

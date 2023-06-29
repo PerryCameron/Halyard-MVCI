@@ -83,7 +83,6 @@ public class NotesDTO {
 	
 
 	public final void setMemo(final String memo) {
-		System.out.println("making single quote replacement");
 		String fixed = memo.replace("'","''");
 		this.memoProperty().set(fixed);
 	}
@@ -132,4 +131,16 @@ public class NotesDTO {
 		this.boatIdProperty().set(boatId);
 	}
 
+	@Override
+	public String toString() {
+		return "NotesDTO{" +
+				"memoId=" + memoId +
+				", msId=" + msId +
+				", memoDate=" + memoDate +
+				", memo=" + memo +
+				", invoiceId=" + invoiceId +
+				", category=" + category +
+				", boatId=" + boatId +
+				'}';
+	}
 }

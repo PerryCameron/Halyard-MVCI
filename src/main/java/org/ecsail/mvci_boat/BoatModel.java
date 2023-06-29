@@ -18,11 +18,22 @@ public class BoatModel {
     private final BooleanProperty dataLoaded = new SimpleBooleanProperty(false);
     private ArrayList<BoatPhotosDTO> images = new ArrayList<BoatPhotosDTO>();
     protected SimpleObjectProperty<BoatPhotosDTO> selectedImage = new SimpleObjectProperty<>();
+    protected SimpleObjectProperty<NotesDTO> selectedNote = new SimpleObjectProperty<>();
     protected SimpleObjectProperty<ImageView> imageView = new SimpleObjectProperty<>();
     private ObservableList<NotesDTO> notesDTOS = FXCollections.observableArrayList();
 
 
+    public NotesDTO getSelectedNote() {
+        return selectedNote.get();
+    }
 
+    public SimpleObjectProperty<NotesDTO> selectedNoteProperty() {
+        return selectedNote;
+    }
+
+    public void setSelectedNote(NotesDTO selectedNote) {
+        this.selectedNote.set(selectedNote);
+    }
 
     public ImageView getImageView() {
         return imageView.get();

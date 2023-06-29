@@ -17,9 +17,11 @@ import org.ecsail.enums.KeelType;
 public class Row extends HBox {
 
     private final BoatModel boatModel;
+    private final BoatView boatView;
     DbBoatSettingsDTO dbBoatSettingsDTO;
-    public Row(BoatModel boatModel, DbBoatSettingsDTO dbBoatSettingsDTO) {
-        this.boatModel = boatModel;
+    public Row(BoatView boatView, DbBoatSettingsDTO dbBoatSettingsDTO) {
+        this.boatView = boatView;
+        this.boatModel = boatView.getBoatModel();
         this.dbBoatSettingsDTO = dbBoatSettingsDTO;
         if(dbBoatSettingsDTO.isVisible()) {
             VBox labelBox = new VBox();
@@ -38,8 +40,8 @@ public class Row extends HBox {
                 .addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
                     // focus out
                     if (oldValue) { // we have focused and unfocused
-//                        SqlUpdate.updateBoat(dbBoatSettingsDTO.getFieldName(), parent.boatDTO.getBoatId(), textField.getText());
                         setPojo(dbBoatSettingsDTO.getFieldName(), textField.getText());
+                        boatView.sendMessage().accept(BoatMessage.UPDATE_BOAT);
                     }
                 });
     }
@@ -56,6 +58,7 @@ public class Row extends HBox {
 //            SqlUpdate.updateBoat(parent.boatDTO.getBoatId(), newValue.getCode());
 //            if(parent.fromList)
             setPojo(dbBoatSettingsDTO.getFieldName(), newValue.getCode());
+            boatView.sendMessage().accept(BoatMessage.UPDATE_BOAT);
         });
     }
 
