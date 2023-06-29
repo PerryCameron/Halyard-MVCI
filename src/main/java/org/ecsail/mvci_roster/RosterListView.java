@@ -27,11 +27,11 @@ import static org.ecsail.mvci_roster.RosterMessage.*;
 
 
 
-public class RosterView implements Builder<Region>  {
+public class RosterListView implements Builder<Region> {
 
     RosterModel rosterModel;
     Consumer<RosterMessage> action;
-    public RosterView(RosterModel rm, Consumer<RosterMessage> a) {
+    public RosterListView(RosterModel rm, Consumer<RosterMessage> a) {
         rosterModel = rm;
         action = a;
     }
@@ -115,14 +115,9 @@ public class RosterView implements Builder<Region>  {
             action.accept(LAUNCH_TAB);
         });
     }
+
     private Node setUpFieldSelectedToSearchBox() {
-        VBox vBox = VBoxFx.vBoxOf(new Insets(0,15,0,57));
-        TitledPane titledPane = new TitledPane();
-        titledPane.setText("Searchable Fields");
-        titledPane.setExpanded(false);
-        titledPane.setContent(setAllCheckBoxes());
-        vBox.getChildren().add(titledPane);
-        return vBox;
+        return VBoxFx.vBoxOfCheckBoxes(this::setAllCheckBoxes);
     }
 
     protected Node setAllCheckBoxes() {

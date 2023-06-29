@@ -22,7 +22,6 @@ import org.ecsail.widgetfx.VBoxFx;
 
 import java.util.function.Consumer;
 
-import static org.ecsail.mvci_boatlist.BoatListMessage.*;
 
 
 public class BoatListView implements Builder<Region> {
@@ -75,7 +74,7 @@ public class BoatListView implements Builder<Region> {
     private Node createExportButton() {
         Button button = new Button("Export");
         button.setOnAction((event) -> {
-            action.accept(EXPORT_XPS);
+            action.accept(BoatListMessage.EXPORT_XPS);
 //            rosterModel.setFileToSave(new SaveFileChooser(HalyardPaths.ROSTERS + "/",
 //                    rosterModel.getSelectedYear() + "_" +
 //                            rosterModel.getSelectedRadioBox().getRadioLabel().replace(" ", "_"),
@@ -87,7 +86,7 @@ public class BoatListView implements Builder<Region> {
 
     protected void setRadioListener() {
 //        boatListModel.selectedRadioBoxProperty().addListener(Observable -> changeState.run());
-        boatListModel.selectedRadioBoxProperty().addListener(Observable -> action.accept(CHANGE_LIST));
+        boatListModel.selectedRadioBoxProperty().addListener(Observable -> action.accept(BoatListMessage.CHANGE_LIST));
     }
 
     private Node createRadioBox() {
@@ -102,13 +101,7 @@ public class BoatListView implements Builder<Region> {
     }
 
     private Node setUpFieldSelectedToSearchBox() {
-        VBox vBox = VBoxFx.vBoxOf(new Insets(0,15,0,57));
-        TitledPane titledPane = new TitledPane();
-        titledPane.setText("Searchable Fields");
-        titledPane.setExpanded(false);
-        titledPane.setContent(setAllCheckBoxes()); // must be set after data retrieved
-        vBox.getChildren().add(titledPane);
-        return vBox;
+        return VBoxFx.vBoxOfCheckBoxes(this::setAllCheckBoxes);
     }
 
     protected Node setAllCheckBoxes() {
@@ -131,7 +124,7 @@ public class BoatListView implements Builder<Region> {
         PauseTransition pause = new PauseTransition(Duration.seconds(1));
         textField.textProperty().addListener(
                 (observable, oldValue, newValue) -> {
-                    pause.setOnFinished(event -> action.accept(SEARCH));
+                    pause.setOnFinished(event -> action.accept(BoatListMessage.SEARCH));
                     pause.playFromStart();
                 }
         );

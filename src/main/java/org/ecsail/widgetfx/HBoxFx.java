@@ -1,16 +1,24 @@
 package org.ecsail.widgetfx;
 
+import javafx.animation.PauseTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Text;
+import javafx.util.Duration;
+import org.ecsail.mvci_boatlist.BoatListMessage;
+
+import java.util.function.Consumer;
 
 public class HBoxFx {
 
@@ -121,12 +129,5 @@ public class HBoxFx {
         hBox.getChildren().add(region);
         return hBox;
     }
-//    public static HBox hBoxOf(Pos pos, Double spacing, Insets insets) {
-//        HBox hBox = new HBox();
-//        hBox.setAlignment(pos);
-//        hBox.setSpacing(spacing);
-//        hBox.setPadding(insets);
-//        return hBox;
-//    }
 
 }

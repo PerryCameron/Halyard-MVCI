@@ -5,8 +5,12 @@ import javafx.beans.binding.StringBinding;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.Property;
 import javafx.beans.property.StringProperty;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.text.Text;
 import javafx.util.converter.NumberStringConverter;
 
 public class TextFieldFx {
@@ -37,4 +41,6 @@ public class TextFieldFx {
         passwordField.setPrefWidth(width);
         return passwordField;
     }
+
+
 }

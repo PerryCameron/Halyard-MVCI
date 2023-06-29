@@ -3,9 +3,14 @@ package org.ecsail.widgetfx;
 import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class VBoxFx {
 
@@ -104,6 +109,16 @@ public class VBoxFx {
         vBox.setPrefWidth(width);
         vBox.setSpacing(spacing);
         vBox.setPadding(insets);
+        return vBox;
+    }
+
+    public static VBox vBoxOfCheckBoxes(Supplier<Node> checkBoxes) {
+        VBox vBox = vBoxOf(new Insets(0,15,0,57));
+        TitledPane titledPane = new TitledPane();
+        titledPane.setText("Searchable Fields");
+        titledPane.setExpanded(false);
+        titledPane.setContent(checkBoxes.get());
+        vBox.getChildren().add(titledPane);
         return vBox;
     }
 

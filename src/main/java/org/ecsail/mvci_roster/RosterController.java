@@ -8,13 +8,13 @@ import org.ecsail.mvci_main.MainController;
 public class RosterController extends Controller {
     MainController mainController;
     RosterInteractor rosterInteractor;
-    RosterView rosterView;
+    RosterListView rosterView;
 
     public RosterController(MainController mc) {
         mainController = mc;
         RosterModel rosterModel = new RosterModel();
         rosterInteractor = new RosterInteractor(rosterModel,mainController.getConnections());
-        rosterView = new RosterView(rosterModel, this::action);
+        rosterView = new RosterListView(rosterModel, this::action);
         getRosterData();
     }
 
