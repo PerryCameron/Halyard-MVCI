@@ -21,16 +21,27 @@ public class BoatController extends Controller {
     }
 
     private void action(BoatMessage action) {
-        switch (action) {
-            case UPDATE_BOAT -> boatInteractor.updateBoat();
-            case UPDATE_NOTE -> boatInteractor.updateNote();
-            case ADD_IMAGE -> boatInteractor.addImage();
-            case SET_DEFAULT -> boatInteractor.setImageAsDefault();
-            case DELETE_IMAGE -> boatInteractor.deleteImage();
-            case INSERT -> System.out.println("Insert");
-            case DELETE -> System.out.println("Delete");
-            case NONE -> System.out.println("None");
-        }
+        Task<Void> task = new Task<>() {
+            @Override
+            protected Void call() {
+                switch(action)
+                {
+                    case UPDATE_BOAT -> boatInteractor.updateBoat();
+                    case UPDATE_NOTE -> boatInteractor.updateNote();
+                    case ADD_IMAGE -> boatInteractor.addImage();
+                    case ADD_NOTE -> boatInteractor.addNote();
+                    case ADD_OWNER -> boatInteractor.addOwner();
+                    case SET_DEFAULT -> boatInteractor.setImageAsDefault();
+                    case DELETE_IMAGE -> boatInteractor.deleteImage();
+                    case DELETE_NOTE -> boatInteractor.deleteNote();
+                    case DELETE_OWNER -> boatInteractor.deleteOwner();
+                    case INSERT -> System.out.println("Insert");
+                    case NONE -> System.out.println("None");
+                }
+                return null;
+            }
+        };
+        new Thread(task).start();
     }
 
     private void getBoatData() {

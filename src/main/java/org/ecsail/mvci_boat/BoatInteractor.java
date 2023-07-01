@@ -99,11 +99,30 @@ public class BoatInteractor {
     }
 
     public void addImage() {
+        System.out.println("adding image");
     }
 
     public void setImageAsDefault() {
+        System.out.println("setting image as default");
     }
 
     public void deleteImage() {
+        System.out.println("Deleting Image");
+    }
+
+    public void addNote() {
+        System.out.println("Adding Note");
+    }
+
+    public void addOwner() {
+        System.out.println("adding owner");
+    }
+
+    public void deleteNote() {
+        System.out.println("deleting note");
+    }
+
+    public void deleteOwner() {
+        System.out.println("deleting owner");
     }
 }

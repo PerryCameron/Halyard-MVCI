@@ -1,6 +1,8 @@
 package org.ecsail.mvci_boat;
 
 import javafx.beans.value.ChangeListener;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -14,12 +16,10 @@ import org.ecsail.dto.BoatPhotosDTO;
 import org.ecsail.dto.DbBoatSettingsDTO;
 import org.ecsail.fileio.FileIO;
 import org.ecsail.interfaces.ConfigFilePaths;
-import org.ecsail.mvci_membership.MembershipMessage;
 import org.ecsail.widgetfx.*;
 
 import java.util.Comparator;
 import java.util.Objects;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 
@@ -52,7 +52,7 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
         HBox hBox = new HBox();
         VBox vBoxTable = VBoxFx.vBoxOf(new Insets(0,0,0,0));
         VBox vBoxButtons = VBoxFx.vBoxOf(80.0,5.0,new Insets(0,0,0,5));
-        vBoxButtons.getChildren().addAll(createButton("Add"), createButton("Delete"));
+        vBoxButtons.getChildren().addAll(createButton("Add","note"), createButton("Delete","note"));
         vBoxTable.getChildren().add(new NotesTableView(this).build());
         hBox.getChildren().addAll(vBoxTable,vBoxButtons);
         titledPane.setContent(hBox);
@@ -84,21 +84,22 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
         HBox hBox = new HBox();
         VBox vBoxTable = VBoxFx.vBoxOf(new Insets(0,10,0,0));
         VBox vBoxButtons = VBoxFx.vBoxOf(80.0,5.0,new Insets(0,0,0,5));
-        vBoxButtons.getChildren().addAll(createButton("Add"), createButton("Delete"));
+        vBoxButtons.getChildren().addAll(createButton("Add","owner"), createButton("Delete","owner"));
         vBoxTable.getChildren().add(new BoatOwnerTableView(this).build());
         hBox.getChildren().addAll(vBoxTable,vBoxButtons);
         return hBox;
     }
 
-    private Node createButton(String name) {
+    private Node createButton(String name, String id) {
         Button button = ButtonFx.buttonOf(name, 60.0);
+        button.setId(id);
         switch (name) {
-            case "Add" -> action.accept(BoatMessage.ADD_IMAGE);
-            case "Delete" -> action.accept(BoatMessage.DELETE_IMAGE);
+            case "Add" -> button.setOnAction(createAddListener(id));
+            case "Delete" -> button.setOnAction(createDeleteListener(id));
             case ">" -> button.setOnAction((event) -> moveToNextImage(true));
             case "<" -> button.setOnAction((event) -> moveToNextImage(false));
             case "Default" -> button.setOnAction((event) -> {
-                for(BoatPhotosDTO photo: boatModel.getImages()) {
+                for (BoatPhotosDTO photo : boatModel.getImages()) {
                     photo.setDefault(photo.getId() == boatModel.getSelectedImage().getId());
                     action.accept(BoatMessage.SET_DEFAULT);
                 }
@@ -107,6 +108,25 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
         return button;
     }
 
+    private EventHandler<ActionEvent> createDeleteListener(String id) {
+        EventHandler<ActionEvent> listener = switch (id) {
+            case "picture" -> (event) -> action.accept(BoatMessage.DELETE_IMAGE);
+            case "note" -> (event) -> action.accept(BoatMessage.DELETE_NOTE);
+            case "owner" -> (event) -> action.accept(BoatMessage.DELETE_OWNER);
+            default -> null;
+        };
+        return listener;
+    }
+
+    private EventHandler<ActionEvent> createAddListener(String id) {
+        EventHandler<ActionEvent> listener = switch (id) {
+            case "picture" -> (event) -> action.accept(BoatMessage.ADD_IMAGE);
+            case "note" -> (event) -> action.accept(BoatMessage.ADD_NOTE);
+            case "owner" -> (event) -> action.accept(BoatMessage.ADD_OWNER);
+            default -> null;
+        };
+        return listener;
+    }
 
     private Node boatInfoTitlePane() {
         TitledPane titledPane = new TitledPane();
@@ -134,7 +154,7 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
         hBox.setPrefHeight(40);
         hBox.setSpacing(7);
         String[] buttonLabels = { "<",">","Add","Delete","Default"};
-        for(String label: buttonLabels) hBox.getChildren().add(createButton(label));
+        for(String label: buttonLabels) hBox.getChildren().add(createButton(label,"picture"));
         return hBox;
     }
 
