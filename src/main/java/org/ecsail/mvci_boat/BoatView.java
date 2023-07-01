@@ -85,7 +85,7 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
         VBox vBoxTable = VBoxFx.vBoxOf(new Insets(0,10,0,0));
         VBox vBoxButtons = VBoxFx.vBoxOf(80.0,5.0,new Insets(0,0,0,5));
         vBoxButtons.getChildren().addAll(createButton("Add"), createButton("Delete"));
-        vBoxTable.getChildren().add(new BoatOwnerTableView(boatModel).build());
+        vBoxTable.getChildren().add(new BoatOwnerTableView(this).build());
         hBox.getChildren().addAll(vBoxTable,vBoxButtons);
         return hBox;
     }
@@ -93,19 +93,20 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
     private Node createButton(String name) {
         Button button = ButtonFx.buttonOf(name, 60.0);
         switch (name) {
-            case "Add" -> System.out.println("Adding owner");
-            case "Delete" -> System.out.println("Deleting Owner");
+            case "Add" -> action.accept(BoatMessage.ADD_IMAGE);
+            case "Delete" -> action.accept(BoatMessage.DELETE_IMAGE);
             case ">" -> button.setOnAction((event) -> moveToNextImage(true));
             case "<" -> button.setOnAction((event) -> moveToNextImage(false));
             case "Default" -> button.setOnAction((event) -> {
                 for(BoatPhotosDTO photo: boatModel.getImages()) {
                     photo.setDefault(photo.getId() == boatModel.getSelectedImage().getId());
-//             TODO           SqlUpdate.updateBoatImages(photo);
+                    action.accept(BoatMessage.SET_DEFAULT);
                 }
             });
         }
         return button;
     }
+
 
     private Node boatInfoTitlePane() {
         TitledPane titledPane = new TitledPane();

@@ -2,8 +2,10 @@ package org.ecsail.mvci_boat;
 
 import javafx.beans.value.ChangeListener;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
 import javafx.util.Builder;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.widgetfx.ListenerFx;
@@ -11,9 +13,11 @@ import org.ecsail.widgetfx.TableViewFx;
 
 public class BoatOwnerTableView implements Builder<TableView<MembershipListDTO>> {
     private final BoatModel boatModel;
+    private final BoatView boatView;
 
-    public BoatOwnerTableView(BoatModel boatModel) {
-        this.boatModel = boatModel;
+    public BoatOwnerTableView(BoatView boatView) {
+        this.boatView = boatView;
+        this.boatModel = boatView.getBoatModel();
     }
 
     @Override
@@ -21,6 +25,15 @@ public class BoatOwnerTableView implements Builder<TableView<MembershipListDTO>>
         TableView<MembershipListDTO> tableView = TableViewFx.tableViewOf(MembershipListDTO.class);
         ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(boatModel.dataLoadedProperty(), () -> {
             tableView.setItems(boatModel.getBoatOwners());
+        });
+        tableView.setRowFactory(tv -> {
+            TableRow<MembershipListDTO> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 1) {
+                    boatModel.setSelectedOwner(row.getItem());
+                }
+            });
+            return row;
         });
         boatModel.dataLoadedProperty().addListener(dataLoadedListener);
         tableView.getColumns().addAll(createColumn1(), createColumn2(), createColumn3());

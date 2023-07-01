@@ -97,4 +97,13 @@ public class BoatInteractor {
         System.out.println("Updating note");
         System.out.println(boatModel.getSelectedNote());
     }
+
+    public void addImage() {
+    }
+
+    public void setImageAsDefault() {
+    }
+
+    public void deleteImage() {
+    }
 }

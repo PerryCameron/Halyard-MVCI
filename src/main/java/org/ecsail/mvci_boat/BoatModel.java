@@ -3,6 +3,7 @@ package org.ecsail.mvci_boat;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.TableRow;
 import javafx.scene.image.ImageView;
 import org.ecsail.dto.*;
 import org.ecsail.mvci_main.MainModel;
@@ -21,7 +22,22 @@ public class BoatModel {
     protected SimpleObjectProperty<NotesDTO> selectedNote = new SimpleObjectProperty<>();
     protected SimpleObjectProperty<ImageView> imageView = new SimpleObjectProperty<>();
     private ObservableList<NotesDTO> notesDTOS = FXCollections.observableArrayList();
+    protected SimpleObjectProperty<MembershipListDTO> selectedOwner = new SimpleObjectProperty<>();
 
+
+
+
+    public MembershipListDTO getSelectedOwner() {
+        return selectedOwner.get();
+    }
+
+    public SimpleObjectProperty<MembershipListDTO> selectedOwnerProperty() {
+        return selectedOwner;
+    }
+
+    public void setSelectedOwner(MembershipListDTO selectedOwner) {
+        this.selectedOwner.set(selectedOwner);
+    }
 
     public NotesDTO getSelectedNote() {
         return selectedNote.get();
@@ -121,4 +137,6 @@ public class BoatModel {
     public MainModel getMainModel() {
         return mainModel;
     }
+
+
 }

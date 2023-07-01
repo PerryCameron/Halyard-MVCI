@@ -24,6 +24,9 @@ public class BoatController extends Controller {
         switch (action) {
             case UPDATE_BOAT -> boatInteractor.updateBoat();
             case UPDATE_NOTE -> boatInteractor.updateNote();
+            case ADD_IMAGE -> boatInteractor.addImage();
+            case SET_DEFAULT -> boatInteractor.setImageAsDefault();
+            case DELETE_IMAGE -> boatInteractor.deleteImage();
             case INSERT -> System.out.println("Insert");
             case DELETE -> System.out.println("Delete");
             case NONE -> System.out.println("None");

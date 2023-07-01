@@ -328,6 +328,26 @@ public class BoatListDTO {
 	public String toString() {
 		return "BoatListDTO{" +
 				"boatId=" + boatId +
+				", msId=" + msId +
+				", manufacturer=" + manufacturer +
+				", manufactureYear=" + manufactureYear +
+				", registrationNum=" + registrationNum +
+				", model=" + model +
+				", boatName=" + boatName +
+				", sailNumber=" + sailNumber +
+				", hasTrailer=" + hasTrailer +
+				", loa=" + loa +
+				", displacement=" + displacement +
+				", keel=" + keel +
+				", phrf=" + phrf +
+				", draft=" + draft +
+				", beam=" + beam +
+				", lwl=" + lwl +
+				", aux=" + aux +
+				", membershipId=" + membershipId +
+				", lName=" + lName +
+				", fName=" + fName +
+				", numberOfImages=" + numberOfImages +
 				'}';
 	}
 }

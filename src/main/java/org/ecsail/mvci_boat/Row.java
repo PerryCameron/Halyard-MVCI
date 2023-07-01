@@ -42,13 +42,16 @@ public class Row extends HBox {
                     if (oldValue) { // we have focused and unfocused
                         setPojo(dbBoatSettingsDTO.getFieldName(), textField.getText());
                         boatView.sendMessage().accept(BoatMessage.UPDATE_BOAT);
+                        // TODO SQL
                     }
                 });
     }
 
     private void setCheckBoxListener(CheckBox checkBox) {
         checkBox.selectedProperty().addListener((obs, wasPreviouslySelected, isNowSelected) -> {
-            //                SqlUpdate.updateBoat(parent.boatDTO.getBoatId(), dbBoatSettingsDTO.getFieldName(), isNowSelected));
+            setBooleanValue(dbBoatSettingsDTO.getFieldName());
+            boatView.sendMessage().accept(BoatMessage.UPDATE_BOAT);
+            // TODO SQL
                 });
 
     }
