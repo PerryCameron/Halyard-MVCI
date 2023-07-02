@@ -15,4 +15,5 @@ public interface NotesRepository {
     NotesDTO getMemoByInvoiceIdAndCategory(InvoiceWithMemberInfoDTO invoice, String category);
     List<Memo2DTO> getAllMemosForTabNotes(String year, String category);
     int insertBoatNote(NotesDTO notesDTO);
+    int update(NotesDTO notesDTO);
 }

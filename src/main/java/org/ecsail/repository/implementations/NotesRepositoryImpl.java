@@ -92,10 +92,18 @@ public class NotesRepositoryImpl implements NotesRepository {
         return affectedRows;
     }
 
-//    private IntegerProperty msId;
-//    private StringProperty memoDate;
-//    private StringProperty memo;
-//    private IntegerProperty invoiceId;
-//    private StringProperty category;
-//    private IntegerProperty boatId;
+    @Override
+    public int update(NotesDTO notesDTO) {
+        String query = "UPDATE memo SET " +
+                "MS_ID = :msId, " +
+                "MEMO_DATE = :memoDate, " +
+                "MEMO = :memo, " +
+                "INVOICE_ID = :invoiceId, " +
+                "CATEGORY = :category, " +
+                "BOAT_ID = :boatId " +
+                "WHERE " +
+                "MEMO_ID = :memoId";
+        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(notesDTO);
+        return namedParameterJdbcTemplate.update(query, namedParameters);
+    }
 }

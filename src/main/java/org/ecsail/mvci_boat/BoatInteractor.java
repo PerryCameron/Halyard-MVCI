@@ -5,9 +5,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.ecsail.connection.Connections;
 import org.ecsail.connection.Sftp;
-import org.ecsail.dto.*;
-import org.ecsail.mvci_boatlist.BoatListModel;
-import org.ecsail.mvci_boatlist.BoatListSettingsCheckBox;
+import org.ecsail.dto.BoatPhotosDTO;
+import org.ecsail.dto.DbBoatSettingsDTO;
+import org.ecsail.dto.MembershipListDTO;
+import org.ecsail.dto.NotesDTO;
 import org.ecsail.repository.implementations.BoatRepositoryImpl;
 import org.ecsail.repository.implementations.MembershipRepositoryImpl;
 import org.ecsail.repository.implementations.NotesRepositoryImpl;
@@ -16,17 +17,11 @@ import org.ecsail.repository.interfaces.BoatRepository;
 import org.ecsail.repository.interfaces.MembershipRepository;
 import org.ecsail.repository.interfaces.NotesRepository;
 import org.ecsail.repository.interfaces.SettingsRepository;
-import org.ecsail.static_calls.StringTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class BoatInteractor {
 
@@ -70,17 +65,13 @@ public class BoatInteractor {
     public void getBoatNotes() {
         ObservableList<NotesDTO> notesDTOS =
                 FXCollections.observableArrayList(noteRepo.getMemosByBoatId(boatModel.getBoatListDTO().getBoatId()));
-        Platform.runLater(() -> {
-            boatModel.setNotesDTOS(notesDTOS);
-        });
+        Platform.runLater(() -> boatModel.setNotesDTOS(notesDTOS));
     }
 
     public void getBoatOwners() {
         ObservableList<MembershipListDTO> boatOwnerDTOS =
                 FXCollections.observableArrayList(membershipRepository.getMembershipByBoatId(boatModel.getBoatListDTO().getBoatId()));
-        Platform.runLater(() -> {
-            boatModel.setBoatOwners(boatOwnerDTOS);
-        });
+        Platform.runLater(() -> boatModel.setBoatOwners(boatOwnerDTOS));
     }
 
     public void getBoatPhotos() {
@@ -94,8 +85,11 @@ public class BoatInteractor {
     }
 
     public void updateNote() {
-        System.out.println("Updating note");
-        System.out.println(boatModel.getSelectedNote());
+        try {
+            noteRepo.update(boatModel.getSelectedNote());
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
     }
 
     public void addImage() {
@@ -111,15 +105,13 @@ public class BoatInteractor {
     }
 
     public void addNote() {
-        System.out.println("Adding Note");
         NotesDTO notesDTO = new NotesDTO(boatModel.getBoatListDTO().getBoatId(),"B");
         try {
             noteRepo.insertBoatNote(notesDTO);
         } catch (Exception e) {
-            System.out.println(e);
+            logger.error(e.getMessage());
         }
-//        System.out.println("Rows affected: " + rowsAffected);
-        boatModel.getNotesDTOS().add(notesDTO);
+        Platform.runLater(() -> boatModel.getNotesDTOS().add(notesDTO));
     }
 
     public void addOwner() {
