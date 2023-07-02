@@ -40,20 +40,6 @@ public class NotesTableView implements Builder<TableView<NotesDTO>> {
         return tableView;
     }
 
-//    private TableColumn<NotesDTO,String> createColumn1() {
-//        TableColumn<NotesDTO, String> col1 = TableColumnFx.tableColumnOf(NotesDTO::memoDateProperty, "Year");
-//        col1.setOnEditCommit(
-//                t -> {
-//                    NotesDTO note = t.getTableView().getItems().get(t.getTablePosition().getRow());
-//                    note.setMemoDate(t.getNewValue());
-//                    boatModel.setSelectedNote(note);
-//                    boatView.sendMessage().accept(BoatMessage.UPDATE_NOTE);
-//                }
-//        );
-//        col1.setMaxWidth( 1f * Integer.MAX_VALUE * 15 );   // Date
-//        return col1;
-//    }
-
     private TableColumn<NotesDTO, LocalDate> createColumn1() {
         TableColumn<NotesDTO, LocalDate> col1 = new TableColumn<>("Date");
         col1.setCellValueFactory(cellData -> cellData.getValue().memoDateProperty());
@@ -77,11 +63,20 @@ public class NotesTableView implements Builder<TableView<NotesDTO>> {
     }
 
     private Callback<TableColumn<NotesDTO, LocalDate>, TableCell<NotesDTO, LocalDate>> createDatePickerCellFactory() {
-        return param -> new TableCell<NotesDTO, LocalDate>() {
+        return param -> new TableCell<>() {
             private final DatePicker datePicker = new DatePicker();
 
             {
-                datePicker.setOnAction(event -> commitEdit(datePicker.getValue()));
+                datePicker.setOnAction(event -> {
+                    commitEdit(datePicker.getValue());
+                    NotesDTO notesDTO = this.getTableRow().getItem();
+                    // Check if notesDTO is not null before calling methods on it
+                    if(notesDTO != null) {
+                        notesDTO.setMemoDate(datePicker.getValue());
+                        boatModel.setSelectedNote(notesDTO);
+                        boatView.sendMessage().accept(BoatMessage.UPDATE_NOTE);
+                    }
+                });
             }
 
             @Override
