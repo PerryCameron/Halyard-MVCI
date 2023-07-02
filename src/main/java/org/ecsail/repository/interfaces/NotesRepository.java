@@ -16,4 +16,5 @@ public interface NotesRepository {
     List<Memo2DTO> getAllMemosForTabNotes(String year, String category);
     int insertNote(NotesDTO notesDTO);
     int update(NotesDTO notesDTO);
+    int delete(NotesDTO notesDTO);
 }

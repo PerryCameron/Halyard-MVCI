@@ -69,8 +69,8 @@ public class NotesTableView implements Builder<TableView<NotesDTO>> {
             {
                 datePicker.setOnAction(event -> {
                     commitEdit(datePicker.getValue());
-                    NotesDTO notesDTO = this.getTableRow().getItem();
                     // Check if notesDTO is not null before calling methods on it
+                    NotesDTO notesDTO = this.getTableRow().getItem();
                     if(notesDTO != null) {
                         notesDTO.setMemoDate(datePicker.getValue());
                         boatModel.setSelectedNote(notesDTO);

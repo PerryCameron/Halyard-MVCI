@@ -106,4 +106,9 @@ public class NotesRepositoryImpl implements NotesRepository {
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(notesDTO);
         return namedParameterJdbcTemplate.update(query, namedParameters);
     }
+
+    @Override
+    public int delete(NotesDTO notesDTO) {
+        return 0;
+    }
 }
