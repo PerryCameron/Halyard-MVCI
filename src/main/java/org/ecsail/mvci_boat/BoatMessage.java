@@ -11,5 +11,7 @@ public enum BoatMessage {
     ADD_IMAGE,
     ADD_NOTE,
     ADD_OWNER,
+    MOVE_FORWARD,
+    MOVE_BACKWARD,
     NONE
 }

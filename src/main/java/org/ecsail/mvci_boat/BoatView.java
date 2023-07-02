@@ -1,8 +1,6 @@
 package org.ecsail.mvci_boat;
 
 import javafx.beans.value.ChangeListener;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -36,14 +34,9 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
     public Region build() {
         BorderPane borderPane = new BorderPane();
         borderPane.setRight(setUpPicture());
-        borderPane.setCenter(createSpacer());
         borderPane.setLeft(setUpInfo());
         borderPane.setBottom(setUpNotes());
         return borderPane;
-    }
-
-    private Node createSpacer() {
-        return RegionFx.regionWidthOf(0);
     }
 
     private Node setUpNotes() {
@@ -52,7 +45,9 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
         HBox hBox = new HBox();
         VBox vBoxTable = VBoxFx.vBoxOf(new Insets(0,0,0,0));
         VBox vBoxButtons = VBoxFx.vBoxOf(80.0,5.0,new Insets(0,0,0,5));
-        vBoxButtons.getChildren().addAll(createButton("Add","note"), createButton("Delete","note"));
+        vBoxButtons.getChildren().addAll(
+                createButton("Add",BoatMessage.ADD_NOTE),
+                createButton("Delete",BoatMessage.DELETE_NOTE));
         vBoxTable.getChildren().add(new NotesTableView(this).build());
         hBox.getChildren().addAll(vBoxTable,vBoxButtons);
         titledPane.setContent(hBox);
@@ -84,48 +79,28 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
         HBox hBox = new HBox();
         VBox vBoxTable = VBoxFx.vBoxOf(new Insets(0,10,0,0));
         VBox vBoxButtons = VBoxFx.vBoxOf(80.0,5.0,new Insets(0,0,0,5));
-        vBoxButtons.getChildren().addAll(createButton("Add","owner"), createButton("Delete","owner"));
+        vBoxButtons.getChildren().addAll(
+                createButton("Add",BoatMessage.ADD_OWNER),
+                createButton("Delete",BoatMessage.DELETE_OWNER));
         vBoxTable.getChildren().add(new BoatOwnerTableView(this).build());
         hBox.getChildren().addAll(vBoxTable,vBoxButtons);
         return hBox;
     }
 
-    private Node createButton(String name, String id) {
+    private Node createButton(String name, BoatMessage type) {
         Button button = ButtonFx.buttonOf(name, 60.0);
-        button.setId(id);
-        switch (name) {
-            case "Add" -> button.setOnAction(createAddListener(id));
-            case "Delete" -> button.setOnAction(createDeleteListener(id));
-            case ">" -> button.setOnAction((event) -> moveToNextImage(true));
-            case "<" -> button.setOnAction((event) -> moveToNextImage(false));
-            case "Default" -> button.setOnAction((event) -> {
-                for (BoatPhotosDTO photo : boatModel.getImages()) {
-                    photo.setDefault(photo.getId() == boatModel.getSelectedImage().getId());
-                    action.accept(BoatMessage.SET_DEFAULT);
-                }
-            });
-        }
+        switch (type) {
+            case ADD_IMAGE ->  button.setOnAction(event -> action.accept(BoatMessage.ADD_IMAGE));
+            case ADD_NOTE -> button.setOnAction(event -> action.accept(BoatMessage.ADD_NOTE));
+            case ADD_OWNER -> button.setOnAction(event -> action.accept(BoatMessage.ADD_OWNER));
+            case DELETE_IMAGE -> button.setOnAction(event -> action.accept(BoatMessage.DELETE_IMAGE));
+            case DELETE_NOTE -> button.setOnAction(event -> action.accept(BoatMessage.DELETE_NOTE));
+            case DELETE_OWNER -> button.setOnAction(event -> action.accept(BoatMessage.DELETE_OWNER));
+            case SET_DEFAULT -> button.setOnAction(event -> action.accept(BoatMessage.SET_DEFAULT));
+            case MOVE_FORWARD -> button.setOnAction((event) -> moveToNextImage(true));
+            case MOVE_BACKWARD -> button.setOnAction((event) -> moveToNextImage(false));
+        };
         return button;
-    }
-
-    private EventHandler<ActionEvent> createDeleteListener(String id) {
-        EventHandler<ActionEvent> listener = switch (id) {
-            case "picture" -> (event) -> action.accept(BoatMessage.DELETE_IMAGE);
-            case "note" -> (event) -> action.accept(BoatMessage.DELETE_NOTE);
-            case "owner" -> (event) -> action.accept(BoatMessage.DELETE_OWNER);
-            default -> null;
-        };
-        return listener;
-    }
-
-    private EventHandler<ActionEvent> createAddListener(String id) {
-        EventHandler<ActionEvent> listener = switch (id) {
-            case "picture" -> (event) -> action.accept(BoatMessage.ADD_IMAGE);
-            case "note" -> (event) -> action.accept(BoatMessage.ADD_NOTE);
-            case "owner" -> (event) -> action.accept(BoatMessage.ADD_OWNER);
-            default -> null;
-        };
-        return listener;
     }
 
     private Node boatInfoTitlePane() {
@@ -153,14 +128,17 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
         HBox hBox = HBoxFx.hBoxOf(Pos.CENTER, 10.0);
         hBox.setPrefHeight(40);
         hBox.setSpacing(7);
-        String[] buttonLabels = { "<",">","Add","Delete","Default"};
-        for(String label: buttonLabels) hBox.getChildren().add(createButton(label,"picture"));
+        hBox.getChildren().add(createButton("<",BoatMessage.MOVE_BACKWARD));
+        hBox.getChildren().add(createButton(">",BoatMessage.MOVE_FORWARD));
+        hBox.getChildren().add(createButton("Add",BoatMessage.ADD_IMAGE));
+        hBox.getChildren().add(createButton("Delete",BoatMessage.DELETE_IMAGE));
+        hBox.getChildren().add(createButton("Default",BoatMessage.SET_DEFAULT));
         return hBox;
     }
 
     private Node addPicture() {
         VBox vBox = VBoxFx.vBoxOf(630,489, true, true);
-        vBox.setAlignment(Pos.CENTER_LEFT);
+        vBox.setPadding(new Insets(0,10,0,0));
         ImageView imageView = new ImageView();
         imageView.setSmooth(true);
         imageView.setPreserveRatio(true);
@@ -176,11 +154,10 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
     }
 
     private BoatPhotosDTO getDefaultBoatPhotoDTO() {
-        BoatPhotosDTO boatPhotosDTO1 = boatModel.getImages().stream()
+        return boatModel.getImages().stream()
                 .filter(BoatPhotosDTO::isDefault)
                 .findFirst()
                 .orElse(new BoatPhotosDTO(0, 0, "", "no_image.png", 0, true));
-        return boatPhotosDTO1;
     }
 
     private void moveToNextImage(boolean moveForward) {

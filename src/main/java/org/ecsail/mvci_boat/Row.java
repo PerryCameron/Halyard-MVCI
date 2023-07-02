@@ -83,7 +83,7 @@ public class Row extends HBox {
         } else if (dbBoatDTO.getControlType().equals("ComboBox")) {
             ComboBox<KeelType> comboBox = new ComboBox<KeelType>();
             comboBox.getItems().setAll(KeelType.values());
-//            comboBox.setValue(KeelType.getByCode(parent.boatDTO.getKeel()));
+            comboBox.setValue(KeelType.getByCode(boatModel.getBoatListDTO().getKeel()));
             comboBox.setPrefSize(150,10);
             setComboBoxListener(comboBox);
             return comboBox;
