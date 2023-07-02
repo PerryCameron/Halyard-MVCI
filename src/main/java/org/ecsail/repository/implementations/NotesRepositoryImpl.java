@@ -8,15 +8,22 @@ import org.ecsail.repository.interfaces.NotesRepository;
 import org.ecsail.repository.rowmappers.Memo2RowMapper;
 import org.ecsail.repository.rowmappers.MemoRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
 import javax.sql.DataSource;
 import java.util.List;
 
 public class NotesRepositoryImpl implements NotesRepository {
-    private JdbcTemplate template;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final JdbcTemplate template;
 
     public NotesRepositoryImpl(DataSource dataSource) {
         this.template = new JdbcTemplate(dataSource);
+        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
 
     @Override
@@ -73,4 +80,22 @@ public class NotesRepositoryImpl implements NotesRepository {
                 template.query(query, new Memo2RowMapper());
         return memoDTOs;
     }
+
+    @Override
+    public int insertBoatNote(NotesDTO notesDTO) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        String query = "INSERT INTO memo (MS_ID, MEMO_DATE, MEMO, INVOICE_ID, CATEGORY, BOAT_ID) " +
+                "VALUES (:msId, :memoDate, :memo, :invoiceId, :category, :boatId)";
+        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(notesDTO);
+        int affectedRows = namedParameterJdbcTemplate.update(query, namedParameters, keyHolder);
+        notesDTO.setMemoId(keyHolder.getKey().intValue());
+        return affectedRows;
+    }
+
+//    private IntegerProperty msId;
+//    private StringProperty memoDate;
+//    private StringProperty memo;
+//    private IntegerProperty invoiceId;
+//    private StringProperty category;
+//    private IntegerProperty boatId;
 }

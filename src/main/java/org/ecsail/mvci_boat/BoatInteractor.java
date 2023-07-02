@@ -112,6 +112,14 @@ public class BoatInteractor {
 
     public void addNote() {
         System.out.println("Adding Note");
+        NotesDTO notesDTO = new NotesDTO(boatModel.getBoatListDTO().getBoatId(),"B");
+        try {
+            noteRepo.insertBoatNote(notesDTO);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+//        System.out.println("Rows affected: " + rowsAffected);
+        boatModel.getNotesDTOS().add(notesDTO);
     }
 
     public void addOwner() {

@@ -22,14 +22,14 @@ create table ECSC_SQL.boat
     AUX TINYINT(1) DEFAULT 0 NOT NULL
 );
 
-create table ECSC_SQL.boat_memo
-(
-    BOAT_MEMO_ID INTEGER NOT NULL auto_increment primary key,
-    BOAT_ID      INTEGER NOT NULL,
-    MEMO_DATE    date    NOT NULL,
-    MEMO         varchar(2000),
-    foreign key (BOAT_ID) references boat (BOAT_ID)
-);
+# create table ECSC_SQL.boat_memo
+# (
+#     BOAT_MEMO_ID INTEGER NOT NULL auto_increment primary key,
+#     BOAT_ID      INTEGER NOT NULL,
+#     MEMO_DATE    date    NOT NULL,
+#     MEMO         varchar(2000),
+#     foreign key (BOAT_ID) references boat (BOAT_ID)
+# );
 
 CREATE TABLE ECSC_SQL.boat_picture
 (
@@ -107,8 +107,8 @@ create table ECSC_SQL.memo
     MEMO       varchar(2000),
     INVOICE_ID INTEGER,
     CATEGORY   varchar(20) NOT NULL,
-    BOAT_ID    INTEGER,
-    foreign key (MS_ID) references membership (MS_ID)
+    BOAT_ID    INTEGER
+#     foreign key (MS_ID) references membership (MS_ID) #used for boats as well
 );
 
 create table ECSC_SQL.person

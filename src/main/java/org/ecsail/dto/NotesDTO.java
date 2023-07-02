@@ -4,6 +4,7 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import org.ecsail.static_calls.DateTools;
 
 public class NotesDTO {
 	
@@ -26,6 +27,19 @@ public class NotesDTO {
 		this.category = new SimpleStringProperty(category);
 		this.boatId = new SimpleIntegerProperty(boatId);
 	}
+
+	public NotesDTO(int boatId, String type) {
+		super();
+		this.memoId = new SimpleIntegerProperty(0);
+		this.msId = new SimpleIntegerProperty(0);
+		this.memoDate = new SimpleStringProperty(DateTools.getDate());
+		this.memo = new SimpleStringProperty("");
+		this.invoiceId = new SimpleIntegerProperty(0);
+		this.category = new SimpleStringProperty(type);
+		this.boatId = new SimpleIntegerProperty(boatId);
+	}
+
+
 
 	public final IntegerProperty memoIdProperty() {
 		return this.memoId;
