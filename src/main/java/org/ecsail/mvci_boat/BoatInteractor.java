@@ -104,7 +104,7 @@ public class BoatInteractor {
         System.out.println("Deleting Image");
     }
 
-    public void addNote() {
+    public void insertNote() {
         NotesDTO notesDTO = new NotesDTO(boatModel.getBoatListDTO().getBoatId(),"B");
         try {
             noteRepo.insertNote(notesDTO);

@@ -1,27 +1,26 @@
 package org.ecsail.dto;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
+import javafx.beans.property.*;
 import org.ecsail.static_calls.DateTools;
+
+import java.time.LocalDate;
 
 public class NotesDTO {
 	
 	private IntegerProperty memoId;
 	private IntegerProperty msId;
-	private StringProperty memoDate;
+	private ObjectProperty<LocalDate> memoDate;
 	private StringProperty memo;
 	private IntegerProperty invoiceId;
 	private StringProperty category;
 	private IntegerProperty boatId;
 	
-	public NotesDTO(Integer memoId, Integer msId, String memoDate,
+	public NotesDTO(Integer memoId, Integer msId, LocalDate memoDate,
 					String memo, Integer invoiceId, String category, int boatId) {
 		super();
 		this.memoId = new SimpleIntegerProperty(memoId);
 		this.msId = new SimpleIntegerProperty(msId);
-		this.memoDate = new SimpleStringProperty(memoDate);
+		this.memoDate = new SimpleObjectProperty(memoDate);
 		this.memo = new SimpleStringProperty(memo);
 		this.invoiceId = new SimpleIntegerProperty(invoiceId);
 		this.category = new SimpleStringProperty(category);
@@ -32,7 +31,7 @@ public class NotesDTO {
 		super();
 		this.memoId = new SimpleIntegerProperty(0);
 		this.msId = new SimpleIntegerProperty(0);
-		this.memoDate = new SimpleStringProperty(DateTools.getDate());
+		this.memoDate = new SimpleObjectProperty(LocalDate.now());
 		this.memo = new SimpleStringProperty("");
 		this.invoiceId = new SimpleIntegerProperty(0);
 		this.category = new SimpleStringProperty(type);
@@ -40,6 +39,8 @@ public class NotesDTO {
 	}
 
 
+//	public NotesDTO(int memoId, int msId, LocalDate memoDate, String memo, int invoiceId, String category, int boatId) {
+//	}
 
 	public final IntegerProperty memoIdProperty() {
 		return this.memoId;
@@ -71,20 +72,30 @@ public class NotesDTO {
 	}
 	
 
-	public final StringProperty memoDateProperty() {
-		return this.memoDate;
-	}
-	
+//	public final StringProperty memoDateProperty() {
+//		return this.memoDate;
+//	}
+//
+//
+//	public final String getMemoDate() {
+//		return this.memoDateProperty().get();
+//	}
+//
+//
+//	public final void setMemoDate(final String memoDate) {
+//		this.memoDateProperty().set(memoDate);
+//	}
+public ObjectProperty<LocalDate> memoDateProperty() {
+	return memoDate;
+}
 
-	public final String getMemoDate() {
-		return this.memoDateProperty().get();
+	public void setMemoDate(LocalDate date) {
+		this.memoDate.set(date);
 	}
-	
 
-	public final void setMemoDate(final String memoDate) {
-		this.memoDateProperty().set(memoDate);
+	public LocalDate getMemoDate() {
+		return memoDate.get();
 	}
-	
 
 	public final StringProperty memoProperty() {
 		return this.memo;

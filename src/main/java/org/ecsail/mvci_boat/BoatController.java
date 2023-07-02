@@ -29,7 +29,7 @@ public class BoatController extends Controller {
                     case UPDATE_BOAT -> boatInteractor.updateBoat();
                     case UPDATE_NOTE -> boatInteractor.updateNote();
                     case ADD_IMAGE -> boatInteractor.addImage();
-                    case ADD_NOTE -> boatInteractor.addNote();
+                    case ADD_NOTE -> boatInteractor.insertNote();
                     case ADD_OWNER -> boatInteractor.addOwner();
                     case SET_DEFAULT -> boatInteractor.setImageAsDefault();
                     case DELETE_IMAGE -> boatInteractor.deleteImage();

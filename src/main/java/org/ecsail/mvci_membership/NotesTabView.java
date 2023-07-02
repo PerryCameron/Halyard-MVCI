@@ -56,7 +56,7 @@ public class NotesTabView implements Builder<Tab> {
     private Node addTable() {
         TableView tableView = TableViewFx.tableViewOf(NotesDTO.class, 200);
         tableView.setItems(membershipView.getMembershipModel().getMembership().getNotesDTOS());
-        tableView.getColumns().addAll(col1(),col2(),col3());
+        tableView.getColumns().addAll(col2(),col3());  // Add col1 back in TODO
         membershipView.getMembershipModel().setNotesTableView(tableView);
         return tableView;
     }
@@ -80,15 +80,15 @@ public class NotesTabView implements Builder<Tab> {
         return col2;
     }
 
-    private TableColumn<NotesDTO,String> col1() {
-        TableColumn<NotesDTO, String> col1 = TableColumnFx.tableColumnOf(NotesDTO::memoDateProperty,"Date");
-        col1.setOnEditCommit(
-                t -> {
-                    NotesDTO notesDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
-                    notesDTO.setMemoDate(t.getNewValue());
-                    membershipView.sendMessage().accept(MembershipMessage.UPDATE,notesDTO);
-                });
-        col1.setMaxWidth( 1f * Integer.MAX_VALUE * 10 );   // Date
-        return col1;
-    }
+//    private TableColumn<NotesDTO,String> col1() {
+//        TableColumn<NotesDTO, String> col1 = TableColumnFx.tableColumnOf(NotesDTO::memoDateProperty,"Date");
+//        col1.setOnEditCommit(
+//                t -> {
+//                    NotesDTO notesDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
+//                    notesDTO.setMemoDate(t.getNewValue());
+//                    membershipView.sendMessage().accept(MembershipMessage.UPDATE,notesDTO);
+//                });
+//        col1.setMaxWidth( 1f * Integer.MAX_VALUE * 10 );   // Date
+//        return col1;
+//    }
 }

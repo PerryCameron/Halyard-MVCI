@@ -13,7 +13,7 @@ public class MemoRowMapper implements RowMapper<NotesDTO> {
         return new NotesDTO(
                 rs.getInt("MEMO_ID"),
                 rs.getInt("MS_ID"),
-                rs.getString("MEMO_DATE"),
+                rs.getDate("MEMO_DATE").toLocalDate(),
                 rs.getString("MEMO"),
                 rs.getInt("INVOICE_ID"),
                 rs.getString("CATEGORY"),
