@@ -82,7 +82,7 @@ public class NotesRepositoryImpl implements NotesRepository {
     }
 
     @Override
-    public int insertBoatNote(NotesDTO notesDTO) {
+    public int insertNote(NotesDTO notesDTO) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String query = "INSERT INTO memo (MS_ID, MEMO_DATE, MEMO, INVOICE_ID, CATEGORY, BOAT_ID) " +
                 "VALUES (:msId, :memoDate, :memo, :invoiceId, :category, :boatId)";

@@ -107,7 +107,7 @@ public class BoatInteractor {
     public void addNote() {
         NotesDTO notesDTO = new NotesDTO(boatModel.getBoatListDTO().getBoatId(),"B");
         try {
-            noteRepo.insertBoatNote(notesDTO);
+            noteRepo.insertNote(notesDTO);
         } catch (Exception e) {
             logger.error(e.getMessage());
         }
