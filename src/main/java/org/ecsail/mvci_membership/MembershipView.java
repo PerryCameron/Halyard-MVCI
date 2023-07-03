@@ -14,13 +14,14 @@ import javafx.util.Builder;
 import org.ecsail.widgetfx.*;
 
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public class MembershipView implements Builder<Region> {
 
     private final MembershipModel membershipModel;
-    private final BiConsumer<MembershipMessage, Object> personEdit;
+    private final Consumer<MembershipMessage> personEdit;
 
-    protected MembershipView(MembershipModel mm, BiConsumer<MembershipMessage, Object> pe) {
+    protected MembershipView(MembershipModel mm, Consumer<MembershipMessage> pe) {
         membershipModel = mm;
         this.personEdit = pe;
     }
@@ -113,7 +114,7 @@ public class MembershipView implements Builder<Region> {
         return membershipModel;
     }
 
-    protected BiConsumer<MembershipMessage, Object> sendMessage() {
+    protected Consumer<MembershipMessage> sendMessage() {
         return personEdit;
     }
 }

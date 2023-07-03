@@ -1,9 +1,7 @@
 package org.ecsail.mvci_membership;
 
 public enum MembershipMessage {
-    INSERT,
-    DELETE,
-    UPDATE,
+    UPDATE_MEMBERSHIP_LIST,
     NONE,
     CHANGE_MEMBER_TYPE,
     REMOVE_MEMBER_FROM_MEMBERSHIP,

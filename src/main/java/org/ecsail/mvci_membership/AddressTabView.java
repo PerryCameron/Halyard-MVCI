@@ -76,9 +76,8 @@ public class AddressTabView implements Builder<Tab> {
         textField.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             //focus out
             if (oldValue) {  // we have focused and unfocused
-                MembershipListDTO membershipListDTO = membershipView.getMembershipModel().getMembership();
-                membershipListDTO.setAddress(textField.getText());
-                membershipView.sendMessage().accept(MembershipMessage.UPDATE, membershipListDTO);
+                membershipView.getMembershipModel().getMembership().setAddress(textField.getText());
+                membershipView.sendMessage().accept(MembershipMessage.UPDATE_MEMBERSHIP_LIST);
             }
         });
     }
@@ -88,9 +87,8 @@ public class AddressTabView implements Builder<Tab> {
         textField.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             //focus out
             if (oldValue) {  // we have focused and unfocused
-                MembershipListDTO membershipListDTO = membershipView.getMembershipModel().getMembership();
-                membershipListDTO.setZip(textField.getText());
-                membershipView.sendMessage().accept(MembershipMessage.UPDATE, membershipListDTO);
+                membershipView.getMembershipModel().getMembership().setZip(textField.getText());
+                membershipView.sendMessage().accept(MembershipMessage.UPDATE_MEMBERSHIP_LIST);
             }
         });
     }
@@ -100,9 +98,8 @@ public class AddressTabView implements Builder<Tab> {
         textField.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             //focus out
             if (oldValue) {  // we have focused and unfocused
-                MembershipListDTO membershipListDTO = membershipView.getMembershipModel().getMembership();
-                membershipListDTO.setCity(textField.getText());
-                membershipView.sendMessage().accept(MembershipMessage.UPDATE, membershipListDTO);
+                membershipView.getMembershipModel().getMembership().setCity(textField.getText());
+                membershipView.sendMessage().accept(MembershipMessage.UPDATE_MEMBERSHIP_LIST);
             }
         });
     }
@@ -111,9 +108,8 @@ public class AddressTabView implements Builder<Tab> {
         comboBox.setPrefWidth(80);
         comboBox.setValue(membershipView.getMembershipModel().getMembership().getState());
         comboBox.getSelectionModel().selectedItemProperty().addListener( (options, oldValue, newValue) -> {
-            MembershipListDTO membershipListDTO = membershipView.getMembershipModel().getMembership();
-            membershipListDTO.setState(newValue.toString());
-            membershipView.sendMessage().accept(MembershipMessage.UPDATE, membershipListDTO);
+            membershipView.getMembershipModel().getMembership().setState(newValue.toString());
+            membershipView.sendMessage().accept(MembershipMessage.UPDATE_MEMBERSHIP_LIST);
         });
     }
 
