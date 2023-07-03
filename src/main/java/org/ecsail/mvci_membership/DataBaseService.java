@@ -13,6 +13,9 @@ import org.springframework.dao.DataAccessException;
 
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 public class DataBaseService {
     private final MembershipModel membershipModel;
@@ -26,6 +29,7 @@ public class DataBaseService {
     private static final Logger logger = LoggerFactory.getLogger(DataBaseService.class);
     private final SlipRepository slipRepo;
     private final NotesRepository notesRepo;
+    private final MembershipRepository membershipRepo;
 
 
     public DataBaseService(DataSource dataSource, MembershipModel membershipModel) {
@@ -39,6 +43,7 @@ public class DataBaseService {
         boatRepo = new BoatRepositoryImpl(dataSource);
         slipRepo = new SlipRepositoryImpl(dataSource);
         notesRepo = new NotesRepositoryImpl(dataSource);
+        membershipRepo = new MembershipRepositoryImpl(dataSource);
     }
 
     public void getPersonLists(MembershipListDTO ml) { // not on FX thread because lists added before UI is launched
@@ -142,70 +147,6 @@ public class DataBaseService {
         membershipModel.setMembershipId(String.valueOf(membershipIdRepo.getCurrentId(membershipModel.getSlip().getSubleased_to()).getMembership_id()));
     }
 
-    public void receiveMessage(MembershipMessage messages, Object o) {
-        switch (messages) {
-            case DELETE -> delete(o);
-            case UPDATE -> update(o);
-            case INSERT -> insert(o);
-            case NONE -> none(o);
-            case CHANGE_MEMBER_TYPE -> changeMemberType(o);
-            case REMOVE_MEMBER_FROM_MEMBERSHIP -> removeFromMembership(o);
-            case DELETE_MEMBER_FROM_DATABASE -> removeFromDatabase(o);
-            case RELEASE_SUBLEASE -> releaseSublease(o);
-            case REASSIGN_SLIP -> reassignSlip(o);
-            case SUBLEASE_SLIP -> subleaseSlip(o);
-            case SET_WAIT_LIST -> setWaitList(o);
-        }
-    }
-
-    private void removeFromDatabase(Object o) {
-        System.out.println("Remove from Database " + o);
-    }
-
-    private void removeFromMembership(Object o) {
-        System.out.println("Remove from membership " + o);
-    }
-
-    private void changeMemberType(Object o) {
-        System.out.println("changeMemberType " + o);
-    }
-
-    private void none(Object o) {
-        System.out.println("none " + o);
-    }
-
-    private void setWaitList(Object o) {
-        System.out.println("Add to wait-list " + o);
-    }
-
-    private void subleaseSlip(Object o) {
-        System.out.println("Sublease Slip " + o);
-    }
-
-    private void reassignSlip(Object o) {
-        System.out.println("reassign Slip " + o);
-    }
-
-    private void releaseSublease(Object o) {
-        System.out.println("release Sublease " + o);
-    }
-
-
-    private void delete(Object o) {
-        int rowsUpdated = 0;
-        try {
-            if (o instanceof AwardDTO) rowsUpdated = awardRepo.delete((AwardDTO) o);
-            if (o instanceof EmailDTO) rowsUpdated = emailRepo.delete((EmailDTO) o);
-            if (o instanceof PhoneDTO) rowsUpdated = phoneRepo.delete((PhoneDTO) o);
-            if (o instanceof OfficerDTO) rowsUpdated = officerRepo.delete((OfficerDTO) o);
-            if (o instanceof BoatDTO) rowsUpdated = boatRepo.delete((BoatDTO) o);
-        } catch (DataAccessException e) {
-            logger.error(e.getMessage());
-            savedToIndicator(false);
-        }
-        savedToIndicator(rowsUpdated == 1);
-    }
-
     public void insert(Object o) {
         int rowsUpdated = 0;
         try {
@@ -227,22 +168,7 @@ public class DataBaseService {
         savedToIndicator(rowsUpdated == 1);
     }
 
-    private void update(Object o) {
-        int rowsUpdated = 0;
-        try {
-            if (o instanceof PersonDTO) rowsUpdated = peopleRepo.update((PersonDTO) o);
-            if (o instanceof PhoneDTO) rowsUpdated = phoneRepo.update((PhoneDTO) o);
-            if (o instanceof EmailDTO) rowsUpdated = emailRepo.update((EmailDTO) o);
-            if (o instanceof AwardDTO) rowsUpdated = awardRepo.update((AwardDTO) o);
-            if (o instanceof OfficerDTO) rowsUpdated = officerRepo.update((OfficerDTO) o);
-            if (o instanceof BoatDTO) rowsUpdated = boatRepo.update((BoatDTO) o);
-            if (o instanceof MembershipIdDTO) rowsUpdated = membershipIdRepo.update((MembershipIdDTO) o);
-        } catch (DataAccessException e) {
-            logger.error(e.getMessage());
-            savedToIndicator(false);
-        }
-        savedToIndicator(rowsUpdated == 1);
-    }
+
 
     protected void savedToIndicator(boolean returnOk) { // updates status lights
         if(returnOk) membershipModel.getMainModel().getLightAnimationMap().get("receiveSuccess").playFromStart();
@@ -252,5 +178,62 @@ public class DataBaseService {
     protected void retrievedFromIndicator(boolean returnOk) { // updates status lights
         if(returnOk) membershipModel.getMainModel().getLightAnimationMap().get("transmitSuccess").playFromStart();
         else membershipModel.getMainModel().getLightAnimationMap().get("transmitError").playFromStart();
+    }
+
+    public void executeQuery(Supplier<Integer> operation) {
+        try {
+            int rowsUpdated = operation.get();
+            savedToIndicator(rowsUpdated == 1);
+        } catch (DataAccessException dae) {
+            dae.printStackTrace();
+            savedToIndicator(false);
+            logger.error("DataAccessException: " + dae.getMessage());
+        } catch (NullPointerException npe) {
+            npe.printStackTrace();
+            savedToIndicator(false);
+            logger.error("NullPointerException: " + npe.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            savedToIndicator(false);
+            logger.error("Exception: " + e.getMessage());
+        }
+    }
+
+    protected void updateMembershipList() {
+        executeQuery(() -> membershipRepo.update(membershipModel.getMembership()));
+    }
+
+    protected void updateAward() {
+        executeQuery(() -> awardRepo.update(membershipModel.getSelectedAward()));
+    }
+
+    protected void updateBoat() {
+        executeQuery(() -> boatRepo.update(membershipModel.getSelectedBoat()));
+    }
+
+    protected void insertBoat() {
+        executeQuery(() -> boatRepo.insert(membershipModel.getSelectedBoat()));
+    }
+
+    protected void deleteBoat() {
+        executeQuery(() -> boatRepo.delete(membershipModel.getSelectedBoat()));
+    }
+
+    protected void updateEmail() {
+        executeQuery(() -> emailRepo.update(membershipModel.getSelectedEmail()));
+    }
+
+    protected void updateMembershipId() {
+        executeQuery(() -> membershipIdRepo.update(membershipModel.getSelectedMembershipId()));
+    }
+
+    protected void updateNote() {
+        executeQuery(() -> notesRepo.update(membershipModel.getSelectedNote()));
+    }
+
+    protected void changeMemberType() {
+    }
+
+    protected void removeMemberFromMembership() {
     }
 }

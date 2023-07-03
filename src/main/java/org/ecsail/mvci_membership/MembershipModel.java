@@ -24,7 +24,6 @@ public class MembershipModel {
     private ObservableMap<PersonDTO, Tab> selectedPropertiesTab = FXCollections.observableHashMap();
     private ObservableMap<PersonDTO, TextField> personTextField = FXCollections.observableHashMap();
     private ObservableList<PersonDTO> people = FXCollections.observableArrayList();
-    private final SimpleObjectProperty<PersonDTO> selectedPerson = new SimpleObjectProperty<>();
     // general membership information
     private final SimpleObjectProperty<MembershipListDTO> membership = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<SlipDTO> slip = new SimpleObjectProperty<>();
@@ -43,7 +42,99 @@ public class MembershipModel {
     private final MainModel mainModel;
     private ObservableMap<String,Control> slipControls = FXCollections.observableHashMap();
     protected SimpleObjectProperty<NotesDTO> selectedNote = new SimpleObjectProperty<>();
+    protected SimpleObjectProperty<AwardDTO> selectedAward = new SimpleObjectProperty<>();
+    protected SimpleObjectProperty<BoatDTO> selectedBoat = new SimpleObjectProperty<>();
+    protected SimpleObjectProperty<EmailDTO> selectedEmail = new SimpleObjectProperty<>();
+    protected SimpleObjectProperty<MembershipIdDTO> selectedMembershipId = new SimpleObjectProperty<>();
+    protected SimpleObjectProperty<OfficerDTO> selectedOfficer = new SimpleObjectProperty<>();
+    protected SimpleObjectProperty<PersonDTO> selectedPerson = new SimpleObjectProperty<>();
+    protected SimpleObjectProperty<PhoneDTO> selectedPhone = new SimpleObjectProperty<>();
+    protected StringProperty selectedString = new SimpleStringProperty("");
 
+
+    public String getSelectedString() {
+        return selectedString.get();
+    }
+
+    public StringProperty selectedStringProperty() {
+        return selectedString;
+    }
+
+    public void setSelectedString(String selectedString) {
+        this.selectedString.set(selectedString);
+    }
+
+    public PhoneDTO getSelectedPhone() {
+        return selectedPhone.get();
+    }
+
+    public SimpleObjectProperty<PhoneDTO> selectedPhoneProperty() {
+        return selectedPhone;
+    }
+
+    public void setSelectedPhone(PhoneDTO selectedPhone) {
+        this.selectedPhone.set(selectedPhone);
+    }
+
+    public OfficerDTO getSelectedOfficer() {
+        return selectedOfficer.get();
+    }
+
+    public SimpleObjectProperty<OfficerDTO> selectedOfficerProperty() {
+        return selectedOfficer;
+    }
+
+    public void setSelectedOfficer(OfficerDTO selectedOfficer) {
+        this.selectedOfficer.set(selectedOfficer);
+    }
+
+    public MembershipIdDTO getSelectedMembershipId() {
+        return selectedMembershipId.get();
+    }
+
+    public SimpleObjectProperty<MembershipIdDTO> selectedMembershipIdProperty() {
+        return selectedMembershipId;
+    }
+
+    public void setSelectedMembershipId(MembershipIdDTO selectedMembershipId) {
+        this.selectedMembershipId.set(selectedMembershipId);
+    }
+
+    public EmailDTO getSelectedEmail() {
+        return selectedEmail.get();
+    }
+
+    public SimpleObjectProperty<EmailDTO> selectedEmailProperty() {
+        return selectedEmail;
+    }
+
+    public void setSelectedEmail(EmailDTO selectedEmail) {
+        this.selectedEmail.set(selectedEmail);
+    }
+
+    public BoatDTO getSelectedBoat() {
+        return selectedBoat.get();
+    }
+
+    public SimpleObjectProperty<BoatDTO> selectedBoatProperty() {
+        return selectedBoat;
+    }
+
+    public void setSelectedBoat(BoatDTO selectedBoat) {
+        this.selectedBoat.set(selectedBoat);
+    }
+
+    public AwardDTO getSelectedAward() {
+        return selectedAward.get();
+    }
+
+    public SimpleObjectProperty<AwardDTO> selectedAwardProperty() {
+        return selectedAward;
+    }
+
+    public void setSelectedAward(AwardDTO selectedAward) {
+        this.selectedAward.set(selectedAward);
+    }
 
     public NotesDTO getSelectedNote() {
         return selectedNote.get();

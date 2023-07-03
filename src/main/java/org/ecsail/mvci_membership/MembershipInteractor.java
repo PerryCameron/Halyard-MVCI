@@ -22,9 +22,7 @@ public class MembershipInteractor implements SlipUser {
         });
     }
 
-    public void receiveMessage(MembershipMessage messages, Object o) {
-        dataBaseService.receiveMessage(messages,o);
-    }
+
 
     public DataBaseService getDataBaseService() {
         return dataBaseService;

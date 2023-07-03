@@ -5,15 +5,20 @@ import org.ecsail.repository.interfaces.MembershipRepository;
 import org.ecsail.repository.rowmappers.MembershipListRowMapper;
 import org.ecsail.repository.rowmappers.MembershipListRowMapper1;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 
 import javax.sql.DataSource;
 import java.util.List;
 
 public class MembershipRepositoryImpl implements MembershipRepository {
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private JdbcTemplate template;
 
     public MembershipRepositoryImpl(DataSource dataSource) {
         this.template = new JdbcTemplate(dataSource);
+        this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
     }
 
     @Override
@@ -138,5 +143,20 @@ public class MembershipRepositoryImpl implements MembershipRepository {
         List<MembershipListDTO> membershipListDTOS
                 = template.query(query, new MembershipListRowMapper1(), boatId);
         return membershipListDTOS;
+    }
+
+    @Override
+    public int update(MembershipListDTO membershipListDTO) {
+        String query = "UPDATE membership SET " +
+                "MS_ID = :msId, " +
+                "P_ID = :pID, " +
+                "JOIN_DATE = :joinDate, " +
+                "MEM_TYPE = :memType, " +
+                "ADDRESS = :address, " +
+                "CITY = :city, " +
+                "STATE = :state, " +
+                "ZIP = :zip";
+        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(membershipListDTO);
+        return namedParameterJdbcTemplate.update(query, namedParameters);
     }
 }

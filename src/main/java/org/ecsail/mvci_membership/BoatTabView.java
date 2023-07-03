@@ -16,10 +16,12 @@ import java.util.Comparator;
 
 public class BoatTabView implements Builder<Tab> {
     private final MembershipView membershipView;
+    private final MembershipModel membershipModel;
     private TableColumn<BoatDTO, String> column1;
 
     public BoatTabView(MembershipView membershipView) {
         this.membershipView = membershipView;
+        this.membershipModel = membershipView.getMembershipModel();
     }
 
     @Override
@@ -53,7 +55,8 @@ public class BoatTabView implements Builder<Tab> {
             int selectedIndex = membershipView.getMembershipModel().getBoatTableView().getSelectionModel().getSelectedIndex();
             if (selectedIndex >= 0) { // TODO add error checking and prompt
                 BoatDTO boatDTO = membershipView.getMembershipModel().getMembership().getBoatDTOS().get(selectedIndex);
-                membershipView.sendMessage().accept(MembershipMessage.DELETE, boatDTO);
+                membershipModel.setSelectedBoat(boatDTO);
+                membershipView.sendMessage().accept(MembershipMessage.DELETE_BOAT);
                 // can't I remove it from the list iteslf?
                 membershipView.getMembershipModel().getBoatTableView().getItems().remove(boatDTO);
             }
@@ -70,7 +73,8 @@ public class BoatTabView implements Builder<Tab> {
             membershipView.getMembershipModel().getMembership().getBoatDTOS().sort(Comparator.comparing(BoatDTO::getBoatId));
             membershipView.getMembershipModel().getBoatTableView().layout();
             membershipView.getMembershipModel().getBoatTableView().edit(0, column1);
-            membershipView.sendMessage().accept(MembershipMessage.INSERT, boatDTO);
+            membershipModel.setSelectedBoat(boatDTO);
+            membershipView.sendMessage().accept(MembershipMessage.INSERT_BOAT);
         });
         return button;
     }
@@ -160,7 +164,8 @@ public class BoatTabView implements Builder<Tab> {
             case "setDraft" -> boatDTO.setDraft(t.getNewValue());
             case "setDisplacement" -> boatDTO.setDisplacement(t.getNewValue());
         }
-        membershipView.sendMessage().accept(MembershipMessage.UPDATE, boatDTO);
+        membershipModel.setSelectedBoat(boatDTO);
+        membershipView.sendMessage().accept(MembershipMessage.UPDATE_BOAT);
     }
 
 

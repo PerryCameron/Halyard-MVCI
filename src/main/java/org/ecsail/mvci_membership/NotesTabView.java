@@ -70,7 +70,8 @@ public class NotesTabView implements Builder<Tab> {
         col3.setOnEditCommit(t -> {
                     NotesDTO notesDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                     notesDTO.setMemo(t.getNewValue());
-                    membershipView.sendMessage().accept(MembershipMessage.UPDATE,notesDTO);
+                    membershipModel.setSelectedNote(notesDTO);
+                    membershipView.sendMessage().accept(MembershipMessage.UPDATE_NOTE);
         });
         col3.setMaxWidth( 1f * Integer.MAX_VALUE * 85 );   // Note
         return col3;
@@ -88,7 +89,7 @@ private TableColumn<NotesDTO, LocalDate> col1() {
     col1.setCellValueFactory(cellData -> cellData.getValue().memoDateProperty());
     col1.setCellFactory(CallBackFX.createDatePickerCellFactory(notesDTO -> {
             membershipModel.setSelectedNote(notesDTO);
-            membershipView.sendMessage().accept(MembershipMessage.UPDATE,notesDTO);
+            membershipView.sendMessage().accept(MembershipMessage.UPDATE_NOTE);
     }));
     col1.setMaxWidth(1f * Integer.MAX_VALUE * 15);   // Date
     return col1;

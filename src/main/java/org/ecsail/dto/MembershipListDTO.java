@@ -11,7 +11,7 @@ public class MembershipListDTO {
 	private IntegerProperty msId; /// unique auto key for Membership
 	private IntegerProperty pId;  /// pid of Main Member
 	private IntegerProperty membershipId;
-	private StringProperty joinDate;
+	private StringProperty joinDate; // TODO change this to objectProperty<LocalDate>
 	private StringProperty memType;  // Type of Membership (Family, Regular, Lake Associate(race fellow), Social
 	private StringProperty address;
 	private StringProperty city;

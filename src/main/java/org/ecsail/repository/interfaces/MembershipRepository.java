@@ -14,4 +14,5 @@ public interface MembershipRepository {
     List<MembershipListDTO> getReturnMemberRoster(Integer selectedYear);
     List<MembershipListDTO> getSlipWaitList(Integer selectedYear);
     List<MembershipListDTO> getMembershipByBoatId(Integer boatId);
+    int update(MembershipListDTO membershipListDTO);
 }

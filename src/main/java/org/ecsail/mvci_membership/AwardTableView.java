@@ -17,10 +17,12 @@ import org.ecsail.widgetfx.TableViewFx;
 public class AwardTableView implements Builder<TableView<AwardDTO>> {
     private final PersonDTO person;
     private final MembershipView membershipView;
+    private final MembershipModel membershipModel;
 
     public AwardTableView(PersonDTO personDTO, MembershipView membershipView) {
         this.person = personDTO;
         this.membershipView = membershipView;
+        this.membershipModel = membershipView.getMembershipModel();
     }
 
     @Override
@@ -38,8 +40,9 @@ public class AwardTableView implements Builder<TableView<AwardDTO>> {
                 t -> {
                     AwardDTO awardDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                     awardDTO.setAwardYear(t.getNewValue());
+                    membershipModel.setSelectedAward(awardDTO);
                     membershipView.sendMessage()
-                            .accept(MembershipMessage.UPDATE, awardDTO);
+                            .accept(MembershipMessage.UPDATE_AWARD);
                 }
         );
         col1.setMaxWidth(1f * Integer.MAX_VALUE * 20);   // Phone
@@ -63,8 +66,10 @@ public class AwardTableView implements Builder<TableView<AwardDTO>> {
             AwardDTO awardDTO = event.getTableView().getItems().get(pos.getRow());
             // update the GUI (do this first so UI seems snappy)
             awardDTO.setAwardType(event.getNewValue().getCode());
+            // place awardDTO as selected in model
+            membershipModel.setSelectedAward(awardDTO);
             // update the SQL
-            membershipView.sendMessage().accept(MembershipMessage.UPDATE, awardDTO);
+            membershipView.sendMessage().accept(MembershipMessage.UPDATE_AWARD);
         });
         col2.setMaxWidth(1f * Integer.MAX_VALUE * 50);  // Type
         return col2;

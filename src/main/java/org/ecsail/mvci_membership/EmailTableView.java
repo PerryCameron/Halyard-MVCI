@@ -23,10 +23,12 @@ public class EmailTableView implements Builder<TableView<EmailDTO>> {
 
     private final PersonDTO person;
     private final MembershipView membershipView;
+    private final MembershipModel membershipModel;
 
     public EmailTableView(PersonDTO personDTO, MembershipView membershipView) {
         this.person = personDTO;
         this.membershipView = membershipView;
+        this.membershipModel = membershipView.getMembershipModel();
     }
 
     @Override
@@ -45,7 +47,8 @@ public class EmailTableView implements Builder<TableView<EmailDTO>> {
             if(StringTools.isValidEmail(t.getNewValue())) {
                 EmailDTO emailDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                 emailDTO.setEmail(t.getNewValue());
-                membershipView.sendMessage().accept(MembershipMessage.UPDATE,emailDTO);
+                membershipModel.setSelectedEmail(emailDTO);
+                membershipView.sendMessage().accept(MembershipMessage.UPDATE_EMAIL);
             } else {
                 person.getEmail().stream()
                         .filter(q -> q.getEmail_id() == email_id)
@@ -63,6 +66,8 @@ public class EmailTableView implements Builder<TableView<EmailDTO>> {
         ObjectProperty<EmailDTO> previousEmailDTO = new SimpleObjectProperty<>();
         previousEmailDTO.set(person.getEmail().stream().filter(EmailDTO::getIsPrimaryUse).findFirst().orElse(null));
         // TODO make this fucking thing work
+        membershipModel.setSelectedEmail(previousEmailDTO.get()); // this may be wrong
+        membershipView.sendMessage().accept(MembershipMessage.EMAIL_IS_PRIMARY_USE);
         col2.setCellFactory(c -> new RadioButtonCell(previousEmailDTO));
         col2.setMaxWidth(1f * Integer.MAX_VALUE * 25);  // Type
         return col2;
@@ -75,7 +80,8 @@ public class EmailTableView implements Builder<TableView<EmailDTO>> {
             SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(emailDTO.getIsListed());
             booleanProp.addListener((observable, oldValue, newValue) -> {
                 emailDTO.setListed(newValue);
-                membershipView.sendMessage().accept(MembershipMessage.UPDATE,emailDTO);
+                membershipModel.setSelectedEmail(emailDTO);
+                membershipView.sendMessage().accept(MembershipMessage.UPDATE_EMAIL);
             });
             return booleanProp;
         });

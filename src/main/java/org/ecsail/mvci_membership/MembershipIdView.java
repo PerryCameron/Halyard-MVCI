@@ -25,9 +25,11 @@ import java.util.Comparator;
 
 public class MembershipIdView implements Builder<Tab> {
     private final MembershipView membershipView;
+    private final MembershipModel membershipModel;
 
     public MembershipIdView(MembershipView membershipView) {
         this.membershipView = membershipView;
+        this.membershipModel = membershipView.getMembershipModel();
     }
 
     @Override
@@ -56,9 +58,9 @@ public class MembershipIdView implements Builder<Tab> {
             if (!isFocused){
                 datePicker.updateValue();
                 LocalDate date = datePicker.getValue();
-                membershipView.getMembershipModel().getMembership().setJoinDate(date.toString());
+                membershipModel.getMembership().setJoinDate(date.toString());
                 membershipView.sendMessage()
-                        .accept(MembershipMessage.UPDATE, membershipView.getMembershipModel().getMembership());
+                        .accept(MembershipMessage.UPDATE_MEMBERSHIP_LIST);
                 membershipView.getMembershipModel().getMembership().setJoinDate(date.toString());
             }
         });
@@ -91,7 +93,7 @@ public class MembershipIdView implements Builder<Tab> {
     private LocalDate getDate() {
         LocalDate date;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        if (membershipView.getMembershipModel().getMembership().getJoinDate() != null)
+        if (membershipModel.getMembership().getJoinDate() != null)
             date = LocalDate.parse(membershipView.getMembershipModel().getMembership().getJoinDate(), formatter);
         else date = LocalDate.parse("1900-01-01", formatter);
         return date;
@@ -99,7 +101,7 @@ public class MembershipIdView implements Builder<Tab> {
 
     private Node addTable() {
         TableView tableView = TableViewFx.tableViewOf(MembershipIdDTO.class);
-        membershipView.getMembershipModel().getMembership().getMembershipIdDTOS()
+        membershipModel.getMembership().getMembershipIdDTOS()
                 .sort(Comparator.comparing(MembershipIdDTO::getFiscal_Year).reversed());
         tableView.setItems(membershipView.getMembershipModel().getMembership().getMembershipIdDTOS());
         tableView.getColumns().addAll(col1(),col2(),col3(),col4(),col5());
@@ -110,11 +112,12 @@ public class MembershipIdView implements Builder<Tab> {
         TableColumn<MembershipIdDTO, Boolean> col5 = new TableColumn<>("Renew Late");
         col5.setCellValueFactory(
                 param -> {
-                    MembershipIdDTO id = param.getValue();
-                    SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(id.getIsLateRenew());
+                    MembershipIdDTO membershipIdDTO = param.getValue();
+                    SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(membershipIdDTO.getIsLateRenew());
                     booleanProp.addListener((observable, oldValue, newValue) -> {
-                        id.setIsLateRenew(newValue);
-                            membershipView.sendMessage().accept(MembershipMessage.UPDATE, id);
+                        membershipIdDTO.setIsLateRenew(newValue);
+                        membershipModel.setSelectedMembershipId(membershipIdDTO);
+                        membershipView.sendMessage().accept(MembershipMessage.UPDATE_MEMBERSHIP_ID);
                     });
                     return booleanProp;
                 });
@@ -131,11 +134,12 @@ public class MembershipIdView implements Builder<Tab> {
         TableColumn<MembershipIdDTO, Boolean> col4 = new TableColumn<>("Renewed");
         col4.setCellValueFactory(
                 param -> {
-                    MembershipIdDTO id = param.getValue();
-                    SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(id.getIsRenew());
+                    MembershipIdDTO membershipIdDTO = param.getValue();
+                    SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(membershipIdDTO.getIsRenew());
                     booleanProp.addListener((observable, oldValue, newValue) -> {
-                        id.setIsRenew(newValue);
-                        membershipView.sendMessage().accept(MembershipMessage.UPDATE, id);
+                        membershipIdDTO.setIsRenew(newValue);
+                        membershipModel.setSelectedMembershipId(membershipIdDTO);
+                        membershipView.sendMessage().accept(MembershipMessage.UPDATE_MEMBERSHIP_ID);
                     });
                     return booleanProp;
                 });
@@ -164,9 +168,10 @@ public class MembershipIdView implements Builder<Tab> {
             TablePosition<MembershipIdDTO, MembershipType> pos = event.getTablePosition();
             MembershipType newMembershipType = event.getNewValue();
             int row = pos.getRow();
-            MembershipIdDTO id = event.getTableView().getItems().get(row);
-            id.setMem_type(newMembershipType.getCode());
-            membershipView.sendMessage().accept(MembershipMessage.UPDATE, id);
+            MembershipIdDTO membershipIdDTO = event.getTableView().getItems().get(row);
+            membershipIdDTO.setMem_type(newMembershipType.getCode());
+            membershipModel.setSelectedMembershipId(membershipIdDTO);
+            membershipView.sendMessage().accept(MembershipMessage.UPDATE_MEMBERSHIP_ID);
         });
         col3.setMaxWidth(1f * Integer.MAX_VALUE * 25);   // Mem Type
         return col3;
@@ -175,10 +180,10 @@ public class MembershipIdView implements Builder<Tab> {
     private TableColumn<MembershipIdDTO,String> col2() {
         TableColumn<MembershipIdDTO, String> col2 = TableColumnFx.tableColumnOf(MembershipIdDTO::membership_idProperty, "Mem ID");
         col2.setOnEditCommit(t -> {
-            MembershipIdDTO id = t.getTableView().getItems().get(t.getTablePosition().getRow());
-            id.setMembership_id(t.getNewValue());
-            membershipView.sendMessage().accept(MembershipMessage.UPDATE, id);
-        });
+            MembershipIdDTO membershipIdDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
+            membershipIdDTO.setMembership_id(t.getNewValue());
+            membershipModel.setSelectedMembershipId(membershipIdDTO);
+            membershipView.sendMessage().accept(MembershipMessage.UPDATE_MEMBERSHIP_ID);          });
         col2.setMaxWidth(1f * Integer.MAX_VALUE * 15);  // Mem Id
         return col2;
     }
@@ -186,10 +191,10 @@ public class MembershipIdView implements Builder<Tab> {
     private TableColumn<MembershipIdDTO,String> col1() {
         TableColumn<MembershipIdDTO, String> col1 = TableColumnFx.tableColumnOf(MembershipIdDTO::fiscal_YearProperty,"Year");
         col1.setOnEditCommit(t -> {
-            MembershipIdDTO id = t.getTableView().getItems().get(t.getTablePosition().getRow());
-            id.setFiscal_Year(t.getNewValue());
-            membershipView.sendMessage().accept(MembershipMessage.UPDATE, id);
-        });
+            MembershipIdDTO membershipIdDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
+            membershipIdDTO.setFiscal_Year(t.getNewValue());
+            membershipModel.setSelectedMembershipId(membershipIdDTO);
+            membershipView.sendMessage().accept(MembershipMessage.UPDATE_MEMBERSHIP_ID);          });
         col1.setMaxWidth(1f * Integer.MAX_VALUE * 25);   // Year
         return col1;
     }

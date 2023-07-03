@@ -13,17 +13,16 @@ import javafx.scene.text.Text;
 import javafx.util.Builder;
 import org.ecsail.widgetfx.*;
 
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class MembershipView implements Builder<Region> {
 
     private final MembershipModel membershipModel;
-    private final Consumer<MembershipMessage> personEdit;
+    private final Consumer<MembershipMessage> action;
 
-    protected MembershipView(MembershipModel mm, Consumer<MembershipMessage> pe) {
+    protected MembershipView(MembershipModel mm, Consumer<MembershipMessage> a) {
         membershipModel = mm;
-        this.personEdit = pe;
+        this.action = a;
     }
 
     @Override
@@ -115,6 +114,6 @@ public class MembershipView implements Builder<Region> {
     }
 
     protected Consumer<MembershipMessage> sendMessage() {
-        return personEdit;
+        return action;
     }
 }

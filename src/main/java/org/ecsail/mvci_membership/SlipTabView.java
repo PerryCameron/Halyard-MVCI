@@ -59,8 +59,14 @@ public class SlipTabView implements Builder<Tab>, SlipUser {
         CheckBox checkBox = new CheckBox("Slip Wait list");
         membershipModel.getSlipControls().put("waitList", checkBox);
         checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue) membershipView.sendMessage().accept(MembershipMessage.SET_WAIT_LIST, "yes");
-            else membershipView.sendMessage().accept(MembershipMessage.SET_WAIT_LIST, "no");
+            if(newValue) {
+                membershipModel.setSelectedString("yes");
+                membershipView.sendMessage().accept(MembershipMessage.SET_WAIT_LIST);
+            }
+            else {
+                membershipModel.setSelectedString("no");
+                membershipView.sendMessage().accept(MembershipMessage.SET_WAIT_LIST);
+            }
         });
         hBox.getChildren().add(checkBox);
         return hBox;
@@ -82,16 +88,18 @@ public class SlipTabView implements Builder<Tab>, SlipUser {
         switch (membershipModel.getSlipRelationStatus()) {
             case subLeaser, ownAndSublease -> {
                 RadioButton rb = (RadioButton) membershipModel.getSlipControls().get("Release Sublease");
-                if(rb.isSelected()) membershipView.sendMessage().accept(MembershipMessage.RELEASE_SUBLEASE, null);
+                if(rb.isSelected()) membershipView.sendMessage().accept(MembershipMessage.RELEASE_SUBLEASE);
             }
             case owner -> {
                 RadioButton rb1 = (RadioButton) membershipModel.getSlipControls().get("Sublease Slip");
                 RadioButton rb2 = (RadioButton) membershipModel.getSlipControls().get("Reassign Slip");
                 if(rb1.isSelected()) {
-                    membershipView.sendMessage().accept(MembershipMessage.SUBLEASE_SLIP, textField.getText());
+                    membershipModel.setSelectedString(textField.getText());
+                    membershipView.sendMessage().accept(MembershipMessage.SUBLEASE_SLIP);
                 }
                 if(rb2.isSelected()) {
-                    membershipView.sendMessage().accept(MembershipMessage.REASSIGN_SLIP, textField.getText());
+                    membershipModel.setSelectedString(textField.getText());
+                    membershipView.sendMessage().accept(MembershipMessage.REASSIGN_SLIP);
                 }
             }
         }

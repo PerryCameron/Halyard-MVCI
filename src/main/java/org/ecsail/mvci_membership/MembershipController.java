@@ -20,11 +20,23 @@ public class MembershipController extends Controller {
         membershipView = new MembershipView(membershipModel, this::editRow);
     }
 
-    private void editRow(MembershipMessage type, Object o) {
+    private void editRow(MembershipMessage type) {
         Task<Void> task = new Task<>() {
             @Override
             protected Void call() {
-                membershipInteractor.receiveMessage(type, o);
+                switch (type) {
+                    case UPDATE_MEMBERSHIP_LIST -> membershipInteractor.getDataBaseService().updateMembershipList();
+                    case UPDATE_MEMBERSHIP_ID -> membershipInteractor.getDataBaseService().updateMembershipId();
+                    case UPDATE_AWARD -> membershipInteractor.getDataBaseService().updateAward();
+                    case UPDATE_EMAIL -> membershipInteractor.getDataBaseService().updateEmail();
+                    case UPDATE_BOAT -> membershipInteractor.getDataBaseService().updateBoat();
+                    case UPDATE_NOTE -> membershipInteractor.getDataBaseService().updateNote();
+                    case INSERT_BOAT -> membershipInteractor.getDataBaseService().insertBoat();
+                    case DELETE_BOAT -> membershipInteractor.getDataBaseService().deleteBoat();
+                    case CHANGE_MEMBER_TYPE -> membershipInteractor.getDataBaseService().changeMemberType();
+                    case REMOVE_MEMBER_FROM_MEMBERSHIP -> membershipInteractor.getDataBaseService().removeMemberFromMembership();
+
+                }
                 return null;
             }
         };
