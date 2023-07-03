@@ -31,11 +31,29 @@ public class MembershipController extends Controller {
                     case UPDATE_EMAIL -> membershipInteractor.getDataBaseService().updateEmail();
                     case UPDATE_BOAT -> membershipInteractor.getDataBaseService().updateBoat();
                     case UPDATE_NOTE -> membershipInteractor.getDataBaseService().updateNote();
+                    case UPDATE_PHONE -> membershipInteractor.getDataBaseService().updatePhone();
+                    case UPDATE_OFFICER -> membershipInteractor.getDataBaseService().updateOfficer();
+                    case UPDATE_PERSON -> membershipInteractor.getDataBaseService().updatePerson();
                     case INSERT_BOAT -> membershipInteractor.getDataBaseService().insertBoat();
+                    case INSERT_AWARD -> membershipInteractor.getDataBaseService().insertAward();
+                    case INSERT_EMAIL -> membershipInteractor.getDataBaseService().insertEmail();
+                    case INSERT_MEMBERSHIP_ID -> membershipInteractor.getDataBaseService().insertMembershipId();
+                    case INSERT_NOTE -> membershipInteractor.getDataBaseService().insertNote();
+                    case INSERT_OFFICER -> membershipInteractor.getDataBaseService().insertOfficer();
+                    case INSERT_PERSON -> membershipInteractor.getDataBaseService().insertPerson();
+                    case INSERT_PHONE -> membershipInteractor.getDataBaseService().insertPhone();
                     case DELETE_BOAT -> membershipInteractor.getDataBaseService().deleteBoat();
+                    case DELETE_AWARD -> membershipInteractor.getDataBaseService().deleteAward();
+                    case DELETE_EMAIL -> membershipInteractor.getDataBaseService().deleteEmail();
+                    case DELETE_MEMBERSHIP_ID -> membershipInteractor.getDataBaseService().deleteMembershipId();
+                    case DELETE_NOTE -> membershipInteractor.getDataBaseService().deleteNote();
+                    case DELETE_OFFICER -> membershipInteractor.getDataBaseService().deleteOfficer();
+                    case DELETE_PERSON -> membershipInteractor.getDataBaseService().deletePerson();
+                    case DELETE_PHONE -> membershipInteractor.getDataBaseService().deletePhone();
                     case CHANGE_MEMBER_TYPE -> membershipInteractor.getDataBaseService().changeMemberType();
                     case REMOVE_MEMBER_FROM_MEMBERSHIP -> membershipInteractor.getDataBaseService().removeMemberFromMembership();
-
+                    case DELETE_MEMBER_FROM_DATABASE -> membershipInteractor.getDataBaseService().deletePerson();
+                    case MOVE_MEMBER_TO_MEMBERSHIP -> membershipInteractor.getDataBaseService().movePerson();
                 }
                 return null;
             }

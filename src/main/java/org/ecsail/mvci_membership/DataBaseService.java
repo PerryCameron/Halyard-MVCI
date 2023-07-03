@@ -232,8 +232,66 @@ public class DataBaseService {
     }
 
     protected void changeMemberType() {
+        System.out.println("changeMemberType");
     }
 
     protected void removeMemberFromMembership() {
+        System.out.println("remove from membership");
+    }
+
+    public void updatePhone() {
+        executeQuery(() -> phoneRepo.update(membershipModel.getSelectedPhone()));
+    }
+
+    public void insertAward() {
+        executeQuery(() -> awardRepo.insert(membershipModel.getSelectedAward()));
+    }
+
+    public void deletePerson() {
+    }
+
+    public void movePerson() {
+    }
+
+    public void deleteAward() {
+    }
+
+    public void deleteEmail() {
+    }
+
+    public void deleteMembershipId() {
+    }
+
+    public void deleteNote() {
+    }
+
+    public void deleteOfficer() {
+    }
+
+    public void deletePhone() {
+    }
+
+    public void updateOfficer() {
+    }
+
+    public void updatePerson() {
+    }
+
+    public void insertEmail() {
+    }
+
+    public void insertMembershipId() {
+    }
+
+    public void insertNote() {
+    }
+
+    public void insertOfficer() {
+    }
+
+    public void insertPerson() {
+    }
+
+    public void insertPhone() {
     }
 }

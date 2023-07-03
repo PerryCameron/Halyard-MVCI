@@ -85,7 +85,7 @@ public class MembershipView implements Builder<Region> {
         membershipModel.setPeopleTabPane(tabPane);  // TODO does anything else use this besides below???
         membershipModel.getPeopleTabPane().getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
             PersonTabView personTabView = (PersonTabView) newTab.getUserData();// Get the associated PersonTabView object
-            membershipModel.setSelectedPerson(personTabView.getPerson());
+            membershipModel.setSelectedPerson(personTabView.getPersonDTO());
         });
         return tabPane;
     }

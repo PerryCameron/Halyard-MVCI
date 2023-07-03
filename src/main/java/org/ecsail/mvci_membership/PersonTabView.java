@@ -31,16 +31,16 @@ import java.util.Objects;
 import static org.ecsail.interfaces.ObjectType.Dto.*;
 
 public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths, ObjectType {
-    private final PersonDTO person;
+    private final PersonDTO personDTO;
     private final MembershipModel membershipModel;
     private final MembershipView membershipView;
     private final HashMap<String, HBox> personInfoHBoxMap = new HashMap<>();
 
     public PersonTabView(MembershipView membershipView, PersonDTO personDTO) {
-        this.person = personDTO;
+        this.personDTO = personDTO;
         this.membershipModel = membershipView.getMembershipModel();
         this.membershipView = membershipView;
-        membershipModel.getStackPaneMap().put(person, new StackPane());
+        membershipModel.getStackPaneMap().put(personDTO, new StackPane());
     }
 
     @Override
@@ -123,24 +123,24 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         switch (type) {
             case Officer -> {
                 VBox vBox = createButtonBox(createAddButton(Officer), createDeleteButton(Officer));
-                membershipModel.getOfficerTableView().put(person, new OfficerTableView(person, membershipView).build());
-                hBox.getChildren().addAll(membershipModel.getOfficerTableView().get(person), vBox);
+                membershipModel.getOfficerTableView().put(personDTO, new OfficerTableView(personDTO, membershipView).build());
+                hBox.getChildren().addAll(membershipModel.getOfficerTableView().get(personDTO), vBox);
             }
             case Award -> {
                 VBox vBox = createButtonBox(createAddButton(Award), createDeleteButton(Award));
-                membershipModel.getAwardTableView().put(person, new AwardTableView(person, membershipView).build());
-                hBox.getChildren().addAll(membershipModel.getAwardTableView().get(person),vBox);
+                membershipModel.getAwardTableView().put(personDTO, new AwardTableView(personDTO, membershipView).build());
+                hBox.getChildren().addAll(membershipModel.getAwardTableView().get(personDTO),vBox);
             }
             case Email -> {
-                TableView<EmailDTO> tableView = new EmailTableView(person, membershipView).build();
-                membershipModel.getEmailTableView().put(person, tableView);
+                TableView<EmailDTO> tableView = new EmailTableView(personDTO, membershipView).build();
+                membershipModel.getEmailTableView().put(personDTO, tableView);
                 VBox vBox = createButtonBox(createAddButton(Email), createDeleteButton(Email), createCopyButton(Email), createEmailButton());
-                hBox.getChildren().addAll(membershipModel.getEmailTableView().get(person),vBox);
+                hBox.getChildren().addAll(membershipModel.getEmailTableView().get(personDTO),vBox);
             }
             case Phone -> {
                 VBox vBox = createButtonBox(createAddButton(Phone), createDeleteButton(Phone), createCopyButton(Phone));
-                membershipModel.getPhoneTableView().put(person, new PhoneTableView(person, membershipView).build());
-                hBox.getChildren().addAll(membershipModel.getPhoneTableView().get(person),vBox);
+                membershipModel.getPhoneTableView().put(personDTO, new PhoneTableView(personDTO, membershipView).build());
+                hBox.getChildren().addAll(membershipModel.getPhoneTableView().get(personDTO),vBox);
             }
             case Properties -> hBox.getChildren().addAll(getInfoBox(), getRadioBox());
         }
@@ -150,15 +150,16 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     private Node getRadioBox() {
         VBox vBox = VBoxFx.vBoxOf(5.0, new Insets(5,5,5,5));
         ToggleGroup tg = new ToggleGroup();
-        vBox.getChildren().add(radioButton(tg, "Change " + person.getFirstName() + "'s member type"));
-        vBox.getChildren().add(radioButton(tg, "Remove " + person.getFirstName() + " from this membership"));
-        vBox.getChildren().add(radioButton(tg, "Delete " + person.getFirstName() + " from database"));
-        vBox.getChildren().add(radioButton(tg, "Move " + person.getFirstName() + " to membership ..."));
+        vBox.getChildren().add(radioButton(tg, "Change " + personDTO.getFirstName() + "'s member type"));
+        vBox.getChildren().add(radioButton(tg, "Remove " + personDTO.getFirstName() + " from this membership"));
+        vBox.getChildren().add(radioButton(tg, "Delete " + personDTO.getFirstName() + " from database"));
+        vBox.getChildren().add(radioButton(tg, "Move " + personDTO.getFirstName() + " to membership ..."));
         vBox.getChildren().add(bottomControlBox());
         return vBox;
     }
 
     private MembershipMessage mapStringToEnum(String input) {
+        membershipModel.setSelectedPerson(personDTO);
         switch (input.split(" ")[0]) { // Split the string and get the first word
             case "Change" -> { return MembershipMessage.CHANGE_MEMBER_TYPE; }
             case "Remove" -> { return MembershipMessage.REMOVE_MEMBER_FROM_MEMBERSHIP; }
@@ -171,9 +172,9 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     private Node bottomControlBox() {
         HBox hBox = HBoxFx.hBoxOf(new Insets(5,5,5,5), 30);
         TextField textField = TextFieldFx.textFieldOf(120, "MSID");
-        membershipModel.getPersonTextField().put(person,textField);
-        membershipModel.getStackPaneMap().get(person).getChildren().addAll(createComboBox(), textField, createRegion());
-        hBox.getChildren().addAll(membershipModel.getStackPaneMap().get(person), createSubmit());
+        membershipModel.getPersonTextField().put(personDTO,textField);
+        membershipModel.getStackPaneMap().get(personDTO).getChildren().addAll(createComboBox(), textField, createRegion());
+        hBox.getChildren().addAll(membershipModel.getStackPaneMap().get(personDTO), createSubmit());
         return hBox;
     }
 
@@ -186,10 +187,10 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
 
     private Node createComboBox() {
         final ComboBox<String> comboBox = new ComboBox<>();
-        membershipModel.getPersonComboBox().put(person,comboBox);
+        membershipModel.getPersonComboBox().put(personDTO,comboBox);
         comboBox.setPrefWidth(120);
         comboBox.getItems().clear();
-        switch (person.getMemberType()) {
+        switch (personDTO.getMemberType()) {
             case 1 -> comboBox.getItems().addAll("Secondary", "Dependent");
             case 2 -> comboBox.getItems().addAll("Primary", "Dependent");
             default -> comboBox.getItems().addAll("Primary", "Secondary");
@@ -204,14 +205,14 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         radioButton.selectedProperty().addListener((obs, wasPreviouslySelected, isNowSelected) -> {
             if (isNowSelected) {
                 changeStackPane(mapStringToEnum(name));
-                membershipModel.getSelectedRadioForPerson().put(person, radioButton);
+                membershipModel.getSelectedRadioForPerson().put(personDTO, radioButton);
             }
         });
         return radioButton;
     }
 
     private void changeStackPane(MembershipMessage action) {
-        membershipModel.getStackPaneMap().get(person).getChildren().forEach(child -> {
+        membershipModel.getStackPaneMap().get(personDTO).getChildren().forEach(child -> {
             if (child instanceof ComboBox) {
                 child.setVisible(action == MembershipMessage.CHANGE_MEMBER_TYPE);
                 child.setManaged(action == MembershipMessage.CHANGE_MEMBER_TYPE);
@@ -229,9 +230,9 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         VBox vBox = VBoxFx.vBoxOf(7.0, new Insets(15,10,0,5));
         vBox.setId("custom-tap-pane-frame");
         vBox.getChildren().addAll(
-                new Label("Age: " + MathTools.calculateAge(person.getBirthday())),
-                new Label("Person ID: " + person.getpId()),
-                new Label("MSID: " + person.getMsId()));
+                new Label("Age: " + MathTools.calculateAge(personDTO.getBirthday())),
+                new Label("Person ID: " + personDTO.getpId()),
+                new Label("MSID: " + personDTO.getMsId()));
         return vBox;
     }
 
@@ -239,7 +240,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         Button button = ButtonFx.buttonOf("Submit",60);
         button.setOnAction(event -> {
             // get selected radio button
-            RadioButton rb = membershipModel.getSelectedRadioForPerson().get(person);
+            RadioButton rb = membershipModel.getSelectedRadioForPerson().get(personDTO);
             MembershipMessage type = mapStringToEnum(rb.getText());
             membershipView.sendMessage().accept(type);
         });
@@ -249,8 +250,8 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     private Object createData(MembershipMessage message) {
         String returnString;
         switch (message) {
-            case CHANGE_MEMBER_TYPE -> returnString = membershipModel.getPersonComboBox().get(person).getValue();
-            case MOVE_MEMBER_TO_MEMBERSHIP -> returnString = membershipModel.getPersonTextField().get(person).getText();
+            case CHANGE_MEMBER_TYPE -> returnString = membershipModel.getPersonComboBox().get(personDTO).getValue();
+            case MOVE_MEMBER_TO_MEMBERSHIP -> returnString = membershipModel.getPersonTextField().get(personDTO).getText();
             default -> returnString = "NONE";
         }
         return returnString;
@@ -262,13 +263,13 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         Button button = ButtonFx.buttonOf("Copy", 60);
         switch (type) {
             case Email -> button.setOnAction(event -> {
-                int selectedIndex = membershipModel.getEmailTableView().get(person).getSelectionModel().getSelectedIndex();
-                EmailDTO emailDTO = membershipModel.getEmailTableView().get(person).getItems().get(selectedIndex);
+                int selectedIndex = membershipModel.getEmailTableView().get(personDTO).getSelectionModel().getSelectedIndex();
+                EmailDTO emailDTO = membershipModel.getEmailTableView().get(personDTO).getItems().get(selectedIndex);
                 content.putString(emailDTO.getEmail());
             });
             case Phone -> button.setOnAction(event -> {
-                int selectedIndex = membershipModel.getPhoneTableView().get(person).getSelectionModel().getSelectedIndex();
-                PhoneDTO phoneDTO = membershipModel.getPhoneTableView().get(person).getItems().get(selectedIndex);
+                int selectedIndex = membershipModel.getPhoneTableView().get(personDTO).getSelectionModel().getSelectedIndex();
+                PhoneDTO phoneDTO = membershipModel.getPhoneTableView().get(personDTO).getItems().get(selectedIndex);
                 content.putString(phoneDTO.getPhone());
             });
         }
@@ -280,32 +281,32 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         Button button = ButtonFx.buttonOf("Delete", 60);
         switch (type) {
             case Phone -> button.setOnAction(event -> {
-                int selectedIndex = membershipModel.getPhoneTableView().get(person).getSelectionModel().getSelectedIndex();
-                PhoneDTO phoneDTO = membershipModel.getPhoneTableView().get(person).getItems().get(selectedIndex);
+                int selectedIndex = membershipModel.getPhoneTableView().get(personDTO).getSelectionModel().getSelectedIndex();
+                PhoneDTO phoneDTO = membershipModel.getPhoneTableView().get(personDTO).getItems().get(selectedIndex);
                 membershipModel.setSelectedPhone(phoneDTO);
                 membershipView.sendMessage().accept(MembershipMessage.DELETE_PHONE);
-                person.getPhones().remove(phoneDTO);
+                personDTO.getPhones().remove(phoneDTO);
             });
             case Email -> button.setOnAction(event -> {
-                int selectedIndex = membershipModel.getEmailTableView().get(person).getSelectionModel().getSelectedIndex();
-                EmailDTO emailDTO = membershipModel.getEmailTableView().get(person).getItems().get(selectedIndex);
+                int selectedIndex = membershipModel.getEmailTableView().get(personDTO).getSelectionModel().getSelectedIndex();
+                EmailDTO emailDTO = membershipModel.getEmailTableView().get(personDTO).getItems().get(selectedIndex);
                 membershipModel.setSelectedEmail(emailDTO);
                 membershipView.sendMessage().accept(MembershipMessage.DELETE_EMAIL);
-                person.getEmail().remove(emailDTO);
+                personDTO.getEmail().remove(emailDTO);
             });
             case Award -> button.setOnAction(event -> {
-                int selectedIndex = membershipModel.getAwardTableView().get(person).getSelectionModel().getSelectedIndex();
-                AwardDTO awardDTO = membershipModel.getAwardTableView().get(person).getItems().get(selectedIndex);
+                int selectedIndex = membershipModel.getAwardTableView().get(personDTO).getSelectionModel().getSelectedIndex();
+                AwardDTO awardDTO = membershipModel.getAwardTableView().get(personDTO).getItems().get(selectedIndex);
                 membershipModel.setSelectedAward(awardDTO);
                 membershipView.sendMessage().accept(MembershipMessage.DELETE_AWARD);
-                person.getAwards().remove(awardDTO);
+                personDTO.getAwards().remove(awardDTO);
             });
             case Officer -> button.setOnAction(event -> {
-                int selectedIndex = membershipModel.getOfficerTableView().get(person).getSelectionModel().getSelectedIndex();
-                OfficerDTO officerDTO = membershipModel.getOfficerTableView().get(person).getItems().get(selectedIndex);
+                int selectedIndex = membershipModel.getOfficerTableView().get(personDTO).getSelectionModel().getSelectedIndex();
+                OfficerDTO officerDTO = membershipModel.getOfficerTableView().get(personDTO).getItems().get(selectedIndex);
                 membershipModel.setSelectedOfficer(officerDTO);
                 membershipView.sendMessage().accept(MembershipMessage.DELETE_OFFICER);
-                person.getOfficer().remove(officerDTO);
+                personDTO.getOfficer().remove(officerDTO);
             });
         }
         return button;
@@ -315,36 +316,36 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         Button button = ButtonFx.buttonOf("Add", 60);
             switch (type) {
                 case Phone -> button.setOnAction(event -> {
-                    PhoneDTO phoneDTO = new PhoneDTO(person.getpId());
+                    PhoneDTO phoneDTO = new PhoneDTO(personDTO.getpId());
                     membershipModel.setSelectedPhone(phoneDTO);
                     membershipView.sendMessage().accept(MembershipMessage.INSERT_PHONE);
-                    person.getPhones().add(phoneDTO);
-                    person.getPhones().sort(Comparator.comparing(PhoneDTO::getPhoneId));
-                    requestFocusOnTable(membershipModel.getPhoneTableView().get(person));
+                    personDTO.getPhones().add(phoneDTO);
+                    personDTO.getPhones().sort(Comparator.comparing(PhoneDTO::getPhoneId));
+                    requestFocusOnTable(membershipModel.getPhoneTableView().get(personDTO));
                 });
                 case Email -> button.setOnAction(event -> {
-                    EmailDTO emailDTO = new EmailDTO(person.getpId());
+                    EmailDTO emailDTO = new EmailDTO(personDTO.getpId());
                     membershipModel.setSelectedEmail(emailDTO);
                     membershipView.sendMessage().accept(MembershipMessage.INSERT_EMAIL);
-                    person.getEmail().add(emailDTO);
-                    person.getEmail().sort(Comparator.comparing(EmailDTO::getEmail_id));
-                    requestFocusOnTable(membershipModel.getEmailTableView().get(person));
+                    personDTO.getEmail().add(emailDTO);
+                    personDTO.getEmail().sort(Comparator.comparing(EmailDTO::getEmail_id));
+                    requestFocusOnTable(membershipModel.getEmailTableView().get(personDTO));
                 });
                 case Award -> button.setOnAction(event -> {
-                    AwardDTO awardDTO = new AwardDTO(person.getpId());
+                    AwardDTO awardDTO = new AwardDTO(personDTO.getpId());
                     membershipModel.setSelectedAward(awardDTO);
                     membershipView.sendMessage().accept(MembershipMessage.INSERT_AWARD);
-                    person.getAwards().add(awardDTO);
-                    person.getAwards().sort(Comparator.comparing(AwardDTO::getAwardId));
-                    requestFocusOnTable(membershipModel.getAwardTableView().get(person));
+                    personDTO.getAwards().add(awardDTO);
+                    personDTO.getAwards().sort(Comparator.comparing(AwardDTO::getAwardId));
+                    requestFocusOnTable(membershipModel.getAwardTableView().get(personDTO));
                 });
                 case Officer -> button.setOnAction(event -> {
-                    OfficerDTO officerDTO = new OfficerDTO(person.getpId());
-                    person.getOfficer().add(officerDTO);
-                    person.getOfficer().sort(Comparator.comparing(OfficerDTO::getOfficerId));
+                    OfficerDTO officerDTO = new OfficerDTO(personDTO.getpId());
+                    personDTO.getOfficer().add(officerDTO);
+                    personDTO.getOfficer().sort(Comparator.comparing(OfficerDTO::getOfficerId));
                     membershipModel.setSelectedOfficer(officerDTO);
                     membershipView.sendMessage().accept(MembershipMessage.INSERT_OFFICER);
-                    requestFocusOnTable(membershipModel.getOfficerTableView().get(person));
+                    requestFocusOnTable(membershipModel.getOfficerTableView().get(personDTO));
                 });
             }
         return button;
@@ -362,9 +363,9 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     private Button createEmailButton() {
         Button button = ButtonFx.buttonOf("Email", 60);
         button.setOnAction(event -> {
-            int selectedIndex = membershipModel.getEmailTableView().get(person).getSelectionModel().getSelectedIndex();
+            int selectedIndex = membershipModel.getEmailTableView().get(personDTO).getSelectionModel().getSelectedIndex();
             if (selectedIndex >= 0) {// make sure something is selected
-                EmailDTO emailDTO = membershipModel.getEmailTableView().get(person).getItems().get(selectedIndex);
+                EmailDTO emailDTO = membershipModel.getEmailTableView().get(personDTO).getItems().get(selectedIndex);
                 Mail.composeEmail(emailDTO.getEmail(), "ECSC", "");
             }
         });
@@ -391,12 +392,12 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
 
     private Node createFieldDetails() {
         VBox vBox = VBoxFx.vBoxOf(new Insets(20,0,0,20));
-        vBox.getChildren().add(fieldBox(person.firstNameProperty(), "First Name"));
-        vBox.getChildren().add(fieldBox(person.lastNameProperty(), "Last Name"));
-        vBox.getChildren().add(fieldBox(person.nickNameProperty(), "Nickname"));
-        vBox.getChildren().add(fieldBox(person.occupationProperty(), "Occupation"));
-        vBox.getChildren().add(fieldBox(person.businessProperty(), "Business"));
-        vBox.getChildren().add(fieldDateBox(person.birthdayProperty(), "Birthday"));
+        vBox.getChildren().add(fieldBox(personDTO.firstNameProperty(), "First Name"));
+        vBox.getChildren().add(fieldBox(personDTO.lastNameProperty(), "Last Name"));
+        vBox.getChildren().add(fieldBox(personDTO.nickNameProperty(), "Nickname"));
+        vBox.getChildren().add(fieldBox(personDTO.occupationProperty(), "Occupation"));
+        vBox.getChildren().add(fieldBox(personDTO.businessProperty(), "Business"));
+        vBox.getChildren().add(fieldDateBox(personDTO.birthdayProperty(), "Birthday"));
         return vBox;
     }
 
@@ -408,7 +409,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
             if (!isFocused){
                 datePicker.updateValue();
                 updatePersonDTO(label, datePicker.getValue().toString());
-                membershipModel.setSelectedPerson(person);
+                membershipModel.setSelectedPerson(personDTO);
                 membershipView.sendMessage().accept(MembershipMessage.UPDATE_PERSON);
             }
         });
@@ -430,7 +431,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
                 .addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
                     updatePersonDTO(label, textField.getText());
             if (oldValue) {
-                membershipModel.setSelectedPerson(person);
+                membershipModel.setSelectedPerson(personDTO);
                 membershipView.sendMessage().accept(MembershipMessage.UPDATE_PERSON);
             }
         });
@@ -461,7 +462,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     }
 
     private String getMemberType() {
-        return switch (person.getMemberType()) {
+        return switch (personDTO.getMemberType()) {
             case 1 -> "Primary";
             case 2 -> "Secondary";
             case 3 -> "Dependant";
@@ -469,7 +470,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         };
     }
 
-    public PersonDTO getPerson() {
-        return person;
+    public PersonDTO getPersonDTO() {
+        return personDTO;
     }
 }
