@@ -92,8 +92,7 @@ private TableColumn<NotesDTO, LocalDate> col1() {
     private Callback<TableColumn<NotesDTO, LocalDate>, TableCell<NotesDTO, LocalDate>> createDatePickerCellFactory() {
         return param -> new TableCell<>() {
             private final DatePicker datePicker = new DatePicker();
-
-            {
+            { // this is called: instance initializer block
                 datePicker.setOnAction(event -> {
                     commitEdit(datePicker.getValue());
                     NotesDTO notesDTO = null;
@@ -119,4 +118,5 @@ private TableColumn<NotesDTO, LocalDate> col1() {
             }
         };
     }
+    
 }

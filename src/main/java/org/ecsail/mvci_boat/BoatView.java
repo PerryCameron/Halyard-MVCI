@@ -48,7 +48,7 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
         vBoxButtons.getChildren().addAll(
                 createButton("Add",BoatMessage.ADD_NOTE),
                 createButton("Delete",BoatMessage.DELETE_NOTE));
-        vBoxTable.getChildren().add(new NotesTableView(this).build());
+        vBoxTable.getChildren().add(new BoatNotesTableView(this).build());
         hBox.getChildren().addAll(vBoxTable,vBoxButtons);
         titledPane.setContent(hBox);
         hBoxOuter.getChildren().add(titledPane);

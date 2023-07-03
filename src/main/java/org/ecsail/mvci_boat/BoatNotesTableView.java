@@ -5,25 +5,19 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.util.Builder;
 import javafx.util.Callback;
-import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.dto.NotesDTO;
-import org.ecsail.dto.OfficerDTO;
-import org.ecsail.widgetfx.HBoxFx;
 import org.ecsail.widgetfx.ListenerFx;
 import org.ecsail.widgetfx.TableColumnFx;
 import org.ecsail.widgetfx.TableViewFx;
 
 import java.time.LocalDate;
 
-public class NotesTableView implements Builder<TableView<NotesDTO>> {
+public class BoatNotesTableView implements Builder<TableView<NotesDTO>> {
     private final BoatModel boatModel;
     private final BoatView boatView;
-    public NotesTableView(BoatView bv) {
+    public BoatNotesTableView(BoatView bv) {
         this.boatView = bv;
         this.boatModel = boatView.getBoatModel();
     }
