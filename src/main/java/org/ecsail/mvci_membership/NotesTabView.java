@@ -16,9 +16,11 @@ import java.time.LocalDate;
 
 public class NotesTabView implements Builder<Tab> {
     private final MembershipView membershipView;
+    private final MembershipModel membershipModel;
 
     public NotesTabView(MembershipView membershipView) {
         this.membershipView = membershipView;
+        this.membershipModel = membershipView.getMembershipModel();
     }
 
     @Override
@@ -84,39 +86,42 @@ public class NotesTabView implements Builder<Tab> {
 private TableColumn<NotesDTO, LocalDate> col1() {
     TableColumn<NotesDTO, LocalDate> col1 = new TableColumn<>("Date");
     col1.setCellValueFactory(cellData -> cellData.getValue().memoDateProperty());
-    col1.setCellFactory(createDatePickerCellFactory());
+    col1.setCellFactory(CallBackFX.createDatePickerCellFactory(notesDTO -> {
+            membershipModel.setSelectedNote(notesDTO);
+            membershipView.sendMessage().accept(MembershipMessage.UPDATE,notesDTO);
+    }));
     col1.setMaxWidth(1f * Integer.MAX_VALUE * 15);   // Date
     return col1;
 }
 
-    private Callback<TableColumn<NotesDTO, LocalDate>, TableCell<NotesDTO, LocalDate>> createDatePickerCellFactory() {
-        return param -> new TableCell<>() {
-            private final DatePicker datePicker = new DatePicker();
-            { // this is called: instance initializer block
-                datePicker.setOnAction(event -> {
-                    commitEdit(datePicker.getValue());
-                    NotesDTO notesDTO = null;
-                    if(this.getTableRow() != null)
-                    notesDTO = this.getTableRow().getItem();
-                    // Check if notesDTO is not null before calling methods on it
-                    if(notesDTO != null) {
-                        notesDTO.setMemoDate(datePicker.getValue());
-                        membershipView.sendMessage().accept(MembershipMessage.UPDATE,notesDTO);
-                    }
-                });
-            }
-
-            @Override
-            protected void updateItem(LocalDate item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                } else {
-                    datePicker.setValue(item);
-                    setGraphic(datePicker);
-                }
-            }
-        };
-    }
+//    private Callback<TableColumn<NotesDTO, LocalDate>, TableCell<NotesDTO, LocalDate>> createDatePickerCellFactory() {
+//        return param -> new TableCell<>() {
+//            private final DatePicker datePicker = new DatePicker();
+//            { // this is called: instance initializer block
+//                datePicker.setOnAction(event -> {
+//                    commitEdit(datePicker.getValue());
+//                    NotesDTO notesDTO = null;
+//                    if(this.getTableRow() != null)
+//                    notesDTO = this.getTableRow().getItem();
+//                    // Check if notesDTO is not null before calling methods on it
+//                    if(notesDTO != null) {
+//                        notesDTO.setMemoDate(datePicker.getValue());
+//                        membershipView.sendMessage().accept(MembershipMessage.UPDATE,notesDTO);
+//                    }
+//                });
+//            }
+//
+//            @Override
+//            protected void updateItem(LocalDate item, boolean empty) {
+//                super.updateItem(item, empty);
+//                if (empty) {
+//                    setGraphic(null);
+//                } else {
+//                    datePicker.setValue(item);
+//                    setGraphic(datePicker);
+//                }
+//            }
+//        };
+//    }
     
 }

@@ -123,3 +123,7 @@
 .progress-indicator-style .progress-indicator {
     -fx-progress-color: #1658e7;
 }
+
+#datepicker-tableview .text-field {
+    -fx-background-color: white;
+}

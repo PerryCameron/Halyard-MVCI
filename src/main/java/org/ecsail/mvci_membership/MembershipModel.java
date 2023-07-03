@@ -42,9 +42,20 @@ public class MembershipModel {
     private final BooleanProperty listsLoaded = new SimpleBooleanProperty(false);
     private final MainModel mainModel;
     private ObservableMap<String,Control> slipControls = FXCollections.observableHashMap();
+    protected SimpleObjectProperty<NotesDTO> selectedNote = new SimpleObjectProperty<>();
 
 
+    public NotesDTO getSelectedNote() {
+        return selectedNote.get();
+    }
 
+    public SimpleObjectProperty<NotesDTO> selectedNoteProperty() {
+        return selectedNote;
+    }
+
+    public void setSelectedNote(NotesDTO selectedNote) {
+        this.selectedNote.set(selectedNote);
+    }
 
     public TableView<MembershipIdDTO> getIdTableView() {
         return idTableView.get();

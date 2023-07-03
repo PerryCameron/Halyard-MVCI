@@ -8,6 +8,7 @@ import javafx.scene.control.TableView;
 import javafx.util.Builder;
 import javafx.util.Callback;
 import org.ecsail.dto.NotesDTO;
+import org.ecsail.widgetfx.CallBackFX;
 import org.ecsail.widgetfx.ListenerFx;
 import org.ecsail.widgetfx.TableColumnFx;
 import org.ecsail.widgetfx.TableViewFx;
@@ -37,7 +38,10 @@ public class BoatNotesTableView implements Builder<TableView<NotesDTO>> {
     private TableColumn<NotesDTO, LocalDate> createColumn1() {
         TableColumn<NotesDTO, LocalDate> col1 = new TableColumn<>("Date");
         col1.setCellValueFactory(cellData -> cellData.getValue().memoDateProperty());
-        col1.setCellFactory(createDatePickerCellFactory());
+        col1.setCellFactory(CallBackFX.createDatePickerCellFactory(notesDTO -> {
+            boatModel.setSelectedNote(notesDTO);
+            boatView.sendMessage().accept(BoatMessage.UPDATE_NOTE);
+        }));
         col1.setMaxWidth(1f * Integer.MAX_VALUE * 15);   // Date
         return col1;
     }
@@ -55,35 +59,4 @@ public class BoatNotesTableView implements Builder<TableView<NotesDTO>> {
         col2.setMaxWidth( 1f * Integer.MAX_VALUE * 85 );   // Note
         return col2;
     }
-
-    private Callback<TableColumn<NotesDTO, LocalDate>, TableCell<NotesDTO, LocalDate>> createDatePickerCellFactory() {
-        return param -> new TableCell<>() {
-            private final DatePicker datePicker = new DatePicker();
-
-            {
-                datePicker.setOnAction(event -> {
-                    commitEdit(datePicker.getValue());
-                    // Check if notesDTO is not null before calling methods on it
-                    NotesDTO notesDTO = this.getTableRow().getItem();
-                    if(notesDTO != null) {
-                        notesDTO.setMemoDate(datePicker.getValue());
-                        boatModel.setSelectedNote(notesDTO);
-                        boatView.sendMessage().accept(BoatMessage.UPDATE_NOTE);
-                    }
-                });
-            }
-
-            @Override
-            protected void updateItem(LocalDate item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                } else {
-                    datePicker.setValue(item);
-                    setGraphic(datePicker);
-                }
-            }
-        };
-    }
-
 }
