@@ -13,6 +13,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.stage.Modality;
+import javafx.stage.StageStyle;
 import javafx.util.Builder;
 import javafx.util.Duration;
 import org.ecsail.BaseApplication;
@@ -41,6 +43,16 @@ public class DialogueView implements Builder<Region> {
         return borderPane;
     }
 
-
+    private void setUpStage() {
+        dialogueModel.getDialogueStage().initOwner(BaseApplication.primaryStage);
+        dialogueModel.getDialogueStage().initModality(Modality.APPLICATION_MODAL);
+        dialogueModel.primaryXPropertyProperty().bind(BaseApplication.primaryStage.xProperty());
+        dialogueModel.primaryYPropertyProperty().bind(BaseApplication.primaryStage.yProperty());
+//        loadingModel.setOffsets(50.0, 50.0);
+//        updateSpinnerLocation();
+//        setOffsetListener();
+//        monitorPropertyChange(loadingModel.primaryXPropertyProperty());
+//        monitorPropertyChange(loadingModel.primaryYPropertyProperty());
+    }
 
 }
