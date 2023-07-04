@@ -168,8 +168,6 @@ public class DataBaseService {
         savedToIndicator(rowsUpdated == 1);
     }
 
-
-
     protected void savedToIndicator(boolean returnOk) { // updates status lights
         if(returnOk) membershipModel.getMainModel().getLightAnimationMap().get("receiveSuccess").playFromStart();
         else membershipModel.getMainModel().getLightAnimationMap().get("receiveError").playFromStart();
@@ -200,35 +198,44 @@ public class DataBaseService {
     }
 
     protected void updateMembershipList() {
+        System.out.println("Update MembershipLlist");
         executeQuery(() -> membershipRepo.update(membershipModel.getMembership()));
     }
 
     protected void updateAward() {
+        System.out.println("Update Award");
         executeQuery(() -> awardRepo.update(membershipModel.getSelectedAward()));
     }
 
     protected void updateBoat() {
+        System.out.println("Update Boat");
         executeQuery(() -> boatRepo.update(membershipModel.getSelectedBoat()));
     }
 
     protected void insertBoat() {
+        System.out.println("Insert Boat");
         executeQuery(() -> boatRepo.insert(membershipModel.getSelectedBoat()));
     }
 
     protected void deleteBoat() {
+        System.out.println("Delete Boat");
         executeQuery(() -> boatRepo.delete(membershipModel.getSelectedBoat()));
     }
 
     protected void updateEmail() {
+        System.out.println("Update Email");
         executeQuery(() -> emailRepo.update(membershipModel.getSelectedEmail()));
     }
 
     protected void updateMembershipId() {
+        System.out.println("Update MembershipId");
         executeQuery(() -> membershipIdRepo.update(membershipModel.getSelectedMembershipId()));
     }
 
     protected void updateNote() {
-        executeQuery(() -> notesRepo.update(membershipModel.getSelectedNote()));
+        System.out.println("updateNote:"); // TODO this is triggering when you scroll the tableview (wierd)
+        System.out.println(membershipModel.getSelectedNote());
+//        executeQuery(() -> notesRepo.update(membershipModel.getSelectedNote()));
     }
 
     protected void changeMemberType() {
@@ -240,58 +247,76 @@ public class DataBaseService {
     }
 
     public void updatePhone() {
+        System.out.println("Update Phone");
         executeQuery(() -> phoneRepo.update(membershipModel.getSelectedPhone()));
     }
 
     public void insertAward() {
+        System.out.println("Insert Award");
         executeQuery(() -> awardRepo.insert(membershipModel.getSelectedAward()));
     }
 
     public void deletePerson() {
+        System.out.println("Delete Person");
     }
 
     public void movePerson() {
+        System.out.println("Move Person");
     }
 
     public void deleteAward() {
+        System.out.println("Delete Award");
     }
 
     public void deleteEmail() {
+        System.out.println("Delete Email");
     }
 
     public void deleteMembershipId() {
+        System.out.println("Delete Membership");
     }
 
     public void deleteNote() {
+        System.out.println("Delete Note");
     }
 
     public void deleteOfficer() {
+        System.out.println("Delete Officer");
     }
 
     public void deletePhone() {
+        System.out.println("Delete Phone");
     }
 
     public void updateOfficer() {
+        System.out.println("Update Officer");
     }
 
     public void updatePerson() {
+        System.out.println("Update Person");
     }
 
     public void insertEmail() {
+        System.out.println("Insert Email");
     }
 
     public void insertMembershipId() {
+        System.out.println("Insert MembershipId");
     }
 
     public void insertNote() {
+        System.out.println("Insert Note");
     }
 
     public void insertOfficer() {
+        System.out.println("Insert Officer");
     }
 
     public void insertPerson() {
+        System.out.println("Insert Person");
     }
 
     public void insertPhone() {
+        System.out.println("Insert Phone");
     }
 }
