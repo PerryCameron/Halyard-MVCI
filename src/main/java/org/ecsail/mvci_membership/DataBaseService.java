@@ -109,7 +109,6 @@ public class DataBaseService {
         SlipDTO slip = null;
         try {
             slip = slipRepo.getSlip(ml.getMsId());
-            logger.info("Blink Green");
             retrievedFromIndicator(true);
         } catch (DataAccessException e) {
             logger.error(e.getMessage());
