@@ -2,7 +2,6 @@ package org.ecsail.mvci_membership;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import org.ecsail.dto.*;
 import org.ecsail.interfaces.SlipUser;
 import org.ecsail.repository.implementations.*;
@@ -14,7 +13,6 @@ import org.springframework.dao.DataAccessException;
 import javax.sql.DataSource;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class DataBaseService {
@@ -46,66 +44,65 @@ public class DataBaseService {
         membershipRepo = new MembershipRepositoryImpl(dataSource);
     }
 
-    public void getPersonLists(MembershipListDTO ml) { // not on FX thread because lists added before UI is launched
-        System.out.println("getPersonLists()");
-        ObservableList<PersonDTO> personDTOS = null;
+    public void queryForList(Runnable task) {
         try {
-            personDTOS = FXCollections.observableArrayList(peopleRepo.getActivePeopleByMsId(ml.getMsId()));
+            task.run();
+            retrievedFromIndicator(true);
+        } catch (DataAccessException dae) {
+            dae.printStackTrace();
+            retrievedFromIndicator(false);
+            logger.error("DataAccessException: " + dae.getMessage());
+        } catch (NullPointerException npe) {
+            npe.printStackTrace();
+            retrievedFromIndicator(false);
+            logger.error("NullPointerException: " + npe.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            retrievedFromIndicator(false);
+            logger.error("Exception: " + e.getMessage());
+        }
+    }
+
+    public void getPersonLists(MembershipListDTO ml) { // not on FX thread because lists added before UI is launched
+        queryForList(() -> {
+            List<PersonDTO> personDTOS = peopleRepo.getActivePeopleByMsId(ml.getMsId());
             for (PersonDTO person : personDTOS) {
                 person.setPhones(FXCollections.observableArrayList(phoneRepo.getPhoneByPid(person.getpId())));
                 person.setEmail(FXCollections.observableArrayList(emailRepo.getEmail(person.getpId())));
                 person.setAwards(FXCollections.observableArrayList(awardRepo.getAwards(person)));
                 person.setOfficer(FXCollections.observableArrayList(officerRepo.getOfficer(person)));
             }
-            retrievedFromIndicator(true);
-            logger.info("Blink Green");
-        } catch (DataAccessException e) {
-            logger.error(e.getMessage());
-            retrievedFromIndicator(false);
-        }
-        membershipModel.setPeople(personDTOS);
-        logger.info("set people, size: " + membershipModel.getPeople().size());
+            membershipModel.setPeople(FXCollections.observableArrayList(personDTOS));
+        });
     }
 
     public void getIds(MembershipListDTO ml) {
-        List<MembershipIdDTO> membershipIdDTOS = membershipIdRepo.getIds(ml.getMsId());
-        try {
-            Platform.runLater(() -> membershipModel.getMembership()
-                    .setMembershipIdDTOS(FXCollections.observableArrayList(membershipIdDTOS)));
-            retrievedFromIndicator(true);
-            logger.info("Blink Green");
-        } catch (DataAccessException e) {
-            logger.error(e.getMessage());
-            retrievedFromIndicator(false);
-        }
+        queryForList(() -> {
+            List<MembershipIdDTO> membershipIdDTOS = membershipIdRepo.getIds(ml.getMsId());
+            Platform.runLater(() -> {
+                membershipModel.getMembership().setMembershipIdDTOS(FXCollections.observableArrayList(membershipIdDTOS));
+            });
+        });
     }
 
     public void getBoats(MembershipListDTO ml) {
-        try {
+        queryForList(() -> {
             List<BoatDTO> boats = boatRepo.getBoatsByMsId(ml.getMsId());
             Platform.runLater(() -> {
                 membershipModel.getMembership()
                         .setBoatDTOS(FXCollections.observableArrayList(boats));
                 retrievedFromIndicator(true);
             });
-            logger.info("Blink Green");
-        } catch (DataAccessException e) {
-            logger.error(e.getMessage());
-            retrievedFromIndicator(false);
-        }
+        });
     }
 
     public void getNotes(MembershipListDTO ml) {
-        try {
+        queryForList(() -> {
             List<NotesDTO> notesDTOS = notesRepo.getMemosByMsId(ml.getMsId());
             Platform.runLater(() -> membershipModel.getMembership()
                     .setNotesDTOS(FXCollections.observableArrayList(notesDTOS)));
             retrievedFromIndicator(true);
-            logger.info("Blink Green");
-        } catch (DataAccessException e) {
-            logger.error(e.getMessage());
-            retrievedFromIndicator(false);
-        }
+        });
     }
 
     public void getSlipInfo(MembershipListDTO ml) {
@@ -145,27 +142,6 @@ public class DataBaseService {
         membershipModel.setSlipRelationStatus(SlipUser.slip.ownAndSublease);
         // gets the id of the subLeaser for the current year
         membershipModel.setMembershipId(String.valueOf(membershipIdRepo.getCurrentId(membershipModel.getSlip().getSubleased_to()).getMembership_id()));
-    }
-
-    public void insert(Object o) {
-        int rowsUpdated = 0;
-        try {
-            if (o instanceof AwardDTO) rowsUpdated = awardRepo.insert((AwardDTO) o);
-            if (o instanceof EmailDTO) rowsUpdated = emailRepo.insert((EmailDTO) o);
-            if (o instanceof PhoneDTO) rowsUpdated = phoneRepo.insert((PhoneDTO) o);
-            if (o instanceof OfficerDTO) rowsUpdated = officerRepo.insert((OfficerDTO) o);
-            if (o instanceof BoatDTO) {
-                BoatDTO boatDTO = (BoatDTO) o;
-                rowsUpdated = boatRepo.insert(boatDTO);
-                BoatOwnerDTO boatOwnerDTO = new BoatOwnerDTO(boatDTO.getMsId(), boatDTO.getBoatId());
-                if(rowsUpdated == 1) rowsUpdated = boatRepo.insertOwner(boatOwnerDTO);
-                else rowsUpdated = 0;
-            }
-        } catch (DataAccessException e) {
-            logger.error(e.getMessage());
-            savedToIndicator(false);
-        }
-        savedToIndicator(rowsUpdated == 1);
     }
 
     protected void savedToIndicator(boolean returnOk) { // updates status lights
@@ -219,7 +195,7 @@ public class DataBaseService {
 
     protected void deleteBoat() {
         System.out.println("Delete Boat");
-        executeQuery(() -> boatRepo.delete(membershipModel.getSelectedBoat()));
+//        executeQuery(() -> boatRepo.delete(membershipModel.getSelectedBoat()));
     }
 
     protected void updateEmail() {
