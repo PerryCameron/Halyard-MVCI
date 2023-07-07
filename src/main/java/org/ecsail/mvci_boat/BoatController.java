@@ -38,8 +38,8 @@ public class BoatController extends Controller {
                     case DELETE_IMAGE -> boatInteractor.deleteImage();
                     case DELETE_NOTE -> boatInteractor.deleteNote();
                     case DELETE_OWNER -> {
-                            System.out.println("Delete Owner");
                             HBox hBox = new HBox();
+                            hBox.setPrefSize(400, 150);
                             hBox.getChildren().add(new Label("testing"));
                             mainController.createDialogueController(hBox);
                     }

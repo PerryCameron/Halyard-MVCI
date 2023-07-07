@@ -4,6 +4,7 @@ package org.ecsail.mvci_dialogue;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -40,7 +41,6 @@ public class DialogueView implements Builder<Region> {
 
     @Override
     public Region build() {
-        System.out.println("making dialogue view");
         setUpStage();
         BorderPane borderPane = new BorderPane();
         borderPane.setCenter(region);
@@ -48,17 +48,31 @@ public class DialogueView implements Builder<Region> {
     }
 
     private void setUpStage() {
-        System.out.println("Setting up dialogue");
         dialogueModel.getDialogueStage().initOwner(BaseApplication.primaryStage);
         dialogueModel.getDialogueStage().initModality(Modality.APPLICATION_MODAL);
         dialogueModel.primaryXPropertyProperty().bind(BaseApplication.primaryStage.xProperty());
         dialogueModel.primaryYPropertyProperty().bind(BaseApplication.primaryStage.yProperty());
+        dialogueModel.getDialogueStage().setOnShown(windowEvent -> {
+            updateSpinnerLocation();
+        });
         dialogueModel.getDialogueStage().show();
-//        loadingModel.setOffsets(50.0, 50.0);
-//        updateSpinnerLocation();
-//        setOffsetListener();
-//        monitorPropertyChange(loadingModel.primaryXPropertyProperty());
-//        monitorPropertyChange(loadingModel.primaryYPropertyProperty());
+        monitorPropertyChange(dialogueModel.primaryXPropertyProperty());
+        monitorPropertyChange(dialogueModel.primaryYPropertyProperty());
+    }
+
+    public void monitorPropertyChange(DoubleProperty property) {
+        property.addListener((observable, oldValue, newValue) -> {
+            updateSpinnerLocation();
+        });
+    }
+
+    private void updateSpinnerLocation() {
+        double centerXPosition = BaseApplication.primaryStage.getX() + BaseApplication.primaryStage.getWidth() / 2d;
+        double centerYPosition = BaseApplication.primaryStage.getY() + BaseApplication.primaryStage.getHeight() / 2d;
+            dialogueModel.getDialogueStage().setX(centerXPosition -
+                    dialogueModel.getDialogueStage().getWidth()  / 2d);
+            dialogueModel.getDialogueStage().setY(centerYPosition -
+                    dialogueModel.getDialogueStage().getHeight()  / 2d);
     }
 
 }

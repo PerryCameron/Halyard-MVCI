@@ -22,7 +22,6 @@ public class DialogueController extends Controller implements Status {
         dialogueInteractor = new DialogueInteractor(dialogueModel);
         dialogueView = new DialogueView(dialogueModel, region);
         this.mainController = mainController;
-        System.out.println("dialogue controller created");
     }
 
 
