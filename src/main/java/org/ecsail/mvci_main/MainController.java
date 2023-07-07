@@ -14,6 +14,7 @@ import org.ecsail.interfaces.Status;
 import org.ecsail.mvci_boat.BoatController;
 import org.ecsail.mvci_boatlist.BoatListController;
 import org.ecsail.mvci_connect.ConnectController;
+import org.ecsail.mvci_dialogue.DialogueController;
 import org.ecsail.mvci_load.LoadingController;
 import org.ecsail.mvci_membership.MembershipController;
 import org.ecsail.mvci_roster.RosterController;
@@ -25,11 +26,24 @@ public class MainController extends Controller implements Status {
     private final MainView mainView;
     private ConnectController connectController;
     private LoadingController loadingController;
+    private DialogueController dialogueController;
+
     public MainController() {
         MainModel mainModel = new MainModel();
         mainInteractor = new MainInteractor(mainModel);
         mainView = new MainView(mainModel, this::closeAllConnections, this::createConnectController);
         mainInteractor.setComplete();
+    }
+
+    public void createDialogueController(Region region) {
+        try {
+            Platform.runLater(() -> {
+                dialogueController = new DialogueController(this, region);
+                dialogueController.getStage().setScene(new Scene(dialogueController.getView()));
+            });
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 
     public void createConnectController() {
@@ -41,7 +55,7 @@ public class MainController extends Controller implements Status {
 
     public void createLoadingController() {
         loadingController = new LoadingController(this);
-        loadingController.getStage().setScene(new Scene(loadingController.getView(), Color.TRANSPARENT));;
+        loadingController.getStage().setScene(new Scene(loadingController.getView(), Color.TRANSPARENT));
     }
 
     public void openMembershipMVCI(MembershipListDTO ml) {

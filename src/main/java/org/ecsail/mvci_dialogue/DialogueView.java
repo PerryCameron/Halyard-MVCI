@@ -24,30 +24,36 @@ import org.ecsail.widgetfx.MenuFx;
 import org.ecsail.widgetfx.RectangleFX;
 
 import java.util.Objects;
+import java.util.function.Supplier;
 
 import static java.lang.System.getProperty;
 
 public class DialogueView implements Builder<Region> {
     private final DialogueModel dialogueModel;
+    private final Region region;
+    private Supplier<Boolean> supplier;
 
-    public DialogueView(DialogueModel dialogueModel) {
+    public DialogueView(DialogueModel dialogueModel, Region region) {
         this.dialogueModel = dialogueModel;
+        this.region = region;
     }
-
-
 
     @Override
     public Region build() {
+        System.out.println("making dialogue view");
+        setUpStage();
         BorderPane borderPane = new BorderPane();
-
+        borderPane.setCenter(region);
         return borderPane;
     }
 
     private void setUpStage() {
+        System.out.println("Setting up dialogue");
         dialogueModel.getDialogueStage().initOwner(BaseApplication.primaryStage);
         dialogueModel.getDialogueStage().initModality(Modality.APPLICATION_MODAL);
         dialogueModel.primaryXPropertyProperty().bind(BaseApplication.primaryStage.xProperty());
         dialogueModel.primaryYPropertyProperty().bind(BaseApplication.primaryStage.yProperty());
+        dialogueModel.getDialogueStage().show();
 //        loadingModel.setOffsets(50.0, 50.0);
 //        updateSpinnerLocation();
 //        setOffsetListener();

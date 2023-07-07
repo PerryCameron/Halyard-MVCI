@@ -1,7 +1,10 @@
 package org.ecsail.mvci_boat;
 
 import javafx.concurrent.Task;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
+import org.apache.commons.compress.compressors.zstandard.ZstdCompressorOutputStream;
 import org.ecsail.dto.BoatListDTO;
 import org.ecsail.interfaces.Controller;
 import org.ecsail.mvci_main.MainController;
@@ -34,7 +37,12 @@ public class BoatController extends Controller {
                     case SET_DEFAULT -> boatInteractor.setImageAsDefault();
                     case DELETE_IMAGE -> boatInteractor.deleteImage();
                     case DELETE_NOTE -> boatInteractor.deleteNote();
-                    case DELETE_OWNER -> boatInteractor.deleteOwner();
+                    case DELETE_OWNER -> {
+                            System.out.println("Delete Owner");
+                            HBox hBox = new HBox();
+                            hBox.getChildren().add(new Label("testing"));
+                            mainController.createDialogueController(hBox);
+                    }
                     case INSERT -> System.out.println("Insert");
                     case NONE -> System.out.println("None");
                 }

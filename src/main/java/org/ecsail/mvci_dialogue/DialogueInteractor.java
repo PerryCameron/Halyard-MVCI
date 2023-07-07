@@ -3,6 +3,7 @@ package org.ecsail.mvci_dialogue;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.scene.layout.Region;
+import javafx.stage.Stage;
 import org.ecsail.connection.Connections;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.fileio.FileIO;
@@ -21,5 +22,7 @@ public class DialogueInteractor implements ConfigFilePaths {
         this.dialogueModel = dialogueModel;
     }
 
-
+    public Stage getStage() {
+        return dialogueModel.getDialogueStage();
+    }
 }
