@@ -107,6 +107,7 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
         action.accept(BoatMessage.DELETE_OWNER);
         ChangeListener<Boolean> confirmed = ListenerFx.createSingleUseListener(boatModel.confirmedProperty(), () -> {
             System.out.println(boatModel.isConfirmed());
+            action.accept(BoatMessage.DELETE_OWNER_CONFIRMED);
         });
         boatModel.confirmedProperty().addListener(confirmed);
     }

@@ -40,6 +40,7 @@ public class BoatController extends Controller {
                         BooleanProperty booleanProperty = boatInteractor.getConfirmation();
                         mainController.createDialogueController(Dialogue.CONFORMATION, booleanProperty);
                     }
+                    case DELETE_OWNER_CONFIRMED -> boatInteractor.deleteOwner();
                     case INSERT -> System.out.println("Insert");
                     case NONE -> System.out.println("None");
                 }

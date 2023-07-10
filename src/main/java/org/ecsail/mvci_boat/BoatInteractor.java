@@ -124,7 +124,9 @@ public class BoatInteractor {
     }
 
     public void deleteOwner() {
-        System.out.println("deleting owner");
+        System.out.println("deleteOwner()");
+        MembershipListDTO ml = boatModel.getSelectedOwner();
+        System.out.println("It has been confirmed, Deleting owner: " + ml.getFirstName() + " " + ml.getLastName());
     }
 
     public BooleanProperty getConfirmation() {

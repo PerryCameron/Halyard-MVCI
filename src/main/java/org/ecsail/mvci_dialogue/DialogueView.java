@@ -5,6 +5,8 @@ import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -14,6 +16,8 @@ import javafx.stage.Stage;
 import javafx.util.Builder;
 import org.ecsail.BaseApplication;
 import org.ecsail.enums.Dialogue;
+import org.ecsail.widgetfx.HBoxFx;
+import org.ecsail.widgetfx.VBoxFx;
 
 import java.util.function.Supplier;
 
@@ -35,10 +39,11 @@ public class DialogueView implements Builder<Region> {
     @Override
     public Region build() {
         setUpStage(stage);
-        VBox vBox = new VBox();
+        VBox vBox = VBoxFx.vBoxOf(20.0, new Insets(0,0,0,0));
+        vBox.setAlignment(Pos.CENTER);
         Label label = new Label("Are you sure you want to delete this?");
         vBox.getChildren().add(label);
-        vBox.setPrefSize(400, 150);
+        vBox.setPrefSize(350, 100);
         switch (dialogue) {
             case CONFORMATION -> vBox.getChildren().add(createConformation(stage));
         }
@@ -46,7 +51,7 @@ public class DialogueView implements Builder<Region> {
     }
 
     private Node createConformation(Stage stage) {
-        HBox hBox = new HBox();
+        HBox hBox = HBoxFx.hBoxOf(new Insets(0,0,0,0), Pos.CENTER, 15.0);
         Button cancelButton = new Button("Cancel");
         cancelButton.setOnAction(getButtonActionEventEventHandler(stage, false));
         Button okButton = new Button("Ok");
