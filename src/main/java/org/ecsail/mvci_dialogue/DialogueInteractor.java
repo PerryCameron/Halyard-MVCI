@@ -22,7 +22,4 @@ public class DialogueInteractor implements ConfigFilePaths {
         this.dialogueModel = dialogueModel;
     }
 
-    public Stage getStage() {
-        return dialogueModel.getDialogueStage();
-    }
 }

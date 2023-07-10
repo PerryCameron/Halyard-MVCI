@@ -95,12 +95,20 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
             case ADD_OWNER -> button.setOnAction(event -> action.accept(BoatMessage.ADD_OWNER));
             case DELETE_IMAGE -> button.setOnAction(event -> action.accept(BoatMessage.DELETE_IMAGE));
             case DELETE_NOTE -> button.setOnAction(event -> action.accept(BoatMessage.DELETE_NOTE));
-            case DELETE_OWNER -> button.setOnAction(event -> action.accept(BoatMessage.DELETE_OWNER));
+            case DELETE_OWNER -> button.setOnAction(event -> deleteOwner());
             case SET_DEFAULT -> button.setOnAction(event -> action.accept(BoatMessage.SET_DEFAULT));
             case MOVE_FORWARD -> button.setOnAction((event) -> moveToNextImage(true));
             case MOVE_BACKWARD -> button.setOnAction((event) -> moveToNextImage(false));
         };
         return button;
+    }
+
+    private void deleteOwner() {
+        action.accept(BoatMessage.DELETE_OWNER);
+        ChangeListener<Boolean> confirmed = ListenerFx.createSingleUseListener(boatModel.confirmedProperty(), () -> {
+            System.out.println(boatModel.isConfirmed());
+        });
+        boatModel.confirmedProperty().addListener(confirmed);
     }
 
     private Node boatInfoTitlePane() {

@@ -1,6 +1,7 @@
 package org.ecsail.mvci_boat;
 
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.ecsail.connection.Connections;
@@ -124,5 +125,9 @@ public class BoatInteractor {
 
     public void deleteOwner() {
         System.out.println("deleting owner");
+    }
+
+    public BooleanProperty getConfirmation() {
+        return boatModel.confirmedProperty();
     }
 }

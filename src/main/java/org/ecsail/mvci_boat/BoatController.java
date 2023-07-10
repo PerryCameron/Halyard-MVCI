@@ -1,13 +1,16 @@
 package org.ecsail.mvci_boat;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.concurrent.Task;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import org.apache.commons.compress.compressors.zstandard.ZstdCompressorOutputStream;
 import org.ecsail.dto.BoatListDTO;
+import org.ecsail.enums.Dialogue;
 import org.ecsail.interfaces.Controller;
 import org.ecsail.mvci_main.MainController;
+import org.ecsail.widgetfx.DialogueFX;
 
 public class BoatController extends Controller {
     MainController mainController;
@@ -38,10 +41,8 @@ public class BoatController extends Controller {
                     case DELETE_IMAGE -> boatInteractor.deleteImage();
                     case DELETE_NOTE -> boatInteractor.deleteNote();
                     case DELETE_OWNER -> {
-                            HBox hBox = new HBox();
-                            hBox.setPrefSize(400, 150);
-                            hBox.getChildren().add(new Label("testing"));
-                            mainController.createDialogueController(hBox);
+                        BooleanProperty booleanProperty = boatInteractor.getConfirmation();
+                        mainController.createDialogueController(Dialogue.CONFORMATION, booleanProperty);
                     }
                     case INSERT -> System.out.println("Insert");
                     case NONE -> System.out.println("None");

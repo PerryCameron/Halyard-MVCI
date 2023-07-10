@@ -13,7 +13,7 @@ import org.ecsail.interfaces.Status;
 
 
 public class DialogueModel {
-    protected Stage dialogueStage = new Stage();
+
     private SimpleDoubleProperty primaryXProperty = new SimpleDoubleProperty();
     private SimpleDoubleProperty primaryYProperty = new SimpleDoubleProperty();
 
@@ -42,11 +42,4 @@ public class DialogueModel {
         this.primaryYProperty.set(primaryYProperty);
     }
 
-    public Stage getDialogueStage() {
-        return dialogueStage;
-    }
-
-    public void setDialogueStage(Stage dialogueStage) {
-        this.dialogueStage = dialogueStage;
-    }
 }

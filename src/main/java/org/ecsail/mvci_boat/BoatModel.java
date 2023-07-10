@@ -3,7 +3,6 @@ package org.ecsail.mvci_boat;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.TableRow;
 import javafx.scene.image.ImageView;
 import org.ecsail.dto.*;
 import org.ecsail.mvci_main.MainModel;
@@ -23,9 +22,20 @@ public class BoatModel {
     protected SimpleObjectProperty<ImageView> imageView = new SimpleObjectProperty<>();
     private ObservableList<NotesDTO> notesDTOS = FXCollections.observableArrayList();
     protected SimpleObjectProperty<MembershipListDTO> selectedOwner = new SimpleObjectProperty<>();
+    private BooleanProperty confirmed = new SimpleBooleanProperty(false);
 
 
+    public boolean isConfirmed() {
+        return confirmed.get();
+    }
 
+    public BooleanProperty confirmedProperty() {
+        return confirmed;
+    }
+
+    public void setConfirmed(boolean confirmed) {
+        this.confirmed.set(confirmed);
+    }
 
     public MembershipListDTO getSelectedOwner() {
         return selectedOwner.get();
@@ -137,6 +147,7 @@ public class BoatModel {
     public MainModel getMainModel() {
         return mainModel;
     }
+
 
 
 }

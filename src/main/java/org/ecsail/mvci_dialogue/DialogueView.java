@@ -1,78 +1,108 @@
 package org.ecsail.mvci_dialogue;
 
 
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.*;
-import javafx.scene.image.Image;
-import javafx.scene.input.KeyCode;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.stage.Modality;
-import javafx.stage.StageStyle;
+import javafx.stage.Stage;
 import javafx.util.Builder;
-import javafx.util.Duration;
 import org.ecsail.BaseApplication;
-import org.ecsail.interfaces.Status;
-import org.ecsail.widgetfx.HBoxFx;
-import org.ecsail.widgetfx.MenuFx;
-import org.ecsail.widgetfx.RectangleFX;
+import org.ecsail.enums.Dialogue;
 
-import java.util.Objects;
 import java.util.function.Supplier;
 
 import static java.lang.System.getProperty;
 
 public class DialogueView implements Builder<Region> {
     private final DialogueModel dialogueModel;
-    private final Region region;
+    private final Dialogue dialogue;
+    private final BooleanProperty confirm;
+
+    private final Stage stage;
     private Supplier<Boolean> supplier;
 
-    public DialogueView(DialogueModel dialogueModel, Region region) {
+    public DialogueView(DialogueModel dialogueModel, Dialogue dialogue, BooleanProperty booleanProperty) {
+        this.dialogue = dialogue;
+        this.confirm = booleanProperty;
         this.dialogueModel = dialogueModel;
-        this.region = region;
+        this.stage = new Stage();
     }
+
 
     @Override
     public Region build() {
-        setUpStage();
-        BorderPane borderPane = new BorderPane();
-        borderPane.setCenter(region);
-        return borderPane;
+        setUpStage(stage);
+        VBox vBox = new VBox();
+        Label label = new Label("Are you sure you want to delete this?");
+        vBox.getChildren().add(label);
+        vBox.setPrefSize(400, 150);
+        switch (dialogue) {
+            case CONFORMATION -> vBox.getChildren().add(createConformation(stage));
+        }
+        return vBox;
     }
 
-    private void setUpStage() {
-        dialogueModel.getDialogueStage().initOwner(BaseApplication.primaryStage);
-        dialogueModel.getDialogueStage().initModality(Modality.APPLICATION_MODAL);
+
+    private Node createConformation(Stage stage) {
+        System.out.println("Creating conformation");
+        HBox hBox = new HBox();
+        Button cancelButton = new Button("Cancel");
+        cancelButton.setOnAction(e -> {
+            if(confirm.get())
+                confirm.set(false);
+            else {
+                confirm.set(true);
+                confirm.set(false);
+            }
+            stage.close();
+        });
+        Button okButton = new Button("Ok");
+        okButton.setOnAction(e ->  {
+            if(!confirm.get())
+                confirm.set(true);
+            else {
+                confirm.set(false);
+                confirm.set(true);
+            }
+            stage.close();
+        });
+        hBox.getChildren().addAll(okButton,cancelButton);
+        return hBox;
+    }
+
+    private void setUpStage(Stage dialogueStage) {
+        dialogueStage.initOwner(BaseApplication.primaryStage);
+        dialogueStage.initModality(Modality.APPLICATION_MODAL);
         dialogueModel.primaryXPropertyProperty().bind(BaseApplication.primaryStage.xProperty());
         dialogueModel.primaryYPropertyProperty().bind(BaseApplication.primaryStage.yProperty());
-        dialogueModel.getDialogueStage().setOnShown(windowEvent -> {
-            updateSpinnerLocation();
+        dialogueStage.setOnShown(windowEvent -> {
+            updateSpinnerLocation(dialogueStage);
         });
-        dialogueModel.getDialogueStage().show();
-        monitorPropertyChange(dialogueModel.primaryXPropertyProperty());
-        monitorPropertyChange(dialogueModel.primaryYPropertyProperty());
+        dialogueStage.show();
+        monitorPropertyChange(dialogueModel.primaryXPropertyProperty(), dialogueStage);
+        monitorPropertyChange(dialogueModel.primaryYPropertyProperty(), dialogueStage);
     }
 
-    public void monitorPropertyChange(DoubleProperty property) {
+    public void monitorPropertyChange(DoubleProperty property, Stage stage) {
         property.addListener((observable, oldValue, newValue) -> {
-            updateSpinnerLocation();
+            updateSpinnerLocation(stage);
         });
     }
 
-    private void updateSpinnerLocation() {
+    private void updateSpinnerLocation(Stage dialogueStage) {
         double centerXPosition = BaseApplication.primaryStage.getX() + BaseApplication.primaryStage.getWidth() / 2d;
         double centerYPosition = BaseApplication.primaryStage.getY() + BaseApplication.primaryStage.getHeight() / 2d;
-            dialogueModel.getDialogueStage().setX(centerXPosition -
-                    dialogueModel.getDialogueStage().getWidth()  / 2d);
-            dialogueModel.getDialogueStage().setY(centerYPosition -
-                    dialogueModel.getDialogueStage().getHeight()  / 2d);
+        dialogueStage.setX(centerXPosition -
+                dialogueStage.getWidth()  / 2d);
+        dialogueStage.setY(centerYPosition -
+                dialogueStage.getHeight()  / 2d);
     }
 
+    public Stage getStage() {
+        return stage;
+    }
 }

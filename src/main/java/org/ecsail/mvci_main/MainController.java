@@ -2,6 +2,7 @@ package org.ecsail.mvci_main;
 
 
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
 import javafx.concurrent.Task;
 import javafx.scene.Scene;
 import javafx.scene.layout.Region;
@@ -9,6 +10,7 @@ import javafx.scene.paint.Color;
 import org.ecsail.connection.Connections;
 import org.ecsail.dto.BoatListDTO;
 import org.ecsail.dto.MembershipListDTO;
+import org.ecsail.enums.Dialogue;
 import org.ecsail.interfaces.Controller;
 import org.ecsail.interfaces.Status;
 import org.ecsail.mvci_boat.BoatController;
@@ -19,6 +21,8 @@ import org.ecsail.mvci_load.LoadingController;
 import org.ecsail.mvci_membership.MembershipController;
 import org.ecsail.mvci_roster.RosterController;
 import org.ecsail.mvci_welcome.WelcomeController;
+
+import java.util.concurrent.atomic.AtomicReference;
 
 public class MainController extends Controller implements Status {
 
@@ -35,10 +39,10 @@ public class MainController extends Controller implements Status {
         mainInteractor.setComplete();
     }
 
-    public void createDialogueController(Region region) {
+    public void createDialogueController(Dialogue dialogue, BooleanProperty booleanProperty) {
         try {
             Platform.runLater(() -> {
-                dialogueController = new DialogueController(this, region);
+                dialogueController = new DialogueController(this, dialogue, booleanProperty);
                 dialogueController.getStage().setScene(new Scene(dialogueController.getView()));
             });
         } catch (Exception e) {
