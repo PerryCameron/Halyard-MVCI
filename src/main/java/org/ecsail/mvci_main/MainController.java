@@ -22,8 +22,6 @@ import org.ecsail.mvci_membership.MembershipController;
 import org.ecsail.mvci_roster.RosterController;
 import org.ecsail.mvci_welcome.WelcomeController;
 
-import java.util.concurrent.atomic.AtomicReference;
-
 public class MainController extends Controller implements Status {
 
     private final MainInteractor mainInteractor;
@@ -44,6 +42,8 @@ public class MainController extends Controller implements Status {
             Platform.runLater(() -> {
                 dialogueController = new DialogueController(this, dialogue, booleanProperty);
                 dialogueController.getStage().setScene(new Scene(dialogueController.getView()));
+                dialogueController.getStage().getScene().getStylesheets().addAll(
+                        "css/dark/dark.css");
             });
         } catch (Exception e) {
             System.out.println(e);

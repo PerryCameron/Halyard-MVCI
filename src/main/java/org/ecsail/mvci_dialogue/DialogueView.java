@@ -3,6 +3,8 @@ package org.ecsail.mvci_dialogue;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.DoubleProperty;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -21,9 +23,7 @@ public class DialogueView implements Builder<Region> {
     private final DialogueModel dialogueModel;
     private final Dialogue dialogue;
     private final BooleanProperty confirm;
-
     private final Stage stage;
-    private Supplier<Boolean> supplier;
 
     public DialogueView(DialogueModel dialogueModel, Dialogue dialogue, BooleanProperty booleanProperty) {
         this.dialogue = dialogue;
@@ -31,7 +31,6 @@ public class DialogueView implements Builder<Region> {
         this.dialogueModel = dialogueModel;
         this.stage = new Stage();
     }
-
 
     @Override
     public Region build() {
@@ -46,45 +45,39 @@ public class DialogueView implements Builder<Region> {
         return vBox;
     }
 
-
     private Node createConformation(Stage stage) {
-        System.out.println("Creating conformation");
         HBox hBox = new HBox();
         Button cancelButton = new Button("Cancel");
-        cancelButton.setOnAction(e -> {
-            if(confirm.get())
-                confirm.set(false);
-            else {
-                confirm.set(true);
-                confirm.set(false);
-            }
-            stage.close();
-        });
+        cancelButton.setOnAction(getButtonActionEventEventHandler(stage, false));
         Button okButton = new Button("Ok");
-        okButton.setOnAction(e ->  {
-            if(!confirm.get())
-                confirm.set(true);
-            else {
-                confirm.set(false);
-                confirm.set(true);
-            }
-            stage.close();
-        });
+        okButton.setOnAction(getButtonActionEventEventHandler(stage, true));
         hBox.getChildren().addAll(okButton,cancelButton);
         return hBox;
     }
 
-    private void setUpStage(Stage dialogueStage) {
-        dialogueStage.initOwner(BaseApplication.primaryStage);
-        dialogueStage.initModality(Modality.APPLICATION_MODAL);
+    private EventHandler<ActionEvent> getButtonActionEventEventHandler(Stage stage, boolean setTo) {
+        return e -> {
+            if (!confirm.get())
+                confirm.set(setTo);
+            else {
+                confirm.set(!setTo);
+                confirm.set(setTo);
+            }
+            stage.close();
+        };
+    }
+
+    private void setUpStage(Stage stage) {
+        stage.initOwner(BaseApplication.primaryStage);
+        stage.initModality(Modality.APPLICATION_MODAL);
         dialogueModel.primaryXPropertyProperty().bind(BaseApplication.primaryStage.xProperty());
         dialogueModel.primaryYPropertyProperty().bind(BaseApplication.primaryStage.yProperty());
-        dialogueStage.setOnShown(windowEvent -> {
-            updateSpinnerLocation(dialogueStage);
+        stage.setOnShown(windowEvent -> {
+            updateSpinnerLocation(stage);
         });
-        dialogueStage.show();
-        monitorPropertyChange(dialogueModel.primaryXPropertyProperty(), dialogueStage);
-        monitorPropertyChange(dialogueModel.primaryYPropertyProperty(), dialogueStage);
+        stage.show();
+        monitorPropertyChange(dialogueModel.primaryXPropertyProperty(), stage);
+        monitorPropertyChange(dialogueModel.primaryYPropertyProperty(), stage);
     }
 
     public void monitorPropertyChange(DoubleProperty property, Stage stage) {
