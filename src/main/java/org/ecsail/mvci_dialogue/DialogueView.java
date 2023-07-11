@@ -15,6 +15,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Builder;
 import org.ecsail.BaseApplication;
+import org.ecsail.dto.DialogueDTO;
 import org.ecsail.enums.Dialogue;
 import org.ecsail.widgetfx.HBoxFx;
 import org.ecsail.widgetfx.VBoxFx;
@@ -25,13 +26,11 @@ import static java.lang.System.getProperty;
 
 public class DialogueView implements Builder<Region> {
     private final DialogueModel dialogueModel;
-    private final Dialogue dialogue;
-    private final BooleanProperty confirm;
+    private final DialogueDTO dialogueDTO;
     private final Stage stage;
 
-    public DialogueView(DialogueModel dialogueModel, Dialogue dialogue, BooleanProperty booleanProperty) {
-        this.dialogue = dialogue;
-        this.confirm = booleanProperty;
+    public DialogueView(DialogueModel dialogueModel, DialogueDTO dialogueDTO) {
+        this.dialogueDTO = dialogueDTO;
         this.dialogueModel = dialogueModel;
         this.stage = new Stage();
     }
@@ -39,12 +38,13 @@ public class DialogueView implements Builder<Region> {
     @Override
     public Region build() {
         setUpStage(stage);
-        VBox vBox = VBoxFx.vBoxOf(20.0, new Insets(0,0,0,0));
+        VBox vBox = VBoxFx.vBoxOf(20.0, new Insets(0,10,0,10));
         vBox.setAlignment(Pos.CENTER);
-        Label label = new Label("Are you sure you want to delete this?");
-        vBox.getChildren().add(label);
+        Label label = new Label(dialogueDTO.getMessage());
+        label.setWrapText(true);
         vBox.setPrefSize(350, 100);
-        switch (dialogue) {
+        vBox.getChildren().add(label);
+        switch (dialogueDTO.getDialogue()) {
             case CONFORMATION -> vBox.getChildren().add(createConformation(stage));
         }
         return vBox;
@@ -62,11 +62,11 @@ public class DialogueView implements Builder<Region> {
 
     private EventHandler<ActionEvent> getButtonActionEventEventHandler(Stage stage, boolean setTo) {
         return e -> {
-            if (!confirm.get())
-                confirm.set(setTo);
+            if (!dialogueDTO.confirmedProperty().get())
+                dialogueDTO.confirmedProperty().set(setTo);
             else {
-                confirm.set(!setTo);
-                confirm.set(setTo);
+                dialogueDTO.confirmedProperty().set(!setTo);
+                dialogueDTO.confirmedProperty().set(setTo);
             }
             stage.close();
         };

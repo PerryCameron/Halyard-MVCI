@@ -9,6 +9,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import org.ecsail.connection.Connections;
 import org.ecsail.dto.BoatListDTO;
+import org.ecsail.dto.DialogueDTO;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.enums.Dialogue;
 import org.ecsail.interfaces.Controller;
@@ -37,10 +38,10 @@ public class MainController extends Controller implements Status {
         mainInteractor.setComplete();
     }
 
-    public void createDialogueController(Dialogue dialogue, BooleanProperty booleanProperty) {
+    public void createDialogueController(DialogueDTO dialogueDTO) {
         try {
             Platform.runLater(() -> {
-                dialogueController = new DialogueController(this, dialogue, booleanProperty);
+                dialogueController = new DialogueController(this, dialogueDTO);
                 dialogueController.getStage().setScene(new Scene(dialogueController.getView()));
                 dialogueController.getStage().getScene().getStylesheets().addAll(
                         "css/dark/dark.css");

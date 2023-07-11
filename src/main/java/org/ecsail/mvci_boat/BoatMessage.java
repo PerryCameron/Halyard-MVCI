@@ -15,5 +15,6 @@ public enum BoatMessage {
     ADD_OWNER,
     MOVE_FORWARD,
     MOVE_BACKWARD,
+    INFORM,
     NONE
 }

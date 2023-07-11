@@ -132,4 +132,11 @@ public class BoatInteractor {
     public BooleanProperty getConfirmation() {
         return boatModel.confirmedProperty();
     }
+
+    public String getDeleteMessage() {
+        return "Are you sure you want to remove "
+                + boatModel.getSelectedOwner().getFirstName() + " "
+                + boatModel.getSelectedOwner().getLastName()
+                + " as an owner of this boat?";
+    }
 }

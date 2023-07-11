@@ -104,12 +104,16 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
     }
 
     private void deleteOwner() {
-        action.accept(BoatMessage.DELETE_OWNER);
-        ChangeListener<Boolean> confirmed = ListenerFx.createSingleUseListener(boatModel.confirmedProperty(), () -> {
-            System.out.println(boatModel.isConfirmed());
-            action.accept(BoatMessage.DELETE_OWNER_CONFIRMED);
-        });
-        boatModel.confirmedProperty().addListener(confirmed);
+        if(boatModel.getSelectedOwner() != null) {
+            action.accept(BoatMessage.DELETE_OWNER);
+            ChangeListener<Boolean> confirmed = ListenerFx.createSingleUseListener(boatModel.confirmedProperty(), () -> {
+                System.out.println(boatModel.isConfirmed());
+                action.accept(BoatMessage.DELETE_OWNER_CONFIRMED);
+            });
+            boatModel.confirmedProperty().addListener(confirmed);
+        } else {
+            System.out.println("You must select a row first");
+        }
     }
 
     private Node boatInfoTitlePane() {
