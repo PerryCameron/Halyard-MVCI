@@ -1,10 +1,7 @@
 package org.ecsail.repository.implementations;
 
 
-import org.ecsail.dto.BoatDTO;
-import org.ecsail.dto.BoatListDTO;
-import org.ecsail.dto.BoatOwnerDTO;
-import org.ecsail.dto.BoatPhotosDTO;
+import org.ecsail.dto.*;
 import org.ecsail.repository.interfaces.BoatRepository;
 import org.ecsail.repository.rowmappers.BoatListRowMapper;
 import org.ecsail.repository.rowmappers.BoatOwnerRowMapper;
@@ -136,6 +133,17 @@ public class BoatRepositoryImpl implements BoatRepository {
     public List<BoatPhotosDTO> getImagesByBoatId(int boatId) {
         String query = "SELECT * FROM boat_photos WHERE BOAT_ID=?";
         return template.query(query, new BoatPhotosRowMapper(), boatId);
+    }
+
+    @Override
+    public int delete(MembershipListDTO membershipListDTO) {
+        String sql = "DELETE FROM boat_owner WHERE MS_ID = ?";
+        try {
+            return template.update(sql, membershipListDTO.getMsId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
     @Override

@@ -86,11 +86,8 @@ public class BoatInteractor {
     }
 
     public void updateNote() {
-        try {
-            noteRepo.update(boatModel.getSelectedNote());
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-        }
+           if(noteRepo.update(boatModel.getSelectedNote()) == 1) savedToIndicator(true);
+           else savedToIndicator(false);
     }
 
     public void addImage() {
@@ -107,12 +104,10 @@ public class BoatInteractor {
 
     public void insertNote() {
         NotesDTO notesDTO = new NotesDTO(boatModel.getBoatListDTO().getBoatId(),"B");
-        try {
-            noteRepo.insertNote(notesDTO);
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-        }
+        if(noteRepo.insertNote(notesDTO) == 1) {
+            savedToIndicator(true);
         Platform.runLater(() -> boatModel.getNotesDTOS().add(notesDTO));
+        } else savedToIndicator(false);
     }
 
     public void addOwner() {
@@ -120,27 +115,20 @@ public class BoatInteractor {
     }
 
     public void deleteNote() {
-        System.out.println("deleting note");
+        if(noteRepo.delete(boatModel.getSelectedNote()) == 1) {
+            savedToIndicator(true);
+            boatModel.getNotesDTOS().remove(boatModel.getSelectedNote());
+        }
+        else savedToIndicator(false);
     }
 
     public void deleteOwner() {
-        System.out.println("deleteOwner()");
-        MembershipListDTO ml = boatModel.getSelectedOwner();
-        System.out.println("It has been confirmed, Deleting owner: " + ml.getFirstName() + " " + ml.getLastName());
+        boatRepo.delete(boatModel.getSelectedOwner());
     }
 
     public BooleanProperty getConfirmation() {
         return boatModel.confirmedProperty();
     }
 
-    public String getOwnerDeleteMessage() {
-        return "Are you sure you want to remove "
-                + boatModel.getSelectedOwner().getFirstName() + " "
-                + boatModel.getSelectedOwner().getLastName()
-                + " as an owner of this boat?";
-    }
 
-    public String getNoteDeleteMessage() {
-        return "Are you sure you want to delete this note?";
-    }
 }

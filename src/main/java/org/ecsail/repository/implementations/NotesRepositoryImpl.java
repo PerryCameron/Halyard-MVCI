@@ -109,6 +109,12 @@ public class NotesRepositoryImpl implements NotesRepository {
 
     @Override
     public int delete(NotesDTO notesDTO) {
+        String sql = "DELETE FROM memo WHERE MEMO_ID = ?";
+        try {
+            return template.update(sql, notesDTO.getMemoId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return 0;
     }
 }
