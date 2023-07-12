@@ -1,11 +1,8 @@
 package org.ecsail.mvci_boat;
 
-import javafx.beans.property.BooleanProperty;
 import javafx.concurrent.Task;
 import javafx.scene.layout.Region;
 import org.ecsail.dto.BoatListDTO;
-import org.ecsail.dto.DialogueDTO;
-import org.ecsail.enums.Dialogue;
 import org.ecsail.interfaces.Controller;
 import org.ecsail.mvci_main.MainController;
 
@@ -37,8 +34,7 @@ public class BoatController extends Controller {
                     case SET_DEFAULT -> boatInteractor.setImageAsDefault();
                     case DELETE_IMAGE -> boatInteractor.deleteImage();
                     case DELETE_NOTE -> boatInteractor.deleteNote();
-                    case DELETE_OWNER -> deleteOwner();
-                    case DELETE_OWNER_CONFIRMED -> boatInteractor.deleteOwner();
+                    case DELETE_OWNER -> boatInteractor.deleteOwner();
                     case INSERT -> System.out.println("Insert");
                     case NONE -> System.out.println("None");
                     case INFORM -> System.out.println("inform");
@@ -47,13 +43,6 @@ public class BoatController extends Controller {
             }
         };
         new Thread(task).start();
-    }
-
-    private void deleteOwner() {
-        DialogueDTO dialogueDTO = new DialogueDTO(Dialogue.CONFORMATION,
-                boatInteractor.getConfirmation(),
-                boatInteractor.getDeleteMessage());
-        mainController.createDialogueController(dialogueDTO);
     }
 
     private void getBoatData() {

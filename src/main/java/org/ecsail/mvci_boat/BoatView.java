@@ -1,15 +1,16 @@
 package org.ecsail.mvci_boat;
 
+import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.TitledPane;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.util.Builder;
+import org.apache.poi.ss.formula.functions.T;
 import org.ecsail.dto.BoatPhotosDTO;
 import org.ecsail.dto.DbBoatSettingsDTO;
 import org.ecsail.fileio.FileIO;
@@ -18,6 +19,7 @@ import org.ecsail.widgetfx.*;
 
 import java.util.Comparator;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 
@@ -93,8 +95,8 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
             case ADD_IMAGE ->  button.setOnAction(event -> action.accept(BoatMessage.ADD_IMAGE));
             case ADD_NOTE -> button.setOnAction(event -> action.accept(BoatMessage.ADD_NOTE));
             case ADD_OWNER -> button.setOnAction(event -> action.accept(BoatMessage.ADD_OWNER));
-            case DELETE_IMAGE -> button.setOnAction(event -> action.accept(BoatMessage.DELETE_IMAGE));
-            case DELETE_NOTE -> button.setOnAction(event -> action.accept(BoatMessage.DELETE_NOTE));
+            case DELETE_IMAGE -> button.setOnAction(event -> deleteImage());
+            case DELETE_NOTE -> button.setOnAction(event -> deleteNote());
             case DELETE_OWNER -> button.setOnAction(event -> deleteOwner());
             case SET_DEFAULT -> button.setOnAction(event -> action.accept(BoatMessage.SET_DEFAULT));
             case MOVE_FORWARD -> button.setOnAction((event) -> moveToNextImage(true));
@@ -103,17 +105,42 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
         return button;
     }
 
-    private void deleteOwner() {
-        if(boatModel.getSelectedOwner() != null) {
-            action.accept(BoatMessage.DELETE_OWNER);
-            ChangeListener<Boolean> confirmed = ListenerFx.createSingleUseListener(boatModel.confirmedProperty(), () -> {
-                System.out.println(boatModel.isConfirmed());
-                action.accept(BoatMessage.DELETE_OWNER_CONFIRMED);
-            });
-            boatModel.confirmedProperty().addListener(confirmed);
+    private void makeAlert(String[] string, Object o, BoatMessage boatMessage) {
+        if(o != null) {
+            Alert alert = DialogueFx.customAlert(string[0], string[1], Alert.AlertType.CONFIRMATION);
+            Optional<ButtonType> result = alert.showAndWait();
+            if (result.get() == ButtonType.OK) action.accept(boatMessage);
         } else {
-            System.out.println("You must select a row first");
+            Alert alert = DialogueFx.customAlert(string[2],string[3], Alert.AlertType.INFORMATION);
+            alert.showAndWait();
         }
+    }
+
+    private void deleteNote() {
+        String[] strings = {
+                "Delete Note",
+                "Are you sure you want to delete this note?",
+                "Missing Selection",
+                "You need to select a note first"};
+        makeAlert(strings, boatModel.getSelectedNote(), BoatMessage.DELETE_NOTE);
+    }
+
+    private void deleteOwner() {
+        String[] strings = {
+                "Delete Owner",
+                "Are you sure you want to delete this owner?",
+                "Missing Selection",
+                "You need to select an owner first"};
+        makeAlert(strings, boatModel.getSelectedOwner(), BoatMessage.DELETE_OWNER);
+    }
+
+    private void deleteImage() {
+        String[] strings = {
+                "Delete Image",
+                "Are you sure you want to delete this owner?",
+                "Missing Selection",
+                "You need to select an owner first"};
+        makeAlert(strings, boatModel.getSelectedImage(), BoatMessage.DELETE_IMAGE);
     }
 
     private Node boatInfoTitlePane() {

@@ -1,12 +1,11 @@
 package org.ecsail.mvci_boat;
 
 import javafx.beans.value.ChangeListener;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
+import javafx.scene.input.MouseButton;
 import javafx.util.Builder;
 import javafx.util.Callback;
+import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.dto.NotesDTO;
 import org.ecsail.widgetfx.CallBackFX;
 import org.ecsail.widgetfx.ListenerFx;
@@ -28,6 +27,15 @@ public class BoatNotesTableView implements Builder<TableView<NotesDTO>> {
         TableView<NotesDTO> tableView = TableViewFx.tableViewOf(NotesDTO.class);
         ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(boatModel.dataLoadedProperty(), () -> {
             tableView.setItems(boatModel.getNotesDTOS());
+        });
+        tableView.setRowFactory(tv -> {
+            TableRow<NotesDTO> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 1) {
+                    boatModel.setSelectedNote(row.getItem());
+                }
+            });
+            return row;
         });
         boatModel.dataLoadedProperty().addListener(dataLoadedListener);
         tableView.setPrefHeight(100);

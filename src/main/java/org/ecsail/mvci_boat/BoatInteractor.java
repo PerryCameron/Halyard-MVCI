@@ -133,10 +133,14 @@ public class BoatInteractor {
         return boatModel.confirmedProperty();
     }
 
-    public String getDeleteMessage() {
+    public String getOwnerDeleteMessage() {
         return "Are you sure you want to remove "
                 + boatModel.getSelectedOwner().getFirstName() + " "
                 + boatModel.getSelectedOwner().getLastName()
                 + " as an owner of this boat?";
+    }
+
+    public String getNoteDeleteMessage() {
+        return "Are you sure you want to delete this note?";
     }
 }
