@@ -47,7 +47,7 @@ public class BoatController extends Controller {
     }
 
     private void getBoatData() {
-            mainController.setSpinnerOffset(225,25);
+            mainController.setSpinnerOffset(50,50);
             mainController.showLoadingSpinner(true);
             Task<Void> task = new Task<>() {
                 @Override

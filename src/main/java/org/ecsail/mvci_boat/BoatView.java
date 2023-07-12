@@ -1,7 +1,6 @@
 package org.ecsail.mvci_boat;
 
 import javafx.animation.PauseTransition;
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -12,12 +11,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.util.Builder;
 import javafx.util.Duration;
-import org.apache.poi.ss.formula.functions.T;
 import org.ecsail.dto.BoatPhotosDTO;
 import org.ecsail.dto.DbBoatSettingsDTO;
 import org.ecsail.fileio.FileIO;
 import org.ecsail.interfaces.ConfigFilePaths;
-import org.ecsail.mvci_boatlist.BoatListMessage;
 import org.ecsail.static_calls.StringTools;
 import org.ecsail.widgetfx.*;
 
@@ -47,6 +44,11 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
 
     private Node setUpNotes() {
         HBox hBoxOuter = HBoxFx.hBoxOf(new Insets(10,10,5,10));
+        hBoxOuter.setVisible(false);
+        ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(boatModel.dataLoadedProperty(), () -> {
+            hBoxOuter.setVisible(true);
+        });
+        boatModel.dataLoadedProperty().addListener(dataLoadedListener);
         TitledPane titledPane = TitledPaneFx.titledPaneOf("Notes");
         HBox hBox = new HBox();
         VBox vBoxTable = VBoxFx.vBoxOf(new Insets(0,0,0,0));
@@ -68,6 +70,11 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
 
     private Node setUpInfo() {
         VBox vBox = VBoxFx.vBoxOf(350.0,10.0, new Insets(10,0,0,10));
+        vBox.setVisible(false);
+        ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(boatModel.dataLoadedProperty(), () -> {
+            vBox.setVisible(true);
+        });
+        boatModel.dataLoadedProperty().addListener(dataLoadedListener);
         vBox.getChildren().addAll(boatInfoTitlePane(), ownerTitlePane());
         return vBox;
     }
@@ -196,11 +203,13 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
 
     private Node boatInfoTitlePane() {
         TitledPane titledPane = new TitledPane();
+        titledPane.setVisible(false);
         var vBox = new VBox();
         vBox.setId("box-grey");
         ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(boatModel.dataLoadedProperty(), () -> {
             for (DbBoatSettingsDTO dbBoatSettingsDTO : boatModel.getBoatSettings())
                 vBox.getChildren().add(new Row(this, dbBoatSettingsDTO));
+            titledPane.setVisible(true);
         });
         boatModel.dataLoadedProperty().addListener(dataLoadedListener);
         titledPane.setContent(vBox);
@@ -210,8 +219,9 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
 
     private Node setUpPicture() {
         VBox vBox = new VBox();
+        vBox.setVisible(false);
         HBox.setHgrow(vBox, Priority.ALWAYS);
-        vBox.getChildren().addAll(addPictureControls(), addPicture());
+        vBox.getChildren().addAll(addPictureControls(), addPicture(vBox));
         return vBox;
     }
 
@@ -227,7 +237,7 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
         return hBox;
     }
 
-    private Node addPicture() {
+    private Node addPicture(VBox parentVBox) {
         VBox vBox = VBoxFx.vBoxOf(630,489, true, true);
         vBox.setPadding(new Insets(0,10,0,10));
         ImageView imageView = new ImageView();
@@ -238,6 +248,7 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
         ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(boatModel.dataLoadedProperty(), () -> {
             boatModel.setSelectedImage(getDefaultBoatPhotoDTO());
             setDefaultImage();
+            parentVBox.setVisible(true);
         });
         boatModel.dataLoadedProperty().addListener(dataLoadedListener);
         vBox.getChildren().add(new ImageViewPane(imageView));
