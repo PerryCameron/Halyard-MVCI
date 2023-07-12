@@ -46,6 +46,15 @@ public class StringTools {
 	    return true;
 	}
 
+	public static boolean isInteger(String str) {
+		try {
+			Integer.parseInt(str);
+			return true;
+		} catch (NumberFormatException e) {
+			return false;
+		}
+	}
+
 	public static boolean isBigDecimal(String str) {
 		try {
 			new BigDecimal(str);

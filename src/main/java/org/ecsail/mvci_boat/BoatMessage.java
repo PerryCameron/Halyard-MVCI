@@ -15,5 +15,6 @@ public enum BoatMessage {
     MOVE_FORWARD,
     MOVE_BACKWARD,
     INFORM,
+    GET_MEMBERSHIP,
     NONE
 }

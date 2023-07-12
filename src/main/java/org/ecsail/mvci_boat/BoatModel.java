@@ -23,7 +23,20 @@ public class BoatModel {
     private ObservableList<NotesDTO> notesDTOS = FXCollections.observableArrayList();
     protected SimpleObjectProperty<MembershipListDTO> selectedOwner = new SimpleObjectProperty<>();
     private BooleanProperty confirmed = new SimpleBooleanProperty(false);
+    private IntegerProperty membershipId = new SimpleIntegerProperty();
 
+
+    public int getMembershipId() {
+        return membershipId.get();
+    }
+
+    public IntegerProperty membershipIdProperty() {
+        return membershipId;
+    }
+
+    public void setMembershipId(int membershipId) {
+        this.membershipId.set(membershipId);
+    }
 
     public boolean isConfirmed() {
         return confirmed.get();

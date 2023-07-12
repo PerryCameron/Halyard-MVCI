@@ -23,12 +23,14 @@ public class BoatNotesTableView implements Builder<TableView<NotesDTO>> {
     @Override
     public TableView<NotesDTO> build() {
         TableView<NotesDTO> tableView = TableViewFx.tableViewOf(NotesDTO.class);
-        ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(boatModel.dataLoadedProperty(), () -> tableView.setItems(boatModel.getNotesDTOS()));
+        ChangeListener<Boolean> dataLoadedListener =
+                ListenerFx.createSingleUseListener(boatModel.dataLoadedProperty(),
+                        () -> tableView.setItems(boatModel.getNotesDTOS()));
+        boatModel.dataLoadedProperty().addListener(dataLoadedListener);
         TableView.TableViewSelectionModel<NotesDTO> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) boatModel.setSelectedNote(newSelection);
         });
-        boatModel.dataLoadedProperty().addListener(dataLoadedListener);
         tableView.setPrefHeight(100);
         tableView.getColumns().addAll(createColumn1(), createColumn2());
         return tableView;

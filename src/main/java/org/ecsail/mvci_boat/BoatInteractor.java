@@ -131,4 +131,7 @@ public class BoatInteractor {
     }
 
 
+    public void getBoatOwner() {
+        System.out.println("Boat Owner is " + boatModel.getMembershipId());
+    }
 }

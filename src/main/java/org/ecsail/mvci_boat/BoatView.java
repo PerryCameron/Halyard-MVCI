@@ -1,5 +1,6 @@
 package org.ecsail.mvci_boat;
 
+import javafx.animation.PauseTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
@@ -10,11 +11,14 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.util.Builder;
+import javafx.util.Duration;
 import org.apache.poi.ss.formula.functions.T;
 import org.ecsail.dto.BoatPhotosDTO;
 import org.ecsail.dto.DbBoatSettingsDTO;
 import org.ecsail.fileio.FileIO;
 import org.ecsail.interfaces.ConfigFilePaths;
+import org.ecsail.mvci_boatlist.BoatListMessage;
+import org.ecsail.static_calls.StringTools;
 import org.ecsail.widgetfx.*;
 
 import java.util.Comparator;
@@ -94,7 +98,7 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
         switch (type) {
             case ADD_IMAGE ->  button.setOnAction(event -> action.accept(BoatMessage.ADD_IMAGE));
             case ADD_NOTE -> button.setOnAction(event -> action.accept(BoatMessage.ADD_NOTE));
-            case ADD_OWNER -> button.setOnAction(event -> action.accept(BoatMessage.ADD_OWNER));
+            case ADD_OWNER -> button.setOnAction(event -> addOwner());
             case DELETE_IMAGE -> button.setOnAction(event -> deleteImage());
             case DELETE_NOTE -> button.setOnAction(event -> deleteNote());
             case DELETE_OWNER -> button.setOnAction(event -> deleteOwner());
@@ -103,6 +107,53 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
             case MOVE_BACKWARD -> button.setOnAction((event) -> moveToNextImage(false));
         };
         return button;
+    }
+
+    private void addOwner() {
+        // Create the alert
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Add Owner");
+        alert.setHeaderText("Please enter membership ID of new owner!");
+
+        // Add style sheets
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add("css/dark/dialogue.css");
+        dialogPane.getStyleClass().add("myDialog");
+// Create a new grid pane
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+// Create a new text field
+        TextField textField = new TextField();
+        textField.setPromptText("Id");
+
+// Add the text field to the grid
+        grid.add(new Label("Membership Id:"), 0, 0);
+        grid.add(textField, 1, 0);
+
+// Add the grid to the alert
+        alert.getDialogPane().setContent(grid);
+        PauseTransition pause = new PauseTransition(Duration.seconds(1));
+        textField.textProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    if(StringTools.isInteger(newValue))
+                    boatModel.setMembershipId(Integer.parseInt(newValue));
+                    else textField.setText("");
+                    pause.setOnFinished(event -> action.accept(BoatMessage.GET_MEMBERSHIP));
+                    pause.playFromStart();
+                }
+        );
+
+// Get the result and show the alert
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK){
+            System.out.println("User input: " + textField.getText());
+        } else {
+            System.out.println("User cancelled the dialog.");
+        }
+//        action.accept(BoatMessage.ADD_OWNER);
     }
 
     private void makeAlert(String[] string, Object o, BoatMessage boatMessage) {
