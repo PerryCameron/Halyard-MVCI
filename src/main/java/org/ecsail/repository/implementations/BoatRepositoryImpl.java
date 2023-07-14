@@ -136,17 +136,6 @@ public class BoatRepositoryImpl implements BoatRepository {
     }
 
     @Override
-    public int delete(MembershipListDTO membershipListDTO) {
-        String sql = "DELETE FROM boat_owner WHERE MS_ID = ?";
-        try {
-            return template.update(sql, membershipListDTO.getMsId());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return 0;
-    }
-
-    @Override
     public int update(BoatDTO boatDTO) {
         String query = "UPDATE boat SET " +
                 "MANUFACTURER = :manufacturer, " +
@@ -166,6 +155,29 @@ public class BoatRepositoryImpl implements BoatRepository {
                 "AUX = :aux " +
                 "WHERE BOAT_ID = :boatId ";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(boatDTO);
+        return namedParameterJdbcTemplate.update(query, namedParameters);
+    }
+
+    @Override
+    public int update(BoatListDTO boatListDTO) {
+        String query = "UPDATE boat SET " +
+                "MANUFACTURER = :manufacturer, " +
+                "MANUFACTURE_YEAR = :manufactureYear, " +
+                "REGISTRATION_NUM = :registrationNum, " +
+                "MODEL = :model, " +
+                "BOAT_NAME = :boatName, " +
+                "SAIL_NUMBER = :sailNumber, " +
+                "HAS_TRAILER = :hasTrailer, " +
+                "LENGTH = :loa, " +
+                "WEIGHT = :displacement, " +
+                "KEEL = :keel, " +
+                "PHRF = :phrf, " +
+                "DRAFT = :draft, " +
+                "BEAM = :beam, " +
+                "LWL = :lwl, " +
+                "AUX = :aux " +
+                "WHERE BOAT_ID = :boatId ";
+        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(boatListDTO);
         return namedParameterJdbcTemplate.update(query, namedParameters);
     }
 
@@ -217,5 +229,11 @@ public class BoatRepositoryImpl implements BoatRepository {
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(boatOwnerDTO);
         int affectedRows = namedParameterJdbcTemplate.update(query, namedParameters);
         return affectedRows;
+    }
+
+    @Override
+    public int deleteBoatOwner(MembershipListDTO membershipListDTO) {
+        String sql = "DELETE FROM boat_owner WHERE MS_ID = ?";
+            return template.update(sql, membershipListDTO.getMsId());
     }
 }

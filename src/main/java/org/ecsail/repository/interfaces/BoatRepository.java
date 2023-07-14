@@ -17,11 +17,14 @@ public interface BoatRepository {
     List<BoatOwnerDTO> getBoatOwnersByBoatId(int boatId);
     List<BoatPhotosDTO> getImagesByBoatId(int boat_id);
 
-    int delete(MembershipListDTO membershipListDTO);
-
     int update(BoatDTO o);
+
+    int update(BoatListDTO boatListDTO);
+
     int updateAux(boolean aux, int boatId);
     int delete(BoatDTO o);
     int insert(BoatDTO o);
     int insertOwner(BoatOwnerDTO boatOwnerDTO);
+
+    int deleteBoatOwner(MembershipListDTO membershipListDTO);
 }

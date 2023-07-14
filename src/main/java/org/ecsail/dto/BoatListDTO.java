@@ -179,6 +179,9 @@ public class BoatListDTO {
 	public void setHasTrailer(boolean hasTrailer) {
 		this.hasTrailer.set(hasTrailer);
 	}
+	public boolean isHasTrailer() {
+		return hasTrailer.get();
+	}
 
 	public String getLoa() {
 		return loa.get();

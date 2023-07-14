@@ -20,9 +20,12 @@ import org.ecsail.repository.interfaces.NotesRepository;
 import org.ecsail.repository.interfaces.SettingsRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
+import java.util.function.Supplier;
 
 public class BoatInteractor {
 
@@ -32,7 +35,7 @@ public class BoatInteractor {
     private final SettingsRepository settingsRepo;
     private final NotesRepository noteRepo;
     private final BoatRepository boatRepo;
-    private final MembershipRepository membershipRepository;
+    private final MembershipRepository membershipRepo;
     private Sftp scp;
 
     public BoatInteractor(BoatModel boatModel, Connections connections) {
@@ -41,7 +44,7 @@ public class BoatInteractor {
         settingsRepo = new SettingsRepositoryImpl(connections.getDataSource());
         boatRepo = new BoatRepositoryImpl(connections.getDataSource());
         noteRepo = new NotesRepositoryImpl(connections.getDataSource());
-        membershipRepository = new MembershipRepositoryImpl(connections.getDataSource());
+        membershipRepo = new MembershipRepositoryImpl(connections.getDataSource());
         scp = connections.getScp();
     }
 
@@ -71,7 +74,7 @@ public class BoatInteractor {
 
     public void getBoatOwners() {
         ObservableList<MembershipListDTO> boatOwnerDTOS =
-                FXCollections.observableArrayList(membershipRepository.getMembershipByBoatId(boatModel.getBoatListDTO().getBoatId()));
+                FXCollections.observableArrayList(membershipRepo.getMembershipByBoatId(boatModel.getBoatListDTO().getBoatId()));
         Platform.runLater(() -> boatModel.setBoatOwners(boatOwnerDTOS));
     }
 
@@ -79,15 +82,50 @@ public class BoatInteractor {
         boatModel.setImages((ArrayList<BoatPhotosDTO>) boatRepo.getImagesByBoatId(boatModel.getBoatListDTO().getBoatId()));
     }
 
+    public boolean executeWithHandling(Supplier<Integer> supplier) {
+        try {
+            if(supplier.get() == 1) savedToIndicator(true);
+            else savedToIndicator(false);
+            return true;
+        } catch (IncorrectResultSizeDataAccessException e) {
+            logger.error("IncorrectResultSizeDataAccessException: Expected 1 row but got multiple or none", e);
+        } catch (DataAccessException e) {
+            logger.error("DataAccessException: A database access error occurred", e);
+        } catch (Exception e) {
+            logger.error("An unexpected error occurred", e);
+        }
+        return false;
+    }
+
+    public void insertNote() {
+        NotesDTO notesDTO = new NotesDTO(boatModel.getBoatListDTO().getBoatId(), "B");
+        executeWithHandling(() -> noteRepo.insertNote(notesDTO));
+        Platform.runLater(() -> boatModel.getNotesDTOS().add(notesDTO));
+    }
 
     public void updateBoat() {
-        System.out.println("Updating boat");
-        System.out.println(boatModel.getBoatListDTO());
+        executeWithHandling(() -> boatRepo.update(boatModel.getBoatListDTO()));
     }
 
     public void updateNote() {
-           if(noteRepo.update(boatModel.getSelectedNote()) == 1) savedToIndicator(true);
-           else savedToIndicator(false);
+        executeWithHandling(() -> noteRepo.update(boatModel.getSelectedNote()));
+    }
+
+    public void deleteOwner() {
+        if(executeWithHandling(() -> boatRepo.deleteBoatOwner(boatModel.getSelectedOwner())))
+            System.out.println("Remove from tableView code goes here");
+    }
+
+    public void deleteNote() {
+        if(executeWithHandling(() -> noteRepo.delete(boatModel.getSelectedNote()))) // if properly deleted from db
+            Platform.runLater(() -> boatModel.getNotesDTOS().remove(boatModel.getSelectedNote())); // remove it from the UI
+    }
+
+    public void getBoatOwner() {
+            MembershipListDTO membershipListDTO = membershipRepo.getMembershipByMembershipId(boatModel.getMembershipId());
+
+        boatModel.setSelectedOwner(membershipListDTO);
+        System.out.println("Boat Owner is " + boatModel.getSelectedOwner());
     }
 
     public void addImage() {
@@ -102,28 +140,8 @@ public class BoatInteractor {
         System.out.println("Deleting Image");
     }
 
-    public void insertNote() {
-        NotesDTO notesDTO = new NotesDTO(boatModel.getBoatListDTO().getBoatId(),"B");
-        if(noteRepo.insertNote(notesDTO) == 1) {
-            savedToIndicator(true);
-        Platform.runLater(() -> boatModel.getNotesDTOS().add(notesDTO));
-        } else savedToIndicator(false);
-    }
-
     public void addOwner() {
         System.out.println("adding owner");
-    }
-
-    public void deleteNote() {
-        if(noteRepo.delete(boatModel.getSelectedNote()) == 1) {
-            savedToIndicator(true);
-            boatModel.getNotesDTOS().remove(boatModel.getSelectedNote());
-        }
-        else savedToIndicator(false);
-    }
-
-    public void deleteOwner() {
-        boatRepo.delete(boatModel.getSelectedOwner());
     }
 
     public BooleanProperty getConfirmation() {
@@ -131,7 +149,5 @@ public class BoatInteractor {
     }
 
 
-    public void getBoatOwner() {
-        System.out.println("Boat Owner is " + boatModel.getMembershipId());
-    }
+
 }

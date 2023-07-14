@@ -15,4 +15,5 @@ public interface MembershipRepository {
     List<MembershipListDTO> getSlipWaitList(Integer selectedYear);
     List<MembershipListDTO> getMembershipByBoatId(Integer boatId);
     int update(MembershipListDTO membershipListDTO);
+    MembershipListDTO getMembershipByMembershipId(int membershipId);
 }

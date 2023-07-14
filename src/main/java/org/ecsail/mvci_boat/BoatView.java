@@ -2,6 +2,7 @@ package org.ecsail.mvci_boat;
 
 import javafx.animation.PauseTransition;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -13,6 +14,7 @@ import javafx.util.Builder;
 import javafx.util.Duration;
 import org.ecsail.dto.BoatPhotosDTO;
 import org.ecsail.dto.DbBoatSettingsDTO;
+import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.fileio.FileIO;
 import org.ecsail.interfaces.ConfigFilePaths;
 import org.ecsail.static_calls.StringTools;
@@ -133,22 +135,36 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
         grid.setPadding(new Insets(20, 150, 10, 10));
 
 // Create a new text field
-        TextField textField = new TextField();
-        textField.setPromptText("Id");
+        TextField textField1 = new TextField();
+        textField1.setPromptText("Id");
+        TextField textField2 = new TextField();
+        textField2.setEditable(false);
+        textField2.setPromptText("Name");
 
 // Add the text field to the grid
         grid.add(new Label("Membership Id:"), 0, 0);
-        grid.add(textField, 1, 0);
-
+        grid.add(textField1, 1, 0);
+        grid.add(new Label("Member Name:"), 0, 1);
+        grid.add(textField2, 1, 1);
 // Add the grid to the alert
         alert.getDialogPane().setContent(grid);
         PauseTransition pause = new PauseTransition(Duration.seconds(1));
-        textField.textProperty().addListener(
+        textField1.textProperty().addListener(
                 (observable, oldValue, newValue) -> {
                     if(StringTools.isInteger(newValue))
                     boatModel.setMembershipId(Integer.parseInt(newValue));
-                    else textField.setText("");
+                    else textField1.setText("");
+                    ChangeListener<MembershipListDTO> selectedOwnerListener = new ChangeListener<MembershipListDTO>() {
+                        @Override
+                        public void changed(ObservableValue<? extends MembershipListDTO> observable, MembershipListDTO oldValue, MembershipListDTO newValue) {
+                            textField2.setText(boatModel.getSelectedOwner().getFirstName() + " "
+                            + boatModel.getSelectedOwner().getLastName());
+                        }
+                    };
+                    boatModel.selectedOwnerProperty().addListener(selectedOwnerListener);
+                    boatModel.selectedOwnerProperty().addListener(selectedOwnerListener);
                     pause.setOnFinished(event -> action.accept(BoatMessage.GET_MEMBERSHIP));
+                    // this gets
                     pause.playFromStart();
                 }
         );
@@ -156,7 +172,7 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
 // Get the result and show the alert
         Optional<ButtonType> result = alert.showAndWait();
         if (result.isPresent() && result.get() == ButtonType.OK){
-            System.out.println("User input: " + textField.getText());
+            System.out.println("User input: " + textField1.getText());
         } else {
             System.out.println("User cancelled the dialog.");
         }
@@ -195,9 +211,9 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
     private void deleteImage() {
         String[] strings = {
                 "Delete Image",
-                "Are you sure you want to delete this owner?",
+                "Are you sure you want to delete this image?",
                 "Missing Selection",
-                "You need to select an owner first"};
+                "You need to select an image first"};
         makeAlert(strings, boatModel.getSelectedImage(), BoatMessage.DELETE_IMAGE);
     }
 
