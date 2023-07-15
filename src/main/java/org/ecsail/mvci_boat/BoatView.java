@@ -165,48 +165,37 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
         alert.getDialogPane().setContent(grid);
 
         // Get the 'OK' button of the alert
-        ButtonType okButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
-        alert.getButtonTypes().setAll(okButtonType, ButtonType.CANCEL);
-        Button okButton = (Button) alert.getDialogPane().lookupButton(okButtonType);
+        Button okButton = (Button) alert.getDialogPane().lookupButton(ButtonType.OK);
 
-        // Disable the 'OK' button initially and create a binding for its disable property
+// Disable the 'OK' button initially and create a binding for its disable property
         okButton.setDisable(true);
         BooleanBinding isInvalid = textField2.textProperty().isEqualTo("").or(textField2.textProperty().isEqualTo("Member Not Found"));
         okButton.disableProperty().bind(isInvalid);
 
         // Listener for textField1
         ChangeListener<String> listener1 = (observable, oldValue, newValue) -> {
-            if (StringTools.isInteger(newValue))
-                boatModel.setMembershipId(Integer.parseInt(newValue));
-            else
-                boatModel.setMembershipId(-1); // set to an invalid id
+            if (StringTools.isInteger(newValue)) boatModel.setMembershipId(Integer.parseInt(newValue));
+            else boatModel.setMembershipId(-1); // set to an invalid id
+            System.out.println(newValue);
             action.accept(BoatMessage.GET_MEMBERSHIP); // directly call the action here
         };
         textField1.textProperty().addListener(listener1);
 
         // Listener for selected owner property
         ChangeListener<MembershipListDTO> selectedOwnerListener = (observable1, oldValue1, newValue1) -> {
+            System.out.println(boatModel.getSelectedOwner().getFirstName() + " " + boatModel.getSelectedOwner().getLastName());
             textField2.setText(boatModel.getSelectedOwner().getFirstName() + " " + boatModel.getSelectedOwner().getLastName());
         };
         boatModel.selectedOwnerProperty().addListener(selectedOwnerListener);
 
         // Get the result and show the alert
         Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) {
-            System.out.println("Ok button hit");
-            textField1.textProperty().removeListener(listener1); // remove the listener when done
-            boatModel.selectedOwnerProperty().removeListener(selectedOwnerListener); // remove the listener when done
-        }
+            if (result.isPresent() && result.get().equals(ButtonType.OK)) {
+                boatModel.getBoatOwners().add(boatModel.getSelectedOwner());
+                textField1.textProperty().removeListener(listener1); // remove the listener when done
+                boatModel.selectedOwnerProperty().removeListener(selectedOwnerListener); // remove the listener when done
+            }
     }
-
-
-    //            action.accept(BoatMessage.GET_MEMBERSHIP);
-//                try {
-//        System.out.println("Adding: " + boatModel.getSelectedOwner());
-//        boatModel.getBoatOwners().add(boatModel.getSelectedOwner());
-//    } catch (Exception e) {
-//        System.out.println(e.getMessage());
-//    }
 
     private void makeAlert(String[] string, Object o, BoatMessage boatMessage) {
         if(o != null) {
