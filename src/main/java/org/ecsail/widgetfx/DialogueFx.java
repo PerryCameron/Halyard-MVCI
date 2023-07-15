@@ -13,6 +13,21 @@ public class DialogueFx {
         alert.setHeaderText(header);
         alert.setContentText(message);
         // Get the Stage from the Dialog
+//        Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+//        // Add a window showing listener to set the position of the dialog
+//        alertStage.addEventHandler(WindowEvent.WINDOW_SHOWN, e -> {
+//            // Position the dialog at the center of the main stage
+//            alertStage.setX(BaseApplication.primaryStage.getX() + (BaseApplication.primaryStage.getWidth() / 2) - (alertStage.getWidth() / 2));
+//            alertStage.setY(BaseApplication.primaryStage.getY() + (BaseApplication.primaryStage.getHeight() / 2) - (alertStage.getHeight() / 2));
+//        });
+        tieAlertToStage(alert);
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add("css/dark/dialogue.css");
+        dialogPane.getStyleClass().add("myDialog");
+        return alert;
+    }
+
+    public static void tieAlertToStage(Alert alert) {
         Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
         // Add a window showing listener to set the position of the dialog
         alertStage.addEventHandler(WindowEvent.WINDOW_SHOWN, e -> {
@@ -20,9 +35,7 @@ public class DialogueFx {
             alertStage.setX(BaseApplication.primaryStage.getX() + (BaseApplication.primaryStage.getWidth() / 2) - (alertStage.getWidth() / 2));
             alertStage.setY(BaseApplication.primaryStage.getY() + (BaseApplication.primaryStage.getHeight() / 2) - (alertStage.getHeight() / 2));
         });
-        DialogPane dialogPane = alert.getDialogPane();
-        dialogPane.getStylesheets().add("css/dark/dialogue.css");
-        dialogPane.getStyleClass().add("myDialog");
-        return alert;
     }
+
+
 }

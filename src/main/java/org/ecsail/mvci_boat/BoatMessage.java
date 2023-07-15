@@ -1,7 +1,7 @@
 package org.ecsail.mvci_boat;
 
 public enum BoatMessage {
-    INSERT,
+
     DELETE_OWNER,
     DELETE_NOTE,
     DELETE_IMAGE,
@@ -9,9 +9,10 @@ public enum BoatMessage {
     UPDATE_NOTE,
     UPDATE_BOAT,
     SET_DEFAULT,
-    ADD_IMAGE,
-    ADD_NOTE,
-    ADD_OWNER,
+    INSERT_IMAGE,
+    INSERT_NOTE,
+    INSERT_OWNER,
+    OWNER_DIALOGUE,
     MOVE_FORWARD,
     MOVE_BACKWARD,
     INFORM,

@@ -103,6 +103,9 @@ public class BoatInteractor {
         Platform.runLater(() -> boatModel.getNotesDTOS().add(notesDTO));
     }
 
+    public void insertOwner() {
+    }
+
     public void updateBoat() {
         executeWithHandling(() -> boatRepo.update(boatModel.getBoatListDTO()));
     }
@@ -153,7 +156,6 @@ public class BoatInteractor {
     public BooleanProperty getConfirmation() {
         return boatModel.confirmedProperty();
     }
-
 
 
 }

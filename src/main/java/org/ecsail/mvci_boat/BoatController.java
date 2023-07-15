@@ -28,15 +28,15 @@ public class BoatController extends Controller {
                 {
                     case UPDATE_BOAT -> boatInteractor.updateBoat();
                     case UPDATE_NOTE -> boatInteractor.updateNote();
-                    case ADD_IMAGE -> boatInteractor.addImage();
-                    case ADD_NOTE -> boatInteractor.insertNote();
-                    case ADD_OWNER -> boatInteractor.addOwner();
+                    case INSERT_IMAGE -> boatInteractor.addImage();
+                    case INSERT_NOTE -> boatInteractor.insertNote();
+                    case OWNER_DIALOGUE -> boatInteractor.addOwner();
                     case SET_DEFAULT -> boatInteractor.setImageAsDefault();
                     case DELETE_IMAGE -> boatInteractor.deleteImage();
                     case DELETE_NOTE -> boatInteractor.deleteNote();
                     case DELETE_OWNER -> boatInteractor.deleteOwner();
                     case GET_MEMBERSHIP -> boatInteractor.getBoatOwner();
-                    case INSERT -> System.out.println("Insert");
+                    case INSERT_OWNER -> boatInteractor.insertOwner();
                     case NONE -> System.out.println("None");
                     case INFORM -> System.out.println("inform");
                 }
