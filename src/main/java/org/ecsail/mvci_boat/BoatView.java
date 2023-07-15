@@ -1,6 +1,7 @@
 package org.ecsail.mvci_boat;
 
 import javafx.animation.PauseTransition;
+import javafx.beans.binding.BooleanBinding;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
@@ -10,8 +11,11 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Builder;
 import javafx.util.Duration;
+import org.ecsail.BaseApplication;
 import org.ecsail.dto.BoatPhotosDTO;
 import org.ecsail.dto.DbBoatSettingsDTO;
 import org.ecsail.dto.MembershipListDTO;
@@ -124,60 +128,85 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
         alert.setTitle("Add Owner");
         alert.setHeaderText("Please enter membership ID of new owner!");
 
+        // Get the Stage from the Dialog
+        Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
+        // Add a window showing listener to set the position of the dialog
+        alertStage.addEventHandler(WindowEvent.WINDOW_SHOWN, e -> {
+            // Position the dialog at the center of the main stage
+            alertStage.setX(BaseApplication.primaryStage.getX() + (BaseApplication.primaryStage.getWidth() / 2) - (alertStage.getWidth() / 2));
+            alertStage.setY(BaseApplication.primaryStage.getY() + (BaseApplication.primaryStage.getHeight() / 2) - (alertStage.getHeight() / 2));
+        });
+
         // Add style sheets
         DialogPane dialogPane = alert.getDialogPane();
         dialogPane.getStylesheets().add("css/dark/dialogue.css");
         dialogPane.getStyleClass().add("myDialog");
-// Create a new grid pane
+
+        // Create a new grid pane
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(10);
         grid.setPadding(new Insets(20, 150, 10, 10));
 
-// Create a new text field
+        // Create a new text field
         TextField textField1 = new TextField();
         textField1.setPromptText("Id");
         TextField textField2 = new TextField();
         textField2.setEditable(false);
         textField2.setPromptText("Name");
 
-// Add the text field to the grid
+        // Add the text field to the grid
         grid.add(new Label("Membership Id:"), 0, 0);
         grid.add(textField1, 1, 0);
         grid.add(new Label("Member Name:"), 0, 1);
         grid.add(textField2, 1, 1);
-// Add the grid to the alert
-        alert.getDialogPane().setContent(grid);
-        PauseTransition pause = new PauseTransition(Duration.seconds(1));
-        textField1.textProperty().addListener(
-                (observable, oldValue, newValue) -> {
-                    if(StringTools.isInteger(newValue))
-                    boatModel.setMembershipId(Integer.parseInt(newValue));
-                    else textField1.setText("");
-                    ChangeListener<MembershipListDTO> selectedOwnerListener = new ChangeListener<MembershipListDTO>() {
-                        @Override
-                        public void changed(ObservableValue<? extends MembershipListDTO> observable, MembershipListDTO oldValue, MembershipListDTO newValue) {
-                            textField2.setText(boatModel.getSelectedOwner().getFirstName() + " "
-                            + boatModel.getSelectedOwner().getLastName());
-                        }
-                    };
-                    boatModel.selectedOwnerProperty().addListener(selectedOwnerListener);
-                    boatModel.selectedOwnerProperty().addListener(selectedOwnerListener);
-                    pause.setOnFinished(event -> action.accept(BoatMessage.GET_MEMBERSHIP));
-                    // this gets
-                    pause.playFromStart();
-                }
-        );
 
-// Get the result and show the alert
+        // Add the grid to the alert
+        alert.getDialogPane().setContent(grid);
+
+        // Get the 'OK' button of the alert
+        ButtonType okButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+        alert.getButtonTypes().setAll(okButtonType, ButtonType.CANCEL);
+        Button okButton = (Button) alert.getDialogPane().lookupButton(okButtonType);
+
+        // Disable the 'OK' button initially and create a binding for its disable property
+        okButton.setDisable(true);
+        BooleanBinding isInvalid = textField2.textProperty().isEqualTo("").or(textField2.textProperty().isEqualTo("Member Not Found"));
+        okButton.disableProperty().bind(isInvalid);
+
+        // Listener for textField1
+        ChangeListener<String> listener1 = (observable, oldValue, newValue) -> {
+            if (StringTools.isInteger(newValue))
+                boatModel.setMembershipId(Integer.parseInt(newValue));
+            else
+                boatModel.setMembershipId(-1); // set to an invalid id
+            action.accept(BoatMessage.GET_MEMBERSHIP); // directly call the action here
+        };
+        textField1.textProperty().addListener(listener1);
+
+        // Listener for selected owner property
+        ChangeListener<MembershipListDTO> selectedOwnerListener = (observable1, oldValue1, newValue1) -> {
+            textField2.setText(boatModel.getSelectedOwner().getFirstName() + " " + boatModel.getSelectedOwner().getLastName());
+        };
+        boatModel.selectedOwnerProperty().addListener(selectedOwnerListener);
+
+        // Get the result and show the alert
         Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK){
-            System.out.println("User input: " + textField1.getText());
-        } else {
-            System.out.println("User cancelled the dialog.");
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            System.out.println("Ok button hit");
+            textField1.textProperty().removeListener(listener1); // remove the listener when done
+            boatModel.selectedOwnerProperty().removeListener(selectedOwnerListener); // remove the listener when done
         }
-//        action.accept(BoatMessage.ADD_OWNER);
     }
+
+
+    //            action.accept(BoatMessage.GET_MEMBERSHIP);
+//                try {
+//        System.out.println("Adding: " + boatModel.getSelectedOwner());
+//        boatModel.getBoatOwners().add(boatModel.getSelectedOwner());
+//    } catch (Exception e) {
+//        System.out.println(e.getMessage());
+//    }
 
     private void makeAlert(String[] string, Object o, BoatMessage boatMessage) {
         if(o != null) {

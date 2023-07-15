@@ -122,10 +122,16 @@ public class BoatInteractor {
     }
 
     public void getBoatOwner() {
+        try {
             MembershipListDTO membershipListDTO = membershipRepo.getMembershipByMembershipId(boatModel.getMembershipId());
-
-        boatModel.setSelectedOwner(membershipListDTO);
-        System.out.println("Boat Owner is " + boatModel.getSelectedOwner());
+            boatModel.setSelectedOwner(membershipListDTO);
+        } catch (IncorrectResultSizeDataAccessException e) {
+            boatModel.setSelectedOwner(new MembershipListDTO("Found", "Member Not"));
+        } catch (DataAccessException e) {
+            logger.error("DataAccessException: A database access error occurred", e);
+        } catch (Exception e) {
+            logger.error("An unexpected error occurred", e);
+        }
     }
 
     public void addImage() {

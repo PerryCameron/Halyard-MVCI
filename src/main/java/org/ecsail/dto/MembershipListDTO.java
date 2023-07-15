@@ -26,9 +26,6 @@ public class MembershipListDTO {
 	private ObservableList<NotesDTO> notesDTOS = FXCollections.observableArrayList();
 	private ObservableList<MembershipIdDTO> membershipIdDTOS = FXCollections.observableArrayList();
 
-
-
-
 	public MembershipListDTO(Integer msId, Integer pId, Integer membershipId, String joinDate, String memType, String address, String city,
 							 String state, String zip, String lastName, String firstName, String slip, Integer subLeaser,
 							 Integer selectedYear) {
@@ -48,6 +45,22 @@ public class MembershipListDTO {
 		this.selectedYear = new SimpleIntegerProperty(selectedYear);
 	}
 
+	public MembershipListDTO(String lastName, String firstName) {
+		this.msId = new SimpleIntegerProperty(0);
+		this.pId = new SimpleIntegerProperty(0);
+		this.membershipId = new SimpleIntegerProperty(0);
+		this.joinDate = new SimpleStringProperty("");
+		this.memType = new SimpleStringProperty("");
+		this.address = new SimpleStringProperty("");
+		this.city = new SimpleStringProperty("");
+		this.state = new SimpleStringProperty("");
+		this.zip = new SimpleStringProperty("");
+		this.lastName = new SimpleStringProperty(lastName);
+		this.firstName = new SimpleStringProperty(firstName);
+		this.slip = new SimpleStringProperty("");
+		this.subLeaser = new SimpleIntegerProperty(0);
+		this.selectedYear = new SimpleIntegerProperty(0);
+	}
 
 	public ObservableList<MembershipIdDTO> getMembershipIdDTOS() {
 		return membershipIdDTOS;
