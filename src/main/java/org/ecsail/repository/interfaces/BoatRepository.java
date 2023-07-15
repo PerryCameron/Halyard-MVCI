@@ -26,5 +26,5 @@ public interface BoatRepository {
     int insert(BoatDTO o);
     int insertOwner(BoatOwnerDTO boatOwnerDTO);
 
-    int deleteBoatOwner(MembershipListDTO membershipListDTO);
+    int deleteBoatOwner(MembershipListDTO membershipListDTO, BoatListDTO boatListDTO);
 }

@@ -16,10 +16,11 @@ import org.springframework.jdbc.support.KeyHolder;
 
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.Objects;
 
 public class BoatRepositoryImpl implements BoatRepository {
     private final JdbcTemplate template;
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public BoatRepositoryImpl(DataSource dataSource) {
         this.template = new JdbcTemplate(dataSource);
@@ -29,12 +30,12 @@ public class BoatRepositoryImpl implements BoatRepository {
     @Override
     public List<BoatListDTO> getActiveSailBoats() {
         String query = """
-                SELECT id.membership_id,id.ms_id, p.l_name, p.f_name,b.*,nb.boat_count 
-                FROM (SELECT * FROM membership_id WHERE FISCAL_YEAR=year(now()) and RENEW=true) id 
-                LEFT JOIN (SELECT * FROM person WHERE MEMBER_TYPE=1) p on id.MS_ID=p.MS_ID 
-                INNER JOIN boat_owner bo on id.MS_ID=bo.MS_ID 
-                INNER JOIN (SELECT * FROM boat WHERE AUX=false) b on bo.BOAT_ID=b.BOAT_ID 
-                LEFT JOIN (SELECT BOAT_ID,count(BOAT_ID) AS boat_count 
+                SELECT id.membership_id,id.ms_id, p.l_name, p.f_name,b.*,nb.boat_count\s
+                FROM (SELECT * FROM membership_id WHERE FISCAL_YEAR=year(now()) and RENEW=true) id\s
+                LEFT JOIN (SELECT * FROM person WHERE MEMBER_TYPE=1) p on id.MS_ID=p.MS_ID\s
+                INNER JOIN boat_owner bo on id.MS_ID=bo.MS_ID\s
+                INNER JOIN (SELECT * FROM boat WHERE AUX=false) b on bo.BOAT_ID=b.BOAT_ID\s
+                LEFT JOIN (SELECT BOAT_ID,count(BOAT_ID) AS boat_count\s
                 FROM boat_photos group by BOAT_ID having count(BOAT_ID) > 0) nb on b.BOAT_ID=nb.BOAT_ID
                 """;
         return template.query(query, new BoatListRowMapper());
@@ -43,12 +44,12 @@ public class BoatRepositoryImpl implements BoatRepository {
     @Override
     public List<BoatListDTO> getActiveAuxBoats() {
         String query = """
-                SELECT id.membership_id,id.ms_id, p.l_name, p.f_name,b.*,nb.boat_count 
-                FROM (SELECT * FROM membership_id WHERE FISCAL_YEAR=year(now()) and RENEW=true) id 
-                LEFT JOIN (SELECT * FROM person WHERE MEMBER_TYPE=1) p on id.MS_ID=p.MS_ID 
-                INNER JOIN boat_owner bo on id.MS_ID=bo.MS_ID 
-                INNER JOIN (SELECT * FROM boat WHERE AUX=true) b on bo.BOAT_ID=b.BOAT_ID 
-                LEFT JOIN (SELECT BOAT_ID,count(BOAT_ID) AS boat_count 
+                SELECT id.membership_id,id.ms_id, p.l_name, p.f_name,b.*,nb.boat_count
+                FROM (SELECT * FROM membership_id WHERE FISCAL_YEAR=year(now()) and RENEW=true) id
+                LEFT JOIN (SELECT * FROM person WHERE MEMBER_TYPE=1) p on id.MS_ID=p.MS_ID
+                INNER JOIN boat_owner bo on id.MS_ID=bo.MS_ID
+                INNER JOIN (SELECT * FROM boat WHERE AUX=true) b on bo.BOAT_ID=b.BOAT_ID
+                LEFT JOIN (SELECT BOAT_ID,count(BOAT_ID) AS boat_count
                 FROM boat_photos group by BOAT_ID having count(BOAT_ID) > 0) nb on b.BOAT_ID=nb.BOAT_ID;
                 """;
         return template.query(query, new BoatListRowMapper());
@@ -57,14 +58,14 @@ public class BoatRepositoryImpl implements BoatRepository {
     @Override
     public List<BoatListDTO> getAllSailBoats() {
         String query = """
-                SELECT id.membership_id,id.ms_id, p.l_name, p.f_name,b.*,nb.boat_count 
-                FROM (select * from boat where AUX=false) b 
-                LEFT JOIN boat_owner bo on b.BOAT_ID = bo.BOAT_ID 
-                LEFT JOIN membership m on bo.MS_ID = m.MS_ID 
-                LEFT JOIN (SELECT * FROM membership_id where FISCAL_YEAR=(select year(now()))) id on bo.MS_ID=id.MS_ID 
-                LEFT JOIN person p on m.P_ID = p.P_ID 
-                LEFT JOIN (select BOAT_ID,count(BOAT_ID) 
-                AS boat_count from boat_photos group by BOAT_ID having count(BOAT_ID) > 0) nb 
+                SELECT id.membership_id,id.ms_id, p.l_name, p.f_name,b.*,nb.boat_count
+                FROM (select * from boat where AUX=false) b
+                LEFT JOIN boat_owner bo on b.BOAT_ID = bo.BOAT_ID
+                LEFT JOIN membership m on bo.MS_ID = m.MS_ID
+                LEFT JOIN (SELECT * FROM membership_id where FISCAL_YEAR=(select year(now()))) id on bo.MS_ID=id.MS_ID
+                LEFT JOIN person p on m.P_ID = p.P_ID
+                LEFT JOIN (select BOAT_ID,count(BOAT_ID)
+                AS boat_count from boat_photos group by BOAT_ID having count(BOAT_ID) > 0) nb
                 ON b.BOAT_ID=nb.BOAT_ID;
                 """;
         return template.query(query, new BoatListRowMapper());
@@ -73,12 +74,12 @@ public class BoatRepositoryImpl implements BoatRepository {
     @Override
     public List<BoatListDTO> getAllAuxBoats() {
         String query = """
-                SELECT id.membership_id,id.ms_id, p.l_name, p.f_name,b.*,nb.boat_count 
-                FROM (select * from boat where AUX=true) b 
-                LEFT JOIN boat_owner bo on b.BOAT_ID = bo.BOAT_ID 
-                LEFT JOIN membership m on bo.MS_ID = m.MS_ID 
-                LEFT JOIN (SELECT * FROM membership_id where FISCAL_YEAR=(select year(now()))) id on bo.MS_ID=id.MS_ID 
-                LEFT JOIN person p on m.P_ID = p.P_ID LEFT JOIN (select BOAT_ID,count(BOAT_ID) 
+                SELECT id.membership_id,id.ms_id, p.l_name, p.f_name,b.*,nb.boat_count
+                FROM (select * from boat where AUX=true) b
+                LEFT JOIN boat_owner bo on b.BOAT_ID = bo.BOAT_ID
+                LEFT JOIN membership m on bo.MS_ID = m.MS_ID
+                LEFT JOIN (SELECT * FROM membership_id where FISCAL_YEAR=(select year(now()))) id on bo.MS_ID=id.MS_ID
+                LEFT JOIN person p on m.P_ID = p.P_ID LEFT JOIN (select BOAT_ID,count(BOAT_ID)
                 AS boat_count from boat_photos group by BOAT_ID having count(BOAT_ID) > 0) nb on b.BOAT_ID=nb.BOAT_ID;
                 """;
         return template.query(query, new BoatListRowMapper());
@@ -87,12 +88,12 @@ public class BoatRepositoryImpl implements BoatRepository {
     @Override
     public List<BoatListDTO> getAllBoats() {
         String query = """
-                SELECT id.membership_id,id.ms_id, p.l_name, p.f_name,b.*,nb.boat_count FROM boat b 
-                LEFT JOIN boat_owner bo on b.BOAT_ID = bo.BOAT_ID 
-                LEFT JOIN membership m on bo.MS_ID = m.MS_ID 
-                LEFT JOIN (SELECT * FROM membership_id where FISCAL_YEAR=(select year(now()))) id on bo.MS_ID=id.MS_ID 
-                LEFT JOIN person p on m.P_ID = p.P_ID 
-                LEFT JOIN (select BOAT_ID,count(BOAT_ID) AS boat_count from boat_photos 
+                SELECT id.membership_id,id.ms_id, p.l_name, p.f_name,b.*,nb.boat_count FROM boat b
+                LEFT JOIN boat_owner bo on b.BOAT_ID = bo.BOAT_ID
+                LEFT JOIN membership m on bo.MS_ID = m.MS_ID
+                LEFT JOIN (SELECT * FROM membership_id where FISCAL_YEAR=(select year(now()))) id on bo.MS_ID=id.MS_ID
+                LEFT JOIN person p on m.P_ID = p.P_ID
+                LEFT JOIN (select BOAT_ID,count(BOAT_ID) AS boat_count from boat_photos
                 GROUP BY BOAT_ID having count(BOAT_ID) > 0) nb on b.BOAT_ID=nb.BOAT_ID
                 """;
         return template.query(query, new BoatListRowMapper());
@@ -101,8 +102,8 @@ public class BoatRepositoryImpl implements BoatRepository {
     @Override
     public List<BoatDTO> getBoatsByMsId(int msId) {
         String query = """
-                SELECT b.boat_id, bo.ms_id, b.manufacturer, b.manufacture_year, b.registration_num, b.model, 
-                b.boat_name, b.sail_number, b.has_trailer, b.length, b.weight, b.keel, b.phrf, b.draft, b.beam, 
+                SELECT b.boat_id, bo.ms_id, b.manufacturer, b.manufacture_year, b.registration_num, b.model,
+                b.boat_name, b.sail_number, b.has_trailer, b.length, b.weight, b.keel, b.phrf, b.draft, b.beam,
                 b.lwl, b.aux FROM boat b INNER JOIN boat_owner bo USING (boat_id) WHERE ms_id=?
                 """;
         return template.query(query, new BoatRowMapper(), msId);
@@ -112,12 +113,12 @@ public class BoatRepositoryImpl implements BoatRepository {
     public List<BoatDTO> getOnlySailboatsByMsId(int msId) {
         String query = """
                 Select BOAT_ID, MS_ID, ifnull(MANUFACTURER,'') AS MANUFACTURER, ifnull(MANUFACTURE_YEAR,'') AS
-                MANUFACTURE_YEAR, ifnull(REGISTRATION_NUM,'') AS REGISTRATION_NUM, ifnull(MODEL,'') AS MODEL, 
-                ifnull(BOAT_NAME,'') AS BOAT_NAME, ifnull(SAIL_NUMBER,'') AS SAIL_NUMBER, HAS_TRAILER, 
-                ifnull(LENGTH,'') AS LENGTH, ifnull(WEIGHT,'') AS WEIGHT, KEEL, ifnull(PHRF,'') AS PHRF, ifnull(DRAFT,'') AS DRAFT, 
-                ifnull(BEAM,'') AS BEAM, ifnull(LWL,'') AS LWL, AUX from boat 
-                INNER JOIN boat_owner USING (boat_id) WHERE ms_id=? and 
-                MODEL NOT LIKE 'Kayak' and MODEL NOT LIKE 'Canoe' and MODEL NOT LIKE 'Row Boat' and 
+                MANUFACTURE_YEAR, ifnull(REGISTRATION_NUM,'') AS REGISTRATION_NUM, ifnull(MODEL,'') AS MODEL,
+                ifnull(BOAT_NAME,'') AS BOAT_NAME, ifnull(SAIL_NUMBER,'') AS SAIL_NUMBER, HAS_TRAILER,
+                ifnull(LENGTH,'') AS LENGTH, ifnull(WEIGHT,'') AS WEIGHT, KEEL, ifnull(PHRF,'') AS PHRF, ifnull(DRAFT,'') AS DRAFT,
+                ifnull(BEAM,'') AS BEAM, ifnull(LWL,'') AS LWL, AUX from boat
+                INNER JOIN boat_owner USING (boat_id) WHERE ms_id=? and
+                MODEL NOT LIKE 'Kayak' and MODEL NOT LIKE 'Canoe' and MODEL NOT LIKE 'Row Boat' and
                 MODEL NOT LIKE 'Paddle Board'
                                 """;
         return template.query(query, new BoatRowMapper(), msId);
@@ -206,7 +207,7 @@ public class BoatRepositoryImpl implements BoatRepository {
                 ":hasTrailer, :loa, :displacement, :keel, :phrf, :draft, :beam, :lwl, :aux)";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(boatDTO);
         int affectedRows = namedParameterJdbcTemplate.update(query, namedParameters, keyHolder);
-        boatDTO.setBoatId(keyHolder.getKey().intValue());
+        boatDTO.setBoatId(Objects.requireNonNull(keyHolder.getKey()).intValue());
         return affectedRows;
     }
 
@@ -227,13 +228,12 @@ public class BoatRepositoryImpl implements BoatRepository {
         String query = "INSERT INTO boat_owner (MS_ID, BOAT_ID) " +
                 "VALUES (:msId, :boatId)";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(boatOwnerDTO);
-        int affectedRows = namedParameterJdbcTemplate.update(query, namedParameters);
-        return affectedRows;
+        return namedParameterJdbcTemplate.update(query, namedParameters);
     }
 
     @Override
-    public int deleteBoatOwner(MembershipListDTO membershipListDTO) {
-        String sql = "DELETE FROM boat_owner WHERE MS_ID = ?";
-            return template.update(sql, membershipListDTO.getMsId());
+    public int deleteBoatOwner(MembershipListDTO membershipListDTO, BoatListDTO boatListDTO) {
+        String sql = "DELETE FROM boat_owner WHERE MS_ID = ? and BOAT_ID = ?";
+            return template.update(sql, membershipListDTO.getMsId(), boatListDTO.getBoatId());
     }
 }

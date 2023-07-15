@@ -16,9 +16,9 @@ public class CustomOwnerDialogue implements Builder<Alert> {
     private final BoatModel boatModel;
     private final BoatView boatView;
     private Alert alert;
-    ChangeListener<String> idTextFieldChangeListener;
-    ChangeListener<MembershipListDTO> selectedOwnerListener;
-    TextField idTextField;
+    private ChangeListener<String> idTextFieldChangeListener;
+    private ChangeListener<MembershipListDTO> selectedOwnerListener;
+    private TextField idTextField;
 
     public CustomOwnerDialogue(BoatView boatView) {
         this.boatModel = boatView.getBoatModel();

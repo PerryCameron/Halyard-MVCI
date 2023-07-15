@@ -6,10 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.ecsail.connection.Connections;
 import org.ecsail.connection.Sftp;
-import org.ecsail.dto.BoatPhotosDTO;
-import org.ecsail.dto.DbBoatSettingsDTO;
-import org.ecsail.dto.MembershipListDTO;
-import org.ecsail.dto.NotesDTO;
+import org.ecsail.dto.*;
 import org.ecsail.repository.implementations.BoatRepositoryImpl;
 import org.ecsail.repository.implementations.MembershipRepositoryImpl;
 import org.ecsail.repository.implementations.NotesRepositoryImpl;
@@ -104,6 +101,8 @@ public class BoatInteractor {
     }
 
     public void insertOwner() {
+        BoatOwnerDTO boatOwnerDTO = new BoatOwnerDTO(boatModel.getSelectedOwner().getMsId(), boatModel.getBoatListDTO().getBoatId());
+        executeWithHandling(() -> boatRepo.insertOwner(boatOwnerDTO));
     }
 
     public void updateBoat() {
@@ -115,8 +114,8 @@ public class BoatInteractor {
     }
 
     public void deleteOwner() {
-        if(executeWithHandling(() -> boatRepo.deleteBoatOwner(boatModel.getSelectedOwner())))
-            System.out.println("Remove from tableView code goes here");
+        if(executeWithHandling(() -> boatRepo.deleteBoatOwner(boatModel.getSelectedOwner(), boatModel.getBoatListDTO())))
+            boatModel.getBoatOwners().removeIf(owner -> owner.getMsId() == boatModel.getSelectedOwner().getMsId());
     }
 
     public void deleteNote() {
