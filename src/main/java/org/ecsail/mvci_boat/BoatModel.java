@@ -24,7 +24,26 @@ public class BoatModel {
     protected SimpleObjectProperty<MembershipListDTO> selectedOwner = new SimpleObjectProperty<>();
     private BooleanProperty confirmed = new SimpleBooleanProperty(false);
     private IntegerProperty membershipId = new SimpleIntegerProperty();
+    private StringProperty selectedPath = new SimpleStringProperty();
 
+
+
+
+
+
+
+
+    public String getSelectedPath() {
+        return selectedPath.get();
+    }
+
+    public StringProperty selectedPathProperty() {
+        return selectedPath;
+    }
+
+    public void setSelectedPath(String selectedPath) {
+        this.selectedPath.set(selectedPath);
+    }
 
     public int getMembershipId() {
         return membershipId.get();

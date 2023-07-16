@@ -2,16 +2,16 @@ package org.ecsail.dto;
 
 public class BoatPhotosDTO {
     int id;
-    int boat_id;
-    String upload_date;
+    int boatId;
+    String uploadDate;
     String filename;
     int fileNumber;
     boolean isDefault;
 
-    public BoatPhotosDTO(int id, int boat_id, String upload_date, String filename, int fileNumber, boolean isDefault) {
+    public BoatPhotosDTO(int id, int boatId, String uploadDate, String filename, int fileNumber, boolean isDefault) {
         this.id = id;
-        this.boat_id = boat_id;
-        this.upload_date = upload_date;
+        this.boatId = boatId;
+        this.uploadDate = uploadDate;
         this.filename = filename;
         this.fileNumber = fileNumber;
         this.isDefault = isDefault;
@@ -25,20 +25,20 @@ public class BoatPhotosDTO {
         this.id = id;
     }
 
-    public int getBoat_id() {
-        return boat_id;
+    public int getBoatId() {
+        return boatId;
     }
 
-    public void setBoat_id(int boat_id) {
-        this.boat_id = boat_id;
+    public void setBoatId(int boatId) {
+        this.boatId = boatId;
     }
 
-    public String getUpload_date() {
-        return upload_date;
+    public String getUploadDate() {
+        return uploadDate;
     }
 
-    public void setUpload_date(String upload_date) {
-        this.upload_date = upload_date;
+    public void setUploadDate(String uploadDate) {
+        this.uploadDate = uploadDate;
     }
 
     public String getFilename() {
@@ -58,6 +58,10 @@ public class BoatPhotosDTO {
     }
 
     public boolean isDefault() {
+        return isDefault;
+    }
+
+    public Boolean getIsDefault() {
         return isDefault;
     }
 

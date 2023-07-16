@@ -10,6 +10,8 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 import javafx.util.Builder;
 import org.ecsail.dto.BoatPhotosDTO;
@@ -99,7 +101,7 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
     private Node createButton(String name, BoatMessage type) {
         Button button = ButtonFx.buttonOf(name, 60.0);
         switch (type) {
-            case INSERT_IMAGE ->  button.setOnAction(event -> action.accept(BoatMessage.INSERT_IMAGE));
+//            case INSERT_IMAGE ->  button.setOnAction(event -> action.accept(BoatMessage.INSERT_IMAGE));
             case INSERT_NOTE -> button.setOnAction(event -> action.accept(BoatMessage.INSERT_NOTE));
             case OWNER_DIALOGUE -> button.setOnAction(event -> launchCustomOwnerDialogue());
             case DELETE_IMAGE -> button.setOnAction(event -> deleteImage());
@@ -192,7 +194,7 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
         hBox.setSpacing(7);
         hBox.getChildren().add(createButton("<",BoatMessage.MOVE_BACKWARD));
         hBox.getChildren().add(createButton(">",BoatMessage.MOVE_FORWARD));
-        hBox.getChildren().add(createButton("Add",BoatMessage.INSERT_IMAGE));
+//        hBox.getChildren().add(createButton("Add",BoatMessage.INSERT_IMAGE));
         hBox.getChildren().add(createButton("Delete",BoatMessage.DELETE_IMAGE));
         hBox.getChildren().add(createButton("Default",BoatMessage.SET_DEFAULT));
         return hBox;
@@ -202,6 +204,7 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
         VBox vBox = VBoxFx.vBoxOf(630,489, true, true);
         vBox.setPadding(new Insets(0,10,0,10));
         ImageView imageView = new ImageView();
+
         imageView.setSmooth(true);
         imageView.setPreserveRatio(true);
         imageView.setCache(true);
@@ -212,6 +215,28 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
             parentVBox.setVisible(true);
         });
         boatModel.dataLoadedProperty().addListener(dataLoadedListener);
+        imageView.setOnDragOver(event -> {
+            /* data is dragged over the target */
+            /* accept it only if it is not dragged from the same node
+             * and if it has a string data */
+            if (event.getGestureSource() != imageView &&
+                    event.getDragboard().hasFiles()) {
+                /* allow for both copying and moving, whatever user chooses */
+                //event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+                event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+            }
+            event.consume();
+        });
+        imageView.setOnDragDropped(event -> {
+            Dragboard db = event.getDragboard();
+            boolean success = false;
+            if (db.hasFiles()) {
+                boatModel.setSelectedPath(db.getFiles().get(0).getAbsolutePath());
+                action.accept(BoatMessage.INSERT_IMAGE);
+            }
+            event.setDropCompleted(success);
+            event.consume();
+        });
         vBox.getChildren().add(new ImageViewPane(imageView));
         return vBox;
     }

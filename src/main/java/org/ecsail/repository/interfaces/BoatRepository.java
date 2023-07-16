@@ -24,6 +24,9 @@ public interface BoatRepository {
     int updateAux(boolean aux, int boatId);
     int delete(BoatDTO o);
     int insert(BoatDTO o);
+
+    int insert(BoatPhotosDTO boatPhotosDTO);
+
     int insertOwner(BoatOwnerDTO boatOwnerDTO);
 
     int deleteBoatOwner(MembershipListDTO membershipListDTO, BoatListDTO boatListDTO);

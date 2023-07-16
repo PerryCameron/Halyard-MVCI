@@ -13,5 +13,7 @@ public interface ConfigFilePaths {
     String DEFAULT_PHOTO = "/personimg.png";
     String BOAT_REMOTE_PATH = "/home/ecsc/ecsc_files/boat_images/";
     String BOAT_LOCAL_PATH = System.getProperty("user.home") + "/.ecsc/boat_images/";
+    String IMAGE_REMOTE_PATH = "/home/ecsc/ecsc_files/boat_images/";
+    String IMAGE_LOCAL_PATH = System.getProperty("user.home") + "/.ecsc/boat_images/";
 
 }

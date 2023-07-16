@@ -130,11 +130,7 @@ public class BoatRepositoryImpl implements BoatRepository {
         return template.query(query, new BoatOwnerRowMapper(), boatId);
     }
 
-    @Override
-    public List<BoatPhotosDTO> getImagesByBoatId(int boatId) {
-        String query = "SELECT * FROM boat_photos WHERE BOAT_ID=?";
-        return template.query(query, new BoatPhotosRowMapper(), boatId);
-    }
+
 
     @Override
     public int update(BoatDTO boatDTO) {
@@ -209,6 +205,24 @@ public class BoatRepositoryImpl implements BoatRepository {
         int affectedRows = namedParameterJdbcTemplate.update(query, namedParameters, keyHolder);
         boatDTO.setBoatId(Objects.requireNonNull(keyHolder.getKey()).intValue());
         return affectedRows;
+    }
+
+    @Override
+    public int insert(BoatPhotosDTO boatPhotosDTO) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        String query = "INSERT INTO boat_photos (BOAT_ID, " +
+                "upload_date, filename, file_number, default_image) " +
+                "VALUES (:boatId, :uploadDate, :filename, :fileNumber, :isDefault)";
+        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(boatPhotosDTO);
+        int affectedRows = namedParameterJdbcTemplate.update(query, namedParameters, keyHolder);
+        boatPhotosDTO.setId(Objects.requireNonNull(keyHolder.getKey()).intValue());
+        return affectedRows;
+    }
+
+    @Override
+    public List<BoatPhotosDTO> getImagesByBoatId(int boatId) {
+        String query = "SELECT * FROM boat_photos WHERE BOAT_ID=?";
+        return template.query(query, new BoatPhotosRowMapper(), boatId);
     }
 
     private static void validateObject(BoatDTO boatDTO) {

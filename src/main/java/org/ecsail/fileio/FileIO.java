@@ -74,6 +74,15 @@ public class FileIO implements ConfigFilePaths {
 		}
 	}
 
+	public static boolean isImageType(String srcPath) {
+		String[] extensionsAllowed = {"jpg","jpeg","png","bmp","gif"};
+		String extension = FileIO.getFileExtension(srcPath);
+		for (String ex : extensionsAllowed) {
+			if (ex.equals(extension.toLowerCase())) return true;
+		}
+		return false;
+	}
+
 	public static String getFileExtension(String fileName) {
 		if (fileName == null) throw new IllegalArgumentException("fileName must not be null!");
 		String extension = "";
