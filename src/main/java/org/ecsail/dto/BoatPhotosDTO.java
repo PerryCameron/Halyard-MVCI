@@ -61,11 +61,16 @@ public class BoatPhotosDTO {
         return isDefault;
     }
 
+    public void setDefault(boolean aDefault) {
+        isDefault = aDefault;
+    }
+
     public Boolean getIsDefault() {
         return isDefault;
     }
 
-    public void setDefault(boolean aDefault) {
-        isDefault = aDefault;
+    public void setIsDefault(Boolean isDefault) {
+        this.isDefault = isDefault;
     }
+
 }

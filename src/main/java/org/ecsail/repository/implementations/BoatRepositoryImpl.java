@@ -212,7 +212,7 @@ public class BoatRepositoryImpl implements BoatRepository {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String query = "INSERT INTO boat_photos (BOAT_ID, " +
                 "upload_date, filename, file_number, default_image) " +
-                "VALUES (:boatId, :uploadDate, :filename, :fileNumber, :isDefault)";
+                "VALUES (:boatId, NOW(), :filename, :fileNumber, :isDefault)";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(boatPhotosDTO);
         int affectedRows = namedParameterJdbcTemplate.update(query, namedParameters, keyHolder);
         boatPhotosDTO.setId(Objects.requireNonNull(keyHolder.getKey()).intValue());
