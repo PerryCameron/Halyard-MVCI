@@ -145,36 +145,28 @@ public class BoatInteractor implements ConfigFilePaths {
         if(FileIO.isImageType(boatModel.getSelectedPath())) {
             // get number for photo
             int fileNumber = getNextFileNumberAvailable();
-
-            System.out.println("The next file number is " + fileNumber);
             // create filename
             String fileName = boatModel.getBoatListDTO().getBoatId()
                     + "_" + fileNumber + "." + FileIO.getFileExtension(boatModel.getSelectedPath());
-            System.out.println("The new file name is " + fileName);
             // create new POJO
             BoatPhotosDTO boatPhotosDTO = new BoatPhotosDTO(0,
-                    boatModel.getBoatListDTO().getBoatId(),"",fileName,fileNumber,isFirstPic());
+                    boatModel.getBoatListDTO().getBoatId(), "", fileName, fileNumber, isFirstPic());
             // send file to remote server and change its group
-            scp.sendFile(boatModel.getSelectedPath(),IMAGE_REMOTE_PATH + boatPhotosDTO.getFilename());
-            System.out.println("sending file");
-            scp.changeGroup(IMAGE_REMOTE_PATH + boatPhotosDTO.getFilename(),1006);
-            System.out.println("changing group");
+            scp.sendFile(boatModel.getSelectedPath(), IMAGE_REMOTE_PATH + boatPhotosDTO.getFilename());
+            scp.changeGroup(IMAGE_REMOTE_PATH + boatPhotosDTO.getFilename(), 1006);
             // update SQL
             Platform.runLater(() -> boatRepo.insert(boatPhotosDTO));
-            System.out.println("Inserting boat");
             // move a copy to local HD
-            FileIO.copyFile(new File(boatModel.getSelectedPath()),new File(IMAGE_LOCAL_PATH + fileName));
-            System.out.println("copy from " + boatModel.getSelectedPath());
-            System.out.println("copy to " + IMAGE_LOCAL_PATH + fileName);
+            FileIO.copyFile(new File(boatModel.getSelectedPath()), new File(IMAGE_LOCAL_PATH + fileName));
             // resets everything to work correctly in GUI
-            boatModel.setSelectedImage(resetImages());
-            // Show our new image
-            Image newImage = new Image("file:" + IMAGE_LOCAL_PATH + fileName);
-            boatModel.getImageView().setImage(newImage);
-            // to update tableview in TabBoats
+            Platform.runLater(() -> {
+                boatModel.setSelectedImage(resetImages());
+                // Show our new image
+                Image newImage = new Image("file:" + IMAGE_LOCAL_PATH + fileName);
+                boatModel.getImageView().setImage(newImage);
+            });
+            // to update tableview in TabBoats);
             refreshBoatList();
-        } else {
-            // TODO not an image type do nothing?
         }
     }
 
@@ -187,6 +179,7 @@ public class BoatInteractor implements ConfigFilePaths {
         boatModel.getImages().addAll(boatRepo.getImagesByBoatId(boatModel.getBoatListDTO().getBoatId()));
         // sort them so one just created is last
         boatModel.getImages().sort(Comparator.comparingInt(BoatPhotosDTO::getId));
+        System.out.println("There are now " + boatModel.getImages().size() + " images");
         // get the last
         return boatModel.getImages().get(boatModel.getImages().size() -1);
     }
@@ -207,6 +200,7 @@ public class BoatInteractor implements ConfigFilePaths {
 
     public void deleteImage() {
         System.out.println("Deleting Image");
+        System.out.println(boatModel.getSelectedImage().getFileNumber());
     }
 
     public void addOwner() {

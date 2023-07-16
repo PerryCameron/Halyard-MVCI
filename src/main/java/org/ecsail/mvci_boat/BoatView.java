@@ -127,7 +127,6 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
 
     private void makeAlert(String[] string, Object o, BoatMessage boatMessage) {
         if(o != null) {
-            System.out.println(o);
             Alert alert = DialogueFx.customAlert(string[0], string[1], Alert.AlertType.CONFIRMATION);
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) action.accept(boatMessage);
@@ -204,7 +203,6 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
         VBox vBox = VBoxFx.vBoxOf(630,489, true, true);
         vBox.setPadding(new Insets(0,10,0,10));
         ImageView imageView = new ImageView();
-
         imageView.setSmooth(true);
         imageView.setPreserveRatio(true);
         imageView.setCache(true);

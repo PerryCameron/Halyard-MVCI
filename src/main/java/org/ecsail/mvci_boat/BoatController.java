@@ -28,7 +28,11 @@ public class BoatController extends Controller {
                 {
                     case UPDATE_BOAT -> boatInteractor.updateBoat();
                     case UPDATE_NOTE -> boatInteractor.updateNote();
-                    case INSERT_IMAGE -> boatInteractor.insertImage();
+                    case INSERT_IMAGE -> {
+                        mainController.setSpinnerOffset(50,50);
+                        mainController.showLoadingSpinner(true);
+                        boatInteractor.insertImage();
+                    }
                     case INSERT_NOTE -> boatInteractor.insertNote();
                     case OWNER_DIALOGUE -> boatInteractor.addOwner();
                     case SET_DEFAULT -> boatInteractor.setImageAsDefault();
@@ -43,6 +47,9 @@ public class BoatController extends Controller {
                 return null;
             }
         };
+        task.setOnSucceeded(e -> {
+            mainController.showLoadingSpinner(false);
+        });
         new Thread(task).start();
     }
 
