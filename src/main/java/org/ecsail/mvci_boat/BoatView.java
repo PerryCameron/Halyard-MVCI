@@ -247,24 +247,26 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
     }
 
     private void moveToNextImage(boolean moveForward) {
-        // put them in ascending order, in case a new image has recently been added
-        boatModel.getImages().sort(Comparator.comparingInt(BoatPhotosDTO::getFileNumber));
-        // find index of current image
-        int index = boatModel.getImages().indexOf(boatModel.getSelectedImage());
-        if (moveForward) {
-            if (index < boatModel.getImages().size() - 1) index++;
-            else index = 0;
-        } else { // we are moving backwards
-            if (index == 0) index = boatModel.getImages().size() - 1;
-            else index--;
+        if(boatModel.getImages().size() > 0) { // prevents exception if button hit and there are no images
+            // put them in ascending order, in case a new image has recently been added
+            boatModel.getImages().sort(Comparator.comparingInt(BoatPhotosDTO::getFileNumber));
+            // find index of current image
+            int index = boatModel.getImages().indexOf(boatModel.getSelectedImage());
+            if (moveForward) {
+                if (index < boatModel.getImages().size() - 1) index++;
+                else index = 0;
+            } else { // we are moving backwards
+                if (index == 0) index = boatModel.getImages().size() - 1;
+                else index--;
+            }
+            boatModel.setSelectedImage(boatModel.getImages().get(index));
+            String localFile = BOAT_LOCAL_PATH + boatModel.getSelectedImage().getFilename();
+            String remoteFile = BOAT_REMOTE_PATH + boatModel.getSelectedImage().getFilename();
+            // if we don't have file on local computer then retrieve it
+            if (!FileIO.fileExists(localFile)) action.accept(BoatMessage.DOWNLOAD_IMAGE);
+            Image image = new Image("file:" + localFile);
+            boatModel.getImageView().setImage(image);
         }
-        boatModel.setSelectedImage(boatModel.getImages().get(index));
-        String localFile = BOAT_LOCAL_PATH + boatModel.getSelectedImage().getFilename();
-        String remoteFile = BOAT_REMOTE_PATH + boatModel.getSelectedImage().getFilename();
-        // if we don't have file on local computer then retrieve it
-        if (!FileIO.fileExists(localFile)) action.accept(BoatMessage.DOWNLOAD_IMAGE);
-        Image image = new Image("file:" + localFile);
-        boatModel.getImageView().setImage(image);
     }
 
     private void setDefaultImage() {

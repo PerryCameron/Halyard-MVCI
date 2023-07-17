@@ -28,11 +28,7 @@ public class BoatController extends Controller {
                 {
                     case UPDATE_BOAT -> boatInteractor.updateBoat();
                     case UPDATE_NOTE -> boatInteractor.updateNote();
-                    case INSERT_IMAGE -> {
-                        mainController.setSpinnerOffset(50,50);
-                        mainController.showLoadingSpinner(true);
-                        boatInteractor.insertImage();
-                    }
+                    case INSERT_IMAGE -> insertImage();
                     case INSERT_NOTE -> boatInteractor.insertNote();
                     case OWNER_DIALOGUE -> boatInteractor.addOwner();
                     case SET_DEFAULT -> boatInteractor.setImageAsDefault();
@@ -41,7 +37,7 @@ public class BoatController extends Controller {
                     case DELETE_OWNER -> boatInteractor.deleteOwner();
                     case GET_MEMBERSHIP -> boatInteractor.getBoatOwner();
                     case INSERT_OWNER -> boatInteractor.insertOwner();
-                    case DOWNLOAD_IMAGE -> boatInteractor.downloadImage();
+                    case DOWNLOAD_IMAGE -> downloadImage();
                     case INFORM -> System.out.println("inform");
                 }
                 return null;
@@ -51,6 +47,18 @@ public class BoatController extends Controller {
             mainController.showLoadingSpinner(false);
         });
         new Thread(task).start();
+    }
+
+    private void downloadImage() {
+        mainController.setSpinnerOffset(-200,-100);
+        mainController.showLoadingSpinner(true);
+        boatInteractor.downloadImage();
+    }
+
+    private void insertImage() {
+        mainController.setSpinnerOffset(-175,-25);
+        mainController.showLoadingSpinner(true);
+        boatInteractor.insertImage();
     }
 
     private void getBoatData() {

@@ -234,10 +234,10 @@ public class BoatInteractor implements ConfigFilePaths {
     }
 
     public void downloadImage() { // if it exists remote but not local
-        System.out.println("remote: " + IMAGE_REMOTE_PATH + boatModel.getSelectedImage().getFilename());
-        System.out.println("local: " + IMAGE_LOCAL_PATH + boatModel.getSelectedImage().getFilename());
-        logger.info(boatModel.getSelectedImage().getFilename() + " does not exist locally, downloading");
+        logger.info(boatModel.getSelectedImage().getFilename() + " does not exist locally, downloading...");
         scp.getFile(IMAGE_REMOTE_PATH + boatModel.getSelectedImage().getFilename(),
                 IMAGE_LOCAL_PATH + boatModel.getSelectedImage().getFilename());
+        Image image = new Image("file:" + IMAGE_LOCAL_PATH + boatModel.getSelectedImage().getFilename());
+        Platform.runLater(() -> boatModel.getImageView().setImage(image));
     }
 }
