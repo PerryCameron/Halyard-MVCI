@@ -178,6 +178,7 @@ public class BoatRepositoryImpl implements BoatRepository {
         return namedParameterJdbcTemplate.update(query, namedParameters);
     }
 
+
     @Override
     public int updateAux(boolean aux, int boatId) {
         String query = "UPDATE boat SET " +
@@ -223,6 +224,25 @@ public class BoatRepositoryImpl implements BoatRepository {
     public List<BoatPhotosDTO> getImagesByBoatId(int boatId) {
         String query = "SELECT * FROM boat_photos WHERE BOAT_ID=?";
         return template.query(query, new BoatPhotosRowMapper(), boatId);
+    }
+
+    @Override
+    public int delete(BoatPhotosDTO boatPhotosDTO) {
+        String deleteSql = "DELETE FROM boat_photos WHERE ID = ?";
+        return template.update(deleteSql, boatPhotosDTO.getId());
+    }
+
+    @Override
+    public int update(BoatPhotosDTO boatPhotosDTO) {
+        String query = "UPDATE boat_photos SET " +
+                "BOAT_ID = :boatId, " +
+                "upload_date = :uploadDate, " +
+                "filename = :filename, " +
+                "file_number = :fileNumber, " +
+                "default_image = :isDefault " +
+                "WHERE ID = :id ";
+        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(boatPhotosDTO);
+        return namedParameterJdbcTemplate.update(query, namedParameters);
     }
 
     private static void validateObject(BoatDTO boatDTO) {

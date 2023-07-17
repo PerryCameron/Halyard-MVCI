@@ -179,7 +179,6 @@ public class BoatInteractor implements ConfigFilePaths {
         boatModel.getImages().addAll(boatRepo.getImagesByBoatId(boatModel.getBoatListDTO().getBoatId()));
         // sort them so one just created is last
         boatModel.getImages().sort(Comparator.comparingInt(BoatPhotosDTO::getId));
-        System.out.println("There are now " + boatModel.getImages().size() + " images");
         // get the last
         return boatModel.getImages().get(boatModel.getImages().size() -1);
     }
@@ -199,8 +198,31 @@ public class BoatInteractor implements ConfigFilePaths {
     }
 
     public void deleteImage() {
-        System.out.println("Deleting Image");
-        System.out.println(boatModel.getSelectedImage().getFileNumber());
+        // find if current image is default
+        boolean oldImageWasDefault = boatModel.getSelectedImage().isDefault();
+        // get id of selected image
+        int id = boatModel.getSelectedImage().getId();
+        // delete remote
+        scp.deleteFile(IMAGE_REMOTE_PATH + boatModel.getSelectedImage().getFilename());
+        // delete local
+        FileIO.deleteFile(IMAGE_LOCAL_PATH + boatModel.getSelectedImage().getFilename());
+        // remove database entry
+        BoatPhotosDTO boatPhotosDTO = boatModel.getSelectedImage();
+        if(executeWithHandling(() -> boatRepo.delete(boatPhotosDTO))) {
+            // move to last image in array if any exist
+            if(!boatModel.getImages().isEmpty()) {
+                boatModel.setSelectedImage(boatModel.getImages().get(boatModel.getImages().size() - 1));
+                String localFile = BOAT_LOCAL_PATH + boatModel.getSelectedImage().getFilename();
+                Image image = new Image("file:" + localFile);
+                boatModel.getImageView().setImage(image);
+            }
+            // if old image was default set the new one as default
+            if(oldImageWasDefault) {
+                boatModel.getSelectedImage().setDefault(true);
+                boatRepo.update(boatModel.getSelectedImage());
+            }
+            boatModel.getImages().remove(boatPhotosDTO);
+        }
     }
 
     public void addOwner() {
