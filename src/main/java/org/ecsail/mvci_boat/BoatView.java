@@ -101,7 +101,6 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
     private Node createButton(String name, BoatMessage type) {
         Button button = ButtonFx.buttonOf(name, 60.0);
         switch (type) {
-//            case INSERT_IMAGE ->  button.setOnAction(event -> action.accept(BoatMessage.INSERT_IMAGE));
             case INSERT_NOTE -> button.setOnAction(event -> action.accept(BoatMessage.INSERT_NOTE));
             case OWNER_DIALOGUE -> button.setOnAction(event -> launchCustomOwnerDialogue());
             case DELETE_IMAGE -> button.setOnAction(event -> deleteImage());
@@ -193,7 +192,6 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
         hBox.setSpacing(7);
         hBox.getChildren().add(createButton("<",BoatMessage.MOVE_BACKWARD));
         hBox.getChildren().add(createButton(">",BoatMessage.MOVE_FORWARD));
-//        hBox.getChildren().add(createButton("Add",BoatMessage.INSERT_IMAGE));
         hBox.getChildren().add(createButton("Delete",BoatMessage.DELETE_IMAGE));
         hBox.getChildren().add(createButton("Default",BoatMessage.SET_DEFAULT));
         return hBox;
@@ -261,7 +259,7 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
             }
             boatModel.setSelectedImage(boatModel.getImages().get(index));
             String localFile = BOAT_LOCAL_PATH + boatModel.getSelectedImage().getFilename();
-            String remoteFile = BOAT_REMOTE_PATH + boatModel.getSelectedImage().getFilename();
+//            String remoteFile = BOAT_REMOTE_PATH + boatModel.getSelectedImage().getFilename();
             // if we don't have file on local computer then retrieve it
             if (!FileIO.fileExists(localFile)) action.accept(BoatMessage.DOWNLOAD_IMAGE);
             Image image = new Image("file:" + localFile);
@@ -272,16 +270,19 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
     private void setDefaultImage() {
         Image image;
         String localFile = BOAT_LOCAL_PATH + boatModel.getSelectedImage().getFilename();
-        String remoteFile = BOAT_REMOTE_PATH + boatModel.getSelectedImage().getFilename();
+//        String remoteFile = BOAT_REMOTE_PATH + boatModel.getSelectedImage().getFilename();
         if(boatModel.getSelectedImage().getFilename().equals("no_image.png")) {
             image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/no_image.png")));
         } else if(FileIO.fileExists(localFile)) {
-            image = new Image("file:" + localFile);
-        } else {
-//   TODO         scp.getFile(remoteFile,localFile);
-            image = new Image("file:" + localFile);
+            System.out.println("This exists");
+            action.accept(BoatMessage.SET_DEFAULT);
         }
-        boatModel.getImageView().setImage(image);
+//            image = new Image("file:" + localFile);
+//        } else {
+////   TODO         scp.getFile(remoteFile,localFile);  no idea what is going on here
+//            image = new Image("file:" + localFile);
+//        }
+//        boatModel.getImageView().setImage(image);
     }
 
     protected BoatModel getBoatModel() {

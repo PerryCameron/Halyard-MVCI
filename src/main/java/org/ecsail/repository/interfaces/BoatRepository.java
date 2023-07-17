@@ -28,4 +28,7 @@ public interface BoatRepository {
     int deleteBoatOwner(MembershipListDTO membershipListDTO, BoatListDTO boatListDTO);
 
 
+    int setAllDefaultImagesToFalse(int boatId);
+
+    int setDefaultImageTrue(int id);
 }

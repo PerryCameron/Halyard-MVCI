@@ -1,7 +1,6 @@
 package org.ecsail.mvci_boat;
 
 import javafx.application.Platform;
-import javafx.beans.property.BooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.image.Image;
@@ -23,7 +22,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 
-import javax.sql.DataSource;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -33,16 +31,14 @@ public class BoatInteractor implements ConfigFilePaths {
 
     private static final Logger logger = LoggerFactory.getLogger(BoatInteractor.class);
     private final BoatModel boatModel;
-    private final DataSource dataSource;
     private final SettingsRepository settingsRepo;
     private final NotesRepository noteRepo;
     private final BoatRepository boatRepo;
     private final MembershipRepository membershipRepo;
-    private Sftp scp;
+    private final Sftp scp;
 
     public BoatInteractor(BoatModel boatModel, Connections connections) {
         this.boatModel = boatModel;
-        this.dataSource = connections.getDataSource();
         settingsRepo = new SettingsRepositoryImpl(connections.getDataSource());
         boatRepo = new BoatRepositoryImpl(connections.getDataSource());
         noteRepo = new NotesRepositoryImpl(connections.getDataSource());
@@ -81,13 +77,14 @@ public class BoatInteractor implements ConfigFilePaths {
     }
 
     public void getBoatPhotos() {
-        boatModel.setImages((ArrayList<BoatPhotosDTO>) boatRepo.getImagesByBoatId(boatModel.getBoatListDTO().getBoatId()));
+        Platform.runLater(() ->
+                boatModel.setImages((ArrayList<BoatPhotosDTO>) boatRepo.getImagesByBoatId(boatModel.getBoatListDTO().getBoatId()))
+        );
     }
 
     public boolean executeWithHandling(Supplier<Integer> supplier) {
         try {
-            if(supplier.get() == 1) savedToIndicator(true);
-            else savedToIndicator(false);
+            savedToIndicator(supplier.get() == 1);
             return true;
         } catch (IncorrectResultSizeDataAccessException e) {
             logger.error("IncorrectResultSizeDataAccessException: Expected 1 row but got multiple or none", e);
@@ -153,9 +150,10 @@ public class BoatInteractor implements ConfigFilePaths {
                     boatModel.getBoatListDTO().getBoatId(), "", fileName, fileNumber, isFirstPic());
             // send file to remote server and change its group
             scp.sendFile(boatModel.getSelectedPath(), IMAGE_REMOTE_PATH + boatPhotosDTO.getFilename());
+            logger.info("Sending " + boatPhotosDTO.getFilename() + " to remote server");
             scp.changeGroup(IMAGE_REMOTE_PATH + boatPhotosDTO.getFilename(), 1006);
             // update SQL
-            Platform.runLater(() -> boatRepo.insert(boatPhotosDTO));
+            executeWithHandling(() -> boatRepo.insert(boatPhotosDTO));
             // move a copy to local HD
             FileIO.copyFile(new File(boatModel.getSelectedPath()), new File(IMAGE_LOCAL_PATH + fileName));
             // resets everything to work correctly in GUI
@@ -194,43 +192,41 @@ public class BoatInteractor implements ConfigFilePaths {
     }
 
     public void setImageAsDefault() {
-        System.out.println("setting image as default");
+        logger.info("Setting " + boatModel.getSelectedImage().getFilename() + " to default");
+        executeWithHandling(() -> boatRepo.setAllDefaultImagesToFalse(boatModel.getBoatListDTO().getBoatId()));
+        executeWithHandling(() -> boatRepo.setDefaultImageTrue(boatModel.getSelectedImage().getId()));
     }
 
     public void deleteImage() {
         // find if current image is default
         boolean oldImageWasDefault = boatModel.getSelectedImage().isDefault();
-        // get id of selected image
-        int id = boatModel.getSelectedImage().getId();
         // delete remote
         scp.deleteFile(IMAGE_REMOTE_PATH + boatModel.getSelectedImage().getFilename());
         // delete local
         FileIO.deleteFile(IMAGE_LOCAL_PATH + boatModel.getSelectedImage().getFilename());
         // remove database entry
         BoatPhotosDTO boatPhotosDTO = boatModel.getSelectedImage();
+        // delete entry in database, return true if successful
         if(executeWithHandling(() -> boatRepo.delete(boatPhotosDTO))) {
             // move to last image in array if any exist
-            if(!boatModel.getImages().isEmpty()) {
-                boatModel.setSelectedImage(boatModel.getImages().get(boatModel.getImages().size() - 1));
-                String localFile = BOAT_LOCAL_PATH + boatModel.getSelectedImage().getFilename();
-                Image image = new Image("file:" + localFile);
-                boatModel.getImageView().setImage(image);
-            }
+            if(!boatModel.getImages().isEmpty()) moveToLastImageInArray();
             // if old image was default set the new one as default
-            if(oldImageWasDefault) {
-                boatModel.getSelectedImage().setDefault(true);
-                boatRepo.update(boatModel.getSelectedImage());
-            }
+            if(oldImageWasDefault) updateSelectedImageAsDefault();
+            // remove from array
             boatModel.getImages().remove(boatPhotosDTO);
         }
     }
 
-    public void addOwner() {
-        System.out.println("adding owner");
+    private void updateSelectedImageAsDefault() {
+        boatModel.getSelectedImage().setDefault(true);
+        executeWithHandling(() -> boatRepo.update(boatModel.getSelectedImage()));
     }
 
-    public BooleanProperty getConfirmation() {
-        return boatModel.confirmedProperty();
+    private void moveToLastImageInArray() {
+        boatModel.setSelectedImage(boatModel.getImages().get(boatModel.getImages().size() - 1));
+        String localFile = BOAT_LOCAL_PATH + boatModel.getSelectedImage().getFilename();
+        Image image = new Image("file:" + localFile);
+        boatModel.getImageView().setImage(image);
     }
 
     public void downloadImage() { // if it exists remote but not local

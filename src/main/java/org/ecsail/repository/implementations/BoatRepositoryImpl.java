@@ -270,4 +270,16 @@ public class BoatRepositoryImpl implements BoatRepository {
         String sql = "DELETE FROM boat_owner WHERE MS_ID = ? and BOAT_ID = ?";
             return template.update(sql, membershipListDTO.getMsId(), boatListDTO.getBoatId());
     }
+
+    @Override
+    public int setAllDefaultImagesToFalse(int boatId) {
+        String query = "UPDATE boat_photos SET default_image = false WHERE BOAT_ID = ?";
+        return template.update(query, boatId);
+    }
+
+    @Override
+    public int setDefaultImageTrue(int id) {
+        String query = "UPDATE boat_photos SET default_image = true WHERE ID = ?";
+        return template.update(query, id);
+    }
 }
