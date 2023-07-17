@@ -1,7 +1,6 @@
 package org.ecsail.mvci_boat;
 
 public enum BoatMessage {
-
     DELETE_OWNER,
     DELETE_NOTE,
     DELETE_IMAGE,

@@ -21,7 +21,6 @@ import org.ecsail.interfaces.ConfigFilePaths;
 import org.ecsail.widgetfx.*;
 
 import java.util.Comparator;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -107,8 +106,8 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
             case DELETE_NOTE -> button.setOnAction(event -> deleteNote());
             case DELETE_OWNER -> button.setOnAction(event -> deleteOwner());
             case SET_DEFAULT -> button.setOnAction(event -> action.accept(BoatMessage.SET_DEFAULT));
-            case MOVE_FORWARD -> button.setOnAction((event) -> moveToNextImage(true));
-            case MOVE_BACKWARD -> button.setOnAction((event) -> moveToNextImage(false));
+            case MOVE_FORWARD -> button.setOnAction(event -> moveToNextImage(true));
+            case MOVE_BACKWARD -> button.setOnAction(event -> moveToNextImage(false));
         }
         return button;
     }
@@ -206,8 +205,9 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
         imageView.setCache(true);
         boatModel.setImageView(imageView);
         ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(boatModel.dataLoadedProperty(), () -> {
-            boatModel.setSelectedImage(getDefaultBoatPhotoDTO());
-            setDefaultImage();
+            BoatPhotosDTO boatPhotosDTO = getDefaultBoatPhotoDTO();
+            boatModel.setSelectedImage(boatPhotosDTO);
+            setImage();
             parentVBox.setVisible(true);
         });
         boatModel.dataLoadedProperty().addListener(dataLoadedListener);
@@ -258,31 +258,16 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
                 else index--;
             }
             boatModel.setSelectedImage(boatModel.getImages().get(index));
-            String localFile = BOAT_LOCAL_PATH + boatModel.getSelectedImage().getFilename();
-//            String remoteFile = BOAT_REMOTE_PATH + boatModel.getSelectedImage().getFilename();
-            // if we don't have file on local computer then retrieve it
-            if (!FileIO.fileExists(localFile)) action.accept(BoatMessage.DOWNLOAD_IMAGE);
-            Image image = new Image("file:" + localFile);
-            boatModel.getImageView().setImage(image);
+            setImage();
         }
     }
 
-    private void setDefaultImage() {
-        Image image;
+    private void setImage() {
         String localFile = BOAT_LOCAL_PATH + boatModel.getSelectedImage().getFilename();
-//        String remoteFile = BOAT_REMOTE_PATH + boatModel.getSelectedImage().getFilename();
-        if(boatModel.getSelectedImage().getFilename().equals("no_image.png")) {
-            image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/no_image.png")));
-        } else if(FileIO.fileExists(localFile)) {
-            System.out.println("This exists");
-            action.accept(BoatMessage.SET_DEFAULT);
-        }
-//            image = new Image("file:" + localFile);
-//        } else {
-////   TODO         scp.getFile(remoteFile,localFile);  no idea what is going on here
-//            image = new Image("file:" + localFile);
-//        }
-//        boatModel.getImageView().setImage(image);
+        // if we don't have file on local computer then retrieve it
+        if (!FileIO.fileExists(localFile)) action.accept(BoatMessage.DOWNLOAD_IMAGE);
+        Image image = new Image("file:" + localFile);
+        boatModel.getImageView().setImage(image);
     }
 
     protected BoatModel getBoatModel() {
