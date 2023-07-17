@@ -28,11 +28,6 @@ public class BoatModel {
 
 
 
-
-
-
-
-
     public String getSelectedPath() {
         return selectedPath.get();
     }

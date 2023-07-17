@@ -41,6 +41,7 @@ public class BoatController extends Controller {
                     case DELETE_OWNER -> boatInteractor.deleteOwner();
                     case GET_MEMBERSHIP -> boatInteractor.getBoatOwner();
                     case INSERT_OWNER -> boatInteractor.insertOwner();
+                    case DOWNLOAD_IMAGE -> boatInteractor.downloadImage();
                     case INFORM -> System.out.println("inform");
                 }
                 return null;

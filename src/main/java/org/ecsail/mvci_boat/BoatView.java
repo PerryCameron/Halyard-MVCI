@@ -262,7 +262,7 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
         String localFile = BOAT_LOCAL_PATH + boatModel.getSelectedImage().getFilename();
         String remoteFile = BOAT_REMOTE_PATH + boatModel.getSelectedImage().getFilename();
         // if we don't have file on local computer then retrieve it
-//        if (!FileIO.fileExists(localFile)) scp.getFile(remoteFile, localFile);
+        if (!FileIO.fileExists(localFile)) action.accept(BoatMessage.DOWNLOAD_IMAGE);
         Image image = new Image("file:" + localFile);
         boatModel.getImageView().setImage(image);
     }

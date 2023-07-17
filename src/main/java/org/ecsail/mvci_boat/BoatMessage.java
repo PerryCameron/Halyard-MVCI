@@ -17,4 +17,5 @@ public enum BoatMessage {
     MOVE_BACKWARD,
     INFORM,
     GET_MEMBERSHIP,
+    DOWNLOAD_IMAGE
 }
