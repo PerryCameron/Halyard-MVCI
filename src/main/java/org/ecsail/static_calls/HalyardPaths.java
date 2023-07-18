@@ -13,21 +13,8 @@ public class HalyardPaths {
 
 	private static final Logger logger = LoggerFactory.getLogger(HalyardPaths.class);
 
-
-	public static final String LOGFILEDIR = System.getProperty("user.home") + "/.ecsc/logs";
-	public static final String DEPOSITREPORTPATH = System.getProperty("user.home") + "/Documents/ECSC/Depost_Reports";
-	public static final String RENEWALFORM = System.getProperty("user.home") + "/Documents/ECSC/Renewal_Forms";
-	public static final String SQLBACKUP = System.getProperty("user.home") + "/Documents/ECSC/SQL_Backup";
 	public static final String ROSTERS = System.getProperty("user.home") + "/Documents/ECSC/Rosters";
-    public static final String ECSCHOME = System.getProperty("user.home") + "/Documents/ECSC";
-	public static final String LOGO = "/ECSClogo4.png";
-	public static final String HOSTS = System.getProperty("user.home") + "/.ecsc/hosts.ecs";
-	public static final String TUPLECOUNTS = System.getProperty("user.home") + "/.ecsc/tuples.ecs";
-	public static final String SLIPCHART = System.getProperty("user.home") + "/Documents/ECSC/SlipCharts";
-	public static final String BOATDIR = System.getProperty("user.home") + "/Documents/ECSC/Boats";
- 	public static final String DEFAULTPHOTO = "/personimg.png";
-	public static final String BOATLISTS = System.getProperty("user.home") + "/Documents/ECSC/BoatLists";
-	// "C:\\Users\\pcame\\Documents\\email.xlsx"
+
 	
 // 	private static boolean isDirEmpty(final Path directory) throws IOException {
 // 	    try(DirectoryStream<Path> dirStream = Files.newDirectoryStream(directory)) {

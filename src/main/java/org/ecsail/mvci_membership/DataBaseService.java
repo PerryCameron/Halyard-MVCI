@@ -4,11 +4,14 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import org.ecsail.dto.*;
 import org.ecsail.interfaces.SlipUser;
+import org.ecsail.mvci_main.MainModel;
 import org.ecsail.repository.implementations.*;
 import org.ecsail.repository.interfaces.*;
+import org.ecsail.static_calls.HandlingTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -44,27 +47,8 @@ public class DataBaseService {
         membershipRepo = new MembershipRepositoryImpl(dataSource);
     }
 
-    public void queryForList(Runnable task) {
-        try {
-            task.run();
-            retrievedFromIndicator(true);
-        } catch (DataAccessException dae) {
-            dae.printStackTrace();
-            retrievedFromIndicator(false);
-            logger.error("DataAccessException: " + dae.getMessage());
-        } catch (NullPointerException npe) {
-            npe.printStackTrace();
-            retrievedFromIndicator(false);
-            logger.error("NullPointerException: " + npe.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace();
-            retrievedFromIndicator(false);
-            logger.error("Exception: " + e.getMessage());
-        }
-    }
-
     public void getPersonLists(MembershipListDTO ml) { // not on FX thread because lists added before UI is launched
-        queryForList(() -> {
+        HandlingTools.queryForList(() -> {
             List<PersonDTO> personDTOS = peopleRepo.getActivePeopleByMsId(ml.getMsId());
             for (PersonDTO person : personDTOS) {
                 person.setPhones(FXCollections.observableArrayList(phoneRepo.getPhoneByPid(person.getpId())));
@@ -73,36 +57,36 @@ public class DataBaseService {
                 person.setOfficer(FXCollections.observableArrayList(officerRepo.getOfficer(person)));
             }
             membershipModel.setPeople(FXCollections.observableArrayList(personDTOS));
-        });
+        }, membershipModel.getMainModel(), logger);
     }
 
     public void getIds(MembershipListDTO ml) {
-        queryForList(() -> {
+        HandlingTools.queryForList(() -> {
             List<MembershipIdDTO> membershipIdDTOS = membershipIdRepo.getIds(ml.getMsId());
             Platform.runLater(() -> {
                 membershipModel.getMembership().setMembershipIdDTOS(FXCollections.observableArrayList(membershipIdDTOS));
             });
-        });
+        }, membershipModel.getMainModel(), logger);
     }
 
     public void getBoats(MembershipListDTO ml) {
-        queryForList(() -> {
+        HandlingTools.queryForList(() -> {
             List<BoatDTO> boats = boatRepo.getBoatsByMsId(ml.getMsId());
             Platform.runLater(() -> {
                 membershipModel.getMembership()
                         .setBoatDTOS(FXCollections.observableArrayList(boats));
                 retrievedFromIndicator(true);
             });
-        });
+        }, membershipModel.getMainModel(), logger);
     }
 
     public void getNotes(MembershipListDTO ml) {
-        queryForList(() -> {
+        HandlingTools.queryForList(() -> {
             List<NotesDTO> notesDTOS = notesRepo.getMemosByMsId(ml.getMsId());
             Platform.runLater(() -> membershipModel.getMembership()
                     .setNotesDTOS(FXCollections.observableArrayList(notesDTOS)));
             retrievedFromIndicator(true);
-        });
+        }, membershipModel.getMainModel(), logger);
     }
 
     public void getSlipInfo(MembershipListDTO ml) {
@@ -153,43 +137,24 @@ public class DataBaseService {
         else membershipModel.getMainModel().getLightAnimationMap().get("transmitError").playFromStart();
     }
 
-    public void executeQuery(Supplier<Integer> operation) {
-        try {
-            int rowsUpdated = operation.get();
-            savedToIndicator(rowsUpdated == 1);
-        } catch (DataAccessException dae) {
-            dae.printStackTrace();
-            savedToIndicator(false);
-            logger.error("DataAccessException: " + dae.getMessage());
-        } catch (NullPointerException npe) {
-            npe.printStackTrace();
-            savedToIndicator(false);
-            logger.error("NullPointerException: " + npe.getMessage());
-        } catch (Exception e) {
-            e.printStackTrace();
-            savedToIndicator(false);
-            logger.error("Exception: " + e.getMessage());
-        }
-    }
-
     protected void updateMembershipList() {
-        System.out.println("Update MembershipLlist");
-        executeQuery(() -> membershipRepo.update(membershipModel.getMembership()));
+        HandlingTools.executeQuery(() ->
+                membershipRepo.update(membershipModel.getMembership()), membershipModel.getMainModel(), logger);
     }
 
     protected void updateAward() {
-        System.out.println("Update Award");
-        executeQuery(() -> awardRepo.update(membershipModel.getSelectedAward()));
+        HandlingTools.executeQuery(() ->
+                awardRepo.update(membershipModel.getSelectedAward()), membershipModel.getMainModel(), logger);
     }
 
     protected void updateBoat() {
-        System.out.println("Update Boat");
-        executeQuery(() -> boatRepo.update(membershipModel.getSelectedBoat()));
+        HandlingTools.executeQuery(() ->
+                boatRepo.update(membershipModel.getSelectedBoat()), membershipModel.getMainModel(), logger);
     }
 
     protected void insertBoat() {
-        System.out.println("Insert Boat");
-        executeQuery(() -> boatRepo.insert(membershipModel.getSelectedBoat()));
+        HandlingTools.executeQuery(() ->
+                boatRepo.insert(membershipModel.getSelectedBoat()), membershipModel.getMainModel(), logger);
     }
 
     protected void deleteBoat() {
@@ -198,13 +163,13 @@ public class DataBaseService {
     }
 
     protected void updateEmail() {
-        System.out.println("Update Email");
-        executeQuery(() -> emailRepo.update(membershipModel.getSelectedEmail()));
+        HandlingTools.executeQuery(() ->
+                emailRepo.update(membershipModel.getSelectedEmail()), membershipModel.getMainModel(), logger);
     }
 
     protected void updateMembershipId() {
-        System.out.println("Update MembershipId");
-        executeQuery(() -> membershipIdRepo.update(membershipModel.getSelectedMembershipId()));
+        HandlingTools.executeQuery(() ->
+                membershipIdRepo.update(membershipModel.getSelectedMembershipId()), membershipModel.getMainModel(), logger);
     }
 
     protected void updateNote() {
@@ -222,13 +187,13 @@ public class DataBaseService {
     }
 
     public void updatePhone() {
-        System.out.println("Update Phone");
-        executeQuery(() -> phoneRepo.update(membershipModel.getSelectedPhone()));
+        HandlingTools.executeQuery(() ->
+                phoneRepo.update(membershipModel.getSelectedPhone()), membershipModel.getMainModel(), logger);
     }
 
     public void insertAward() {
-        System.out.println("Insert Award");
-        executeQuery(() -> awardRepo.insert(membershipModel.getSelectedAward()));
+        HandlingTools.executeQuery(() ->
+                awardRepo.insert(membershipModel.getSelectedAward()), membershipModel.getMainModel(), logger);
     }
 
     public void deletePerson() {

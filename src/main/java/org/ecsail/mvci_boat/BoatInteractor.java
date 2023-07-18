@@ -17,6 +17,7 @@ import org.ecsail.repository.interfaces.BoatRepository;
 import org.ecsail.repository.interfaces.MembershipRepository;
 import org.ecsail.repository.interfaces.NotesRepository;
 import org.ecsail.repository.interfaces.SettingsRepository;
+import org.ecsail.static_calls.HandlingTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
@@ -44,16 +45,6 @@ public class BoatInteractor implements ConfigFilePaths {
         noteRepo = new NotesRepositoryImpl(connections.getDataSource());
         membershipRepo = new MembershipRepositoryImpl(connections.getDataSource());
         scp = connections.getScp();
-    }
-
-    protected void savedToIndicator(boolean returnOk) { // updates status lights
-        if(returnOk) boatModel.getMainModel().getLightAnimationMap().get("receiveSuccess").playFromStart();
-        else boatModel.getMainModel().getLightAnimationMap().get("receiveError").playFromStart();
-    }
-
-    protected void retrievedFromIndicator(boolean returnOk) { // updates status lights
-        if(returnOk) boatModel.getMainModel().getLightAnimationMap().get("transmitSuccess").playFromStart();
-        else boatModel.getMainModel().getLightAnimationMap().get("transmitError").playFromStart();
     }
 
     public void getBoatSettings() {
@@ -84,7 +75,7 @@ public class BoatInteractor implements ConfigFilePaths {
 
     public boolean executeWithHandling(Supplier<Integer> supplier) {
         try {
-            savedToIndicator(supplier.get() == 1);
+            HandlingTools.savedToIndicator(supplier.get() == 1, boatModel.getMainModel());
             return true;
         } catch (IncorrectResultSizeDataAccessException e) {
             logger.error("IncorrectResultSizeDataAccessException: Expected 1 row but got multiple or none", e);
