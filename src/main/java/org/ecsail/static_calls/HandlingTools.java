@@ -26,23 +26,25 @@ public class HandlingTools {
         }
     }
 
-    public static void executeQuery(Supplier<Integer> operation, MainModel model, Logger logger) {
+    public static boolean executeQuery(Supplier<Integer> operation, MainModel model, Logger logger) {
         try {
             int rowsUpdated = operation.get();
             savedToIndicator(rowsUpdated == 1, model);
+            return true;
         } catch (DataAccessException dae) {
             dae.printStackTrace();
             savedToIndicator(false, model);
-            logger.error(dae.getMessage());
+            logger.error("An exception occurred", dae);
         } catch (NullPointerException npe) {
             npe.printStackTrace();
             savedToIndicator(false, model);
-            logger.error(npe.getMessage());
+            logger.error("An exception occurred", npe);
         } catch (Exception e) {
             e.printStackTrace();
             savedToIndicator(false, model);
-            logger.error(e.getMessage());
+            logger.error("An exception occurred", e);
         }
+        return false;
     }
 
     public static void savedToIndicator(boolean returnOk, MainModel model) { // updates status lights

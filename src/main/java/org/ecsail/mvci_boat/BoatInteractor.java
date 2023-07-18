@@ -26,7 +26,6 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.function.Supplier;
 
 public class BoatInteractor implements ConfigFilePaths {
 
@@ -73,46 +72,42 @@ public class BoatInteractor implements ConfigFilePaths {
         );
     }
 
-    public boolean executeWithHandling(Supplier<Integer> supplier) {
-        try {
-            HandlingTools.savedToIndicator(supplier.get() == 1, boatModel.getMainModel());
-            return true;
-        } catch (IncorrectResultSizeDataAccessException e) {
-            logger.error("IncorrectResultSizeDataAccessException: Expected 1 row but got multiple or none", e);
-        } catch (DataAccessException e) {
-            logger.error("DataAccessException: A database access error occurred", e);
-        } catch (Exception e) {
-            logger.error("An unexpected error occurred", e);
-        }
-        return false;
-    }
-
     public void insertNote() {
         NotesDTO notesDTO = new NotesDTO(boatModel.getBoatListDTO().getBoatId(), "B");
-        executeWithHandling(() -> noteRepo.insertNote(notesDTO));
+        HandlingTools.executeQuery(() ->
+                noteRepo.insertNote(notesDTO), boatModel.getMainModel(), logger);
         Platform.runLater(() -> boatModel.getNotesDTOS().add(notesDTO));
     }
 
     public void insertOwner() {
-        BoatOwnerDTO boatOwnerDTO = new BoatOwnerDTO(boatModel.getSelectedOwner().getMsId(), boatModel.getBoatListDTO().getBoatId());
-        executeWithHandling(() -> boatRepo.insertOwner(boatOwnerDTO));
+        BoatOwnerDTO boatOwnerDTO =
+                new BoatOwnerDTO(boatModel.getSelectedOwner().getMsId(), boatModel.getBoatListDTO().getBoatId());
+        HandlingTools.executeQuery(() ->
+                boatRepo.insertOwner(boatOwnerDTO), boatModel.getMainModel(), logger);
     }
 
     public void updateBoat() {
-        executeWithHandling(() -> boatRepo.update(boatModel.getBoatListDTO()));
+        HandlingTools.executeQuery(() ->
+                boatRepo.update(boatModel.getBoatListDTO()), boatModel.getMainModel(), logger);
     }
 
     public void updateNote() {
-        executeWithHandling(() -> noteRepo.update(boatModel.getSelectedNote()));
+        HandlingTools.executeQuery(() ->
+                noteRepo.update(boatModel.getSelectedNote()), boatModel.getMainModel(), logger);
     }
 
     public void deleteOwner() {
-        if(executeWithHandling(() -> boatRepo.deleteBoatOwner(boatModel.getSelectedOwner(), boatModel.getBoatListDTO())))
+        if(HandlingTools.executeQuery(() ->
+                boatRepo.deleteBoatOwner(boatModel.getSelectedOwner(), boatModel.getBoatListDTO()),
+                boatModel.getMainModel(),
+                logger))
             boatModel.getBoatOwners().removeIf(owner -> owner.getMsId() == boatModel.getSelectedOwner().getMsId());
     }
 
     public void deleteNote() {
-        if(executeWithHandling(() -> noteRepo.delete(boatModel.getSelectedNote()))) // if properly deleted from db
+        if(HandlingTools.executeQuery(() -> noteRepo.delete(boatModel.getSelectedNote()),
+                boatModel.getMainModel(),
+                logger))
             Platform.runLater(() -> boatModel.getNotesDTOS().remove(boatModel.getSelectedNote())); // remove it from the UI
     }
 
@@ -144,7 +139,9 @@ public class BoatInteractor implements ConfigFilePaths {
             logger.info("Sending " + boatPhotosDTO.getFilename() + " to remote server");
             scp.changeGroup(IMAGE_REMOTE_PATH + boatPhotosDTO.getFilename(), 1006);
             // update SQL
-            executeWithHandling(() -> boatRepo.insert(boatPhotosDTO));
+            HandlingTools.executeQuery(() -> boatRepo.insert(boatPhotosDTO),
+                    boatModel.getMainModel(),
+                    logger);
             // move a copy to local HD
             FileIO.copyFile(new File(boatModel.getSelectedPath()), new File(IMAGE_LOCAL_PATH + fileName));
             // resets everything to work correctly in GUI
@@ -184,8 +181,12 @@ public class BoatInteractor implements ConfigFilePaths {
 
     public void setImageAsDefault() {
         logger.info("Setting " + boatModel.getSelectedImage().getFilename() + " to default");
-        executeWithHandling(() -> boatRepo.setAllDefaultImagesToFalse(boatModel.getBoatListDTO().getBoatId()));
-        executeWithHandling(() -> boatRepo.setDefaultImageTrue(boatModel.getSelectedImage().getId()));
+        HandlingTools.executeQuery(() -> boatRepo.setAllDefaultImagesToFalse(boatModel.getBoatListDTO().getBoatId()),
+                boatModel.getMainModel(),
+                logger);
+        HandlingTools.executeQuery(() -> boatRepo.setDefaultImageTrue(boatModel.getSelectedImage().getId()),
+                boatModel.getMainModel(),
+                logger);
     }
 
     public void deleteImage() {
@@ -198,7 +199,7 @@ public class BoatInteractor implements ConfigFilePaths {
         // remove database entry
         BoatPhotosDTO boatPhotosDTO = boatModel.getSelectedImage();
         // delete entry in database, return true if successful
-        if(executeWithHandling(() -> boatRepo.delete(boatPhotosDTO))) {
+        if(HandlingTools.executeQuery(() -> boatRepo.delete(boatPhotosDTO), boatModel.getMainModel(), logger)) {
             // move to last image in array if any exist
             if(!boatModel.getImages().isEmpty()) moveToLastImageInArray();
             // if old image was default set the new one as default
@@ -210,7 +211,7 @@ public class BoatInteractor implements ConfigFilePaths {
 
     private void updateSelectedImageAsDefault() {
         boatModel.getSelectedImage().setDefault(true);
-        executeWithHandling(() -> boatRepo.update(boatModel.getSelectedImage()));
+        HandlingTools.executeQuery(() -> boatRepo.update(boatModel.getSelectedImage()), boatModel.getMainModel(), logger);
     }
 
     private void moveToLastImageInArray() {
