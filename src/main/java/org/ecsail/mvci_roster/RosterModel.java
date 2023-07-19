@@ -7,12 +7,14 @@ import javafx.scene.control.TableView;
 import org.ecsail.dto.DbRosterSettingsDTO;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.dto.MembershipListRadioDTO;
+import org.ecsail.mvci_main.MainModel;
 
 import java.io.File;
 import java.time.Year;
 import java.util.ArrayList;
 
 public class RosterModel {
+    private final MainModel mainModel;
     private ObservableList<MembershipListDTO> rosters = FXCollections.observableArrayList();
     private final ObservableList<MembershipListDTO> searchedRosters = FXCollections.observableArrayList();
     private final ObservableList<MembershipListRadioDTO> radioChoices = FXCollections.observableArrayList();
@@ -27,6 +29,10 @@ public class RosterModel {
     private final IntegerProperty selectedYear = new SimpleIntegerProperty(Year.now().getValue());
     private final BooleanProperty isActiveSearch = new SimpleBooleanProperty(false);
     private final BooleanProperty listsLoaded = new SimpleBooleanProperty(false);
+
+    public RosterModel(MainModel mainModel) {
+        this.mainModel = mainModel;
+    }
 
 
     public MembershipListDTO getSelectedMembershipList() {
@@ -111,5 +117,9 @@ public class RosterModel {
     }
     public ObservableList<MembershipListDTO> getRosters() {
         return rosters;
+    }
+
+    public MainModel getMainModel() {
+        return mainModel;
     }
 }

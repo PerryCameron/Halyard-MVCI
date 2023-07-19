@@ -55,21 +55,25 @@ public class BoatInteractor implements ConfigFilePaths {
     }
 
     public void getBoatNotes() {
-        ObservableList<NotesDTO> notesDTOS =
-                FXCollections.observableArrayList(noteRepo.getMemosByBoatId(boatModel.getBoatListDTO().getBoatId()));
-        Platform.runLater(() -> boatModel.setNotesDTOS(notesDTOS));
+        HandlingTools.queryForList(() -> {
+            ObservableList<NotesDTO> notesDTOS = FXCollections.observableArrayList(noteRepo.getMemosByBoatId(boatModel.getBoatListDTO().getBoatId()));
+            Platform.runLater(() -> boatModel.setNotesDTOS(notesDTOS));
+        }, boatModel.getMainModel(), logger);
     }
 
     public void getBoatOwners() {
-        ObservableList<MembershipListDTO> boatOwnerDTOS =
-                FXCollections.observableArrayList(membershipRepo.getMembershipByBoatId(boatModel.getBoatListDTO().getBoatId()));
+        HandlingTools.queryForList(() -> {
+        ObservableList<MembershipListDTO> boatOwnerDTOS = FXCollections.observableArrayList(membershipRepo.getMembershipByBoatId(boatModel.getBoatListDTO().getBoatId()));
         Platform.runLater(() -> boatModel.setBoatOwners(boatOwnerDTOS));
+        }, boatModel.getMainModel(), logger);
     }
 
     public void getBoatPhotos() {
+        HandlingTools.queryForList(() -> {
         Platform.runLater(() ->
                 boatModel.setImages((ArrayList<BoatPhotosDTO>) boatRepo.getImagesByBoatId(boatModel.getBoatListDTO().getBoatId()))
         );
+        }, boatModel.getMainModel(), logger);
     }
 
     public void insertNote() {
@@ -160,7 +164,7 @@ public class BoatInteractor implements ConfigFilePaths {
         boatModel.getBoatListDTO().setNumberOfImages(boatModel.getImages().size());
     }
 
-    private BoatPhotosDTO resetImages() {
+    private BoatPhotosDTO resetImages() {  // TODO put in static call
         boatModel.getImages().clear();
         boatModel.getImages().addAll(boatRepo.getImagesByBoatId(boatModel.getBoatListDTO().getBoatId()));
         // sort them so one just created is last

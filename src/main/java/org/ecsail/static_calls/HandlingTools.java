@@ -1,9 +1,9 @@
 package org.ecsail.static_calls;
 
 import org.ecsail.mvci_main.MainModel;
-import org.springframework.dao.DataAccessException;
-import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.slf4j.Logger;
+import org.springframework.dao.DataAccessException;
+
 import java.util.function.Supplier;
 
 public class HandlingTools {

@@ -12,6 +12,7 @@ import org.ecsail.repository.implementations.MembershipRepositoryImpl;
 import org.ecsail.repository.implementations.SettingsRepositoryImpl;
 import org.ecsail.repository.interfaces.MembershipRepository;
 import org.ecsail.repository.interfaces.SettingsRepository;
+import org.ecsail.static_calls.HandlingTools;
 import org.ecsail.static_calls.StringTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,12 +103,10 @@ public class RosterInteractor {
     }
 
     protected void getRadioChoices() {
-        try {
+        HandlingTools.queryForList(() -> {
             ObservableList<MembershipListRadioDTO> list = FXCollections.observableArrayList(settingsRepo.getRadioChoices());
             Platform.runLater(() -> rosterModel.getRadioChoices().addAll(list));
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-        }
+        }, rosterModel.getMainModel(), logger);
     }
     protected void exportRoster() {
         try {
@@ -164,8 +163,10 @@ public class RosterInteractor {
     }
 
     protected void getRosterSettings() {
+        HandlingTools.queryForList(() -> {
         ObservableList<DbRosterSettingsDTO> list = FXCollections.observableArrayList(settingsRepo.getSearchableListItems());
         Platform.runLater(() -> rosterModel.setRosterSettings(list));
+        }, rosterModel.getMainModel(), logger);
     }
 
     protected void setListsLoaded(boolean isLoaded) {

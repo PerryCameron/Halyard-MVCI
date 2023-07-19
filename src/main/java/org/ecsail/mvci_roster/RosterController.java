@@ -12,7 +12,7 @@ public class RosterController extends Controller {
 
     public RosterController(MainController mc) {
         mainController = mc;
-        RosterModel rosterModel = new RosterModel();
+        RosterModel rosterModel = new RosterModel(mainController.getMainModel());
         rosterInteractor = new RosterInteractor(rosterModel,mainController.getConnections());
         rosterView = new RosterListView(rosterModel, this::action);
         getRosterData();
