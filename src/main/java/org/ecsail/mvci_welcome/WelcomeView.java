@@ -12,9 +12,12 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Builder;
+import org.ecsail.BaseApplication;
 import org.ecsail.interfaces.ChartConstants;
 import org.ecsail.widgetfx.ButtonFx;
+import org.ecsail.widgetfx.EventFx;
 import org.ecsail.widgetfx.HBoxFx;
 import org.ecsail.widgetfx.VBoxFx;
 
@@ -67,6 +70,8 @@ public class WelcomeView implements Builder<Region>, ChartConstants {
             stage.setTitle("Updating Statistics");
             stage.setScene(new Scene(new DialogProgressIndicator(welcomeModel).build()));
             stage.getScene().getStylesheets().add("css/dark/custom_dialogue.css");
+            // locate in middle of application
+            stage.addEventHandler(WindowEvent.WINDOW_SHOWN, EventFx.setStageLocation(stage));
             stage.show();
             updateStats.run();
             welcomeModel.dataBaseStatisticsRefreshedProperty().addListener((observable, oldValue, newValue) -> {

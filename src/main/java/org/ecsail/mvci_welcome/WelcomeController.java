@@ -4,6 +4,7 @@ import javafx.concurrent.Task;
 import javafx.scene.layout.Region;
 import org.ecsail.BaseApplication;
 import org.ecsail.mvci_main.MainController;
+import org.ecsail.mvci_main.MainModel;
 
 public class WelcomeController {
 
@@ -11,7 +12,7 @@ public class WelcomeController {
     WelcomeInteractor welcomeInteractor;
     MainController mainController;
     public WelcomeController(MainController mainController) {
-        WelcomeModel welcomeModel = new WelcomeModel();
+        WelcomeModel welcomeModel = new WelcomeModel(mainController.getMainModel());
         this.mainController = mainController;
         welcomeInteractor = new WelcomeInteractor(welcomeModel, mainController.getConnections());
         getStatisticsOnLaunch();

@@ -2,6 +2,10 @@ package org.ecsail.widgetfx;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.event.EventHandler;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+import org.ecsail.BaseApplication;
 
 public class ListenerFx {
     public static ChangeListener<Boolean> createSingleUseListener(BooleanProperty booleanProperty, Runnable action) {
@@ -13,6 +17,7 @@ public class ListenerFx {
         };
         return listener[0];
     }
+
 
 
 }

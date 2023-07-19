@@ -4,13 +4,14 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.ProgressBar;
 import org.ecsail.dto.StatsDTO;
+import org.ecsail.mvci_main.MainModel;
 
 import java.time.Year;
 import java.util.ArrayList;
 
 public class WelcomeModel {
+    private final MainModel mainModel;
     private ArrayList<StatsDTO> stats;
     private final ObservableList<XYChart.Data<String,Number>> familyData = FXCollections.observableArrayList();
     private final ObservableList<XYChart.Data<String,Number>> regularData = FXCollections.observableArrayList();
@@ -30,6 +31,14 @@ public class WelcomeModel {
     private final DoubleProperty progress = new SimpleDoubleProperty(0);
     private final IntegerProperty startYear = new SimpleIntegerProperty(1970);
 
+    public WelcomeModel(MainModel mainModel) {
+        this.mainModel = mainModel;
+    }
+
+    public MainModel getMainModel() {
+        return mainModel;
+    }
+
     public double getProgress() {
         return progress.get();
     }
@@ -44,10 +53,6 @@ public class WelcomeModel {
 
     public int getStartYear() {
         return startYear.get();
-    }
-
-    public IntegerProperty startYearProperty() {
-        return startYear;
     }
 
     public void setStartYear(int startYear) {

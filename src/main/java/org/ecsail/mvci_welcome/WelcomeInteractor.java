@@ -1,11 +1,13 @@
 package org.ecsail.mvci_welcome;
 
+import javafx.application.Platform;
 import javafx.concurrent.WorkerStateEvent;
 import org.ecsail.connection.Connections;
 import org.ecsail.dto.StatsDTO;
 import org.ecsail.repository.implementations.StatRepositoryImpl;
 import org.ecsail.repository.interfaces.StatRepository;
 import org.ecsail.repository.temp.SqlStats;
+import org.ecsail.static_calls.HandlingTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,14 +29,22 @@ public class WelcomeInteractor {
 
     protected void setStatistics() {
         int endYear = welcomeModel.getDefaultStartYear() + welcomeModel.getYearSpan();
-        welcomeModel.setStats((ArrayList<StatsDTO>) statRepository.getStatistics(welcomeModel.getDefaultStartYear(), endYear));
+        HandlingTools.queryForList(() -> {
+        ArrayList<StatsDTO> statsDTOS = (ArrayList<StatsDTO>) statRepository.getStatistics(welcomeModel.getDefaultStartYear(), endYear);
+        Platform.runLater(() -> welcomeModel.setStats(statsDTOS));
+        }, welcomeModel.getMainModel(), logger);
     }
 
     protected void reloadStats() {
-        int endYear = welcomeModel.getDefaultStartYear() + welcomeModel.getYearSpan();
-        if(endYear > welcomeModel.getSelectedYear()) endYear = welcomeModel.getSelectedYear();
-        welcomeModel.getStats().clear();
-        welcomeModel.getStats().addAll(statRepository.getStatistics(welcomeModel.getDefaultStartYear(), endYear));
+        HandlingTools.queryForList(() -> {
+            int endYear = welcomeModel.getDefaultStartYear() + welcomeModel.getYearSpan();
+            if (endYear > welcomeModel.getSelectedYear()) endYear = welcomeModel.getSelectedYear();
+            ArrayList<StatsDTO> statsDTOS = (ArrayList<StatsDTO>) statRepository.getStatistics(welcomeModel.getDefaultStartYear(), endYear);
+            Platform.runLater(() -> {
+                welcomeModel.getStats().clear();
+                welcomeModel.getStats().addAll(statsDTOS);
+            });
+        }, welcomeModel.getMainModel(), logger);
     }
 
     protected void updateProgressBar() {
