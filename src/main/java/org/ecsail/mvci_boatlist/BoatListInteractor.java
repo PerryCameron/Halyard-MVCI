@@ -12,6 +12,7 @@ import org.ecsail.repository.implementations.BoatRepositoryImpl;
 import org.ecsail.repository.implementations.SettingsRepositoryImpl;
 import org.ecsail.repository.interfaces.BoatRepository;
 import org.ecsail.repository.interfaces.SettingsRepository;
+import org.ecsail.static_calls.HandlingTools;
 import org.ecsail.static_calls.StringTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,13 +28,11 @@ public class BoatListInteractor {
 
     private static final Logger logger = LoggerFactory.getLogger(BoatListInteractor.class);
     private final BoatListModel boatListModel;
-    private final DataSource dataSource;
     private final SettingsRepository settingsRepo;
     private final BoatRepository boatRepo;
 
     public BoatListInteractor(BoatListModel boatListModel, Connections connections) {
         this.boatListModel = boatListModel;
-        this.dataSource = connections.getDataSource();
         settingsRepo = new SettingsRepositoryImpl(connections.getDataSource());
         boatRepo = new BoatRepositoryImpl(connections.getDataSource());
     }
@@ -42,7 +41,6 @@ public class BoatListInteractor {
         clearMainBoatList();
         Method method;
         try {
-            System.out.println("method: " + boatListModel.getSelectedRadioBox().getMethod());
             method = boatRepo.getClass().getMethod(boatListModel.getSelectedRadioBox().getMethod());
             ObservableList<BoatListDTO> updatedBoatList
                     = FXCollections.observableArrayList((List<BoatListDTO>) method.invoke(boatRepo));
@@ -122,12 +120,10 @@ public class BoatListInteractor {
     }
 
     public void getRadioChoices() {
-        try {
+        HandlingTools.queryForList(() -> {
             ObservableList<BoatListRadioDTO> list = FXCollections.observableArrayList(settingsRepo.getBoatRadioChoices());
             Platform.runLater(() -> boatListModel.getRadioChoices().addAll(list));
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-        }
+        }, boatListModel.getMainModel(), logger);
     }
 
     protected void setListsLoaded(boolean isLoaded) {
@@ -135,8 +131,10 @@ public class BoatListInteractor {
     }
 
     public void getBoatListSettings() {
-        ObservableList<DbBoatSettingsDTO> list = FXCollections.observableArrayList(settingsRepo.getBoatSettings());
-        boatListModel.setBoatListSettings(list);
+        HandlingTools.queryForList(() -> {
+            ObservableList<DbBoatSettingsDTO> list = FXCollections.observableArrayList(settingsRepo.getBoatSettings());
+            Platform.runLater(() -> boatListModel.setBoatListSettings(list));
+        }, boatListModel.getMainModel(), logger);
     }
 
     protected void setBoatListToTableview() {
@@ -155,8 +153,10 @@ public class BoatListInteractor {
     }
 
     public void updateBoat() {
-        int rowsUpdated = boatRepo.updateAux(boatListModel.getSelectedBoatList().isAux(), boatListModel.getSelectedBoatList().getBoatId());
-        savedToIndicator(rowsUpdated == 1);
+        HandlingTools.executeQuery(() ->
+                boatRepo.updateAux(boatListModel.getSelectedBoatList().isAux(), boatListModel.getSelectedBoatList().getBoatId()),
+                boatListModel.getMainModel(),
+                logger);
     }
 
     protected void savedToIndicator(boolean returnOk) { // updates status lights
