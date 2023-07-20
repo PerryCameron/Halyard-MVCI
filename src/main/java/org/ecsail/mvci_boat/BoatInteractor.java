@@ -17,7 +17,7 @@ import org.ecsail.repository.interfaces.BoatRepository;
 import org.ecsail.repository.interfaces.MembershipRepository;
 import org.ecsail.repository.interfaces.NotesRepository;
 import org.ecsail.repository.interfaces.SettingsRepository;
-import org.ecsail.static_calls.HandlingTools;
+import org.ecsail.static_tools.HandlingTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;

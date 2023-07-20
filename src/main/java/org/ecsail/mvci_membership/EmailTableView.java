@@ -12,7 +12,7 @@ import javafx.util.Builder;
 import org.ecsail.custom.RadioButtonCell;
 import org.ecsail.dto.EmailDTO;
 import org.ecsail.dto.PersonDTO;
-import org.ecsail.static_calls.StringTools;
+import org.ecsail.static_tools.StringTools;
 import org.ecsail.widgetfx.TableColumnFx;
 import org.ecsail.widgetfx.TableViewFx;
 

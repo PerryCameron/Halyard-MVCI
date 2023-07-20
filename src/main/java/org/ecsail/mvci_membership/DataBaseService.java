@@ -4,19 +4,15 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import org.ecsail.dto.*;
 import org.ecsail.interfaces.SlipUser;
-import org.ecsail.mvci_main.MainModel;
 import org.ecsail.repository.implementations.*;
 import org.ecsail.repository.interfaces.*;
-import org.ecsail.static_calls.HandlingTools;
+import org.ecsail.static_tools.HandlingTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
-import org.springframework.dao.IncorrectResultSizeDataAccessException;
 
 import javax.sql.DataSource;
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public class DataBaseService {
     private final MembershipModel membershipModel;
@@ -174,7 +170,7 @@ public class DataBaseService {
 
     protected void updateNote() {
         System.out.println("updateNote:"); // TODO this is triggering when you scroll the tableview (wierd)
-        System.out.println(membershipModel.getSelectedNote());
+        System.out.println(membershipModel.getSelectedNote()); // TODO I think I fixed
 //        executeQuery(() -> notesRepo.update(membershipModel.getSelectedNote()));
     }
 
@@ -225,7 +221,10 @@ public class DataBaseService {
     }
 
     public void deletePhone() {
-        System.out.println("Delete Phone");
+        if (HandlingTools.executeQuery(() -> phoneRepo.delete(membershipModel.getSelectedPhone()),
+                membershipModel.getMainModel(), logger))
+            membershipModel.getSelectedPerson().getPhones().removeIf(person ->
+                    person.getPhone().equals(membershipModel.getSelectedPhone()));
     }
 
     public void updateOfficer() {
@@ -233,7 +232,8 @@ public class DataBaseService {
     }
 
     public void updatePerson() {
-        System.out.println("Update Person");
+        HandlingTools.executeQuery(() ->
+        peopleRepo.update(membershipModel.getSelectedPerson()), membershipModel.getMainModel(), logger);
     }
 
     public void insertEmail() {

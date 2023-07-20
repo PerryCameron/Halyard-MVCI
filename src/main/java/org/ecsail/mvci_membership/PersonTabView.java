@@ -18,7 +18,7 @@ import org.ecsail.custom.CustomDatePicker;
 import org.ecsail.dto.*;
 import org.ecsail.interfaces.ConfigFilePaths;
 import org.ecsail.interfaces.ObjectType;
-import org.ecsail.static_calls.MathTools;
+import org.ecsail.static_tools.MathTools;
 import org.ecsail.widgetfx.*;
 
 import java.time.LocalDate;

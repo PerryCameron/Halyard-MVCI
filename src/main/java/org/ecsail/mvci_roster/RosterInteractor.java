@@ -12,8 +12,8 @@ import org.ecsail.repository.implementations.MembershipRepositoryImpl;
 import org.ecsail.repository.implementations.SettingsRepositoryImpl;
 import org.ecsail.repository.interfaces.MembershipRepository;
 import org.ecsail.repository.interfaces.SettingsRepository;
-import org.ecsail.static_calls.HandlingTools;
-import org.ecsail.static_calls.StringTools;
+import org.ecsail.static_tools.HandlingTools;
+import org.ecsail.static_tools.StringTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

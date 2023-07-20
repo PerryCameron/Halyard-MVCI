@@ -7,7 +7,7 @@ import org.ecsail.dto.StatsDTO;
 import org.ecsail.repository.implementations.StatRepositoryImpl;
 import org.ecsail.repository.interfaces.StatRepository;
 import org.ecsail.repository.temp.SqlStats;
-import org.ecsail.static_calls.HandlingTools;
+import org.ecsail.static_tools.HandlingTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

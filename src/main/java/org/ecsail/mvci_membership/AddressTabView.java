@@ -11,8 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
-import org.ecsail.dto.MembershipListDTO;
-import org.ecsail.static_calls.StringTools;
+import org.ecsail.static_tools.StringTools;
 import org.ecsail.widgetfx.*;
 
 public class AddressTabView implements Builder<Tab> {

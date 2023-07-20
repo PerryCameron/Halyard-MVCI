@@ -12,12 +12,11 @@ import org.ecsail.repository.implementations.BoatRepositoryImpl;
 import org.ecsail.repository.implementations.SettingsRepositoryImpl;
 import org.ecsail.repository.interfaces.BoatRepository;
 import org.ecsail.repository.interfaces.SettingsRepository;
-import org.ecsail.static_calls.HandlingTools;
-import org.ecsail.static_calls.StringTools;
+import org.ecsail.static_tools.HandlingTools;
+import org.ecsail.static_tools.StringTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.sql.DataSource;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Comparator;

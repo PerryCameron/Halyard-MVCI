@@ -8,7 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.util.Builder;
 import org.ecsail.dto.MembershipListDTO;
-import org.ecsail.static_calls.StringTools;
+import org.ecsail.static_tools.StringTools;
 import org.ecsail.widgetfx.DialogueFx;
 
 public class CustomOwnerDialogue implements Builder<Alert> {
