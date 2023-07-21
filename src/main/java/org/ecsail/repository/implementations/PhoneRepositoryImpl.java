@@ -52,12 +52,12 @@ public class PhoneRepositoryImpl implements PhoneRepository {
     @Override
     public int update(PhoneDTO phoneDTO) {
         String query = "UPDATE phone SET " +
-                "PHONE_ID = :phoneId, " +
                 "P_ID = :pId," +
                 "PHONE = :phone, " +
                 "PHONE_TYPE = :phoneType, " +
                 "PHONE_LISTED = :phoneListed " +
                 "WHERE PHONE_ID = :phoneId";
+        System.out.println("Phone ID is " + phoneDTO.getPhoneId());
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(phoneDTO);
         return namedParameterJdbcTemplate.update(query, namedParameters);
     }

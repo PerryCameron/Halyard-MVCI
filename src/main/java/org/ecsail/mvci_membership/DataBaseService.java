@@ -7,10 +7,12 @@ import org.ecsail.interfaces.SlipUser;
 import org.ecsail.repository.implementations.*;
 import org.ecsail.repository.interfaces.*;
 import org.ecsail.static_tools.HandlingTools;
+import org.ecsail.widgetfx.TableViewFx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -129,21 +131,6 @@ public class DataBaseService {
                 boatRepo.update(membershipModel.getSelectedBoat()), membershipModel.getMainModel(), logger);
     }
 
-    protected void insertBoat() {
-        HandlingTools.executeQuery(() ->
-                boatRepo.insert(membershipModel.getSelectedBoat()), membershipModel.getMainModel(), logger);
-    }
-
-    public void insertAward() {
-        HandlingTools.executeQuery(() ->
-                awardRepo.insert(membershipModel.getSelectedAward()), membershipModel.getMainModel(), logger);
-    }
-
-    protected void deleteBoat() {
-        System.out.println("Delete Boat");
-//        executeQuery(() -> boatRepo.delete(membershipModel.getSelectedBoat()));
-    }
-
     protected void updateEmail() {
         HandlingTools.executeQuery(() ->
                 emailRepo.update(membershipModel.getSelectedEmail()), membershipModel.getMainModel(), logger);
@@ -217,15 +204,10 @@ public class DataBaseService {
                     person.getPhone().equals(membershipModel.getSelectedPhone()));
     }
 
-//    public void deleteOwner() {
-//        if(HandlingTools.executeQuery(() ->
-//                        boatRepo.deleteBoatOwner(boatModel.getSelectedOwner(), boatModel.getBoatListDTO()),
-//                boatModel.getMainModel(),
-//                logger))
-//            boatModel.getBoatOwners().removeIf(owner -> owner.getMsId() == boatModel.getSelectedOwner().getMsId());
-//    }
-
-
+    protected void deleteBoat() {
+        System.out.println("Delete Boat");
+//        executeQuery(() -> boatRepo.delete(membershipModel.getSelectedBoat()));
+    }
 
     public void insertEmail() {
         System.out.println("Insert Email");
@@ -249,7 +231,24 @@ public class DataBaseService {
 
     public void insertPhone() {
         PhoneDTO phoneDTO = new PhoneDTO(membershipModel.getSelectedPerson().getpId());
-        if(HandlingTools.executeQuery(() -> phoneRepo.insert(phoneDTO), membershipModel.getMainModel(), logger))
-            Platform.runLater(() -> membershipModel.getSelectedPerson().getPhones().add(phoneDTO));
+        if (HandlingTools.executeQuery(() -> phoneRepo.insert(phoneDTO), membershipModel.getMainModel(), logger)) {
+            Platform.runLater(() -> {
+                membershipModel.setSelectedPhone(phoneDTO);
+                logger.info("Created new phone entry");
+                membershipModel.getSelectedPerson().getPhones().add(phoneDTO);
+                membershipModel.getSelectedPerson().getPhones().sort(Comparator.comparing(PhoneDTO::getPhoneId).reversed());
+                TableViewFx.requestFocusOnTable(membershipModel.getPhoneTableView().get(membershipModel.getSelectedPerson()));
+            });
+        }
+    }
+
+    protected void insertBoat() {
+        HandlingTools.executeQuery(() ->
+                boatRepo.insert(membershipModel.getSelectedBoat()), membershipModel.getMainModel(), logger);
+    }
+
+    public void insertAward() {
+        HandlingTools.executeQuery(() ->
+                awardRepo.insert(membershipModel.getSelectedAward()), membershipModel.getMainModel(), logger);
     }
 }

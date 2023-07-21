@@ -18,6 +18,7 @@ import org.ecsail.custom.CustomDatePicker;
 import org.ecsail.dto.*;
 import org.ecsail.interfaces.ConfigFilePaths;
 import org.ecsail.interfaces.ObjectType;
+import org.ecsail.mvci_boat.BoatMessage;
 import org.ecsail.static_tools.MathTools;
 import org.ecsail.widgetfx.*;
 
@@ -277,6 +278,16 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         return button;
     }
 
+    private void deletePhone(PhoneDTO phoneDTO) {
+        String[] strings = {
+                "Delete Phone",
+                "Are you sure you want to delete this phone number?",
+                "Missing Selection",
+                "You need to select a phone first"};
+        if(DialogueFx.verifyAction(strings, phoneDTO))
+            membershipView.sendMessage().accept(MembershipMessage.DELETE_PHONE);
+    }
+
     private Button createDeleteButton(ObjectType.Dto type) {
         Button button = ButtonFx.buttonOf("Delete", 60);
         switch (type) {
@@ -284,7 +295,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
                 int selectedIndex = membershipModel.getPhoneTableView().get(personDTO).getSelectionModel().getSelectedIndex();
                 PhoneDTO phoneDTO = membershipModel.getPhoneTableView().get(personDTO).getItems().get(selectedIndex);
                 membershipModel.setSelectedPhone(phoneDTO);
-                membershipView.sendMessage().accept(MembershipMessage.DELETE_PHONE);
+                deletePhone(phoneDTO);
                 personDTO.getPhones().remove(phoneDTO);
             });
             case Email -> button.setOnAction(event -> {
@@ -316,12 +327,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         Button button = ButtonFx.buttonOf("Add", 60);
             switch (type) {
                 case Phone -> button.setOnAction(event -> {
-                    PhoneDTO phoneDTO = new PhoneDTO(personDTO.getpId());
-                    membershipModel.setSelectedPhone(phoneDTO);
                     membershipView.sendMessage().accept(MembershipMessage.INSERT_PHONE);
-                    personDTO.getPhones().add(phoneDTO);
-                    personDTO.getPhones().sort(Comparator.comparing(PhoneDTO::getPhoneId));
-                    requestFocusOnTable(membershipModel.getPhoneTableView().get(personDTO));
                 });
                 case Email -> button.setOnAction(event -> {
                     EmailDTO emailDTO = new EmailDTO(personDTO.getpId());
@@ -329,7 +335,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
                     membershipView.sendMessage().accept(MembershipMessage.INSERT_EMAIL);
                     personDTO.getEmail().add(emailDTO);
                     personDTO.getEmail().sort(Comparator.comparing(EmailDTO::getEmail_id));
-                    requestFocusOnTable(membershipModel.getEmailTableView().get(personDTO));
+                    TableViewFx.requestFocusOnTable(membershipModel.getEmailTableView().get(personDTO));
                 });
                 case Award -> button.setOnAction(event -> {
                     AwardDTO awardDTO = new AwardDTO(personDTO.getpId());
@@ -337,7 +343,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
                     membershipView.sendMessage().accept(MembershipMessage.INSERT_AWARD);
                     personDTO.getAwards().add(awardDTO);
                     personDTO.getAwards().sort(Comparator.comparing(AwardDTO::getAwardId));
-                    requestFocusOnTable(membershipModel.getAwardTableView().get(personDTO));
+                    TableViewFx.requestFocusOnTable(membershipModel.getAwardTableView().get(personDTO));
                 });
                 case Officer -> button.setOnAction(event -> {
                     OfficerDTO officerDTO = new OfficerDTO(personDTO.getpId());
@@ -345,19 +351,10 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
                     personDTO.getOfficer().sort(Comparator.comparing(OfficerDTO::getOfficerId));
                     membershipModel.setSelectedOfficer(officerDTO);
                     membershipView.sendMessage().accept(MembershipMessage.INSERT_OFFICER);
-                    requestFocusOnTable(membershipModel.getOfficerTableView().get(personDTO));
+                    TableViewFx.requestFocusOnTable(membershipModel.getOfficerTableView().get(personDTO));
                 });
             }
         return button;
-    }
-
-    private void requestFocusOnTable(TableView<?> tableView) {
-        TableColumn firstColumn = tableView.getColumns().get(0);
-        tableView.layout();
-        tableView.requestFocus();
-        tableView.getSelectionModel().select(0);
-        tableView.getFocusModel().focus(0);
-        tableView.edit(0, firstColumn);
     }
 
     private Button createEmailButton() {

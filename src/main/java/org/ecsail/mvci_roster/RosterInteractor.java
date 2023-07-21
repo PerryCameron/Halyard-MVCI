@@ -54,7 +54,10 @@ public class RosterInteractor {
     }
 
     protected void setRosterToTableview() {
-        Platform.runLater(() -> rosterModel.getRosterTableView().setItems(rosterModel.getRosters()));
+        Platform.runLater(() -> {
+            logger.info("Setting memberships to roster on change.........");
+            rosterModel.getRosterTableView().setItems(rosterModel.getRosters());
+        });
         changeState();
     }
 
