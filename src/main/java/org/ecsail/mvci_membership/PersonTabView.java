@@ -330,20 +330,10 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
                     membershipView.sendMessage().accept(MembershipMessage.INSERT_PHONE);
                 });
                 case Email -> button.setOnAction(event -> {
-                    EmailDTO emailDTO = new EmailDTO(personDTO.getpId());
-                    membershipModel.setSelectedEmail(emailDTO);
                     membershipView.sendMessage().accept(MembershipMessage.INSERT_EMAIL);
-                    personDTO.getEmail().add(emailDTO);
-                    personDTO.getEmail().sort(Comparator.comparing(EmailDTO::getEmail_id));
-                    TableViewFx.requestFocusOnTable(membershipModel.getEmailTableView().get(personDTO));
                 });
                 case Award -> button.setOnAction(event -> {
-                    AwardDTO awardDTO = new AwardDTO(personDTO.getpId());
-                    membershipModel.setSelectedAward(awardDTO);
                     membershipView.sendMessage().accept(MembershipMessage.INSERT_AWARD);
-                    personDTO.getAwards().add(awardDTO);
-                    personDTO.getAwards().sort(Comparator.comparing(AwardDTO::getAwardId));
-                    TableViewFx.requestFocusOnTable(membershipModel.getAwardTableView().get(personDTO));
                 });
                 case Officer -> button.setOnAction(event -> {
                     OfficerDTO officerDTO = new OfficerDTO(personDTO.getpId());
