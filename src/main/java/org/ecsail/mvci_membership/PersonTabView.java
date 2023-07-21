@@ -325,25 +325,16 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
 
     private Button createAddButton(ObjectType.Dto type) {
         Button button = ButtonFx.buttonOf("Add", 60);
-            switch (type) {
-                case Phone -> button.setOnAction(event -> {
-                    membershipView.sendMessage().accept(MembershipMessage.INSERT_PHONE);
-                });
-                case Email -> button.setOnAction(event -> {
-                    membershipView.sendMessage().accept(MembershipMessage.INSERT_EMAIL);
-                });
-                case Award -> button.setOnAction(event -> {
-                    membershipView.sendMessage().accept(MembershipMessage.INSERT_AWARD);
-                });
-                case Officer -> button.setOnAction(event -> {
-                    OfficerDTO officerDTO = new OfficerDTO(personDTO.getpId());
-                    personDTO.getOfficer().add(officerDTO);
-                    personDTO.getOfficer().sort(Comparator.comparing(OfficerDTO::getOfficerId));
-                    membershipModel.setSelectedOfficer(officerDTO);
-                    membershipView.sendMessage().accept(MembershipMessage.INSERT_OFFICER);
-                    TableViewFx.requestFocusOnTable(membershipModel.getOfficerTableView().get(personDTO));
-                });
-            }
+        switch (type) {
+            case Phone -> button.setOnAction(event ->
+                    membershipView.sendMessage().accept(MembershipMessage.INSERT_PHONE));
+            case Email -> button.setOnAction(event ->
+                    membershipView.sendMessage().accept(MembershipMessage.INSERT_EMAIL));
+            case Award -> button.setOnAction(event ->
+                    membershipView.sendMessage().accept(MembershipMessage.INSERT_AWARD));
+            case Officer -> button.setOnAction(event ->
+                membershipView.sendMessage().accept(MembershipMessage.INSERT_OFFICER));
+        }
         return button;
     }
 

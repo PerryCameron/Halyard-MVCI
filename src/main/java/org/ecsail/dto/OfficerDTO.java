@@ -27,8 +27,8 @@ public class OfficerDTO {
     public OfficerDTO(Integer pId) {
 		this.officerId = new SimpleIntegerProperty(0);
 		this.pId = new SimpleIntegerProperty(pId);
-		this.boardYear = new SimpleStringProperty("");
-		this.officerType = new SimpleStringProperty("");
+		this.boardYear = new SimpleStringProperty("0");
+		this.officerType = new SimpleStringProperty("BM");
 		this.fiscalYear = new SimpleStringProperty(Year.now().toString());
     }
 

@@ -8,6 +8,7 @@ import org.ecsail.repository.rowmappers.OfficerRowMapper;
 import org.ecsail.repository.rowmappers.OfficerWithNamesRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -66,7 +67,11 @@ public class OfficerRepositoryImpl implements OfficerRepository {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String query = "INSERT INTO officer (P_ID, BOARD_YEAR, OFF_TYPE, OFF_YEAR) " +
                 "VALUES (:pId, :boardYear, :officerType, :fiscalYear)";
-        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(officerDTO);
+        MapSqlParameterSource namedParameters = new MapSqlParameterSource();
+        namedParameters.addValue("pId", officerDTO.getpId());
+        namedParameters.addValue("boardYear", Integer.parseInt(officerDTO.getBoardYear()));
+        namedParameters.addValue("officerType", officerDTO.getOfficerType());
+        namedParameters.addValue("fiscalYear", Integer.parseInt(officerDTO.getFiscalYear()));
         int affectedRows = namedParameterJdbcTemplate.update(query, namedParameters, keyHolder);
         officerDTO.setOfficerId(keyHolder.getKey().intValue());
         return affectedRows;

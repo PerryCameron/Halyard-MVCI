@@ -121,16 +121,10 @@ public class DataBaseService {
                 membershipRepo.update(membershipModel.getMembership()), membershipModel.getMainModel(), logger);
     }
 
-    protected void updateAward() {
-        HandlingTools.executeQuery(() ->
-                awardRepo.update(membershipModel.getSelectedAward()), membershipModel.getMainModel(), logger);
-    }
-
     protected void updateBoat() {
         HandlingTools.executeQuery(() ->
                 boatRepo.update(membershipModel.getSelectedBoat()), membershipModel.getMainModel(), logger);
     }
-
 
     protected void updateMembershipId() {
         HandlingTools.executeQuery(() ->
@@ -161,8 +155,14 @@ public class DataBaseService {
                 emailRepo.update(membershipModel.getSelectedEmail()), membershipModel.getMainModel(), logger);
     }
 
+    protected void updateAward() {
+        HandlingTools.executeQuery(() ->
+                awardRepo.update(membershipModel.getSelectedAward()), membershipModel.getMainModel(), logger);
+    }
+
     public void updateOfficer() {
-        System.out.println("Update Officer");
+        HandlingTools.executeQuery(() ->
+                officerRepo.update(membershipModel.getSelectedOfficer()), membershipModel.getMainModel(), logger);
     }
 
     public void updatePerson() {
@@ -188,10 +188,6 @@ public class DataBaseService {
         System.out.println("Delete Note");
     }
 
-    public void deleteOfficer() {
-        System.out.println("Delete Officer");
-    }
-
     public void deletePhone() {
         if (HandlingTools.executeQuery(() -> phoneRepo.delete(membershipModel.getSelectedPhone()),
             membershipModel.getMainModel(), logger))
@@ -211,6 +207,13 @@ public class DataBaseService {
             membershipModel.getMainModel(), logger))
                 membershipModel.getSelectedPerson().getAwards().removeIf(awardDTO ->
                     awardDTO.equals(membershipModel.getSelectedAward()));
+    }
+
+    public void deleteOfficer() {
+        if (HandlingTools.executeQuery(() -> officerRepo.delete(membershipModel.getSelectedOfficer()),
+            membershipModel.getMainModel(), logger))
+                membershipModel.getSelectedPerson().getOfficer().removeIf(officerDTO ->
+                    officerDTO.equals(membershipModel.getSelectedOfficer()));
     }
 
     protected void deleteBoat() {
@@ -259,8 +262,7 @@ public class DataBaseService {
 
     public void insertAward() {
         AwardDTO awardDTO = new AwardDTO(membershipModel.getSelectedPerson().getpId());
-        if (HandlingTools.executeQuery(() ->
-                awardRepo.insert(awardDTO), membershipModel.getMainModel(), logger)) {
+        if (HandlingTools.executeQuery(() -> awardRepo.insert(awardDTO), membershipModel.getMainModel(), logger)) {
             Platform.runLater(() -> {
                 membershipModel.setSelectedAward(awardDTO);
                 membershipModel.getSelectedPerson().getAwards().add(awardDTO);
@@ -271,7 +273,15 @@ public class DataBaseService {
     }
 
     public void insertOfficer() {
-        System.out.println("Insert Officer");
+        OfficerDTO officerDTO = new OfficerDTO(membershipModel.getSelectedPerson().getpId());
+        if (HandlingTools.executeQuery(() -> officerRepo.insert(officerDTO), membershipModel.getMainModel(), logger)) {
+            Platform.runLater(() -> {
+                membershipModel.setSelectedOfficer(officerDTO);
+                membershipModel.getSelectedPerson().getOfficer().add(officerDTO);
+                membershipModel.getSelectedPerson().getOfficer().sort(Comparator.comparing(OfficerDTO::getOfficerId).reversed());
+                TableViewFx.requestFocusOnTable(membershipModel.getOfficerTableView().get(membershipModel.getSelectedPerson()));
+            });
+        }
     }
 
     protected void insertBoat() {
