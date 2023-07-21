@@ -9,10 +9,10 @@ import org.ecsail.repository.interfaces.*;
 import org.ecsail.static_tools.HandlingTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataAccessException;
 
 import javax.sql.DataSource;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class DataBaseService {
     private final MembershipModel membershipModel;
@@ -71,7 +71,6 @@ public class DataBaseService {
             Platform.runLater(() -> {
                 membershipModel.getMembership()
                         .setBoatDTOS(FXCollections.observableArrayList(boats));
-                retrievedFromIndicator(true);
             });
         }, membershipModel.getMainModel(), logger);
     }
@@ -81,23 +80,15 @@ public class DataBaseService {
             List<NotesDTO> notesDTOS = notesRepo.getMemosByMsId(ml.getMsId());
             Platform.runLater(() -> membershipModel.getMembership()
                     .setNotesDTOS(FXCollections.observableArrayList(notesDTOS)));
-            retrievedFromIndicator(true);
         }, membershipModel.getMainModel(), logger);
     }
 
     public void getSlipInfo(MembershipListDTO ml) {
-        SlipDTO slip = null;
-        try {
-            slip = slipRepo.getSlip(ml.getMsId());
-            retrievedFromIndicator(true);
-        } catch (DataAccessException e) {
-            logger.error(e.getMessage());
-            retrievedFromIndicator(false);
-        }
-        SlipDTO finalSlip = slip;
+        HandlingTools.queryForList(() -> {
+            Platform.runLater(() -> membershipModel.setSlip(slipRepo.getSlip(ml.getMsId())));
+        }, membershipModel.getMainModel(), logger);
         logger.info("Slip is loaded");
         Platform.runLater(() -> {
-            membershipModel.setSlip(finalSlip);
             // member does not own a slip
             if (membershipModel.getSlip().getMs_id() == 0) membershipModel.setSlipRelationStatus(SlipUser.slip.noSlip);
                 // member owns a slip
@@ -123,16 +114,6 @@ public class DataBaseService {
         membershipModel.setMembershipId(String.valueOf(membershipIdRepo.getCurrentId(membershipModel.getSlip().getSubleased_to()).getMembership_id()));
     }
 
-    protected void savedToIndicator(boolean returnOk) { // updates status lights
-        if(returnOk) membershipModel.getMainModel().getLightAnimationMap().get("receiveSuccess").playFromStart();
-        else membershipModel.getMainModel().getLightAnimationMap().get("receiveError").playFromStart();
-    }
-
-    protected void retrievedFromIndicator(boolean returnOk) { // updates status lights
-        if(returnOk) membershipModel.getMainModel().getLightAnimationMap().get("transmitSuccess").playFromStart();
-        else membershipModel.getMainModel().getLightAnimationMap().get("transmitError").playFromStart();
-    }
-
     protected void updateMembershipList() {
         HandlingTools.executeQuery(() ->
                 membershipRepo.update(membershipModel.getMembership()), membershipModel.getMainModel(), logger);
@@ -151,6 +132,11 @@ public class DataBaseService {
     protected void insertBoat() {
         HandlingTools.executeQuery(() ->
                 boatRepo.insert(membershipModel.getSelectedBoat()), membershipModel.getMainModel(), logger);
+    }
+
+    public void insertAward() {
+        HandlingTools.executeQuery(() ->
+                awardRepo.insert(membershipModel.getSelectedAward()), membershipModel.getMainModel(), logger);
     }
 
     protected void deleteBoat() {
@@ -187,9 +173,13 @@ public class DataBaseService {
                 phoneRepo.update(membershipModel.getSelectedPhone()), membershipModel.getMainModel(), logger);
     }
 
-    public void insertAward() {
+    public void updateOfficer() {
+        System.out.println("Update Officer");
+    }
+
+    public void updatePerson() {
         HandlingTools.executeQuery(() ->
-                awardRepo.insert(membershipModel.getSelectedAward()), membershipModel.getMainModel(), logger);
+                peopleRepo.update(membershipModel.getSelectedPerson()), membershipModel.getMainModel(), logger);
     }
 
     public void deletePerson() {
@@ -222,19 +212,20 @@ public class DataBaseService {
 
     public void deletePhone() {
         if (HandlingTools.executeQuery(() -> phoneRepo.delete(membershipModel.getSelectedPhone()),
-                membershipModel.getMainModel(), logger))
-            membershipModel.getSelectedPerson().getPhones().removeIf(person ->
+            membershipModel.getMainModel(), logger))
+                membershipModel.getSelectedPerson().getPhones().removeIf(person ->
                     person.getPhone().equals(membershipModel.getSelectedPhone()));
     }
 
-    public void updateOfficer() {
-        System.out.println("Update Officer");
-    }
+//    public void deleteOwner() {
+//        if(HandlingTools.executeQuery(() ->
+//                        boatRepo.deleteBoatOwner(boatModel.getSelectedOwner(), boatModel.getBoatListDTO()),
+//                boatModel.getMainModel(),
+//                logger))
+//            boatModel.getBoatOwners().removeIf(owner -> owner.getMsId() == boatModel.getSelectedOwner().getMsId());
+//    }
 
-    public void updatePerson() {
-        HandlingTools.executeQuery(() ->
-        peopleRepo.update(membershipModel.getSelectedPerson()), membershipModel.getMainModel(), logger);
-    }
+
 
     public void insertEmail() {
         System.out.println("Insert Email");
@@ -257,6 +248,8 @@ public class DataBaseService {
     }
 
     public void insertPhone() {
-        System.out.println("Insert Phone");
+        PhoneDTO phoneDTO = new PhoneDTO(membershipModel.getSelectedPerson().getpId());
+        if(HandlingTools.executeQuery(() -> phoneRepo.insert(phoneDTO), membershipModel.getMainModel(), logger))
+            Platform.runLater(() -> membershipModel.getSelectedPerson().getPhones().add(phoneDTO));
     }
 }

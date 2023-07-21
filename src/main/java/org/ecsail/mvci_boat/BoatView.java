@@ -123,24 +123,14 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
         }
     }
 
-    private void makeAlert(String[] string, Object o, BoatMessage boatMessage) {
-        if(o != null) {
-            Alert alert = DialogueFx.customAlert(string[0], string[1], Alert.AlertType.CONFIRMATION);
-            Optional<ButtonType> result = alert.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK) action.accept(boatMessage);
-        } else {
-            Alert alert = DialogueFx.customAlert(string[2],string[3], Alert.AlertType.INFORMATION);
-            alert.showAndWait();
-        }
-    }
-
     private void deleteNote() {
         String[] strings = {
                 "Delete Note",
                 "Are you sure you want to delete this note?",
                 "Missing Selection",
                 "You need to select a note first"};
-        makeAlert(strings, boatModel.getSelectedNote(), BoatMessage.DELETE_NOTE);
+        if(DialogueFx.verifyAction(strings, boatModel.getSelectedNote()))
+            action.accept(BoatMessage.DELETE_NOTE);
     }
 
     private void deleteOwner() {
@@ -149,7 +139,8 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
                 "Are you sure you want to delete this owner?",
                 "Missing Selection",
                 "You need to select an owner first"};
-        makeAlert(strings, boatModel.getSelectedOwner(), BoatMessage.DELETE_OWNER);
+        if(DialogueFx.verifyAction(strings, boatModel.getSelectedOwner()))
+            action.accept(BoatMessage.DELETE_OWNER);
     }
 
     private void deleteImage() {
@@ -158,7 +149,8 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
                 "Are you sure you want to delete this image?",
                 "Missing Selection",
                 "You need to select an image first"};
-        makeAlert(strings, boatModel.getSelectedImage(), BoatMessage.DELETE_IMAGE);
+        if(DialogueFx.verifyAction(strings, boatModel.getSelectedImage()))
+            action.accept(BoatMessage.DELETE_IMAGE);
     }
 
     private Node boatInfoTitlePane() {
