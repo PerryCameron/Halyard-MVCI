@@ -16,6 +16,7 @@ import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import org.ecsail.custom.CustomDatePicker;
 import org.ecsail.dto.MembershipIdDTO;
+import org.ecsail.dto.NotesDTO;
 import org.ecsail.enums.MembershipType;
 import org.ecsail.widgetfx.*;
 
@@ -100,11 +101,15 @@ public class MembershipIdView implements Builder<Tab> {
     }
 
     private Node addTable() {
-        TableView tableView = TableViewFx.tableViewOf(MembershipIdDTO.class);
+        TableView<MembershipIdDTO> tableView = TableViewFx.tableViewOf(MembershipIdDTO.class);
         membershipModel.getMembership().getMembershipIdDTOS()
                 .sort(Comparator.comparing(MembershipIdDTO::getFiscal_Year).reversed());
         tableView.setItems(membershipView.getMembershipModel().getMembership().getMembershipIdDTOS());
         tableView.getColumns().addAll(col1(),col2(),col3(),col4(),col5());
+        TableView.TableViewSelectionModel<MembershipIdDTO> selectionModel = tableView.getSelectionModel();
+        selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) membershipModel.setSelectedMembershipId(newSelection);
+        });
         return tableView;
     }
 

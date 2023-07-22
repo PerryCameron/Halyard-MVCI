@@ -11,6 +11,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Builder;
 import org.ecsail.custom.RadioButtonCell;
 import org.ecsail.dto.EmailDTO;
+import org.ecsail.dto.NotesDTO;
 import org.ecsail.dto.PersonDTO;
 import org.ecsail.static_tools.StringTools;
 import org.ecsail.widgetfx.TableColumnFx;
@@ -37,6 +38,10 @@ public class EmailTableView implements Builder<TableView<EmailDTO>> {
         tableView.setItems(person.getEmail());
         List<TableColumn<EmailDTO, ?>> columns = Arrays.asList(createColumn1(), createColumn2(), createColumn3());
         tableView.getColumns().setAll(columns);
+        TableView.TableViewSelectionModel<EmailDTO> selectionModel = tableView.getSelectionModel();
+        selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) membershipModel.setSelectedEmail(newSelection);
+        });
         return tableView;
     }
 
