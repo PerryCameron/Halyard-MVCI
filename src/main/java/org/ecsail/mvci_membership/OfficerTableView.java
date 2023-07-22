@@ -9,7 +9,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.util.Builder;
 import org.ecsail.dto.BoardPositionDTO;
-import org.ecsail.dto.NotesDTO;
 import org.ecsail.dto.OfficerDTO;
 import org.ecsail.dto.PersonDTO;
 import org.ecsail.enums.Officer;
@@ -34,7 +33,7 @@ public class OfficerTableView implements Builder<TableView<OfficerDTO>> {
     @Override
     public TableView<OfficerDTO> build() {
         TableView<OfficerDTO> tableView = TableViewFx.tableViewOf(OfficerDTO.class, 146);
-        tableView.setItems(person.getOfficer());
+        tableView.setItems(person.getOfficers());
         tableView.getColumns().addAll(createColumn1(), createColumn2(), createColumn3());
         TableView.TableViewSelectionModel<OfficerDTO> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {

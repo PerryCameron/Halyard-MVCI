@@ -278,26 +278,12 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         return button;
     }
 
-    private void deletePhone(PhoneDTO phoneDTO) {
-        String[] strings = {
-                "Delete Phone",
-                "Are you sure you want to delete this phone number?",
-                "Missing Selection",
-                "You need to select a phone first"};
-        if(DialogueFx.verifyAction(strings, phoneDTO))
-            membershipView.sendMessage().accept(MembershipMessage.DELETE_PHONE);
-    }
+
 
     private Button createDeleteButton(ObjectType.Dto type) {
         Button button = ButtonFx.buttonOf("Delete", 60);
         switch (type) {
-            case Phone -> button.setOnAction(event -> {
-                int selectedIndex = membershipModel.getPhoneTableView().get(personDTO).getSelectionModel().getSelectedIndex();
-                PhoneDTO phoneDTO = membershipModel.getPhoneTableView().get(personDTO).getItems().get(selectedIndex);
-                membershipModel.setSelectedPhone(phoneDTO);
-                deletePhone(phoneDTO);
-                personDTO.getPhones().remove(phoneDTO);
-            });
+            case Phone -> button.setOnAction(event -> deletePhone());
             case Email -> button.setOnAction(event -> {
                 int selectedIndex = membershipModel.getEmailTableView().get(personDTO).getSelectionModel().getSelectedIndex();
                 EmailDTO emailDTO = membershipModel.getEmailTableView().get(personDTO).getItems().get(selectedIndex);
@@ -312,13 +298,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
                 membershipView.sendMessage().accept(MembershipMessage.DELETE_AWARD);
                 personDTO.getAwards().remove(awardDTO);
             });
-            case Officer -> button.setOnAction(event -> {
-//                int selectedIndex = membershipModel.getOfficerTableView().get(personDTO).getSelectionModel().getSelectedIndex();
-//                OfficerDTO officerDTO = membershipModel.getOfficerTableView().get(personDTO).getItems().get(selectedIndex);
-//                membershipModel.setSelectedOfficer(officerDTO);
-                deleteOfficer();
-//                personDTO.getOfficer().remove(officerDTO);
-            });
+            case Officer -> button.setOnAction(event -> deleteOfficer());
         }
         return button;
     }
@@ -333,15 +313,15 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
             membershipView.sendMessage().accept(MembershipMessage.DELETE_OFFICER);
     }
 
-//    private void deletePhone() {
-//        String[] strings = {
-//                "Delete Phone",
-//                "Are you sure you want to delete this numer?",
-//                "Missing Selection",
-//                "You need to select a phone first"};
-//        if(DialogueFx.verifyAction(strings, membershipModel.getSelectedPhone()))
-//            action.accept(BoatMessage.DELETE_IMAGE);
-//    }
+    private void deletePhone() {
+        String[] strings = {
+                "Delete Phone",
+                "Are you sure you want to delete this phone number?",
+                "Missing Selection",
+                "You need to select a phone first"};
+        if(DialogueFx.verifyAction(strings, membershipModel.getSelectedPhone()))
+            membershipView.sendMessage().accept(MembershipMessage.DELETE_PHONE);
+    }
 
     private Button createAddButton(ObjectType.Dto type) {
         Button button = ButtonFx.buttonOf("Add", 60);

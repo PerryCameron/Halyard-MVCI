@@ -38,7 +38,7 @@ public class PersonDTO {
 	}
 
 
-	public ObservableList<OfficerDTO> getOfficer() {
+	public ObservableList<OfficerDTO> getOfficers() {
 		return officer;
 	}
 
