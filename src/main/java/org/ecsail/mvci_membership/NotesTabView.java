@@ -45,17 +45,20 @@ public class NotesTabView implements Builder<Tab> {
     private Node createButton(String text) {
         Button button = ButtonFx.buttonOf(text, 60);
         switch (text) {
-            case "Delete" -> button.setOnAction(event -> membershipView.sendMessage().accept(MembershipMessage.DELETE_NOTE));
+            case "Delete" -> button.setOnAction(event -> deleteNote());
             case "Add" -> button.setOnAction(event -> membershipView.sendMessage().accept(MembershipMessage.INSERT_NOTE));
         }
         return button;
     }
 
-    private void addNote() {
-
-    }
-
     private void deleteNote() {
+        String[] strings = {
+                "Delete Note",
+                "Are you sure you want to delete this note?",
+                "Missing Selection",
+                "You need to select a note first"};
+        if (DialogueFx.verifyAction(strings, membershipModel.getSelectedNote()))
+            membershipView.sendMessage().accept(MembershipMessage.DELETE_NOTE);
     }
 
     private Node addTable() {

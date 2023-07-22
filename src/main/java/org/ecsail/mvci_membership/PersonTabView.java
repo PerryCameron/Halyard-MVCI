@@ -303,13 +303,13 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         return button;
     }
 
-        private void deleteOfficer() {
+    private void deleteOfficer() {
         String[] strings = {
                 "Delete Officer",
                 "Are you sure you want to delete this officer entry?",
                 "Missing Selection",
                 "You need to select an officer entry first"};
-        if(DialogueFx.verifyAction(strings, membershipModel.getSelectedOfficer()))
+        if (DialogueFx.verifyAction(strings, membershipModel.getSelectedOfficer()))
             membershipView.sendMessage().accept(MembershipMessage.DELETE_OFFICER);
     }
 
@@ -319,7 +319,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
                 "Are you sure you want to delete this phone number?",
                 "Missing Selection",
                 "You need to select a phone first"};
-        if(DialogueFx.verifyAction(strings, membershipModel.getSelectedPhone()))
+        if (DialogueFx.verifyAction(strings, membershipModel.getSelectedPhone()))
             membershipView.sendMessage().accept(MembershipMessage.DELETE_PHONE);
     }
 
