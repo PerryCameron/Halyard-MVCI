@@ -131,9 +131,8 @@ public class DataBaseService {
     }
 
     protected void updateNote() {
-        System.out.println("updateNote:"); // TODO this is triggering when you scroll the tableview (wierd)
-        System.out.println(membershipModel.getSelectedNote()); // TODO I think I fixed
-//        executeQuery(() -> notesRepo.update(membershipModel.getSelectedNote()));
+        HandlingTools.executeQuery(() ->
+                notesRepo.update(membershipModel.getSelectedNote()), membershipModel.getMainModel(), logger);
     }
 
     protected void changeMemberType() {

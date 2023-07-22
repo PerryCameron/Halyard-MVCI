@@ -105,7 +105,7 @@ public class BoatInteractor implements ConfigFilePaths {
                 boatRepo.deleteBoatOwner(boatModel.getSelectedOwner(), boatModel.getBoatListDTO()),
                 boatModel.getMainModel(),
                 logger))
-            boatModel.getBoatOwners().removeIf(owner -> owner.getMsId() == boatModel.getSelectedOwner().getMsId());
+            boatModel.getBoatOwners().remove(boatModel.getSelectedOwner());
     }
 
     public void deleteNote() {
