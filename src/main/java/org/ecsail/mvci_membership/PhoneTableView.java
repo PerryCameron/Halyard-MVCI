@@ -12,6 +12,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.util.Builder;
+import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.dto.PersonDTO;
 import org.ecsail.dto.PhoneDTO;
 import org.ecsail.enums.PhoneType;
@@ -43,6 +44,10 @@ public class PhoneTableView implements Builder<TableView<PhoneDTO>> {
         columns.add(createColumn2());
         columns.add(createColumn3());
         tableView.getColumns().addAll(columns);
+        TableView.TableViewSelectionModel<PhoneDTO> selectionModel = tableView.getSelectionModel();
+        selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) membershipModel.setSelectedPhone(newSelection);
+        });
         return tableView;
     }
 

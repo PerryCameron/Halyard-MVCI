@@ -8,6 +8,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
 import javafx.util.Builder;
 import org.ecsail.dto.MembershipListDTO;
+import org.ecsail.dto.NotesDTO;
 import org.ecsail.widgetfx.ListenerFx;
 import org.ecsail.widgetfx.TableViewFx;
 
@@ -26,14 +27,9 @@ public class BoatOwnerTableView implements Builder<TableView<MembershipListDTO>>
         ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(boatModel.dataLoadedProperty(), () -> {
             tableView.setItems(boatModel.getBoatOwners());
         });
-        tableView.setRowFactory(tv -> {
-            TableRow<MembershipListDTO> row = new TableRow<>();
-            row.setOnMouseClicked(event -> {
-                if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 1) {
-                    boatModel.setSelectedOwner(row.getItem());
-                }
-            });
-            return row;
+        TableView.TableViewSelectionModel<MembershipListDTO> selectionModel = tableView.getSelectionModel();
+        selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) boatModel.setSelectedOwner(newSelection);
         });
         boatModel.dataLoadedProperty().addListener(dataLoadedListener);
         tableView.getColumns().addAll(createColumn1(), createColumn2());

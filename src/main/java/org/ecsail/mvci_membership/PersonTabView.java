@@ -313,15 +313,35 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
                 personDTO.getAwards().remove(awardDTO);
             });
             case Officer -> button.setOnAction(event -> {
-                int selectedIndex = membershipModel.getOfficerTableView().get(personDTO).getSelectionModel().getSelectedIndex();
-                OfficerDTO officerDTO = membershipModel.getOfficerTableView().get(personDTO).getItems().get(selectedIndex);
-                membershipModel.setSelectedOfficer(officerDTO);
-                membershipView.sendMessage().accept(MembershipMessage.DELETE_OFFICER);
-                personDTO.getOfficer().remove(officerDTO);
+//                int selectedIndex = membershipModel.getOfficerTableView().get(personDTO).getSelectionModel().getSelectedIndex();
+//                OfficerDTO officerDTO = membershipModel.getOfficerTableView().get(personDTO).getItems().get(selectedIndex);
+//                membershipModel.setSelectedOfficer(officerDTO);
+                deleteOfficer();
+//                personDTO.getOfficer().remove(officerDTO);
             });
         }
         return button;
     }
+
+        private void deleteOfficer() {
+        String[] strings = {
+                "Delete Officer",
+                "Are you sure you want to delete this officer entry?",
+                "Missing Selection",
+                "You need to select an officer entry first"};
+        if(DialogueFx.verifyAction(strings, membershipModel.getSelectedOfficer()))
+            membershipView.sendMessage().accept(MembershipMessage.DELETE_OFFICER);
+    }
+
+//    private void deletePhone() {
+//        String[] strings = {
+//                "Delete Phone",
+//                "Are you sure you want to delete this numer?",
+//                "Missing Selection",
+//                "You need to select a phone first"};
+//        if(DialogueFx.verifyAction(strings, membershipModel.getSelectedPhone()))
+//            action.accept(BoatMessage.DELETE_IMAGE);
+//    }
 
     private Button createAddButton(ObjectType.Dto type) {
         Button button = ButtonFx.buttonOf("Add", 60);
