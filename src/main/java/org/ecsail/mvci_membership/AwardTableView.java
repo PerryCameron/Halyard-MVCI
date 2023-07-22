@@ -43,11 +43,8 @@ public class AwardTableView implements Builder<TableView<AwardDTO>> {
         col1.setSortType(TableColumn.SortType.DESCENDING);
         col1.setOnEditCommit(
                 t -> {
-                    AwardDTO awardDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
-                    awardDTO.setAwardYear(t.getNewValue());
-                    membershipModel.setSelectedAward(awardDTO);
-                    membershipView.sendMessage()
-                            .accept(MembershipMessage.UPDATE_AWARD);
+                    membershipModel.getSelectedAward().setAwardYear(t.getNewValue());
+                    membershipView.sendMessage().accept(MembershipMessage.UPDATE_AWARD);
                 }
         );
         col1.setMaxWidth(1f * Integer.MAX_VALUE * 20);   // Phone
@@ -65,14 +62,8 @@ public class AwardTableView implements Builder<TableView<AwardDTO>> {
         });
         col2.setCellFactory(ComboBoxTableCell.forTableColumn(awardsList));
         col2.setOnEditCommit((TableColumn.CellEditEvent<AwardDTO, Awards> event) -> {
-            // get the position on the table
-            TablePosition<AwardDTO, Awards> pos = event.getTablePosition();
-            // give object a name to manipulate
-            AwardDTO awardDTO = event.getTableView().getItems().get(pos.getRow());
             // update the GUI (do this first so UI seems snappy)
-            awardDTO.setAwardType(event.getNewValue().getCode());
-            // place awardDTO as selected in model
-            membershipModel.setSelectedAward(awardDTO);
+            membershipModel.getSelectedAward().setAwardType(event.getNewValue().getCode());
             // update the SQL
             membershipView.sendMessage().accept(MembershipMessage.UPDATE_AWARD);
         });

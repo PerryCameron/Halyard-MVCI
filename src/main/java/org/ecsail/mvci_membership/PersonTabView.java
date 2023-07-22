@@ -278,10 +278,10 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     private Button createDeleteButton(ObjectType.Dto type) {
         Button button = ButtonFx.buttonOf("Delete", 60);
         switch (type) {
-            case Phone -> button.setOnAction(event -> deletePhone());
-            case Email -> button.setOnAction(event -> deleteEmail());
-            case Award -> button.setOnAction(event -> deleteAward());
-            case Officer -> button.setOnAction(event -> deleteOfficer());
+            case Phone -> button.setOnAction(onClick -> deletePhone());
+            case Email -> button.setOnAction(onClick -> deleteEmail());
+            case Award -> button.setOnAction(onClick -> deleteAward());
+            case Officer -> button.setOnAction(onClick -> deleteOfficer());
         }
         return button;
     }
@@ -343,10 +343,8 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     private Button createEmailButton() {
         Button button = ButtonFx.buttonOf("Email", 60);
         button.setOnAction(event -> {
-            int selectedIndex = membershipModel.getEmailTableView().get(personDTO).getSelectionModel().getSelectedIndex();
-            if (selectedIndex >= 0) {// make sure something is selected
-                EmailDTO emailDTO = membershipModel.getEmailTableView().get(personDTO).getItems().get(selectedIndex);
-                Mail.composeEmail(emailDTO.getEmail(), "ECSC", "");
+            if (membershipModel.getSelectedEmail() != null) {// make sure something is selected
+                Mail.composeEmail(membershipModel.getSelectedEmail().getEmail(), "ECSC", "");
             }
         });
         return button;

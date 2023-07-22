@@ -38,45 +38,27 @@ public class BoatTabView implements Builder<Tab> {
 
     private Node getButtonControls() {
         VBox vBox = VBoxFx.vBoxOf(5.0, new Insets(10,5,5,10));
-        vBox.getChildren().addAll(createButton1(),createButton2(),createButton3());
+        vBox.getChildren().addAll(createButton("Add"),createButton("Delete"),createButton("View"));
         return vBox;
     }
 
-    private Node createButton3() {
-        Button button = ButtonFx.buttonOf("View", 60);
-        button.setOnAction(event -> {
-            // TODO
-        });
-        return button;
+    private void deleteBoat() {
+        String[] strings = {
+                "Delete Boat",
+                "Are you sure you want to delete this boat?",
+                "Missing Selection",
+                "You need to select a boat first"};
+        if (DialogueFx.verifyAction(strings, membershipModel.getSelectedBoat()))
+            membershipView.sendMessage().accept(MembershipMessage.DELETE_BOAT);
     }
 
-    private Node createButton2() {
-        Button button = ButtonFx.buttonOf("Delete", 60);
-        button.setOnAction(event -> {
-            int selectedIndex = membershipView.getMembershipModel().getBoatTableView().getSelectionModel().getSelectedIndex();
-            if (selectedIndex >= 0) { // TODO add error checking and prompt
-                BoatDTO boatDTO = membershipView.getMembershipModel().getMembership().getBoatDTOS().get(selectedIndex);
-                membershipModel.setSelectedBoat(boatDTO);
-                membershipView.sendMessage().accept(MembershipMessage.DELETE_BOAT);
-                // can't I remove it from the list iteslf?
-                membershipView.getMembershipModel().getBoatTableView().getItems().remove(boatDTO);
-            }
-        });
-        return button;
-    }
-
-    // TODO need to complete this correctly, it curretly doesn't assign boat_id, it does create the object and row
-    private Node createButton1() {
-        Button button = ButtonFx.buttonOf("Add", 60);
-        button.setOnAction(event -> {
-            BoatDTO boatDTO = new BoatDTO(membershipView.getMembershipModel().getMembership().getMsId());
-            membershipView.getMembershipModel().getMembership().getBoatDTOS().add(boatDTO);
-            membershipView.getMembershipModel().getMembership().getBoatDTOS().sort(Comparator.comparing(BoatDTO::getBoatId));
-            membershipView.getMembershipModel().getBoatTableView().layout();
-            membershipView.getMembershipModel().getBoatTableView().edit(0, column1);
-            membershipModel.setSelectedBoat(boatDTO);
-            membershipView.sendMessage().accept(MembershipMessage.INSERT_BOAT);
-        });
+    private Node createButton(String type) {
+        Button button = ButtonFx.buttonOf(type, 60);
+        switch (type) {
+            case "Add" -> button.setOnAction(event -> membershipView.sendMessage().accept(MembershipMessage.INSERT_BOAT));
+            case "Delete" -> button.setOnAction(event -> deleteBoat());
+            case "View" -> button.setOnAction(event -> System.out.println("View"));
+        }
         return button;
     }
 
@@ -169,7 +151,6 @@ public class BoatTabView implements Builder<Tab> {
             case "setDraft" -> boatDTO.setDraft(t.getNewValue());
             case "setDisplacement" -> boatDTO.setDisplacement(t.getNewValue());
         }
-        membershipModel.setSelectedBoat(boatDTO);
         membershipView.sendMessage().accept(MembershipMessage.UPDATE_BOAT);
     }
 

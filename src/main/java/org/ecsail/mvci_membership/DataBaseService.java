@@ -210,20 +210,10 @@ public class DataBaseService {
                 membershipModel.getMembership().getNotesDTOS().remove(membershipModel.getSelectedNote());
     }
 
-    protected void deleteBoat() {
-        System.out.println("Delete Boat");
-//        executeQuery(() -> boatRepo.delete(membershipModel.getSelectedBoat()));
-    }
-
-
-    public void insertMembershipId() {
-        System.out.println("Insert MembershipId");
-    }
-
-
-
-    public void insertPerson() {
-        System.out.println("Insert Person");
+    protected void deleteBoat() {  /// only removes boat owner
+        if(HandlingTools.executeQuery(() -> boatRepo.deleteBoatOwner(membershipModel.getMembership(), membershipModel.getSelectedBoat()),
+            membershipModel.getMainModel(), logger))
+                membershipModel.getMembership().getBoatDTOS().remove(membershipModel.getSelectedBoat());
     }
 
     public void insertPhone() {
@@ -288,9 +278,22 @@ public class DataBaseService {
     }
 
     protected void insertBoat() {
-        HandlingTools.executeQuery(() ->
-                boatRepo.insert(membershipModel.getSelectedBoat()), membershipModel.getMainModel(), logger);
+        BoatDTO boatDTO = new BoatDTO(membershipModel.getMembership().getMsId());
+        if (HandlingTools.executeQuery(() -> boatRepo.insert(boatDTO), membershipModel.getMainModel(), logger)) {
+            Platform.runLater(() -> {
+                membershipModel.setSelectedBoat(boatDTO);
+                membershipModel.getMembership().getBoatDTOS().add(boatDTO);
+                membershipModel.getMembership().getBoatDTOS().sort(Comparator.comparing(BoatDTO::getBoatId).reversed());
+                TableViewFx.requestFocusOnTable(membershipModel.getNotesTableView());
+            });
+        }
     }
 
 
+    public void insertMembershipId() {
+        System.out.println("Insert MembershipId");
+    }
+    public void insertPerson() {
+        System.out.println("Insert Person");
+    }
 }
