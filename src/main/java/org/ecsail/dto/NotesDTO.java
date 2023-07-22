@@ -37,6 +37,17 @@ public class NotesDTO {
         this.boatId = new SimpleIntegerProperty(boatId);
     }
 
+    public NotesDTO(String type, int msId) {
+        super();
+        this.memoId = new SimpleIntegerProperty(0);
+        this.msId = new SimpleIntegerProperty(msId);
+        this.memoDate = new SimpleObjectProperty(LocalDate.now());
+        this.memo = new SimpleStringProperty("");
+        this.invoiceId = new SimpleIntegerProperty(0);
+        this.category = new SimpleStringProperty(type);
+        this.boatId = new SimpleIntegerProperty(0);
+    }
+
 
 //	public NotesDTO(int memoId, int msId, LocalDate memoDate, String memo, int invoiceId, String category, int boatId) {
 //	}

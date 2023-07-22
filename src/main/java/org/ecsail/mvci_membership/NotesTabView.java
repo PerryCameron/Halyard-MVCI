@@ -11,6 +11,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import org.ecsail.dto.NotesDTO;
+import org.ecsail.dto.OfficerDTO;
 import org.ecsail.widgetfx.*;
 
 import java.time.LocalDate;
@@ -37,30 +38,34 @@ public class NotesTabView implements Builder<Tab> {
 
     private Node getButtonControls() {
         VBox vBox = VBoxFx.vBoxOf(5.0, new Insets(10, 5, 5, 10));
-        vBox.getChildren().addAll(createButton1(), createButton2());
+        vBox.getChildren().addAll(createButton("Add"), createButton("Delete"));
         return vBox;
     }
 
-    private Node createButton1() {
-        Button button = ButtonFx.buttonOf("Add", 60);
-        button.setOnAction(event -> {
-
-        });
+    private Node createButton(String text) {
+        Button button = ButtonFx.buttonOf(text, 60);
+        switch (text) {
+            case "Delete" -> button.setOnAction(event -> membershipView.sendMessage().accept(MembershipMessage.DELETE_NOTE));
+            case "Add" -> button.setOnAction(event -> membershipView.sendMessage().accept(MembershipMessage.INSERT_NOTE));
+        }
         return button;
     }
 
-    private Node createButton2() {
-        Button button = ButtonFx.buttonOf("Delete", 60);
-        button.setOnAction(event -> {
+    private void addNote() {
 
-        });
-        return button;
+    }
+
+    private void deleteNote() {
     }
 
     private Node addTable() {
         TableView tableView = TableViewFx.tableViewOf(NotesDTO.class, 200);
         tableView.setItems(membershipView.getMembershipModel().getMembership().getNotesDTOS());
         tableView.getColumns().addAll(col1(), col2(), col3());  // Add col1 back in TODO
+        TableView.TableViewSelectionModel<NotesDTO> selectionModel = tableView.getSelectionModel();
+        selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) membershipModel.setSelectedNote(newSelection);
+        });
         membershipView.getMembershipModel().setNotesTableView(tableView);
         return tableView;
     }

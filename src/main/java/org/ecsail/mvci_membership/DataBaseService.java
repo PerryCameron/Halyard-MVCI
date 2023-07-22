@@ -181,10 +181,6 @@ public class DataBaseService {
         System.out.println("Delete Membership");
     }
 
-    public void deleteNote() {
-        System.out.println("Delete Note");
-    }
-
     public void deletePhone() {
         if (HandlingTools.executeQuery(() -> phoneRepo.delete(membershipModel.getSelectedPhone()),
             membershipModel.getMainModel(), logger))
@@ -209,6 +205,12 @@ public class DataBaseService {
                 membershipModel.getSelectedPerson().getOfficers().remove(membershipModel.getSelectedOfficer());
     }
 
+    public void deleteNote() {
+        if (HandlingTools.executeQuery(() -> notesRepo.delete(membershipModel.getSelectedNote()),
+            membershipModel.getMainModel(), logger))
+                membershipModel.getMembership().getNotesDTOS().remove(membershipModel.getSelectedNote());
+    }
+
     protected void deleteBoat() {
         System.out.println("Delete Boat");
 //        executeQuery(() -> boatRepo.delete(membershipModel.getSelectedBoat()));
@@ -219,9 +221,7 @@ public class DataBaseService {
         System.out.println("Insert MembershipId");
     }
 
-    public void insertNote() {
-        System.out.println("Insert Note");
-    }
+
 
     public void insertPerson() {
         System.out.println("Insert Person");
@@ -272,6 +272,18 @@ public class DataBaseService {
                 membershipModel.getSelectedPerson().getOfficers().add(officerDTO);
                 membershipModel.getSelectedPerson().getOfficers().sort(Comparator.comparing(OfficerDTO::getOfficerId).reversed());
                 TableViewFx.requestFocusOnTable(membershipModel.getOfficerTableView().get(membershipModel.getSelectedPerson()));
+            });
+        }
+    }
+
+    public void insertNote() {
+        NotesDTO notesDTO = new NotesDTO("N", membershipModel.getMembership().getMsId());
+        if (HandlingTools.executeQuery(() -> notesRepo.insertNote(notesDTO), membershipModel.getMainModel(), logger)) {
+            Platform.runLater(() -> {
+                membershipModel.setSelectedNote(notesDTO);
+                membershipModel.getMembership().getNotesDTOS().add(notesDTO);
+                membershipModel.getMembership().getNotesDTOS().sort(Comparator.comparing(NotesDTO::getMemoId).reversed());
+                TableViewFx.requestFocusOnTable(membershipModel.getNotesTableView());
             });
         }
     }
