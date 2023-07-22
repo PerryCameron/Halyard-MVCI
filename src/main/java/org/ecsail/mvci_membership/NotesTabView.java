@@ -11,7 +11,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import org.ecsail.dto.NotesDTO;
-import org.ecsail.dto.OfficerDTO;
 import org.ecsail.widgetfx.*;
 
 import java.time.LocalDate;
@@ -64,7 +63,7 @@ public class NotesTabView implements Builder<Tab> {
     private Node addTable() {
         TableView tableView = TableViewFx.tableViewOf(NotesDTO.class, 200);
         tableView.setItems(membershipView.getMembershipModel().getMembership().getNotesDTOS());
-        tableView.getColumns().addAll(col1(), col2(), col3());  // Add col1 back in TODO
+        tableView.getColumns().addAll(col1(), col2(), col3());
         TableView.TableViewSelectionModel<NotesDTO> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) membershipModel.setSelectedNote(newSelection);
@@ -104,5 +103,4 @@ public class NotesTabView implements Builder<Tab> {
         col1.setMaxWidth(1f * Integer.MAX_VALUE * 15);   // Date
         return col1;
     }
-
 }

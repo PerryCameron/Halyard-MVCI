@@ -264,43 +264,45 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         Button button = ButtonFx.buttonOf("Copy", 60);
         switch (type) {
             case Email -> button.setOnAction(event -> {
-                int selectedIndex = membershipModel.getEmailTableView().get(personDTO).getSelectionModel().getSelectedIndex();
-                EmailDTO emailDTO = membershipModel.getEmailTableView().get(personDTO).getItems().get(selectedIndex);
-                content.putString(emailDTO.getEmail());
+                content.putString(membershipModel.getSelectedEmail().getEmail());
+                clipboard.setContent(content);
             });
             case Phone -> button.setOnAction(event -> {
-                int selectedIndex = membershipModel.getPhoneTableView().get(personDTO).getSelectionModel().getSelectedIndex();
-                PhoneDTO phoneDTO = membershipModel.getPhoneTableView().get(personDTO).getItems().get(selectedIndex);
-                content.putString(phoneDTO.getPhone());
+                content.putString(membershipModel.getSelectedPhone().getPhone());
+                clipboard.setContent(content);
             });
         }
-        clipboard.setContent(content);
         return button;
     }
-
-
 
     private Button createDeleteButton(ObjectType.Dto type) {
         Button button = ButtonFx.buttonOf("Delete", 60);
         switch (type) {
             case Phone -> button.setOnAction(event -> deletePhone());
-            case Email -> button.setOnAction(event -> {
-                int selectedIndex = membershipModel.getEmailTableView().get(personDTO).getSelectionModel().getSelectedIndex();
-                EmailDTO emailDTO = membershipModel.getEmailTableView().get(personDTO).getItems().get(selectedIndex);
-                membershipModel.setSelectedEmail(emailDTO);
-                membershipView.sendMessage().accept(MembershipMessage.DELETE_EMAIL);
-                personDTO.getEmail().remove(emailDTO);
-            });
-            case Award -> button.setOnAction(event -> {
-                int selectedIndex = membershipModel.getAwardTableView().get(personDTO).getSelectionModel().getSelectedIndex();
-                AwardDTO awardDTO = membershipModel.getAwardTableView().get(personDTO).getItems().get(selectedIndex);
-                membershipModel.setSelectedAward(awardDTO);
-                membershipView.sendMessage().accept(MembershipMessage.DELETE_AWARD);
-                personDTO.getAwards().remove(awardDTO);
-            });
+            case Email -> button.setOnAction(event -> deleteEmail());
+            case Award -> button.setOnAction(event -> deleteAward());
             case Officer -> button.setOnAction(event -> deleteOfficer());
         }
         return button;
+    }
+
+    private void deleteAward() {
+        String[] strings = {
+                "Delete Award",
+                "Are you sure you want to delete this award entry?",
+                "Missing Selection",
+                "You need to select an award entry first"};
+        if (DialogueFx.verifyAction(strings, membershipModel.getSelectedAward()))
+            membershipView.sendMessage().accept(MembershipMessage.DELETE_AWARD);
+    }
+    private void deleteEmail() {
+        String[] strings = {
+                "Delete Email",
+                "Are you sure you want to delete this email entry?",
+                "Missing Selection",
+                "You need to select an email entry first"};
+        if (DialogueFx.verifyAction(strings, membershipModel.getSelectedEmail()))
+            membershipView.sendMessage().accept(MembershipMessage.DELETE_EMAIL);
     }
 
     private void deleteOfficer() {
