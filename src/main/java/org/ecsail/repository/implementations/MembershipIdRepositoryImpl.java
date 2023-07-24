@@ -7,6 +7,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -105,5 +107,22 @@ public class MembershipIdRepositoryImpl implements MembershipIdRepository {
                 "WHERE MID = :mid ";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(membershipIdDTO);
         return namedParameterJdbcTemplate.update(query, namedParameters);
+    }
+
+    @Override
+    public int delete(MembershipIdDTO membershipIdDTO) {
+        String deleteSql = "DELETE FROM membership_id WHERE MID = ?";
+        return template.update(deleteSql, membershipIdDTO.getmId());
+    }
+
+    @Override
+    public int insert(MembershipIdDTO membershipIdDTO) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        String query = "INSERT INTO membership_id (FISCAL_YEAR, MS_ID, MEMBERSHIP_ID, RENEW, MEM_TYPE, SELECTED, LATE_RENEW) " +
+                "VALUES (:fiscalYear, :msId, :membershipId, :renew, :memType, :selected, :lateRenew)";
+        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(membershipIdDTO);
+        int affectedRows = namedParameterJdbcTemplate.update(query, namedParameters, keyHolder);
+        membershipIdDTO.setmId(keyHolder.getKey().intValue());
+        return affectedRows;
     }
 }

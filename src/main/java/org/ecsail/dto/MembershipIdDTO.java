@@ -6,97 +6,97 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public class MembershipIdDTO {
-	private IntegerProperty mid;
-	private SimpleStringProperty fiscal_Year;
-	private IntegerProperty ms_id;
-	private SimpleStringProperty membership_id;
+	private IntegerProperty mId;
+	private SimpleStringProperty fiscalYear;
+	private IntegerProperty msId;
+	private SimpleStringProperty membershipId;
 	private SimpleBooleanProperty renew;
-	private SimpleStringProperty mem_type;
+	private SimpleStringProperty memType;
 	private SimpleBooleanProperty selected;
 	private SimpleBooleanProperty lateRenew;
 	
-	public MembershipIdDTO(Integer mid, String fiscal_Year, Integer ms_id, String membership_id,
-						   Boolean renew, String mem_type, Boolean selected, Boolean lateRenew) {
-		this.mid = new SimpleIntegerProperty(mid);
-		this.fiscal_Year = new SimpleStringProperty(fiscal_Year);
-		this.ms_id = new SimpleIntegerProperty(ms_id);
-		this.membership_id = new SimpleStringProperty(membership_id);
+	public MembershipIdDTO(Integer mId, String fiscalYear, Integer msId, String membershipId,
+						   Boolean renew, String memType, Boolean selected, Boolean lateRenew) {
+		this.mId = new SimpleIntegerProperty(mId);
+		this.fiscalYear = new SimpleStringProperty(fiscalYear);
+		this.msId = new SimpleIntegerProperty(msId);
+		this.membershipId = new SimpleStringProperty(membershipId);
 		this.renew = new SimpleBooleanProperty(renew);
-		this.mem_type = new SimpleStringProperty(mem_type);
+		this.memType = new SimpleStringProperty(memType);
 		this.selected = new SimpleBooleanProperty(selected);
 		this.lateRenew = new SimpleBooleanProperty(lateRenew);
 	}
 
-	public MembershipIdDTO(String fiscal_Year, Integer ms_id, String membership_id, String mem_type) {
-//		this.mid = new SimpleIntegerProperty(SqlSelect.getNextAvailablePrimaryKey("membership_id","MID"));
-		this.fiscal_Year = new SimpleStringProperty(fiscal_Year);
-		this.ms_id = new SimpleIntegerProperty(ms_id);
-		this.membership_id = new SimpleStringProperty(membership_id);
+	public MembershipIdDTO(String fiscalYear, Integer msId, String membershipId, String memType) {
+		this.mId = new SimpleIntegerProperty(0);
+		this.fiscalYear = new SimpleStringProperty("0");
+		this.msId = new SimpleIntegerProperty(msId);
+		this.membershipId = new SimpleStringProperty(membershipId);
 		this.renew = new SimpleBooleanProperty(false);
-		this.mem_type = new SimpleStringProperty(mem_type);
+		this.memType = new SimpleStringProperty(memType);
 		this.selected = new SimpleBooleanProperty(false);
 		this.lateRenew = new SimpleBooleanProperty(false);
 	}
 
 
 
-	public final IntegerProperty midProperty() {
-		return this.mid;
+	public final IntegerProperty mIdProperty() {
+		return this.mId;
 	}
 	
 
-	public final int getMid() {
-		return this.midProperty().get();
+	public final int getmId() {
+		return this.mIdProperty().get();
 	}
 	
 
-	public final void setMid(final int mid) {
-		this.midProperty().set(mid);
+	public final void setmId(final int mId) {
+		this.mIdProperty().set(mId);
 	}
 	
 
-	public final SimpleStringProperty fiscal_YearProperty() {
-		return this.fiscal_Year;
+	public final SimpleStringProperty fiscalYearProperty() {
+		return this.fiscalYear;
 	}
 	
 
-	public final String getFiscal_Year() {
-		return this.fiscal_YearProperty().get();
+	public final String getFiscalYear() {
+		return this.fiscalYearProperty().get();
 	}
 	
 
-	public final void setFiscal_Year(final String fiscal_Year) {
-		this.fiscal_YearProperty().set(fiscal_Year);
+	public final void setFiscalYear(final String fiscalYear) {
+		this.fiscalYearProperty().set(fiscalYear);
 	}
 	
 
-	public final IntegerProperty ms_idProperty() {
-		return this.ms_id;
+	public final IntegerProperty msIdProperty() {
+		return this.msId;
 	}
 	
 
-	public final int getMs_id() {
-		return this.ms_idProperty().get();
+	public final int getMsId() {
+		return this.msIdProperty().get();
 	}
 	
 
-	public final void setMs_id(final int ms_id) {
-		this.ms_idProperty().set(ms_id);
+	public final void setMsId(final int msId) {
+		this.msIdProperty().set(msId);
 	}
 	
 
-	public final SimpleStringProperty membership_idProperty() {
-		return this.membership_id;
+	public final SimpleStringProperty membershipIdProperty() {
+		return this.membershipId;
 	}
 	
 
-	public final String getMembership_id() {
-		return this.membership_idProperty().get();
+	public final String getMembershipId() {
+		return this.membershipIdProperty().get();
 	}
 	
 
-	public final void setMembership_id(final String membership_id) {
-		this.membership_idProperty().set(membership_id);
+	public final void setMembershipId(final String membershipId) {
+		this.membershipIdProperty().set(membershipId);
 	}
 	
 
@@ -105,7 +105,7 @@ public class MembershipIdDTO {
 	}
 	
 
-	public final boolean getIsRenew() {
+	public final boolean isRenew() {
 		return this.renewProperty().get();
 	}
 	
@@ -115,18 +115,18 @@ public class MembershipIdDTO {
 	}
 	
 
-	public final SimpleStringProperty mem_typeProperty() {
-		return this.mem_type;
+	public final SimpleStringProperty memTypeProperty() {
+		return this.memType;
 	}
 	
 
-	public final String getMem_type() {
-		return this.mem_typeProperty().get();
+	public final String getMemType() {
+		return this.memTypeProperty().get();
 	}
 	
 
-	public final void setMem_type(final String mem_type) {
-		this.mem_typeProperty().set(mem_type);
+	public final void setMemType(final String memType) {
+		this.memTypeProperty().set(memType);
 	}
 	
 
@@ -149,7 +149,7 @@ public class MembershipIdDTO {
 	}
 	
 
-	public final boolean getIsLateRenew() {
+	public final boolean isLateRenew() {
 		return this.lateRenewProperty().get();
 	}
 	
@@ -161,12 +161,12 @@ public class MembershipIdDTO {
 	@Override
 	public String toString() {
 		return "Object_MembershipId{" +
-				"mid=" + mid +
-				", fiscal_Year=" + fiscal_Year +
-				", ms_id=" + ms_id +
-				", membership_id=" + membership_id +
+				"mid=" + mId +
+				", fiscal_Year=" + fiscalYear +
+				", ms_id=" + msId +
+				", membership_id=" + membershipId +
 				", isRenew=" + renew +
-				", mem_type=" + mem_type +
+				", mem_type=" + memType +
 				", selected=" + selected +
 				", isLateRenew=" + lateRenew +
 				'}';

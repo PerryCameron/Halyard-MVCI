@@ -106,13 +106,13 @@ public class DataBaseService {
     private void setSubLeaser() {
         membershipModel.setSlipRelationStatus(SlipUser.slip.subLeaser);
         // gets the current id of the slip owner
-        membershipModel.setMembershipId(String.valueOf(membershipIdRepo.getCurrentId(membershipModel.getSlip().getMs_id()).getMembership_id()));
+        membershipModel.setMembershipId(String.valueOf(membershipIdRepo.getCurrentId(membershipModel.getSlip().getMs_id()).getMembershipId()));
     }
 
     private void setOwnAndSublease() {
         membershipModel.setSlipRelationStatus(SlipUser.slip.ownAndSublease);
         // gets the id of the subLeaser for the current year
-        membershipModel.setMembershipId(String.valueOf(membershipIdRepo.getCurrentId(membershipModel.getSlip().getSubleased_to()).getMembership_id()));
+        membershipModel.setMembershipId(String.valueOf(membershipIdRepo.getCurrentId(membershipModel.getSlip().getSubleased_to()).getMembershipId()));
     }
 
     protected void updateMembershipList() {
@@ -158,35 +158,33 @@ public class DataBaseService {
                 awardRepo.update(membershipModel.getSelectedAward()), membershipModel.getMainModel(), logger);
     }
 
-    public void updateOfficer() {
+    protected void updateOfficer() {
         HandlingTools.executeQuery(() ->
                 officerRepo.update(membershipModel.getSelectedOfficer()), membershipModel.getMainModel(), logger);
     }
 
-    public void updatePerson() {
+    protected void updatePerson() {
         HandlingTools.executeQuery(() ->
                 peopleRepo.update(membershipModel.getSelectedPerson()), membershipModel.getMainModel(), logger);
     }
 
-    public void deletePerson() {
+    protected void deletePerson() {
         System.out.println("Delete Person");
     }
 
-    public void movePerson() {
+    protected void movePerson() {
         System.out.println("Move Person");
     }
 
-    public void deleteMembershipId() {
-        System.out.println("Delete Membership");
-    }
 
-    public void deletePhone() {
+
+    protected void deletePhone() {
         if (HandlingTools.executeQuery(() -> phoneRepo.delete(membershipModel.getSelectedPhone()),
             membershipModel.getMainModel(), logger))
                 membershipModel.getSelectedPerson().getPhones().remove(membershipModel.getSelectedPhone());
     }
 
-    public void deleteEmail() {
+    protected void deleteEmail() {
         if (HandlingTools.executeQuery(() -> emailRepo.delete(membershipModel.getSelectedEmail()),
             membershipModel.getMainModel(), logger))
                 membershipModel.getSelectedPerson().getEmail().remove(membershipModel.getSelectedEmail());
@@ -198,13 +196,13 @@ public class DataBaseService {
                 membershipModel.getSelectedPerson().getAwards().remove(membershipModel.getSelectedAward());
     }
 
-    public void deleteOfficer() {
+    protected void deleteOfficer() {
         if (HandlingTools.executeQuery(() -> officerRepo.delete(membershipModel.getSelectedOfficer()),
             membershipModel.getMainModel(), logger))
                 membershipModel.getSelectedPerson().getOfficers().remove(membershipModel.getSelectedOfficer());
     }
 
-    public void deleteNote() {
+    protected void deleteNote() {
         if (HandlingTools.executeQuery(() -> notesRepo.delete(membershipModel.getSelectedNote()),
             membershipModel.getMainModel(), logger))
                 membershipModel.getMembership().getNotesDTOS().remove(membershipModel.getSelectedNote());
@@ -215,6 +213,13 @@ public class DataBaseService {
             membershipModel.getMainModel(), logger))
                 membershipModel.getMembership().getBoatDTOS().remove(membershipModel.getSelectedBoat());
     }
+
+    public void deleteMembershipId() {
+        if(HandlingTools.executeQuery(() -> membershipIdRepo.delete(membershipModel.getSelectedMembershipId()),
+                membershipModel.getMainModel(), logger))
+            membershipModel.getMembership().getBoatDTOS().remove(membershipModel.getSelectedMembershipId());
+    }
+
 
     public void insertPhone() {
         PhoneDTO phoneDTO = new PhoneDTO(membershipModel.getSelectedPerson().getpId());
@@ -289,11 +294,24 @@ public class DataBaseService {
         }
     }
 
-
     public void insertMembershipId() {
-        System.out.println("Insert MembershipId");
+        MembershipIdDTO membershipIdDTO = new MembershipIdDTO(
+                String.valueOf(membershipModel.getMembership().getSelectedYear()),
+                membershipModel.getMembership().getMsId(),
+                String.valueOf(membershipModel.getMembership().getMembershipId()),
+                membershipModel.getMembership().getMemType());
+        if (HandlingTools.executeQuery(() -> membershipIdRepo.insert(membershipIdDTO), membershipModel.getMainModel(), logger)) {
+            Platform.runLater(() -> {
+                membershipModel.setSelectedMembershipId(membershipIdDTO);
+                membershipModel.getMembership().getMembershipIdDTOS().add(membershipIdDTO);
+                membershipModel.getMembership().getMembershipIdDTOS().sort(Comparator.comparing(MembershipIdDTO::getmId).reversed());
+                TableViewFx.requestFocusOnTable(membershipModel.getIdTableView());
+            });
+        }
     }
     public void insertPerson() {
         System.out.println("Insert Person");
     }
+
+
 }
