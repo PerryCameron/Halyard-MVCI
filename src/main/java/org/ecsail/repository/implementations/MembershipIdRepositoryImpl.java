@@ -97,14 +97,14 @@ public class MembershipIdRepositoryImpl implements MembershipIdRepository {
     @Override
     public int update(MembershipIdDTO membershipIdDTO) {
         String query = "UPDATE membership_id SET " +
-                "FISCAL_YEAR = :fiscal_Year, " +
-                "MS_ID = :ms_id, " +
-                "MEMBERSHIP_ID = :membership_id, " +
-                "RENEW = :isRenew, " +
-                "MEM_TYPE = :mem_type, " +
+                "FISCAL_YEAR = :fiscalYear, " +
+                "MS_ID = :msId, " +
+                "MEMBERSHIP_ID = :membershipId, " +
+                "RENEW = :renew, " +
+                "MEM_TYPE = :memType, " +
                 "SELECTED = :selected, " +
-                "LATE_RENEW = :isLateRenew " +
-                "WHERE MID = :mid ";
+                "LATE_RENEW = :lateRenew " +
+                "WHERE MID = :mId ";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(membershipIdDTO);
         return namedParameterJdbcTemplate.update(query, namedParameters);
     }

@@ -217,9 +217,8 @@ public class DataBaseService {
     public void deleteMembershipId() {
         if(HandlingTools.executeQuery(() -> membershipIdRepo.delete(membershipModel.getSelectedMembershipId()),
                 membershipModel.getMainModel(), logger))
-            membershipModel.getMembership().getBoatDTOS().remove(membershipModel.getSelectedMembershipId());
+            membershipModel.getMembership().getMembershipIdDTOS().remove(membershipModel.getSelectedMembershipId());
     }
-
 
     public void insertPhone() {
         PhoneDTO phoneDTO = new PhoneDTO(membershipModel.getSelectedPerson().getpId());
@@ -312,6 +311,4 @@ public class DataBaseService {
     public void insertPerson() {
         System.out.println("Insert Person");
     }
-
-
 }
