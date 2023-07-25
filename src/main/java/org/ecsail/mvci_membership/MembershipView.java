@@ -50,6 +50,7 @@ public class MembershipView implements Builder<Region> {
         ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(membershipModel.listsLoadedProperty(), () -> {
             membershipModel.getPeople().forEach(personDTO -> membershipModel.getPeopleTabPane().getTabs()
                     .add(new PersonTabView(this, personDTO).build()));
+            membershipModel.getPeopleTabPane().getTabs().add(new AddPersonTab(this).build());
             // right tabPane
             membershipModel.getInfoTabPane().getTabs().add(new SlipTabView(this).build());
             membershipModel.getInfoTabPane().getTabs().add(new MembershipIdView(this).build());
@@ -84,8 +85,13 @@ public class MembershipView implements Builder<Region> {
         TabPane tabPane = TabPaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE, 498,"custom-tab-pane");
         membershipModel.setPeopleTabPane(tabPane);  // TODO does anything else use this besides below???
         membershipModel.getPeopleTabPane().getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
-            PersonTabView personTabView = (PersonTabView) newTab.getUserData();// Get the associated PersonTabView object
-            membershipModel.setSelectedPerson(personTabView.getPersonDTO());
+            if(newTab instanceof PersonTabView) {
+                PersonTabView personTabView = (PersonTabView) newTab.getUserData();// Get the associated PersonTabView object
+                membershipModel.setSelectedPerson(personTabView.getPersonDTO());
+            } else if (newTab instanceof AddPersonTab) {
+                AddPersonTab addPersonTab = (AddPersonTab) newTab.getUserData();
+                membershipModel.setSelectedPerson(addPersonTab.getPersonDTO());
+            }
         });
         return tabPane;
     }

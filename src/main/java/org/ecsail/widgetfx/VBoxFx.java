@@ -81,6 +81,13 @@ public class VBoxFx {
         return vBox;
     }
 
+    public static VBox vBoxOf(Double width, Pos pos) {
+        VBox vBox = new VBox();
+        vBox.setAlignment(pos);
+        vBox.setPrefWidth(width);
+        return vBox;
+    }
+
     public static VBox vBoxOf(Insets insets, DoubleProperty doubleProperty) {
         VBox vBox = new VBox();
         vBox.setPadding(insets);

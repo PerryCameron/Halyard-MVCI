@@ -37,6 +37,20 @@ public class PersonDTO {
 		this.oldMsid = new SimpleIntegerProperty(oldMsid);
 	}
 
+	public PersonDTO() {
+		this.pId = new SimpleIntegerProperty(0);
+		this.msId = new SimpleIntegerProperty(0);
+		this.memberType = new SimpleIntegerProperty(0);
+		this.firstName = new SimpleStringProperty("");
+		this.lastName = new SimpleStringProperty("");
+		this.birthday = new SimpleStringProperty("");
+		this.occupation = new SimpleStringProperty("");
+		this.business = new SimpleStringProperty("");
+		this.active = new SimpleBooleanProperty(false);
+		this.nickName = new SimpleStringProperty("");
+		this.oldMsid = new SimpleIntegerProperty(0);
+	}
+
 
 	public ObservableList<OfficerDTO> getOfficers() {
 		return officer;
@@ -53,8 +67,6 @@ public class PersonDTO {
 	public void setAwards(ObservableList<AwardDTO> awards) {
 		this.awards = awards;
 	}
-
-	public PersonDTO() { }// default constructor
 
 	public ObservableList<PhoneDTO> getPhones() {
 		return phones;
