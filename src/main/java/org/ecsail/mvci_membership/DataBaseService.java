@@ -115,9 +115,18 @@ public class DataBaseService {
         membershipModel.setMembershipId(String.valueOf(membershipIdRepo.getCurrentId(membershipModel.getSlip().getSubleased_to()).getMembershipId()));
     }
 
+    protected void changeMemberType() {
+        System.out.println("changeMemberType");
+    }
+
+    protected void removeMemberFromMembership() {
+        System.out.println("remove from membership");
+    }
+
     protected void updateMembershipList() {
+        System.out.println(membershipModel.getMembership());
         HandlingTools.executeQuery(() ->
-                membershipRepo.update(membershipModel.getMembership()), membershipModel.getMainModel(), logger);
+                membershipRepo.updateJoinDate(membershipModel.getMembership()), membershipModel.getMainModel(), logger);
     }
 
     protected void updateBoat() {
@@ -133,14 +142,6 @@ public class DataBaseService {
     protected void updateNote() {
         HandlingTools.executeQuery(() ->
                 notesRepo.update(membershipModel.getSelectedNote()), membershipModel.getMainModel(), logger);
-    }
-
-    protected void changeMemberType() {
-        System.out.println("changeMemberType");
-    }
-
-    protected void removeMemberFromMembership() {
-        System.out.println("remove from membership");
     }
 
     public void updatePhone() {

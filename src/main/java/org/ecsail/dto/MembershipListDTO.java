@@ -102,7 +102,7 @@ public class MembershipListDTO {
 		this.msId.set(msId);
 	}
 
-	public int getPid() {
+	public int getPId() {
 		return pId.get();
 	}
 
@@ -110,9 +110,21 @@ public class MembershipListDTO {
 		return pId;
 	}
 
-	public void setPid(int pId) {
+	public void setPId(int pId) {
 		this.pId.set(pId);
 	}
+
+//	public int getPid() {
+//		return pId.get();
+//	}
+//
+//	public IntegerProperty pIdProperty() {
+//		return pId;
+//	}
+//
+//	public void setPid(int pId) {
+//		this.pId.set(pId);
+//	}
 
 	public String getJoinDate() {
 		return joinDate.get();

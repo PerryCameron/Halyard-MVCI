@@ -148,14 +148,21 @@ public class MembershipRepositoryImpl implements MembershipRepository {
     @Override
     public int update(MembershipListDTO membershipListDTO) {
         String query = "UPDATE membership SET " +
-                "MS_ID = :msId, " +
-                "P_ID = :pID, " +
+                "P_ID = :pId, " +
                 "JOIN_DATE = :joinDate, " +
                 "MEM_TYPE = :memType, " +
                 "ADDRESS = :address, " +
                 "CITY = :city, " +
                 "STATE = :state, " +
-                "ZIP = :zip";
+                "ZIP = :zip WHERE MS_ID = :msId";
+        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(membershipListDTO);
+        return namedParameterJdbcTemplate.update(query, namedParameters);
+    }
+
+    @Override
+    public int updateJoinDate(MembershipListDTO membershipListDTO) {
+        String query = "UPDATE membership SET " +
+                "JOIN_DATE = :joinDate WHERE MS_ID=:msId";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(membershipListDTO);
         return namedParameterJdbcTemplate.update(query, namedParameters);
     }

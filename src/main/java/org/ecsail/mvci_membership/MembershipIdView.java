@@ -61,7 +61,6 @@ public class MembershipIdView implements Builder<Tab> {
                 membershipModel.getMembership().setJoinDate(date.toString());
                 membershipView.sendMessage()
                         .accept(MembershipMessage.UPDATE_MEMBERSHIP_LIST);
-                membershipView.getMembershipModel().getMembership().setJoinDate(date.toString());
             }
         });
         hBox.getChildren().addAll(TextFx.textOf("Join Date","text-white"), datePicker, createButtonBox());
