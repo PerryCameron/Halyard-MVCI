@@ -142,6 +142,7 @@ public class PersonDTO {
 		this.memberTypeProperty().set(memberType);
 	}
 
+
 	public final StringProperty firstNameProperty() {
 		return this.firstName;
 	}

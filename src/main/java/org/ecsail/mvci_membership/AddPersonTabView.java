@@ -19,14 +19,16 @@ import org.ecsail.widgetfx.VBoxFx;
 
 import java.util.Arrays;
 
-public class AddPersonTab extends Tab implements Builder<Tab> {
+public class AddPersonTabView extends Tab implements Builder<Tab> {
 
     private final PersonDTO personDTO;
     private final MembershipView membershipView;
 
-    public AddPersonTab(MembershipView membershipView) {
+    public AddPersonTabView(MembershipView membershipView) {
         this.membershipView = membershipView;
         this.personDTO = new PersonDTO();
+        personDTO.setFirstName("Erase");
+        personDTO.setLastName("Me");
     }
 
     @Override
@@ -66,11 +68,10 @@ public class AddPersonTab extends Tab implements Builder<Tab> {
         TextField textField = TextFieldFx.textFieldOf(200, property);
         textField.focusedProperty()
                 .addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-//                    updatePersonDTO(label, textField.getText());
-//                    if (oldValue) {
-//                        membershipModel.setSelectedPerson(personDTO);
-//                        membershipView.sendMessage().accept(MembershipMessage.UPDATE_PERSON);
-//                    }
+                    if (oldValue) {
+                        System.out.println(label);
+                        System.out.println(membershipView.getMembershipModel().getSelectedPerson());
+                    }
                 });
         return labeledField(label, textField);
     }
