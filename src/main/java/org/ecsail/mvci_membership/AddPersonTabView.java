@@ -5,6 +5,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -12,7 +13,9 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Builder;
+import org.ecsail.custom.CustomDatePicker;
 import org.ecsail.dto.PersonDTO;
+import org.ecsail.widgetfx.ButtonFx;
 import org.ecsail.widgetfx.HBoxFx;
 import org.ecsail.widgetfx.TextFieldFx;
 import org.ecsail.widgetfx.VBoxFx;
@@ -27,8 +30,6 @@ public class AddPersonTabView extends Tab implements Builder<Tab> {
     public AddPersonTabView(MembershipView membershipView) {
         this.membershipView = membershipView;
         this.personDTO = new PersonDTO();
-        personDTO.setFirstName("Erase");
-        personDTO.setLastName("Me");
     }
 
     @Override
@@ -47,33 +48,59 @@ public class AddPersonTabView extends Tab implements Builder<Tab> {
         VBox vBox = VBoxFx.vBoxOf(10.0, new Insets(20,5,5,60));
         vBox.setId("box-background-light");
         VBox.setVgrow(vBox, Priority.ALWAYS); // Don't know why I need this, but ok
-        String[] strings = {"First Name","Last Name", "Occupation", "Business", "Birthday", "Member Type"};
+        String[] strings = {"First Name","Last Name", "Occupation", "Business", "Birthday", "Button"};
         Arrays.stream(strings).forEach(field -> vBox.getChildren().add(fieldRow(field)));
         return vBox;
     }
 
-    private Node fieldRow(String field) {
-        switch (field) {
-            case "First Name" -> { return fieldBox(personDTO.firstNameProperty(), field);}
-            case "Last Name" ->  { return fieldBox(personDTO.lastNameProperty(), field);}
-            case "Occupation" -> { return fieldBox(personDTO.occupationProperty(), field);}
-            case "Business" ->  { return fieldBox(personDTO.businessProperty(), field);}
-            case "Birthday" -> { return fieldBox(personDTO.birthdayProperty(), field);}
-            case "Member Type" -> { return fieldBox(personDTO.memberTypeProperty(), field);}
+    private Node fieldRow(String label) {
+        switch (label) {
+            case "First Name" -> { return fieldBox(personDTO.firstNameProperty(), label);}
+            case "Last Name" ->  { return fieldBox(personDTO.lastNameProperty(), label);}
+            case "Occupation" -> { return fieldBox(personDTO.occupationProperty(), label);}
+            case "Business" ->  { return fieldBox(personDTO.businessProperty(), label);}
+            case "Birthday" -> { return fieldDateBox(personDTO.birthdayProperty(), label);}
+            case "Button" -> { return buttonBox(); }
         }
         return null;
     }
 
+    private Node buttonBox() {
+        Button button = ButtonFx.buttonOf("Add", 60);
+        button.setOnAction(event -> {
+            membershipView.sendMessage().accept(MembershipMessage.INSERT_PERSON);
+        });
+        return labeledField("", button);
+    }
+
     private Node fieldBox(Property<?> property, String label) {
-        TextField textField = TextFieldFx.textFieldOf(200, property);
+        TextField textField = TextFieldFx.textFieldOf(230, property);
         textField.focusedProperty()
                 .addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-                    if (oldValue) {
-                        System.out.println(label);
-                        System.out.println(membershipView.getMembershipModel().getSelectedPerson());
-                    }
+                    if (oldValue) { updatePerson(label, textField.getText()); }
                 });
         return labeledField(label, textField);
+    }
+
+    private void updatePerson(String label, String text) {
+        switch (label) {
+            case "First Name" -> { personDTO.setFirstName(text);}
+            case "Last Name" ->  { personDTO.setLastName(text);}
+            case "Occupation" -> { personDTO.setOccupation(text);}
+            case "Business" ->  { personDTO.setBusiness(text);}
+        }
+    }
+
+    private Node fieldDateBox(Property<?> property, String label) {
+        CustomDatePicker datePicker = new CustomDatePicker();
+        datePicker.setPrefWidth(230);
+        datePicker.focusedProperty().addListener((observable, wasFocused, isFocused) -> {
+            if (!isFocused){
+                datePicker.updateValue();
+                personDTO.setBirthday(datePicker.getValue().toString());
+            }
+        });
+        return labeledField(label, datePicker);
     }
 
     private Node labeledField(String label, Node node) {
@@ -82,7 +109,7 @@ public class AddPersonTabView extends Tab implements Builder<Tab> {
         text.setId("text-white");
         HBox hBoxLabel = HBoxFx.hBoxOf(Pos.CENTER_LEFT, 100);
         hBoxLabel.getChildren().add(text);
-        HBox hBoxTextField = HBoxFx.hBoxOf(Pos.CENTER_LEFT, 200.00);
+        HBox hBoxTextField = HBoxFx.hBoxOf(Pos.CENTER, 230);
         hBoxTextField.getChildren().add(node);
         hBox.getChildren().addAll(hBoxLabel, hBoxTextField);
         return hBox;

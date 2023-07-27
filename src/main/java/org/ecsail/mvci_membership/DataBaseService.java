@@ -310,6 +310,6 @@ public class DataBaseService {
         }
     }
     public void insertPerson() {
-        System.out.println("Insert Person");
+        System.out.println(membershipModel.getSelectedPerson());
     }
 }

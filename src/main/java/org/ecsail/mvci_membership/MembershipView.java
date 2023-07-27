@@ -83,7 +83,7 @@ public class MembershipView implements Builder<Region> {
 
     private Node createPeopleTabPane() {
         TabPane tabPane = TabPaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE, 498,"custom-tab-pane");
-        membershipModel.setPeopleTabPane(tabPane);  // TODO does anything else use this besides below???
+        membershipModel.setPeopleTabPane(tabPane);
         membershipModel.getPeopleTabPane().getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
             if(newTab.getText().equals("Add")) {
                 AddPersonTabView addPersonTabView = (AddPersonTabView) newTab.getUserData();
