@@ -4,11 +4,12 @@ package org.ecsail.repository.implementations;
 import org.ecsail.dto.PersonDTO;
 import org.ecsail.repository.interfaces.PersonRepository;
 import org.ecsail.repository.rowmappers.PersonRowMapper;
-import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -46,14 +47,18 @@ public class PersonRepositoryImpl implements PersonRepository {
         return namedParameterJdbcTemplate.update(query, namedParameters);
     }
 
-//    public  void deletePerson(PersonDTO p) {
-//        String query = "DELETE FROM person WHERE p_id = ?";
-//        template.update(query, p.getP_id());
-//    }
-//
-//    public int getPersonAge(PersonDTO person) {
-//        String query = "SELECT DATE_FORMAT(FROM_DAYS(DATEDIFF(NOW(),(SELECT birthday FROM person where p_id=?))), '%Y')+0 AS AGE;";
-//            Integer age = template.queryForObject(query, Integer.class, new Object[] { person.getP_id() });
-//            return age != null ? age : 0;
-//    }
+    @Override
+    public int insert(PersonDTO personDTO) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        String query =
+                """
+                    INSERT INTO person (MS_ID, member_type, F_NAME, L_NAME, OCCUPATION, BUSINESS, 
+                    birthday, IS_ACTIVE, NICK_NAME, OLD_MSID) VALUES (:msId, :memberType, :firstName,
+                    :lastName, :occupation, :business, :birthday, :active, :nickName, :oldMsid)
+                """;
+        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(personDTO);
+        int affectedRows = namedParameterJdbcTemplate.update(query, namedParameters, keyHolder);
+        personDTO.setpId(keyHolder.getKey().intValue());
+        return affectedRows;
+    }
 }

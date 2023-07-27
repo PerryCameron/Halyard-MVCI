@@ -13,4 +13,5 @@ public interface PersonRepository {
 
     int update(PersonDTO personDTO);
 
+    int insert(PersonDTO personDTO);
 }

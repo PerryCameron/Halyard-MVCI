@@ -310,6 +310,14 @@ public class DataBaseService {
         }
     }
     public void insertPerson() {
+        if (HandlingTools.executeQuery(() -> peopleRepo.insert(membershipModel.getSelectedPerson()), membershipModel.getMainModel(), logger)) {
+            Platform.runLater(() -> {
+//                membershipModel.setSelectedBoat(boatDTO);
+//                membershipModel.getMembership().getBoatDTOS().add(boatDTO);
+//                membershipModel.getMembership().getBoatDTOS().sort(Comparator.comparing(BoatDTO::getBoatId).reversed());
+//                TableViewFx.requestFocusOnTable(membershipModel.getNotesTableView());
+            });
+        }
         System.out.println(membershipModel.getSelectedPerson());
     }
 }
