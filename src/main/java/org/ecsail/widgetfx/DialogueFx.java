@@ -21,6 +21,17 @@ public class DialogueFx {
         return alert;
     }
 
+    public static void customAlertWithShow(String header, String message, Alert.AlertType type) {
+        Alert alert = new Alert(type);
+        alert.setHeaderText(header);
+        alert.setContentText(message);
+        tieAlertToStage(alert);
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add("css/dark/dialogue.css");
+        dialogPane.getStyleClass().add("myDialog");
+        alert.showAndWait();
+    }
+
     public static void tieAlertToStage(Alert alert) {
         Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
         // Add a window showing listener to set the position of the dialog
