@@ -318,6 +318,8 @@ public class DataBaseService {
 ////                TableViewFx.requestFocusOnTable(membershipModel.getNotesTableView());
 //            });
 //        }
+        membershipModel.setAddPerson(true);
+        membershipModel.setAddPerson(false);
         System.out.println(membershipModel.getSelectedPerson());
     }
 }

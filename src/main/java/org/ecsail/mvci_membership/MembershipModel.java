@@ -5,11 +5,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.scene.control.*;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import org.ecsail.custom.CustomDatePicker;
 import org.ecsail.dto.*;
+import org.ecsail.enums.MemberType;
 import org.ecsail.interfaces.SlipUser;
 import org.ecsail.mvci_main.MainModel;
+
+import java.util.HashMap;
 
 public class MembershipModel {
 
@@ -24,21 +27,19 @@ public class MembershipModel {
     private ObservableMap<PersonDTO, Tab> selectedPropertiesTab = FXCollections.observableHashMap();
     private ObservableMap<PersonDTO, TextField> personTextField = FXCollections.observableHashMap();
     private ObservableList<PersonDTO> people = FXCollections.observableArrayList();
-    // general membership information
     private final SimpleObjectProperty<MembershipListDTO> membership = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<SlipDTO> slip = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TableView<BoatDTO>> boatTableView = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TableView<NotesDTO>> notesTableView = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TableView<MembershipIdDTO>> idTableView = new SimpleObjectProperty<>();
-    // tab panes
     private final SimpleObjectProperty<TabPane> peopleTabPane = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TabPane> infoTabPane = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TabPane> extraTabPane = new SimpleObjectProperty<>();
-    // slip variables
     private final SimpleObjectProperty<SlipUser.slip> slipRelationStatus = new SimpleObjectProperty<>();
     private StringProperty sublease = new SimpleStringProperty("");
     private StringProperty membershipId = new SimpleStringProperty("");
     private final BooleanProperty listsLoaded = new SimpleBooleanProperty(false);
+    private final BooleanProperty addPerson = new SimpleBooleanProperty(false);
     private final MainModel mainModel;
     private ObservableMap<String,Control> slipControls = FXCollections.observableHashMap();
     protected SimpleObjectProperty<NotesDTO> selectedNote = new SimpleObjectProperty<>();
@@ -51,6 +52,59 @@ public class MembershipModel {
     protected SimpleObjectProperty<PhoneDTO> selectedPhone = new SimpleObjectProperty<>();
     protected StringProperty selectedString = new SimpleStringProperty("");
 
+    protected SimpleObjectProperty<PersonDTO> newPerson = new SimpleObjectProperty<>();
+    final ComboBox<MemberType> addPersonComboBox = new ComboBox<>();
+    HashMap<String, TextField> textFields = new HashMap<>();
+    SimpleObjectProperty<CustomDatePicker> newPersonBirthday = new SimpleObjectProperty<>();
+
+
+    public PersonDTO getNewPerson() {
+        return newPerson.get();
+    }
+
+    public SimpleObjectProperty<PersonDTO> newPersonProperty() {
+        return newPerson;
+    }
+
+    public void setNewPerson(PersonDTO newPerson) {
+        this.newPerson.set(newPerson);
+    }
+
+    public ComboBox<MemberType> getAddPersonComboBox() {
+        return addPersonComboBox;
+    }
+
+    public HashMap<String, TextField> getTextFields() {
+        return textFields;
+    }
+
+    public void setTextFields(HashMap<String, TextField> textFields) {
+        this.textFields = textFields;
+    }
+
+    public CustomDatePicker getNewPersonBirthday() {
+        return newPersonBirthday.get();
+    }
+
+    public SimpleObjectProperty<CustomDatePicker> newPersonBirthdayProperty() {
+        return newPersonBirthday;
+    }
+
+    public void setNewPersonBirthday(CustomDatePicker newPersonBirthday) {
+        this.newPersonBirthday.set(newPersonBirthday);
+    }
+
+    public boolean isAddPerson() {
+        return addPerson.get();
+    }
+
+    public BooleanProperty addPersonProperty() {
+        return addPerson;
+    }
+
+    public void setAddPerson(boolean addPerson) {
+        this.addPerson.set(addPerson);
+    }
 
     public String getSelectedString() {
         return selectedString.get();

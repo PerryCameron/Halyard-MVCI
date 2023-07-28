@@ -2,6 +2,7 @@ package org.ecsail.widgetfx;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.EventHandler;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -16,6 +17,13 @@ public class ListenerFx {
             booleanProperty.removeListener(listener[0]);
         };
         return listener[0];
+    }
+
+    public static void createListener(BooleanProperty booleanProperty, Runnable action) {
+        ChangeListener<Boolean> listener = (observable, oldValue, newValue) -> {
+            if(newValue) action.run();
+        };
+        booleanProperty.addListener(listener);
     }
 
 
