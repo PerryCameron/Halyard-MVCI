@@ -227,24 +227,24 @@ public class PersonDTO {
 		this.nickNameProperty().set(nickName);
 	}
 
-	@Override
-	public String toString() {
-		return "PersonDTO{" +
-				"pId=" + pId +
-				", msId=" + msId +
-				", memberType=" + memberType +
-				", firstName=" + firstName +
-				", lastName=" + lastName +
-				", occupation=" + occupation +
-				", business=" + business +
-				", birthday=" + birthday +
-				", active=" + active +
-				", nickName=" + nickName +
-				", oldMsid=" + oldMsid +
-				", phones=" + phones +
-				", email=" + email +
-				", awards=" + awards +
-				", officer=" + officer +
-				'}';
-	}
+//	@Override
+//	public String toString() {
+//		return "PersonDTO{" +
+//				"pId=" + pId +
+//				", msId=" + msId +
+//				", memberType=" + memberType +
+//				", firstName=" + firstName +
+//				", lastName=" + lastName +
+//				", occupation=" + occupation +
+//				", business=" + business +
+//				", birthday=" + birthday +
+//				", active=" + active +
+//				", nickName=" + nickName +
+//				", oldMsid=" + oldMsid +
+//				", phones=" + phones +
+//				", email=" + email +
+//				", awards=" + awards +
+//				", officer=" + officer +
+//				'}';
+//	}
 }

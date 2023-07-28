@@ -1,13 +1,12 @@
 package org.ecsail.mvci_membership;
 
 import javafx.beans.property.Property;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Tab;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -19,18 +18,21 @@ import org.ecsail.enums.MemberType;
 import org.ecsail.widgetfx.*;
 
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class AddPersonTabView extends Tab implements Builder<Tab> {
 
-
+    private SimpleObjectProperty<PersonDTO> personDTO = new SimpleObjectProperty<>();
+    private HashMap<String, TextField> textFieldHashMap = new HashMap<>();
+    private CustomDatePicker datePicker = new CustomDatePicker();
     private final MembershipView membershipView;
     private final MembershipModel membershipModel;
-
+    private ComboBox<MemberType> comboBox = new ComboBox<>();
 
     public AddPersonTabView(MembershipView membershipView) {
         this.membershipView = membershipView;
         this.membershipModel = membershipView.getMembershipModel();
-        membershipModel.setNewPerson(new PersonDTO());
+        addPersonDTO();
     }
 
     @Override
@@ -49,10 +51,20 @@ public class AddPersonTabView extends Tab implements Builder<Tab> {
 
     private Runnable addPerson() {
         return () -> {
-            // TODO create new personDTO object
-            // clear all fields
-            System.out.println("Time to clear fields");
+            System.out.println("Right before: " + personDTO);
+            membershipModel.getPeople().add(personDTO.get());
+            membershipModel.getPeopleTabPane().getTabs()
+                    .add(new PersonTabView(membershipView, personDTO.get()).build());
+            textFieldHashMap.values().forEach(textField -> textField.setText(""));
+            addPersonDTO();
         };
+    }
+
+    private void addPersonDTO() {
+        PersonDTO personDTO = new PersonDTO();
+        personDTO.setMsId(membershipModel.getMembership().getMsId());
+        personDTO.setMemberType(1);
+        this.personDTO.set(personDTO);
     }
 
     private Node createFields() {
@@ -66,11 +78,11 @@ public class AddPersonTabView extends Tab implements Builder<Tab> {
 
     private Node fieldRow(String label) {
         switch (label) {
-            case "First Name" -> { return fieldBox(membershipModel.getNewPerson().firstNameProperty(), label); }
-            case "Last Name" ->  { return fieldBox(membershipModel.getNewPerson().lastNameProperty(), label); }
-            case "Occupation" -> { return fieldBox(membershipModel.getNewPerson().occupationProperty(), label); }
-            case "Business" ->  { return fieldBox(membershipModel.getNewPerson().businessProperty(), label); }
-            case "Birthday" -> { return fieldDateBox(membershipModel.getNewPerson().birthdayProperty(), label); }
+            case "First Name" -> { return fieldBox(personDTO.get().firstNameProperty(), label); }
+            case "Last Name" ->  { return fieldBox(personDTO.get().lastNameProperty(), label); }
+            case "Occupation" -> { return fieldBox(personDTO.get().occupationProperty(), label); }
+            case "Business" ->  { return fieldBox(personDTO.get().businessProperty(), label); }
+            case "Birthday" -> { return fieldDateBox(personDTO.get().birthdayProperty(), label); }
             case "Member Type" -> { return returnTypeComboBox(label); }
             case "Button" -> { return buttonBox(); }
         }
@@ -78,10 +90,13 @@ public class AddPersonTabView extends Tab implements Builder<Tab> {
     }
 
     private Node returnTypeComboBox(String label) {
-        membershipModel.getAddPersonComboBox().getItems().setAll(MemberType.values());
-        membershipModel.getAddPersonComboBox().setValue(MemberType.getByCode(1)); // sets to primary
-        membershipModel.getAddPersonComboBox().setPrefWidth(230);
-        return labeledField(label, membershipModel.getAddPersonComboBox());
+        comboBox.getItems().setAll(MemberType.values());
+        comboBox.setValue(MemberType.getByCode(1)); // sets to primary
+        comboBox.setPrefWidth(230);
+        comboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
+            personDTO.get().setMemberType(newValue.getCode());
+        });
+        return labeledField(label, comboBox);
     }
 
     private Node buttonBox() {
@@ -96,7 +111,7 @@ public class AddPersonTabView extends Tab implements Builder<Tab> {
     private boolean isConsistent() {
         if(!memberTypeAcceptable()) {
             DialogueFx.customAlertWithShow("Can not add " + membershipModel.getSelectedPerson().getFullName(),
-                    "You cannot have two " + membershipModel.getAddPersonComboBox().getValue()
+                    "You cannot have two " + comboBox.getValue()
                             + " members for the same membership!",
                     Alert.AlertType.ERROR);
             return false;
@@ -117,15 +132,15 @@ public class AddPersonTabView extends Tab implements Builder<Tab> {
     }
 
     private boolean lastNamePresent() {
-        return !membershipModel.getTextFields().get("Last Name").getText().equals("");
+        return !textFieldHashMap.get("Last Name").getText().equals("");
     }
 
     private boolean firstNamePresent() {
-        return !membershipModel.getTextFields().get("First Name").getText().equals("");
+        return !textFieldHashMap.get("First Name").getText().equals("");
     }
 
     private boolean memberTypeAcceptable() {
-        switch (membershipModel.getAddPersonComboBox().getValue()) {
+        switch (comboBox.getValue()) {
             case PRIMARY -> { return !primaryExists(); }
             case SECONDARY -> { return !secondaryExists(); }
             case DEPENDANT -> { return true; }
@@ -142,32 +157,31 @@ public class AddPersonTabView extends Tab implements Builder<Tab> {
     }
 
     private Node fieldBox(Property<?> property, String label) {
-        membershipModel.getTextFields().put(label, TextFieldFx.textFieldOf(230, property));
-        membershipModel.getTextFields().get(label).focusedProperty()
+        textFieldHashMap.put(label, TextFieldFx.textFieldOf(230, property));
+        textFieldHashMap.get(label).focusedProperty()
                     .addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
                         if (oldValue) {
-                            updatePerson(label, membershipModel.getTextFields().get(label).getText());
+                            updatePerson(label, textFieldHashMap.get(label).getText());
                         }
                     });
-        return labeledField(label, membershipModel.getTextFields().get(label));
+        return labeledField(label, textFieldHashMap.get(label));
     }
 
     private void updatePerson(String label, String text) {
         switch (label) {
-            case "First Name" -> membershipModel.getNewPerson().setFirstName(text);
-            case "Last Name" -> membershipModel.getNewPerson().setLastName(text);
-            case "Occupation" -> membershipModel.getNewPerson().setOccupation(text);
-            case "Business" -> membershipModel.getNewPerson().setBusiness(text);
+            case "First Name" -> personDTO.get().setFirstName(text);
+            case "Last Name" -> personDTO.get().setLastName(text);
+            case "Occupation" -> personDTO.get().setOccupation(text);
+            case "Business" -> personDTO.get().setBusiness(text);
         }
     }
 
     private Node fieldDateBox(Property<?> property, String label) {
-        CustomDatePicker datePicker = new CustomDatePicker();
         datePicker.setPrefWidth(230);
         datePicker.focusedProperty().addListener((observable, wasFocused, isFocused) -> {
             if (!isFocused){
                 datePicker.updateValue();
-                membershipModel.getNewPerson().setBirthday(datePicker.getValue().toString());
+                personDTO.get().setBirthday(datePicker.getValue().toString());
             }
         });
         return labeledField(label, datePicker);
@@ -185,4 +199,11 @@ public class AddPersonTabView extends Tab implements Builder<Tab> {
         return hBox;
     }
 
+    public PersonDTO getPersonDTO() {
+        return personDTO.get();
+    }
+
+    public SimpleObjectProperty<PersonDTO> personDTOProperty() {
+        return personDTO;
+    }
 }

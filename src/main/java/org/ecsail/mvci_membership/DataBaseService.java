@@ -311,15 +311,12 @@ public class DataBaseService {
     }
     public void insertPerson() {
 //        if (HandlingTools.executeQuery(() -> peopleRepo.insert(membershipModel.getSelectedPerson()), membershipModel.getMainModel(), logger)) {
-//            Platform.runLater(() -> {
-////                membershipModel.setSelectedBoat(boatDTO);
-////                membershipModel.getMembership().getBoatDTOS().add(boatDTO);
-////                membershipModel.getMembership().getBoatDTOS().sort(Comparator.comparing(BoatDTO::getBoatId).reversed());
-////                TableViewFx.requestFocusOnTable(membershipModel.getNotesTableView());
-//            });
+            Platform.runLater(() -> {
+                System.out.println("Inserted " + membershipModel.getSelectedPerson().getFullName() + " into the database");
+                membershipModel.getSelectedPerson().setpId(12345678);
+                membershipModel.setAddPerson(true);
+                membershipModel.setAddPerson(false);
+            });
 //        }
-        membershipModel.setAddPerson(true);
-        membershipModel.setAddPerson(false);
-        System.out.println(membershipModel.getSelectedPerson());
     }
 }

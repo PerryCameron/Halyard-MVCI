@@ -92,6 +92,7 @@ public class MembershipView implements Builder<Region> {
                 PersonTabView personTabView = (PersonTabView) newTab.getUserData();// Get the associated PersonTabView object
                 membershipModel.setSelectedPerson(personTabView.getPersonDTO());
             }
+            System.out.println("Selected person is: " + membershipModel.getSelectedPerson());
         });
         return tabPane;
     }

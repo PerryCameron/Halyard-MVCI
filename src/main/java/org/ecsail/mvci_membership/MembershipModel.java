@@ -52,47 +52,7 @@ public class MembershipModel {
     protected SimpleObjectProperty<PhoneDTO> selectedPhone = new SimpleObjectProperty<>();
     protected StringProperty selectedString = new SimpleStringProperty("");
 
-    protected SimpleObjectProperty<PersonDTO> newPerson = new SimpleObjectProperty<>();
-    final ComboBox<MemberType> addPersonComboBox = new ComboBox<>();
-    HashMap<String, TextField> textFields = new HashMap<>();
-    SimpleObjectProperty<CustomDatePicker> newPersonBirthday = new SimpleObjectProperty<>();
 
-
-    public PersonDTO getNewPerson() {
-        return newPerson.get();
-    }
-
-    public SimpleObjectProperty<PersonDTO> newPersonProperty() {
-        return newPerson;
-    }
-
-    public void setNewPerson(PersonDTO newPerson) {
-        this.newPerson.set(newPerson);
-    }
-
-    public ComboBox<MemberType> getAddPersonComboBox() {
-        return addPersonComboBox;
-    }
-
-    public HashMap<String, TextField> getTextFields() {
-        return textFields;
-    }
-
-    public void setTextFields(HashMap<String, TextField> textFields) {
-        this.textFields = textFields;
-    }
-
-    public CustomDatePicker getNewPersonBirthday() {
-        return newPersonBirthday.get();
-    }
-
-    public SimpleObjectProperty<CustomDatePicker> newPersonBirthdayProperty() {
-        return newPersonBirthday;
-    }
-
-    public void setNewPersonBirthday(CustomDatePicker newPersonBirthday) {
-        this.newPersonBirthday.set(newPersonBirthday);
-    }
 
     public boolean isAddPerson() {
         return addPerson.get();
