@@ -74,7 +74,7 @@ public class AddPersonTabView extends Tab implements Builder<Tab> {
     }
 
     private Node createFields() {
-        VBox vBox = VBoxFx.vBoxOf(10.0, new Insets(20,5,5,60));
+        VBox vBox = VBoxFx.vBoxOf(10.0, new Insets(60,5,5,60));
         vBox.setId("box-background-light");
         VBox.setVgrow(vBox, Priority.ALWAYS); // Don't know why I need this, but ok
         String[] strings = {"First Name","Last Name", "Occupation", "Business", "Birthday", "Member Type", "Button"};
