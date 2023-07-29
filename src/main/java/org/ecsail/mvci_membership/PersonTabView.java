@@ -234,10 +234,10 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     private Node getInfoBox() {
         VBox vBox = VBoxFx.vBoxOf(7.0, new Insets(15,10,0,5));
         vBox.setId("custom-tap-pane-frame");
-        vBox.getChildren().addAll(
-                new Label("Age: " + MathTools.calculateAge(personDTO.getBirthday())),
-                new Label("Person ID: " + personDTO.getpId()),
-                new Label("MSID: " + personDTO.getMsId()));
+        if(personDTO.getBirthday() != null)
+        vBox.getChildren().add(new Label("Age: " + MathTools.calculateAge(personDTO.getBirthday())));
+        vBox.getChildren().add(new Label("Person ID: " + personDTO.getpId()));
+        vBox.getChildren().add(new Label("MSID: " + personDTO.getMsId()));
         return vBox;
     }
 
@@ -386,7 +386,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     private Node fieldDateBox(Property<?> property, String label) {
         CustomDatePicker datePicker = new CustomDatePicker();
         datePicker.setPrefWidth(150);
-        datePicker.setValue(stringToDate(property.getValue().toString()));
+        datePicker.setValue((LocalDate) property.getValue());
         datePicker.focusedProperty().addListener((observable, wasFocused, isFocused) -> {
             if (!isFocused){
                 datePicker.updateValue();
@@ -398,12 +398,22 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         return labeledField(label, datePicker);
     }
 
+//    private LocalDate stringToDate(String stringDate) {
+//        LocalDate date;
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//        if (membershipView.getMembershipModel().getMembership().getJoinDate() != null)
+//            date = LocalDate.parse(stringDate, formatter);
+//        else date = LocalDate.parse("1900-01-01", formatter);
+//        return date;
+//    }
+
     private LocalDate stringToDate(String stringDate) {
         LocalDate date;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        if (membershipView.getMembershipModel().getMembership().getJoinDate() != null)
+        if (stringDate != null && !stringDate.isEmpty())
             date = LocalDate.parse(stringDate, formatter);
-        else date = LocalDate.parse("1900-01-01", formatter);
+        else
+            date = LocalDate.parse("1900-01-01", formatter);
         return date;
     }
 
@@ -433,16 +443,14 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     }
 
     private void updatePersonDTO(String label, String text) {
-        System.out.println("updatePersonDTO(String label, String text)->"  + personDTO);
         switch (label) {
             case "First Name" -> membershipModel.getSelectedPerson().setFirstName(text);
             case "Last Name" -> membershipModel.getSelectedPerson().setLastName(text);
             case "Nickname" -> membershipModel.getSelectedPerson().setNickName(text);
             case "Occupation" -> membershipModel.getSelectedPerson().setOccupation(text);
             case "Business" -> membershipModel.getSelectedPerson().setBusiness(text);
-            case "Birthday" -> membershipModel.getSelectedPerson().setBirthday(text);
+            case "Birthday" -> membershipModel.getSelectedPerson().setBirthday(LocalDate.parse(text));
         }
-        System.out.println("updatePersonDTO(String label, String text)->"  + personDTO);
     }
 
     private String getMemberType() {

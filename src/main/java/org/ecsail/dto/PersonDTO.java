@@ -4,6 +4,8 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.time.LocalDate;
+
 public class PersonDTO {
 	private IntegerProperty pId;
 	private IntegerProperty msId;
@@ -12,7 +14,7 @@ public class PersonDTO {
 	private StringProperty lastName;
 	private StringProperty occupation;
 	private StringProperty business;
-	private StringProperty birthday;
+	private ObjectProperty<LocalDate> birthday;
 	private BooleanProperty active;
 	private StringProperty nickName;
 	private IntegerProperty oldMsid;
@@ -22,14 +24,14 @@ public class PersonDTO {
 	private ObservableList<OfficerDTO> officer = FXCollections.observableArrayList();
 
 	public PersonDTO(Integer pid, Integer ms_id, Integer memberType, String firstName, String lastName,
-                     String birthday, String occupation,
+                     LocalDate birthday, String occupation,
                      String business, Boolean isActive, String nickName, Integer oldMsid) {
 		this.pId = new SimpleIntegerProperty(pid);
 		this.msId = new SimpleIntegerProperty(ms_id);
 		this.memberType = new SimpleIntegerProperty(memberType);
 		this.firstName = new SimpleStringProperty(firstName);
 		this.lastName = new SimpleStringProperty(lastName);
-		this.birthday = new SimpleStringProperty(birthday);
+		this.birthday = new SimpleObjectProperty<>(birthday);
 		this.occupation = new SimpleStringProperty(occupation);
 		this.business = new SimpleStringProperty(business);
 		this.active = new SimpleBooleanProperty(isActive);
@@ -43,7 +45,21 @@ public class PersonDTO {
 		this.memberType = new SimpleIntegerProperty(0);
 		this.firstName = new SimpleStringProperty("");
 		this.lastName = new SimpleStringProperty("");
-		this.birthday = new SimpleStringProperty("");
+		this.birthday = new SimpleObjectProperty<>(); // what would be a good default here
+		this.occupation = new SimpleStringProperty("");
+		this.business = new SimpleStringProperty("");
+		this.active = new SimpleBooleanProperty(false);
+		this.nickName = new SimpleStringProperty("");
+		this.oldMsid = new SimpleIntegerProperty(0);
+	}
+
+	public PersonDTO(int msId) {
+		this.pId = new SimpleIntegerProperty(0);
+		this.msId = new SimpleIntegerProperty(msId);
+		this.memberType = new SimpleIntegerProperty(0);
+		this.firstName = new SimpleStringProperty("");
+		this.lastName = new SimpleStringProperty("");
+		this.birthday = new SimpleObjectProperty<>(); // what would be a good default here
 		this.occupation = new SimpleStringProperty("");
 		this.business = new SimpleStringProperty("");
 		this.active = new SimpleBooleanProperty(false);
@@ -54,10 +70,13 @@ public class PersonDTO {
 	public PersonDTO(PersonDTO p) { // for cloning
 		this.pId = new SimpleIntegerProperty(p.getpId());
 		this.msId = new SimpleIntegerProperty(p.getMsId());
+		System.out.println("moving p.getMsId() : " + p.getMsId() + " to new object: " + this.msId);
 		this.memberType = new SimpleIntegerProperty(p.getMemberType());
 		this.firstName = new SimpleStringProperty(p.getFirstName());
+		System.out.println("moving p.getFirstName() : " + p.getFirstName() + " to new object: " + this.firstName);
 		this.lastName = new SimpleStringProperty(p.getLastName());
-		this.birthday = new SimpleStringProperty(p.getBirthday());
+		System.out.println("moving p.getLastName() : " + p.getLastName() + " to new object: " + this.lastName);
+		this.birthday = new SimpleObjectProperty<>(p.getBirthday());
 		this.occupation = new SimpleStringProperty(p.getOccupation());
 		this.business = new SimpleStringProperty(p.getBusiness());
 		this.active = new SimpleBooleanProperty(p.isActive());
@@ -205,16 +224,16 @@ public class PersonDTO {
 		this.businessProperty().set(business);
 	}
 
-	public final StringProperty birthdayProperty() {
-		return this.birthday;
+	public LocalDate getBirthday() {
+		return birthday.get();
 	}
 
-	public final String getBirthday() {
-		return this.birthdayProperty().get();
+	public ObjectProperty<LocalDate> birthdayProperty() {
+		return birthday;
 	}
 
-	public final void setBirthday(final String birthday) {
-		this.birthdayProperty().set(birthday);
+	public void setBirthday(LocalDate birthday) {
+		this.birthday.set(birthday);
 	}
 
 	public final BooleanProperty activeProperty() {

@@ -1,6 +1,6 @@
 package org.ecsail.mvci_membership;
 
-import javafx.beans.property.*;
+import javafx.beans.property.Property;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -18,24 +18,23 @@ import org.ecsail.widgetfx.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashMap;
 
 public class AddPersonTabView extends Tab implements Builder<Tab> {
 
-    private final PersonDTO personDTO = new PersonDTO();
+
     private HashMap<String, TextField> textFieldHashMap = new HashMap<>();
     private CustomDatePicker datePicker = new CustomDatePicker();
     private final MembershipView membershipView;
     private final MembershipModel membershipModel;
     private ComboBox<MemberType> comboBox = new ComboBox<>();
-
     private static final Logger logger = LoggerFactory.getLogger(AddPersonTabView.class);
-
+    private final PersonDTO personDTO;
     public AddPersonTabView(MembershipView membershipView) {
         this.membershipView = membershipView;
         this.membershipModel = membershipView.getMembershipModel();
+        this.personDTO = new PersonDTO(membershipModel.getMembership().getMsId());
     }
 
     @Override
@@ -67,7 +66,7 @@ public class AddPersonTabView extends Tab implements Builder<Tab> {
         personDTO.setNickName("");
         personDTO.setOccupation("");
         personDTO.setBusiness("");
-        personDTO.setBirthday("");
+        personDTO.setBirthday(null);
         personDTO.setMemberType(1);
         textFieldHashMap.values().forEach(textField -> textField.setText(""));
         comboBox.setValue(MemberType.getByCode(personDTO.getMemberType()));
@@ -188,7 +187,7 @@ public class AddPersonTabView extends Tab implements Builder<Tab> {
         datePicker.focusedProperty().addListener((observable, wasFocused, isFocused) -> {
             if (!isFocused){
                 datePicker.updateValue();
-                personDTO.setBirthday(datePicker.getValue().toString());
+                personDTO.setBirthday(datePicker.getValue());
             }
         });
         return labeledField(label, datePicker);

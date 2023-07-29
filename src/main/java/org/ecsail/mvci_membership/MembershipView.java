@@ -90,13 +90,13 @@ public class MembershipView implements Builder<Region> {
         membershipModel.setPeopleTabPane(tabPane);
         membershipModel.getPeopleTabPane().getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
             if(newTab.getText().equals("Add")) {
-                logger.debug("Showing Add tab: " + membershipModel.getSelectedPerson());
                 AddPersonTabView addPersonTabView = (AddPersonTabView) newTab.getUserData();
                 membershipModel.setSelectedPerson(addPersonTabView.getPersonDTO());
+                logger.debug("Showing Add tab: " + membershipModel.getSelectedPerson());
             } else {
-                logger.debug("Showing Person tab: " + membershipModel.getSelectedPerson());
                 PersonTabView personTabView = (PersonTabView) newTab.getUserData();// Get the associated PersonTabView object
                 membershipModel.setSelectedPerson(personTabView.getPersonDTO());
+                logger.debug("Showing Person tab: " + membershipModel.getSelectedPerson());
             }
         });
         return tabPane;

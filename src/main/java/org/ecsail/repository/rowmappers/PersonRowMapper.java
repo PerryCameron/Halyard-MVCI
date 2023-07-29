@@ -17,7 +17,7 @@ public class PersonRowMapper implements RowMapper<PersonDTO> {
                 rs.getInt("member_type"),
                 rs.getString("F_NAME"),
                 rs.getString("L_NAME"),
-                rs.getString("birthday"),
+                rs.getDate("birthday").toLocalDate(),
                 rs.getString("OCCUPATION"),
                 rs.getString("BUSINESS"),
                 rs.getBoolean("IS_ACTIVE"),

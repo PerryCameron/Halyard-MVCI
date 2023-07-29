@@ -12,4 +12,10 @@ public class MathTools {
         return period.getYears();
     }
 
+    public static int calculateAge(LocalDate dateOfBirth) {
+        LocalDate currentDate = LocalDate.now();
+        Period period = Period.between(dateOfBirth, currentDate);
+        return period.getYears();
+    }
+
 }
