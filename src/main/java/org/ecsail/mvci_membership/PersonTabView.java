@@ -15,19 +15,17 @@ import javafx.scene.text.Text;
 import javafx.util.Builder;
 import org.ecsail.connection.Mail;
 import org.ecsail.custom.CustomDatePicker;
-import org.ecsail.dto.*;
+import org.ecsail.dto.EmailDTO;
+import org.ecsail.dto.PersonDTO;
 import org.ecsail.interfaces.ConfigFilePaths;
 import org.ecsail.interfaces.ObjectType;
-import org.ecsail.mvci_boat.BoatMessage;
-import org.ecsail.static_tools.MathTools;
+import org.ecsail.static_tools.DateTools;
 import org.ecsail.widgetfx.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -38,6 +36,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     private final MembershipModel membershipModel;
     private final MembershipView membershipView;
     private final HashMap<String, HBox> personInfoHBoxMap = new HashMap<>();
+    private Label ageLabel;
     private static final Logger logger = LoggerFactory.getLogger(PersonTabView.class);
 
     public PersonTabView(MembershipView membershipView, PersonDTO personDTO) {
@@ -234,8 +233,10 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     private Node getInfoBox() {
         VBox vBox = VBoxFx.vBoxOf(7.0, new Insets(15,10,0,5));
         vBox.setId("custom-tap-pane-frame");
+        this.ageLabel = new Label("Age: unknown");
         if(personDTO.getBirthday() != null)
-        vBox.getChildren().add(new Label("Age: " + MathTools.calculateAge(personDTO.getBirthday())));
+            ageLabel.setText("Age: " + DateTools.calculateAge(personDTO.getBirthday()));
+        vBox.getChildren().add(ageLabel);
         vBox.getChildren().add(new Label("Person ID: " + personDTO.getpId()));
         vBox.getChildren().add(new Label("MSID: " + personDTO.getMsId()));
         return vBox;
@@ -391,30 +392,12 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
             if (!isFocused){
                 datePicker.updateValue();
                 updatePersonDTO(label, datePicker.getValue().toString());
+                ageLabel.setText("Age: " + DateTools.calculateAge(datePicker.getValue()));
                 membershipModel.setSelectedPerson(personDTO);
                 membershipView.sendMessage().accept(MembershipMessage.UPDATE_PERSON);
             }
         });
         return labeledField(label, datePicker);
-    }
-
-//    private LocalDate stringToDate(String stringDate) {
-//        LocalDate date;
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-//        if (membershipView.getMembershipModel().getMembership().getJoinDate() != null)
-//            date = LocalDate.parse(stringDate, formatter);
-//        else date = LocalDate.parse("1900-01-01", formatter);
-//        return date;
-//    }
-
-    private LocalDate stringToDate(String stringDate) {
-        LocalDate date;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        if (stringDate != null && !stringDate.isEmpty())
-            date = LocalDate.parse(stringDate, formatter);
-        else
-            date = LocalDate.parse("1900-01-01", formatter);
-        return date;
     }
 
     private Node fieldBox(Property<?> property, String label) {

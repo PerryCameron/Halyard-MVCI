@@ -53,7 +53,6 @@ public class MembershipModel {
     protected StringProperty selectedString = new SimpleStringProperty("");
 
 
-
     public boolean isAddPerson() {
         return addPerson.get();
     }
