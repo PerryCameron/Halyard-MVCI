@@ -21,6 +21,8 @@ import org.ecsail.interfaces.ObjectType;
 import org.ecsail.mvci_boat.BoatMessage;
 import org.ecsail.static_tools.MathTools;
 import org.ecsail.widgetfx.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -36,6 +38,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     private final MembershipModel membershipModel;
     private final MembershipView membershipView;
     private final HashMap<String, HBox> personInfoHBoxMap = new HashMap<>();
+    private static final Logger logger = LoggerFactory.getLogger(PersonTabView.class);
 
     public PersonTabView(MembershipView membershipView, PersonDTO personDTO) {
         this.personDTO = personDTO;
@@ -58,6 +61,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         borderPane.setBottom(createBottomStacks());
         vBox.getChildren().add(borderPane);
         tab.setContent(vBox);
+        logger.debug("PersonDTO------>" + personDTO);
         return tab;
     }
 
@@ -408,11 +412,11 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         textField.focusedProperty()
                 .addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
                     updatePersonDTO(label, textField.getText());
-            if (oldValue) {
-                membershipModel.setSelectedPerson(personDTO);
-                membershipView.sendMessage().accept(MembershipMessage.UPDATE_PERSON);
-            }
-        });
+                    if (oldValue) {
+                        membershipModel.setSelectedPerson(personDTO);
+                        membershipView.sendMessage().accept(MembershipMessage.UPDATE_PERSON);
+                    }
+                });
         return labeledField(label, textField);
     }
 
@@ -429,6 +433,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     }
 
     private void updatePersonDTO(String label, String text) {
+        System.out.println("updatePersonDTO(String label, String text)->"  + personDTO);
         switch (label) {
             case "First Name" -> membershipModel.getSelectedPerson().setFirstName(text);
             case "Last Name" -> membershipModel.getSelectedPerson().setLastName(text);
@@ -437,6 +442,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
             case "Business" -> membershipModel.getSelectedPerson().setBusiness(text);
             case "Birthday" -> membershipModel.getSelectedPerson().setBirthday(text);
         }
+        System.out.println("updatePersonDTO(String label, String text)->"  + personDTO);
     }
 
     private String getMemberType() {

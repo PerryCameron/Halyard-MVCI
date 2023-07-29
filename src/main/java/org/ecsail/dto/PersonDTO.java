@@ -51,6 +51,20 @@ public class PersonDTO {
 		this.oldMsid = new SimpleIntegerProperty(0);
 	}
 
+	public PersonDTO(PersonDTO p) { // for cloning
+		this.pId = new SimpleIntegerProperty(p.getpId());
+		this.msId = new SimpleIntegerProperty(p.getMsId());
+		this.memberType = new SimpleIntegerProperty(p.getMemberType());
+		this.firstName = new SimpleStringProperty(p.getFirstName());
+		this.lastName = new SimpleStringProperty(p.getLastName());
+		this.birthday = new SimpleStringProperty(p.getBirthday());
+		this.occupation = new SimpleStringProperty(p.getOccupation());
+		this.business = new SimpleStringProperty(p.getBusiness());
+		this.active = new SimpleBooleanProperty(p.isActive());
+		this.nickName = new SimpleStringProperty(p.getNickName());
+		this.oldMsid = new SimpleIntegerProperty(p.getOldMsid());
+	}
+
 
 	public ObservableList<OfficerDTO> getOfficers() {
 		return officer;
@@ -227,24 +241,24 @@ public class PersonDTO {
 		this.nickNameProperty().set(nickName);
 	}
 
-//	@Override
-//	public String toString() {
-//		return "PersonDTO{" +
-//				"pId=" + pId +
-//				", msId=" + msId +
-//				", memberType=" + memberType +
-//				", firstName=" + firstName +
-//				", lastName=" + lastName +
-//				", occupation=" + occupation +
-//				", business=" + business +
-//				", birthday=" + birthday +
-//				", active=" + active +
-//				", nickName=" + nickName +
-//				", oldMsid=" + oldMsid +
-//				", phones=" + phones +
-//				", email=" + email +
-//				", awards=" + awards +
-//				", officer=" + officer +
-//				'}';
-//	}
+	@Override
+	public String toString() {
+		return super.toString() + " PersonDTO {" +
+				"pId=" + pId +
+				", msId=" + msId +
+				", memberType=" + memberType +
+				", firstName=" + firstName +
+				", lastName=" + lastName +
+				", occupation=" + occupation +
+				", business=" + business +
+				", birthday=" + birthday +
+				", active=" + active +
+				", nickName=" + nickName +
+				", oldMsid=" + oldMsid +
+				", phones=" + phones +
+				", email=" + email +
+				", awards=" + awards +
+				", officer=" + officer +
+				'}';
+	}
 }

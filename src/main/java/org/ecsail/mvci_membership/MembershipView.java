@@ -12,13 +12,17 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.util.Builder;
 import org.ecsail.widgetfx.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.sound.midi.Soundbank;
 import java.util.function.Consumer;
 
 public class MembershipView implements Builder<Region> {
 
     private final MembershipModel membershipModel;
     private final Consumer<MembershipMessage> action;
+    private static final Logger logger = LoggerFactory.getLogger(MembershipView.class);
 
     protected MembershipView(MembershipModel mm, Consumer<MembershipMessage> a) {
         membershipModel = mm;
@@ -86,13 +90,14 @@ public class MembershipView implements Builder<Region> {
         membershipModel.setPeopleTabPane(tabPane);
         membershipModel.getPeopleTabPane().getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
             if(newTab.getText().equals("Add")) {
+                logger.debug("Showing Add tab: " + membershipModel.getSelectedPerson());
                 AddPersonTabView addPersonTabView = (AddPersonTabView) newTab.getUserData();
                 membershipModel.setSelectedPerson(addPersonTabView.getPersonDTO());
             } else {
+                logger.debug("Showing Person tab: " + membershipModel.getSelectedPerson());
                 PersonTabView personTabView = (PersonTabView) newTab.getUserData();// Get the associated PersonTabView object
                 membershipModel.setSelectedPerson(personTabView.getPersonDTO());
             }
-            System.out.println("Selected person is: " + membershipModel.getSelectedPerson());
         });
         return tabPane;
     }
