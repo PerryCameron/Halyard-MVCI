@@ -116,7 +116,7 @@ public class MainView implements Builder<Region> {
     private Node setUpMenuBar() {
         MenuBar menuBar = new MenuBar();
         if(isMac()) menuBar.setUseSystemMenuBar(true);
-        menuBar.getMenus().addAll(createEditMenu());
+        menuBar.getMenus().addAll(createEditMenu(),createFileMenu());
         return menuBar;
     }
     private Menu createEditMenu() {
@@ -130,6 +130,15 @@ public class MainView implements Builder<Region> {
         menu.getItems().addAll(undo, redo, editSeparator, cut, copy, paste);
         return menu;
     }
+
+    private Menu createFileMenu() {
+        Menu menu = new Menu("File");
+        MenuItem backUp = MenuFx.menuItemOf("Backup DataBase", x -> System.out.println("this"), KeyCode.N);
+        menu.getItems().add(backUp);
+        return menu;
+    }
+
+
     private static boolean isMac() {
         return getProperty("os.name").contains("Mac");
     }

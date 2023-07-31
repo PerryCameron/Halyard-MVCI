@@ -21,6 +21,7 @@ import org.ecsail.mvci_load.LoadingController;
 import org.ecsail.mvci_membership.MembershipController;
 import org.ecsail.mvci_roster.RosterController;
 import org.ecsail.mvci_welcome.WelcomeController;
+import org.ecsail.static_tools.Database;
 
 public class MainController extends Controller implements Status {
 
@@ -34,6 +35,10 @@ public class MainController extends Controller implements Status {
         mainInteractor = new MainInteractor(mainModel);
         mainView = new MainView(mainModel, this::closeAllConnections, this::createConnectController);
         mainInteractor.setComplete();
+    }
+
+    public void backUpDatabase() {
+        Database.BackUp(getConnections().getDataSource());
     }
 
     public void createConnectController() {
