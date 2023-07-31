@@ -1,6 +1,6 @@
 package org.ecsail.dto;
 
-public class schemaDTO {
+public class SchemaDTO {
     String table;
     String column;
     String DataType;
@@ -11,7 +11,7 @@ public class schemaDTO {
     String defaultValue;
     String comment;
 
-    public schemaDTO(String table, String column, String dataType, String columnType, String isNullable, String key,
+    public SchemaDTO(String table, String column, String dataType, String columnType, String isNullable, String key,
                      String extra, String defaultValue, String comment) {
         this.table = table;
         this.column = column;
@@ -22,6 +22,9 @@ public class schemaDTO {
         this.extra = extra;
         this.defaultValue = defaultValue;
         this.comment = comment;
+    }
+
+    public SchemaDTO() {
     }
 
     public String getTable() {
