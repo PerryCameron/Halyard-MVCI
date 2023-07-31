@@ -98,4 +98,19 @@ public class SchemaDTO {
     public void setComment(String comment) {
         this.comment = comment;
     }
+
+    @Override
+    public String toString() {
+        return "SchemaDTO{" +
+                "table='" + table + '\'' +
+                ", column='" + column + '\'' +
+                ", DataType='" + DataType + '\'' +
+                ", ColumnType='" + ColumnType + '\'' +
+                ", isNullable='" + isNullable + '\'' +
+                ", key='" + key + '\'' +
+                ", extra='" + extra + '\'' +
+                ", defaultValue='" + defaultValue + '\'' +
+                ", comment='" + comment + '\'' +
+                '}';
+    }
 }
