@@ -21,24 +21,23 @@ import javafx.util.Builder;
 import javafx.util.Duration;
 import org.ecsail.BaseApplication;
 import org.ecsail.interfaces.Status;
+import org.ecsail.mvci_boatlist.BoatListMessage;
 import org.ecsail.widgetfx.HBoxFx;
 import org.ecsail.widgetfx.MenuFx;
 import org.ecsail.widgetfx.RectangleFX;
 
 
 import java.util.Objects;
+import java.util.function.Consumer;
 
 import static java.lang.System.getProperty;
 
 public class MainView implements Builder<Region> {
     private final MainModel mainModel;
-    private final Runnable closeConnections;
-    private final Runnable createConnectController;
-
-    public MainView(MainModel mainModel, Runnable closeConnections, Runnable createConnectController) {
+    Consumer<MainMessages> action;
+    public MainView(MainModel mainModel, Consumer<MainMessages> m) {
         this.mainModel = mainModel;
-        this.closeConnections = closeConnections;
-        this.createConnectController = createConnectController;
+        action = m;
     }
 
     @Override
@@ -49,7 +48,7 @@ public class MainView implements Builder<Region> {
         borderPane.setBottom(setUpBottomPane());
         borderPane.setCenter(setUpCenterPane());
         // closing program with x button
-        BaseApplication.primaryStage.setOnHiding(event -> closeConnections.run());
+        BaseApplication.primaryStage.setOnHiding(event -> action.accept(MainMessages.CLOSE_ALL_CONNECTIONS));
         Image mainIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/title_bar_icon.png")));
         BaseApplication.primaryStage.getIcons().add(mainIcon);
         BaseApplication.primaryStage.setTitle("Halyard");
@@ -133,7 +132,7 @@ public class MainView implements Builder<Region> {
 
     private Menu createFileMenu() {
         Menu menu = new Menu("File");
-        MenuItem backUp = MenuFx.menuItemOf("Backup DataBase", x -> System.out.println("this"), KeyCode.N);
+        MenuItem backUp = MenuFx.menuItemOf("Backup DataBase", x -> action.accept(MainMessages.BACKUP_DATABASE), KeyCode.N);
         menu.getItems().add(backUp);
         return menu;
     }
@@ -153,7 +152,7 @@ public class MainView implements Builder<Region> {
 
     private void setPrimaryStageCompleteListener() {
         mainModel.primaryStageCompleteProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue) createConnectController.run();
+            if(newValue) action.accept(MainMessages.CREATE_CONNECT_CONTROLLER);
         });
     }
 

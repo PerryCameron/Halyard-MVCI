@@ -33,8 +33,16 @@ public class MainController extends Controller implements Status {
     public MainController() {
         MainModel mainModel = new MainModel();
         mainInteractor = new MainInteractor(mainModel);
-        mainView = new MainView(mainModel, this::closeAllConnections, this::createConnectController);
+        mainView = new MainView(mainModel, this::action);
         mainInteractor.setComplete();
+    }
+
+    private void action(MainMessages action) {
+        switch (action) {
+            case CLOSE_ALL_CONNECTIONS -> closeAllConnections();
+            case CREATE_CONNECT_CONTROLLER -> createConnectController();
+            case BACKUP_DATABASE -> backUpDatabase();
+        }
     }
 
     public void backUpDatabase() {
