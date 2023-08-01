@@ -10,9 +10,12 @@ public class SchemaDTO {
     String extra;
     String defaultValue;
     String comment;
+    String referencedTable;
+    String referencedColumn;
+
 
     public SchemaDTO(String table, String column, String dataType, String columnType, String isNullable, String key,
-                     String extra, String defaultValue, String comment) {
+                     String extra, String defaultValue, String comment, String referencedTable, String referencedColumn) {
         this.table = table;
         this.column = column;
         DataType = dataType;
@@ -22,9 +25,26 @@ public class SchemaDTO {
         this.extra = extra;
         this.defaultValue = defaultValue;
         this.comment = comment;
+        this.referencedTable = referencedTable;
+        this.referencedColumn = referencedColumn;
     }
 
     public SchemaDTO() {
+    }
+    public String getReferencedTable() {
+        return referencedTable;
+    }
+
+    public void setReferencedTable(String referencedTable) {
+        this.referencedTable = referencedTable;
+    }
+
+    public String getReferencedColumn() {
+        return referencedColumn;
+    }
+
+    public void setReferencedColumn(String referencedColumn) {
+        this.referencedColumn = referencedColumn;
     }
 
     public String getTable() {

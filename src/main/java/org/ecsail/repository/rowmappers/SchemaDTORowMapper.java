@@ -19,6 +19,8 @@ public class SchemaDTORowMapper implements RowMapper<SchemaDTO> {
             schema.setExtra(rs.getString("Extra"));
             schema.setDefaultValue(rs.getString("Default Value"));
             schema.setComment(rs.getString("Comment"));
+            schema.setReferencedTable(rs.getString("Referenced Table"));
+            schema.setReferencedColumn(rs.getString("Referenced Column"));
             return schema;
         }
 }

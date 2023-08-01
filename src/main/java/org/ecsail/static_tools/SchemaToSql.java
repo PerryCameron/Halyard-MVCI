@@ -14,6 +14,7 @@ public class SchemaToSql {
         List<String> createTableStatements = new ArrayList<>();
 
         for (String tableName : tableMap.keySet()) {
+
             List<SchemaDTO> columns = tableMap.get(tableName);
 
             StringJoiner columnSql = new StringJoiner(",\n  ");
@@ -32,7 +33,8 @@ public class SchemaToSql {
                 }
 
                 if (column.getExtra() != null && !column.getExtra().isEmpty()) {
-                    columnDefinition += " " + column.getExtra();
+                    String extra = column.getExtra().replaceFirst("DEFAULT_GENERATED","").trim();
+                    columnDefinition += " " + extra;
                 }
 
                 columnSql.add(columnDefinition);
@@ -56,7 +58,8 @@ public class SchemaToSql {
                     "CREATE TABLE `%s` (\n  %s\n) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;",
                     tableName, columnSql.toString());
 
-            createTableStatements.add(createTableSql);
+            createTableStatements.add(createTableSql + "\n\n");
+
         }
 
         return createTableStatements;

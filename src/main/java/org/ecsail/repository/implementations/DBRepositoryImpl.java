@@ -22,19 +22,27 @@ public class DBRepositoryImpl implements DBRepository {
     public List<SchemaDTO> getSchema(String dbName) {
         String query = """
                 SELECT
-                    TABLE_NAME AS `Table`,
-                    COLUMN_NAME AS `Column`,
-                    DATA_TYPE AS `Data Type`,
-                    COLUMN_TYPE AS `Column Type`,
-                    IS_NULLABLE AS `Is Nullable`,
-                    COLUMN_KEY AS `Key`,
-                    EXTRA AS `Extra`,
-                    COLUMN_DEFAULT AS `Default Value`,
-                    COLUMN_COMMENT AS `Comment`
-                FROM
-                    information_schema.COLUMNS
-                WHERE
-                    TABLE_SCHEMA = ?;
+                          c.TABLE_NAME AS `Table`,
+                          c.COLUMN_NAME AS `Column`,
+                          c.DATA_TYPE AS `Data Type`,
+                          c.COLUMN_TYPE AS `Column Type`,
+                          c.IS_NULLABLE AS `Is Nullable`,
+                          c.COLUMN_KEY AS `Key`,
+                          c.EXTRA AS `Extra`,
+                          c.COLUMN_DEFAULT AS `Default Value`,
+                          c.COLUMN_COMMENT AS `Comment`,
+                          kcu.REFERENCED_TABLE_NAME as `Referenced Table`,
+                          kcu.REFERENCED_COLUMN_NAME as `Referenced Column`
+                      FROM
+                          information_schema.COLUMNS c
+                      LEFT JOIN
+                          information_schema.KEY_COLUMN_USAGE kcu
+                      ON
+                          c.TABLE_SCHEMA = kcu.TABLE_SCHEMA AND
+                          c.TABLE_NAME = kcu.TABLE_NAME AND
+                          c.COLUMN_NAME = kcu.COLUMN_NAME
+                      WHERE
+                          c.TABLE_SCHEMA = ?;
                                 
                 """;
         return template.query(query, new Object[]{dbName}, new SchemaDTORowMapper());
