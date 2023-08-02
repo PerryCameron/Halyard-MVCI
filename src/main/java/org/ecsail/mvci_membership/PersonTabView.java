@@ -10,6 +10,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.Clipboard;
 import javafx.scene.input.ClipboardContent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.util.Builder;
@@ -19,6 +21,7 @@ import org.ecsail.dto.EmailDTO;
 import org.ecsail.dto.PersonDTO;
 import org.ecsail.interfaces.ConfigFilePaths;
 import org.ecsail.interfaces.ObjectType;
+import org.ecsail.mvci_boat.BoatMessage;
 import org.ecsail.static_tools.DateTools;
 import org.ecsail.widgetfx.*;
 import org.slf4j.Logger;
@@ -368,6 +371,28 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         ImageView imageView = new ImageView(memberPhoto);
         imageView.setOnMouseExited(ex -> vBoxFrame.setStyle("-fx-background-color: #010e11;"));
         imageView.setOnMouseEntered(en -> vBoxFrame.setStyle("-fx-background-color: #201ac9;"));
+        imageView.setOnDragOver(event -> {
+            /* data is dragged over the target */
+            /* accept it only if it is not dragged from the same node
+             * and if it has a string data */
+            if (event.getGestureSource() != imageView &&
+                    event.getDragboard().hasFiles()) {
+                /* allow for both copying and moving, whatever user chooses */
+                //event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+                event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+            }
+            event.consume();
+        });
+        imageView.setOnDragDropped(event -> {
+            Dragboard db = event.getDragboard();
+            boolean success = false;
+            if (db.hasFiles()) {
+                membershipView.sendMessage().accept(MembershipMessage.UPLOAD_MEMBER_PHOTO);
+                System.out.println(db.getFiles().get(0).getAbsolutePath());
+            }
+            event.setDropCompleted(success);
+            event.consume();
+        });
         vBoxFrame.getChildren().add(imageView);
         vBoxPicture.getChildren().add(vBoxFrame);
         return vBoxPicture;

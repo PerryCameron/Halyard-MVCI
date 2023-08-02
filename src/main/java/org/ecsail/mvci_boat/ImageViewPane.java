@@ -18,20 +18,9 @@ public class ImageViewPane extends Region {
     public ImageViewPane(ImageView imageView) {
     	VBox.setVgrow(this, Priority.ALWAYS);
     	HBox.setHgrow(this, Priority.ALWAYS);
-        imageViewProperty.addListener(new ChangeListener<ImageView>() {
-            @Override
-            public void changed(ObservableValue<? extends ImageView> arg0, ImageView oldIV, ImageView newIV) {
-                if (oldIV != null) {
-                    getChildren().remove(oldIV);
-                    //System.out.println("removing oldIV");
-                }
-                if (newIV != null) {
-                    getChildren().add(newIV);
-                    //System.out.println("adding newIV");
-                }
-                //System.out.println("Listerner called");
-            }
-            
+        imageViewProperty.addListener((arg0, oldIV, newIV) -> {
+            if (oldIV != null) { getChildren().remove(oldIV); }
+            if (newIV != null) { getChildren().add(newIV); }
         });
         this.imageViewProperty.set(imageView);
     }

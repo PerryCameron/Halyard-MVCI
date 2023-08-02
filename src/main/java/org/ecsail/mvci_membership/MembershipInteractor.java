@@ -22,9 +22,11 @@ public class MembershipInteractor implements SlipUser {
         });
     }
 
-
-
     public DataBaseService getDataBaseService() {
         return dataBaseService;
+    }
+
+    public void uploadMemberPhoto() {
+        System.out.println("uploading photo");
     }
 }
