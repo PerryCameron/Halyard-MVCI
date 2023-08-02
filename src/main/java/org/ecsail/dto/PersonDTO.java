@@ -45,10 +45,10 @@ public class PersonDTO {
 		this.memberType = new SimpleIntegerProperty(0);
 		this.firstName = new SimpleStringProperty("");
 		this.lastName = new SimpleStringProperty("");
-		this.birthday = new SimpleObjectProperty<>(); // what would be a good default here
+		this.birthday = new SimpleObjectProperty<>(null);
 		this.occupation = new SimpleStringProperty("");
 		this.business = new SimpleStringProperty("");
-		this.active = new SimpleBooleanProperty(false);
+		this.active = new SimpleBooleanProperty(true);
 		this.nickName = new SimpleStringProperty("");
 		this.oldMsid = new SimpleIntegerProperty(0);
 	}
@@ -59,10 +59,10 @@ public class PersonDTO {
 		this.memberType = new SimpleIntegerProperty(0);
 		this.firstName = new SimpleStringProperty("");
 		this.lastName = new SimpleStringProperty("");
-		this.birthday = new SimpleObjectProperty<>(); // what would be a good default here
+		this.birthday = new SimpleObjectProperty<>(null);
 		this.occupation = new SimpleStringProperty("");
 		this.business = new SimpleStringProperty("");
-		this.active = new SimpleBooleanProperty(false);
+		this.active = new SimpleBooleanProperty(true);
 		this.nickName = new SimpleStringProperty("");
 		this.oldMsid = new SimpleIntegerProperty(0);
 	}
@@ -70,12 +70,9 @@ public class PersonDTO {
 	public PersonDTO(PersonDTO p) { // for cloning
 		this.pId = new SimpleIntegerProperty(p.getpId());
 		this.msId = new SimpleIntegerProperty(p.getMsId());
-		System.out.println("moving p.getMsId() : " + p.getMsId() + " to new object: " + this.msId);
 		this.memberType = new SimpleIntegerProperty(p.getMemberType());
 		this.firstName = new SimpleStringProperty(p.getFirstName());
-		System.out.println("moving p.getFirstName() : " + p.getFirstName() + " to new object: " + this.firstName);
 		this.lastName = new SimpleStringProperty(p.getLastName());
-		System.out.println("moving p.getLastName() : " + p.getLastName() + " to new object: " + this.lastName);
 		this.birthday = new SimpleObjectProperty<>(p.getBirthday());
 		this.occupation = new SimpleStringProperty(p.getOccupation());
 		this.business = new SimpleStringProperty(p.getBusiness());

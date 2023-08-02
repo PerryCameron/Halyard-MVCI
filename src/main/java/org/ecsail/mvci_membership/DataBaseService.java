@@ -310,13 +310,13 @@ public class DataBaseService {
         }
     }
     public void insertPerson() {
-//        if (HandlingTools.executeQuery(() -> peopleRepo.insert(membershipModel.getSelectedPerson()), membershipModel.getMainModel(), logger)) {
+        if (HandlingTools.executeQuery(() -> peopleRepo.insert(membershipModel.getSelectedPerson()), membershipModel.getMainModel(), logger)) {
             Platform.runLater(() -> {
-                logger.debug("Inserted " + membershipModel.getSelectedPerson().getFullName() + " into the database");
-                membershipModel.getSelectedPerson().setpId(12345678);
+                logger.debug("Inserted " + membershipModel.getSelectedPerson().getpId() + " into the database");
+//                membershipModel.getSelectedPerson().setpId(12345678);
                 membershipModel.setAddPerson(true);
                 membershipModel.setAddPerson(false);
             });
-//        }
+        }
     }
 }
