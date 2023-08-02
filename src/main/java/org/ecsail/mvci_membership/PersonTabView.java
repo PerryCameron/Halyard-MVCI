@@ -362,8 +362,8 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     }
 
     private Node createPictureFrame() {
-        VBox vBoxPicture = VBoxFx.vBoxOf(new Insets(12, 5, 0, 7));
-        VBox vBoxFrame = VBoxFx.vBoxOf(196,226,new Insets(2, 2, 2, 2),"box-frame-dark");
+        VBox vBoxPicture = VBoxFx.vBoxOf(new Insets(12, 10, 0, 7));
+        VBox vBoxFrame = VBoxFx.vBoxOf(new Insets(2, 2, 2, 2),"box-frame-dark");
         Image memberPhoto = new Image(Objects.requireNonNull(getClass().getResourceAsStream(DEFAULT_PHOTO)));
         ImageView imageView = new ImageView(memberPhoto);
         imageView.setOnMouseExited(ex -> vBoxFrame.setStyle("-fx-background-color: #010e11;"));
