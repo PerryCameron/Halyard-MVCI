@@ -7,6 +7,16 @@ CREATE TABLE `form_settings` (
   PRIMARY KEY (`form_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE ECSC_SQL.form_settings
+(
+    form_id  varchar(60)  not null primary key,
+    PORT     int,
+    LINK     varchar(200),
+    form_url varchar(255) not null,
+    selected_year int
+);
+
+#   next table
 
 CREATE TABLE `form_email_auth` (
   `HOST` varchar(100),
@@ -22,6 +32,21 @@ CREATE TABLE `form_email_auth` (
   PRIMARY KEY (`USER`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE ECSC_SQL.form_email_auth
+(
+    HOST      varchar(100),
+    PORT      int,
+    USER      varchar(100) primary key,
+    PASS      varchar(100),
+    PROTOCOL  varchar(20),
+    SMTP_AUTH boolean,
+    TTLS      boolean,
+    DEBUG     boolean,
+    id int NOT NULL,
+    email varchar(255)
+);
+
+#   next table
 
 CREATE TABLE `officer` (
   `O_ID` int NOT NULL auto_increment,
@@ -29,9 +54,22 @@ CREATE TABLE `officer` (
   `BOARD_YEAR` int,
   `OFF_TYPE` varchar(20),
   `OFF_YEAR` int,
-  PRIMARY KEY (`O_ID`)
+  PRIMARY KEY (`O_ID`),
+  FOREIGN KEY (`P_ID`) REFERENCES `person`(`P_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+create table ECSC_SQL.officer
+(
+    O_ID       INTEGER NOT NULL auto_increment primary key,
+    P_ID       INTEGER NOT NULL,
+    BOARD_YEAR INTEGER NULL,
+    OFF_TYPE   varchar(20),
+    OFF_YEAR   INTEGER NULL, # This maintains the record forever
+    foreign key (P_ID) references person (P_ID),
+    unique (P_ID, OFF_YEAR, OFF_TYPE)
+);
+
+#   next table
 
 CREATE TABLE `wait_list` (
   `MS_ID` int NOT NULL,
@@ -41,9 +79,9 @@ CREATE TABLE `wait_list` (
   `WANT_SUBLEASE` tinyint(1),
   `WANT_RELEASE` tinyint(1),
   `WANT_SLIP_CHANGE` tinyint(1),
-  PRIMARY KEY (`MS_ID`)
+  PRIMARY KEY (`MS_ID`),
+  FOREIGN KEY (`MS_ID`) REFERENCES `membership`(`MS_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 
 CREATE TABLE `fee` (
   `FEE_ID` int NOT NULL auto_increment,
@@ -56,7 +94,6 @@ CREATE TABLE `fee` (
   PRIMARY KEY (`FEE_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-
 CREATE TABLE `memo` (
   `MEMO_ID` int NOT NULL auto_increment,
   `MS_ID` int NOT NULL,
@@ -65,9 +102,9 @@ CREATE TABLE `memo` (
   `INVOICE_ID` int,
   `CATEGORY` varchar(20) NOT NULL,
   `boat_id` int,
-  PRIMARY KEY (`MEMO_ID`)
+  PRIMARY KEY (`MEMO_ID`),
+  FOREIGN KEY (`MS_ID`) REFERENCES `membership`(`MS_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 
 CREATE TABLE `db_table_changes` (
   `id` int NOT NULL,
@@ -78,9 +115,9 @@ CREATE TABLE `db_table_changes` (
   `table_update` int NOT NULL,
   `change_date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ,
   `changed_by` varchar(100),
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (`db_updates_id`) REFERENCES `db_updates`(`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 
 CREATE TABLE `membership` (
   `MS_ID` int NOT NULL auto_increment,
@@ -95,7 +132,6 @@ CREATE TABLE `membership` (
   UNIQUE KEY (`P_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-
 CREATE TABLE `board_positions` (
   `id` int NOT NULL,
   `position` varchar(50) NOT NULL,
@@ -108,7 +144,6 @@ CREATE TABLE `board_positions` (
   UNIQUE KEY (`position`),
   UNIQUE KEY (`identifier`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 
 CREATE TABLE `stats_view` (
   `STAT_ID` int NOT NULL DEFAULT 0,
@@ -126,7 +161,6 @@ CREATE TABLE `stats_view` (
   `ACTIVE_MEMBERSHIPS` decimal(25,0)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-
 CREATE TABLE `db_roster_radio_selection` (
   `ID` int NOT NULL auto_increment,
   `LABEL` varchar(40) NOT NULL,
@@ -137,7 +171,6 @@ CREATE TABLE `db_roster_radio_selection` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-
 CREATE TABLE `form_hash_request` (
   `FORM_HASH_ID` int NOT NULL auto_increment,
   `REQ_DATE` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ,
@@ -147,7 +180,6 @@ CREATE TABLE `form_hash_request` (
   `MAILED_TO` varchar(120),
   PRIMARY KEY (`FORM_HASH_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 
 CREATE TABLE `stats` (
   `STAT_ID` int NOT NULL auto_increment,
@@ -171,7 +203,6 @@ CREATE TABLE `stats` (
   PRIMARY KEY (`STAT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-
 CREATE TABLE `payment` (
   `PAY_ID` int NOT NULL auto_increment,
   `INVOICE_ID` int NOT NULL,
@@ -180,9 +211,10 @@ CREATE TABLE `payment` (
   `PAYMENT_DATE` date NOT NULL,
   `AMOUNT` decimal(10,2) NOT NULL,
   `DEPOSIT_ID` int NOT NULL,
-  PRIMARY KEY (`PAY_ID`)
+  PRIMARY KEY (`PAY_ID`),
+  FOREIGN KEY (`INVOICE_ID`) REFERENCES `invoice`(`ID`),
+  FOREIGN KEY (`DEPOSIT_ID`) REFERENCES `deposit`(`DEPOSIT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 
 CREATE TABLE `id_change` (
   `CHANGE_ID` int NOT NULL auto_increment,
@@ -191,7 +223,6 @@ CREATE TABLE `id_change` (
   PRIMARY KEY (`CHANGE_ID`),
   UNIQUE KEY (`ID_YEAR`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 
 CREATE TABLE `db_boat_list_radio_selection` (
   `ID` int NOT NULL auto_increment,
@@ -203,16 +234,15 @@ CREATE TABLE `db_boat_list_radio_selection` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-
 CREATE TABLE `email` (
   `EMAIL_ID` int NOT NULL auto_increment,
   `P_ID` int NOT NULL,
   `PRIMARY_USE` tinyint(1),
   `EMAIL` varchar(60),
   `EMAIL_LISTED` tinyint(1),
-  PRIMARY KEY (`EMAIL_ID`)
+  PRIMARY KEY (`EMAIL_ID`),
+  FOREIGN KEY (`P_ID`) REFERENCES `person`(`P_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 
 CREATE TABLE `db_roster_settings` (
   `ID` int NOT NULL auto_increment,
@@ -226,15 +256,14 @@ CREATE TABLE `db_roster_settings` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-
 CREATE TABLE `form_msid_hash` (
   `HASH_ID` int NOT NULL auto_increment,
   `HASH` bigint NOT NULL,
   `MS_ID` int NOT NULL,
   PRIMARY KEY (`HASH_ID`),
-  UNIQUE KEY (`HASH`)
+  UNIQUE KEY (`HASH`),
+  FOREIGN KEY (`MS_ID`) REFERENCES `membership`(`MS_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 
 CREATE TABLE `db_invoice` (
   `id` int NOT NULL,
@@ -252,11 +281,9 @@ CREATE TABLE `db_invoice` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-
 CREATE TABLE `hibernate_sequence` (
   `next_val` bigint
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 
 CREATE TABLE `membership_id` (
   `MID` int NOT NULL auto_increment,
@@ -267,15 +294,16 @@ CREATE TABLE `membership_id` (
   `MEM_TYPE` varchar(4),
   `SELECTED` tinyint(1),
   `LATE_RENEW` tinyint(1),
-  PRIMARY KEY (`MID`)
+  PRIMARY KEY (`MID`),
+  FOREIGN KEY (`MS_ID`) REFERENCES `membership`(`MS_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 
 CREATE TABLE `boat_owner` (
   `MS_ID` int NOT NULL,
-  `BOAT_ID` int NOT NULL
+  `BOAT_ID` int NOT NULL,
+  FOREIGN KEY (`MS_ID`) REFERENCES `membership`(`MS_ID`),
+  FOREIGN KEY (`BOAT_ID`) REFERENCES `boat`(`BOAT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 
 CREATE TABLE `users` (
   `id` int NOT NULL,
@@ -284,7 +312,6 @@ CREATE TABLE `users` (
   `enabled` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 
 CREATE TABLE `boat` (
   `BOAT_ID` int NOT NULL auto_increment,
@@ -306,7 +333,6 @@ CREATE TABLE `boat` (
   PRIMARY KEY (`BOAT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-
 CREATE TABLE `db_updates` (
   `ID` int NOT NULL,
   `SQL_CREATION_DATE` datetime,
@@ -314,7 +340,6 @@ CREATE TABLE `db_updates` (
   `DB_SIZE` double,
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 
 CREATE TABLE `form_request` (
   `FORM_ID` int NOT NULL auto_increment,
@@ -325,7 +350,6 @@ CREATE TABLE `form_request` (
   PRIMARY KEY (`FORM_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-
 CREATE TABLE `invoice_item` (
   `ID` int NOT NULL auto_increment,
   `INVOICE_ID` int NOT NULL,
@@ -335,9 +359,10 @@ CREATE TABLE `invoice_item` (
   `IS_CREDIT` tinyint(1) NOT NULL,
   `VALUE` decimal(10,2),
   `QTY` int,
-  PRIMARY KEY (`ID`)
+  PRIMARY KEY (`ID`),
+  FOREIGN KEY (`INVOICE_ID`) REFERENCES `invoice`(`ID`),
+  FOREIGN KEY (`MS_ID`) REFERENCES `membership`(`MS_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 
 CREATE TABLE `slip` (
   `SLIP_ID` int NOT NULL auto_increment,
@@ -347,10 +372,11 @@ CREATE TABLE `slip` (
   `ALT_TEXT` varchar(20),
   PRIMARY KEY (`SLIP_ID`),
   UNIQUE KEY (`MS_ID`),
+  UNIQUE KEY (`MS_ID`),
   UNIQUE KEY (`SLIP_NUM`),
-  UNIQUE KEY (`SUBLEASED_TO`)
+  UNIQUE KEY (`SUBLEASED_TO`),
+  FOREIGN KEY (`MS_ID`) REFERENCES `membership`(`MS_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 
 CREATE TABLE `phone` (
   `PHONE_ID` int NOT NULL auto_increment,
@@ -358,9 +384,9 @@ CREATE TABLE `phone` (
   `PHONE` varchar(30),
   `PHONE_TYPE` varchar(30),
   `PHONE_LISTED` tinyint(1),
-  PRIMARY KEY (`PHONE_ID`)
+  PRIMARY KEY (`PHONE_ID`),
+  FOREIGN KEY (`P_ID`) REFERENCES `person`(`P_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 
 CREATE TABLE `api_key` (
   `API_ID` int NOT NULL auto_increment,
@@ -371,7 +397,6 @@ CREATE TABLE `api_key` (
   UNIQUE KEY (`NAME`),
   UNIQUE KEY (`APIKEY`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 
 CREATE TABLE `person` (
   `P_ID` int NOT NULL auto_increment,
@@ -386,18 +411,18 @@ CREATE TABLE `person` (
   `PICTURE` blob,
   `NICK_NAME` varchar(30),
   `OLD_MSID` int,
-  PRIMARY KEY (`P_ID`)
+  PRIMARY KEY (`P_ID`),
+  FOREIGN KEY (`MS_ID`) REFERENCES `membership`(`MS_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 
 CREATE TABLE `awards` (
   `AWARD_ID` int NOT NULL auto_increment,
   `P_ID` int NOT NULL,
   `AWARD_YEAR` varchar(10) NOT NULL,
   `AWARD_TYPE` varchar(10) NOT NULL,
-  PRIMARY KEY (`AWARD_ID`)
+  PRIMARY KEY (`AWARD_ID`),
+  FOREIGN KEY (`P_ID`) REFERENCES `person`(`P_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 
 CREATE TABLE `boat_photos` (
   `ID` int NOT NULL auto_increment,
@@ -406,9 +431,9 @@ CREATE TABLE `boat_photos` (
   `filename` varchar(200) NOT NULL,
   `file_number` int NOT NULL,
   `default_image` tinyint(1) DEFAULT 0,
-  PRIMARY KEY (`ID`)
+  PRIMARY KEY (`ID`),
+  FOREIGN KEY (`BOAT_ID`) REFERENCES `boat`(`BOAT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 
 CREATE TABLE `deposit` (
   `DEPOSIT_ID` int NOT NULL auto_increment,
@@ -417,7 +442,6 @@ CREATE TABLE `deposit` (
   `BATCH` int NOT NULL,
   PRIMARY KEY (`DEPOSIT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 
 CREATE TABLE `db_boat_list_settings` (
   `ID` int NOT NULL auto_increment,
@@ -432,7 +456,6 @@ CREATE TABLE `db_boat_list_settings` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-
 CREATE TABLE `invoice` (
   `ID` int NOT NULL auto_increment,
   `MS_ID` int NOT NULL,
@@ -446,9 +469,9 @@ CREATE TABLE `invoice` (
   `CLOSED` tinyint(1),
   `SUPPLEMENTAL` tinyint(1),
   `MAX_CREDIT` decimal(10,2) NOT NULL DEFAULT 0.00,
-  PRIMARY KEY (`ID`)
+  PRIMARY KEY (`ID`),
+  FOREIGN KEY (`MS_ID`) REFERENCES `membership`(`MS_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 
 CREATE TABLE `user` (
   `id` int NOT NULL,
@@ -459,12 +482,11 @@ CREATE TABLE `user` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-
 CREATE TABLE `winter_storage` (
   `WS_ID` int NOT NULL auto_increment,
   `BOAT_ID` int NOT NULL,
   `FISCAL_YEAR` int NOT NULL,
-  PRIMARY KEY (`WS_ID`)
+  PRIMARY KEY (`WS_ID`),
+  FOREIGN KEY (`BOAT_ID`) REFERENCES `boat`(`BOAT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 

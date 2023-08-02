@@ -22,6 +22,26 @@ create table ECSC_SQL.boat
     AUX TINYINT(1) DEFAULT 0 NOT NULL
 );
 
+CREATE TABLE `boat` (
+                        `PHRF` int,
+                        `LWL` varchar(20),
+                        `REGISTRATION_NUM` varchar(30),
+                        `BEAM` varchar(20),
+                        `MANUFACTURER` varchar(40),
+                        `MODEL` varchar(40),
+                        `DRAFT` varchar(20),
+                        `LENGTH` varchar(20),
+                        `WEIGHT` varchar(20),
+                        `BOAT_NAME` varchar(30),
+                        `KEEL` varchar(4),
+                        `SAIL_NUMBER` varchar(20),
+                        `AUX` tinyint(1) NOT NULL DEFAULT 0,
+                        `MANUFACTURE_YEAR` varchar(5),
+                        `HAS_TRAILER` tinyint(1),
+                        `BOAT_ID` int NOT NULL auto_increment,
+                        PRIMARY KEY (`BOAT_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 # create table ECSC_SQL.boat_memo
 # (
 #     BOAT_MEMO_ID INTEGER NOT NULL auto_increment primary key,
@@ -86,6 +106,19 @@ create table ECSC_SQL.slip
     ALT_TEXT     varchar(20),
     foreign key (MS_ID) references membership (MS_ID)
 );
+
+CREATE TABLE `slip` (
+                        `SLIP_ID` int NOT NULL auto_increment,
+                        `MS_ID` int,
+                        `SLIP_NUM` varchar(4) NOT NULL,
+                        `SUBLEASED_TO` int,
+                        `ALT_TEXT` varchar(20),
+                        PRIMARY KEY (`SLIP_ID`),
+                        UNIQUE KEY (`MS_ID`),
+                        UNIQUE KEY (`SLIP_NUM`),
+                        UNIQUE KEY (`SUBLEASED_TO`),
+                        FOREIGN KEY (`MS_ID`) REFERENCES `membership`(`MS_ID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE ECSC_SQL.fee
 (
@@ -310,9 +343,9 @@ CREATE TABLE ECSC_SQL.form_email_auth
 -- Table to record everytime a request for a hash is made
 CREATE TABLE ECSC_SQL.form_hash_request
 (
-    FORM_HASH_ID int       NOT NULL auto_increment primary key unique,
+    FORM_HASH_ID int       NOT NULL auto_increment primary key,
     REQ_DATE     TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    PRI_MEM      varchar(20),
+    PRI_MEM      varchar(120),
     LINK         varchar(120),
     MSID         int       NOT NULL,
     MAILED_TO    varchar(120)
@@ -334,7 +367,8 @@ CREATE TABLE ECSC_SQL.form_settings
     form_id  varchar(60)  not null primary key,
     PORT     int,
     LINK     varchar(200),
-    form_url varchar(255) not null
+    form_url varchar(255) not null,
+    selected_year int
 );
 
 -- user authentication database
