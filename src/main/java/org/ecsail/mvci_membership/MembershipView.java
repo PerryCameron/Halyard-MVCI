@@ -51,7 +51,9 @@ public class MembershipView implements Builder<Region> {
 
     private void listenForData() {
         // waits for data to arrive before completing UI
-        ChangeListener<MembershipMessage> dataLoadedListener = ListenerFx.createSingleUseEnumListener(membershipModel.returnMessageProperty(), () -> {
+        ChangeListener<MembershipMessage> dataLoadedListener = ListenerFx.createSingleUseEnumListener(
+                membershipModel.returnMessageProperty(),
+                MembershipMessage.DATA_LOAD_SUCCEED, () -> {
             membershipModel.getPeople().forEach(personDTO -> membershipModel.getPeopleTabPane().getTabs()
                     .add(new PersonTabView(this, personDTO).build()));
             membershipModel.getPeopleTabPane().getTabs().add(new AddPersonTabView(this).build());

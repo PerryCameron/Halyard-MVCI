@@ -1,6 +1,7 @@
 package org.ecsail.mvci_membership;
 
 import javafx.beans.property.Property;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -50,9 +51,8 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
 
     @Override
     public Tab build() {
-        Tab tab = new Tab();
-        tab.setText(getMemberType());
-        tab.setUserData(this);
+        this.setText(getMemberType());
+        this.setUserData(this);
         VBox vBox = VBoxFx.vBoxOf(new Insets(2,2,2,2)); // makes outer border
         vBox.setId("custom-tap-pane-frame");
         BorderPane borderPane = new BorderPane();
@@ -61,8 +61,8 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         borderPane.setCenter(createPictureFrame());
         borderPane.setBottom(createBottomStacks());
         vBox.getChildren().add(borderPane);
-        tab.setContent(vBox);
-        return tab;
+        this.setContent(vBox);
+        return this;
     }
 
     private Node createBottomStacks() {
@@ -246,6 +246,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     private Control createSubmit() {
         Button button = ButtonFx.buttonOf("Submit",60);
         button.setOnAction(event -> {
+            logger.info("createSubmit() button");
             // get selected radio button
             RadioButton rb = membershipModel.getSelectedRadioForPerson().get(personDTO);
             switch (rb.getText().split(" ")[0]) { // Split the string and get the first word
@@ -302,6 +303,15 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
                 "Are you sure you want to delete " + membershipModel.getSelectedPerson().getFullName() + "?",
                 "Missing Selection",
                 "You need to select a person first"};
+        // listens for a successful delete in database then removes tab
+        ChangeListener<MembershipMessage> personRemoved = ListenerFx.createSingleUseEnumListener(
+                membershipModel.returnMessageProperty(),
+                MembershipMessage.DELETE_MEMBER_FROM_DATABASE_SUCCEED, () -> {
+                    logger.info("Removing tab");
+                    membershipModel.getPeopleTabPane().getTabs().remove(this);
+        });
+        // add dialogue to make sure you want to do this
+        membershipModel.returnMessageProperty().addListener(personRemoved);
         if (DialogueFx.verifyAction(strings, membershipModel.getSelectedPerson()))
             membershipView.sendMessage().accept(MembershipMessage.DELETE_MEMBER_FROM_DATABASE);
     }

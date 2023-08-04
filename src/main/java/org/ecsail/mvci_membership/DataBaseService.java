@@ -109,7 +109,7 @@ public class DataBaseService {
         membershipModel.setMembershipId(String.valueOf(membershipIdRepo.getCurrentId(membershipModel.getSlip().getMs_id()).getMembershipId()));
     }
 
-    private void setOwnAndSublease() {
+    private void setOwnAndSublease() { // already inside Platform.runLater
         membershipModel.setSlipRelationStatus(SlipUser.slip.ownAndSublease);
         // gets the id of the subLeaser for the current year
         membershipModel.setMembershipId(String.valueOf(membershipIdRepo.getCurrentId(membershipModel.getSlip().getSubleased_to()).getMembershipId()));
@@ -124,7 +124,6 @@ public class DataBaseService {
     }
 
     protected void updateMembershipList() {
-        System.out.println(membershipModel.getMembership());
         HandlingTools.executeQuery(() ->
                 membershipRepo.updateJoinDate(membershipModel.getMembership()), membershipModel.getMainModel(), logger);
     }
@@ -172,7 +171,13 @@ public class DataBaseService {
     protected void deletePerson() {
         if (HandlingTools.executeQuery(() -> peopleRepo.delete(membershipModel.getSelectedPerson()),
                 membershipModel.getMainModel(), logger))
-            membershipModel.setReturnMessage(MembershipMessage.DELETE_MEMBER_FROM_DATABASE_SUCCEED);
+            Platform.runLater(() -> {
+                membershipModel.setReturnMessage(MembershipMessage.DELETE_MEMBER_FROM_DATABASE_SUCCEED);
+            });
+        else
+            Platform.runLater(() -> {
+                membershipModel.setReturnMessage(MembershipMessage.DELETE_MEMBER_FROM_DATABASE_FAIL);
+            });
     }
 
     protected void movePerson() {
@@ -182,43 +187,57 @@ public class DataBaseService {
     protected void deletePhone() {
         if (HandlingTools.executeQuery(() -> phoneRepo.delete(membershipModel.getSelectedPhone()),
             membershipModel.getMainModel(), logger))
+            Platform.runLater(() -> {
                 membershipModel.getSelectedPerson().getPhones().remove(membershipModel.getSelectedPhone());
+            });
     }
 
     protected void deleteEmail() {
         if (HandlingTools.executeQuery(() -> emailRepo.delete(membershipModel.getSelectedEmail()),
-            membershipModel.getMainModel(), logger))
+                membershipModel.getMainModel(), logger))
+            Platform.runLater(() -> {
                 membershipModel.getSelectedPerson().getEmail().remove(membershipModel.getSelectedEmail());
+            });
     }
 
     public void deleteAward() {
         if (HandlingTools.executeQuery(() -> awardRepo.delete(membershipModel.getSelectedAward()),
-            membershipModel.getMainModel(), logger))
+                membershipModel.getMainModel(), logger))
+            Platform.runLater(() -> {
                 membershipModel.getSelectedPerson().getAwards().remove(membershipModel.getSelectedAward());
+            });
     }
 
     protected void deleteOfficer() {
         if (HandlingTools.executeQuery(() -> officerRepo.delete(membershipModel.getSelectedOfficer()),
-            membershipModel.getMainModel(), logger))
+                membershipModel.getMainModel(), logger))
+            Platform.runLater(() -> {
                 membershipModel.getSelectedPerson().getOfficers().remove(membershipModel.getSelectedOfficer());
+            });
     }
 
     protected void deleteNote() {
         if (HandlingTools.executeQuery(() -> notesRepo.delete(membershipModel.getSelectedNote()),
-            membershipModel.getMainModel(), logger))
+                membershipModel.getMainModel(), logger))
+            Platform.runLater(() -> {
                 membershipModel.getMembership().getNotesDTOS().remove(membershipModel.getSelectedNote());
+            });
     }
 
     protected void deleteBoat() {  /// only removes boat owner
-        if(HandlingTools.executeQuery(() -> boatRepo.deleteBoatOwner(membershipModel.getMembership(), membershipModel.getSelectedBoat()),
-            membershipModel.getMainModel(), logger))
+        if (HandlingTools.executeQuery(() -> boatRepo.deleteBoatOwner(membershipModel.getMembership(), membershipModel.getSelectedBoat()),
+                membershipModel.getMainModel(), logger))
+            Platform.runLater(() -> {
                 membershipModel.getMembership().getBoatDTOS().remove(membershipModel.getSelectedBoat());
+            });
     }
 
     public void deleteMembershipId() {
-        if(HandlingTools.executeQuery(() -> membershipIdRepo.delete(membershipModel.getSelectedMembershipId()),
+        if (HandlingTools.executeQuery(() -> membershipIdRepo.delete(membershipModel.getSelectedMembershipId()),
                 membershipModel.getMainModel(), logger))
-            membershipModel.getMembership().getMembershipIdDTOS().remove(membershipModel.getSelectedMembershipId());
+            Platform.runLater(() -> {
+                membershipModel.getMembership().getMembershipIdDTOS().remove(membershipModel.getSelectedMembershipId());
+            });
     }
 
     public void insertPhone() {
