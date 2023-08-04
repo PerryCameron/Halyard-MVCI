@@ -51,7 +51,7 @@ public class MembershipView implements Builder<Region> {
 
     private void listenForData() {
         // waits for data to arrive before completing UI
-        ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(membershipModel.listsLoadedProperty(), () -> {
+        ChangeListener<MembershipMessage> dataLoadedListener = ListenerFx.createSingleUseEnumListener(membershipModel.returnMessageProperty(), () -> {
             membershipModel.getPeople().forEach(personDTO -> membershipModel.getPeopleTabPane().getTabs()
                     .add(new PersonTabView(this, personDTO).build()));
             membershipModel.getPeopleTabPane().getTabs().add(new AddPersonTabView(this).build());
@@ -66,7 +66,7 @@ public class MembershipView implements Builder<Region> {
             membershipModel.getExtraTabPane().getTabs().add(new AttachmentsTabView(this).build());
             membershipModel.getExtraTabPane().getTabs().add(new AddressTabView(this).build());
         });
-        membershipModel.listsLoadedProperty().addListener(dataLoadedListener);
+        membershipModel.returnMessageProperty().addListener(dataLoadedListener);
     }
 
     private Node createExtrasTabPane() {

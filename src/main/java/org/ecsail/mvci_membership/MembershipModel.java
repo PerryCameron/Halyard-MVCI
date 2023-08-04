@@ -39,7 +39,7 @@ public class MembershipModel {
     private final ObjectProperty<MembershipMessage> returnMessage = new SimpleObjectProperty<>();
     private StringProperty sublease = new SimpleStringProperty("");
     private StringProperty membershipId = new SimpleStringProperty("");
-    private final BooleanProperty listsLoaded = new SimpleBooleanProperty(false);
+//    private final BooleanProperty listsLoaded = new SimpleBooleanProperty(false);
     private final BooleanProperty addPerson = new SimpleBooleanProperty(false);
     private final MainModel mainModel;
     private ObservableMap<String,Control> slipControls = FXCollections.observableHashMap();
@@ -379,15 +379,15 @@ public class MembershipModel {
     public MainModel getMainModel() {
         return mainModel;
     }
-    public boolean isListsLoaded() {
-        return listsLoaded.get();
-    }
-    public BooleanProperty listsLoadedProperty() {
-        return listsLoaded;
-    }
-    public void setListsLoaded(boolean listsLoaded) {
-        this.listsLoaded.set(listsLoaded);
-    }
+//    public boolean isListsLoaded() {
+//        return listsLoaded.get();
+//    }
+//    public BooleanProperty listsLoadedProperty() {
+//        return listsLoaded;
+//    }
+//    public void setListsLoaded(boolean listsLoaded) {
+//        this.listsLoaded.set(listsLoaded);
+//    }
     public ObservableList<PersonDTO> getPeople() {
         return people;
     }

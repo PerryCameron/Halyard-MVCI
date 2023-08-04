@@ -62,7 +62,6 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         borderPane.setBottom(createBottomStacks());
         vBox.getChildren().add(borderPane);
         tab.setContent(vBox);
-        logger.debug("PersonDTO------>" + personDTO);
         return tab;
     }
 
