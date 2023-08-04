@@ -39,16 +39,15 @@ public class AddPersonTabView extends Tab implements Builder<Tab> {
 
     @Override
     public Tab build() {
-        Tab tab = new Tab();
-        tab.setText("Add");
-        tab.setUserData(this);
+        this.setText("Add");
+        this.setUserData(this);
         VBox vBox = VBoxFx.vBoxOf(new Insets(2,2,2,2)); // makes outer border
         vBox.setId("custom-tap-pane-frame");
         vBox.getChildren().add(createFields());
-        tab.setContent(vBox);
+        this.setContent(vBox);
         // once database has added person, this updates UI
         ListenerFx.createListener(membershipModel.addPersonProperty(), addPerson());
-        return tab;
+        return this;
     }
 
     private Runnable addPerson() {
