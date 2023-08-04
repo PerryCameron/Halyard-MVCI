@@ -21,7 +21,6 @@ import org.ecsail.dto.EmailDTO;
 import org.ecsail.dto.PersonDTO;
 import org.ecsail.interfaces.ConfigFilePaths;
 import org.ecsail.interfaces.ObjectType;
-import org.ecsail.mvci_boat.BoatMessage;
 import org.ecsail.static_tools.DateTools;
 import org.ecsail.widgetfx.*;
 import org.slf4j.Logger;
@@ -250,8 +249,12 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         button.setOnAction(event -> {
             // get selected radio button
             RadioButton rb = membershipModel.getSelectedRadioForPerson().get(personDTO);
-            MembershipMessage type = mapStringToEnum(rb.getText());
-            membershipView.sendMessage().accept(type);
+            switch (rb.getText().split(" ")[0]) { // Split the string and get the first word
+//                case "Change" -> { return MembershipMessage.CHANGE_MEMBER_TYPE; }
+//                case "Remove" -> { return MembershipMessage.REMOVE_MEMBER_FROM_MEMBERSHIP; }
+                case "Delete" -> { deletePerson(); }
+//                case "Move" -> { return MembershipMessage.MOVE_MEMBER_TO_MEMBERSHIP; }
+            }
         });
         return button;
     }
@@ -292,6 +295,16 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
             case Officer -> button.setOnAction(onClick -> deleteOfficer());
         }
         return button;
+    }
+
+    private void deletePerson() {
+        String[] strings = {
+                "Delete Person",
+                "Are you sure you want to delete " + membershipModel.getSelectedPerson().getFullName() + "?",
+                "Missing Selection",
+                "You need to select a person first"};
+        if (DialogueFx.verifyAction(strings, membershipModel.getSelectedPerson()))
+            membershipView.sendMessage().accept(MembershipMessage.DELETE_MEMBER_FROM_DATABASE);
     }
 
     private void deleteAward() {

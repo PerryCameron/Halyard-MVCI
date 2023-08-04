@@ -170,14 +170,14 @@ public class DataBaseService {
     }
 
     protected void deletePerson() {
-        System.out.println("Delete Person");
+        if (HandlingTools.executeQuery(() -> peopleRepo.delete(membershipModel.getSelectedPerson()),
+                membershipModel.getMainModel(), logger))
+            System.out.println("Somehow remove person tab here");
     }
 
     protected void movePerson() {
         System.out.println("Move Person");
     }
-
-
 
     protected void deletePhone() {
         if (HandlingTools.executeQuery(() -> phoneRepo.delete(membershipModel.getSelectedPhone()),

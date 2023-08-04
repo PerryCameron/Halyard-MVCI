@@ -25,7 +25,7 @@ public enum MembershipMessage {
     DELETE_NOTE,
     DELETE_OFFICER,
     DELETE_PHONE,
-    DELETE_PERSON,
+//    DELETE_PERSON,
     UPLOAD_MEMBER_PHOTO,
     NONE,
     CHANGE_MEMBER_TYPE,

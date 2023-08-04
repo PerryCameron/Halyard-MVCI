@@ -61,4 +61,10 @@ public class PersonRepositoryImpl implements PersonRepository {
         personDTO.setpId(keyHolder.getKey().intValue());
         return affectedRows;
     }
+
+    @Override
+    public int delete(PersonDTO personDTO) {
+        String deleteSql = "DELETE FROM person WHERE P_ID = ?";
+        return template.update(deleteSql, personDTO.getpId());
+    }
 }
