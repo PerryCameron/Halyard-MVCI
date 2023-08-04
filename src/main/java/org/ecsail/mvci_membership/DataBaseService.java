@@ -172,7 +172,7 @@ public class DataBaseService {
     protected void deletePerson() {
         if (HandlingTools.executeQuery(() -> peopleRepo.delete(membershipModel.getSelectedPerson()),
                 membershipModel.getMainModel(), logger))
-            System.out.println("Somehow remove person tab here");
+            membershipModel.setReturnMessage(MembershipMessage.DELETE_MEMBER_FROM_DATABASE_SUCCEED);
     }
 
     protected void movePerson() {

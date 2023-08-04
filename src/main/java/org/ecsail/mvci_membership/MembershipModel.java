@@ -36,6 +36,7 @@ public class MembershipModel {
     private final SimpleObjectProperty<TabPane> infoTabPane = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TabPane> extraTabPane = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<SlipUser.slip> slipRelationStatus = new SimpleObjectProperty<>();
+    private final ObjectProperty<MembershipMessage> returnMessage = new SimpleObjectProperty<>();
     private StringProperty sublease = new SimpleStringProperty("");
     private StringProperty membershipId = new SimpleStringProperty("");
     private final BooleanProperty listsLoaded = new SimpleBooleanProperty(false);
@@ -52,6 +53,18 @@ public class MembershipModel {
     protected SimpleObjectProperty<PhoneDTO> selectedPhone = new SimpleObjectProperty<>();
     protected StringProperty selectedString = new SimpleStringProperty("");
 
+
+    public MembershipMessage getReturnMessage() {
+        return returnMessage.get();
+    }
+
+    public ObjectProperty<MembershipMessage> returnMessageProperty() {
+        return returnMessage;
+    }
+
+    public void setReturnMessage(MembershipMessage returnMessage) {
+        this.returnMessage.set(returnMessage);
+    }
 
     public boolean isAddPerson() {
         return addPerson.get();

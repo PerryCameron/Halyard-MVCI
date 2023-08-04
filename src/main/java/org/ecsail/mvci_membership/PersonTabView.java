@@ -252,7 +252,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
             switch (rb.getText().split(" ")[0]) { // Split the string and get the first word
 //                case "Change" -> { return MembershipMessage.CHANGE_MEMBER_TYPE; }
 //                case "Remove" -> { return MembershipMessage.REMOVE_MEMBER_FROM_MEMBERSHIP; }
-                case "Delete" -> { deletePerson(); }
+                case "Delete" -> deletePerson();
 //                case "Move" -> { return MembershipMessage.MOVE_MEMBER_TO_MEMBERSHIP; }
             }
         });
