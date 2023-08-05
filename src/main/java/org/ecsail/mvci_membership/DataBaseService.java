@@ -3,6 +3,7 @@ package org.ecsail.mvci_membership;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import org.ecsail.dto.*;
+import org.ecsail.enums.MemberType;
 import org.ecsail.interfaces.SlipUser;
 import org.ecsail.repository.implementations.*;
 import org.ecsail.repository.interfaces.*;
@@ -289,8 +290,9 @@ public class DataBaseService {
         }
     }
 
-    public void insertNote() {
+    public void insertNote(String note) {
         NotesDTO notesDTO = new NotesDTO("N", membershipModel.getMembership().getMsId());
+        notesDTO.setMemo(note);
         if (HandlingTools.executeQuery(() -> notesRepo.insertNote(notesDTO), membershipModel.getMainModel(), logger)) {
             Platform.runLater(() -> {
                 membershipModel.setSelectedNote(notesDTO);
@@ -329,11 +331,13 @@ public class DataBaseService {
         }
     }
     public void insertPerson() {
-//        if (HandlingTools.executeQuery(() -> peopleRepo.insert(membershipModel.getSelectedPerson()), membershipModel.getMainModel(), logger)) {
+        if (HandlingTools.executeQuery(() -> peopleRepo.insert(membershipModel.getSelectedPerson()), membershipModel.getMainModel(), logger)) {
             Platform.runLater(() -> {
-                logger.debug("Inserted " + membershipModel.getSelectedPerson().getpId() + " into the database");
+                PersonDTO p = membershipModel.getSelectedPerson();
+                insertNote("New Person: " + p.getFullName() + "(p_id " + p.getpId()
+                        + ") added as " + MemberType.getByCode(p.getMemberType()));
                 membershipModel.setReturnMessage(MembershipMessage.INSERT_PERSON);
             });
-//        }
+        }
     }
 }

@@ -343,7 +343,6 @@ public class MembershipModel {
     public void setPersonTextField(ObservableMap<PersonDTO, TextField> personTextField) {
         this.personTextField = personTextField;
     }
-
     public PersonDTO getSelectedPerson() {
         return selectedPerson.get();
     }
@@ -365,15 +364,6 @@ public class MembershipModel {
     public MainModel getMainModel() {
         return mainModel;
     }
-//    public boolean isListsLoaded() {
-//        return listsLoaded.get();
-//    }
-//    public BooleanProperty listsLoadedProperty() {
-//        return listsLoaded;
-//    }
-//    public void setListsLoaded(boolean listsLoaded) {
-//        this.listsLoaded.set(listsLoaded);
-//    }
     public ObservableList<PersonDTO> getPeople() {
         return people;
     }
