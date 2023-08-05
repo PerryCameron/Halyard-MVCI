@@ -1,6 +1,7 @@
 package org.ecsail.mvci_membership;
 
 import javafx.beans.property.Property;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -45,20 +46,16 @@ public class AddPersonTabView extends Tab implements Builder<Tab> {
         vBox.setId("custom-tap-pane-frame");
         vBox.getChildren().add(createFields());
         this.setContent(vBox);
-        // once database has added person, this updates UI
-        ListenerFx.createListener(membershipModel.addPersonProperty(), addPerson());
         return this;
     }
 
-    private Runnable addPerson() {
-        return () -> {
+    private void addPerson() {
             membershipModel.getPeople().add(personDTO);
             Tab newTab = new PersonTabView(membershipView, new PersonDTO(personDTO)).build();
             membershipModel.getPeopleTabPane().getTabs().add(newTab);
             // Select the newly added tab
             membershipModel.getPeopleTabPane().getSelectionModel().select(newTab);
             clearPersonDTO();
-        };
     }
 
     private void clearPersonDTO() {
@@ -109,8 +106,15 @@ public class AddPersonTabView extends Tab implements Builder<Tab> {
     private Node buttonBox() {
         Button button = ButtonFx.buttonOf("Add", 60);
         button.setOnAction(event -> {
-            if (isConsistent())
+            if (isConsistent()) {
+                // sets a temporary listener, which updates UI after database has been updated
+                ChangeListener<MembershipMessage> dataLoadedListener = ListenerFx.createSingleUseEnumListener(
+                        membershipModel.returnMessageProperty(),
+                        MembershipMessage.INSERT_PERSON, () -> addPerson());
+                membershipModel.returnMessageProperty().addListener(dataLoadedListener);
+                // this sends messages to insert
                 membershipView.sendMessage().accept(MembershipMessage.INSERT_PERSON);
+            }
         });
         return labeledField("", button);
     }

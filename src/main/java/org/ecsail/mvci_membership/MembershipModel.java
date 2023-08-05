@@ -39,8 +39,6 @@ public class MembershipModel {
     private final ObjectProperty<MembershipMessage> returnMessage = new SimpleObjectProperty<>();
     private StringProperty sublease = new SimpleStringProperty("");
     private StringProperty membershipId = new SimpleStringProperty("");
-//    private final BooleanProperty listsLoaded = new SimpleBooleanProperty(false);
-    private final BooleanProperty addPerson = new SimpleBooleanProperty(false);
     private final MainModel mainModel;
     private ObservableMap<String,Control> slipControls = FXCollections.observableHashMap();
     protected SimpleObjectProperty<NotesDTO> selectedNote = new SimpleObjectProperty<>();
@@ -64,18 +62,6 @@ public class MembershipModel {
 
     public void setReturnMessage(MembershipMessage returnMessage) {
         this.returnMessage.set(returnMessage);
-    }
-
-    public boolean isAddPerson() {
-        return addPerson.get();
-    }
-
-    public BooleanProperty addPersonProperty() {
-        return addPerson;
-    }
-
-    public void setAddPerson(boolean addPerson) {
-        this.addPerson.set(addPerson);
     }
 
     public String getSelectedString() {
