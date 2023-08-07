@@ -4,7 +4,6 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.Property;
 import javafx.beans.value.ChangeListener;
-import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -18,7 +17,6 @@ import org.ecsail.widgetfx.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.sound.midi.Soundbank;
 import java.util.function.Consumer;
 
 public class MembershipView implements Builder<Region> {
@@ -62,7 +60,7 @@ public class MembershipView implements Builder<Region> {
         return () -> {
             switch (message) {
                 case DATA_LOAD_SUCCEED -> launchDataDependentUI();
-                case DELETE_MEMBER_FROM_DATABASE_SUCCEED -> removeOpenPersonTab();
+                case DELETE_MEMBER_FROM_DATABASE_SUCCEED -> removePersonTab();
                 case INSERT_PERSON_SUCCEED -> addPerson();
             }
         };
@@ -78,7 +76,7 @@ public class MembershipView implements Builder<Region> {
         selectExtraTabByName("Notes"); // open notes tab after creating entry
     }
 
-    private void removeOpenPersonTab() {
+    private void removePersonTab() {
         int selectedIndex = membershipModel.getPeopleTabPane().getSelectionModel().getSelectedIndex();
         membershipModel.getPeopleTabPane().getTabs().remove(selectedIndex);
     }

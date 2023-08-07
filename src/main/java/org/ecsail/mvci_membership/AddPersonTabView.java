@@ -48,15 +48,6 @@ public class AddPersonTabView extends Tab implements Builder<Tab> {
         return this;
     }
 
-//    private void addPerson() {
-//            membershipModel.getPeople().add(personDTO);
-//            Tab newTab = new PersonTabView(membershipView, new PersonDTO(personDTO)).build();
-//            membershipModel.getPeopleTabPane().getTabs().add(newTab);
-//            // Select the newly added tab
-//            membershipModel.getPeopleTabPane().getSelectionModel().select(newTab);
-//            clearPersonDTO();
-//    }
-
     protected void clearPersonDTO() {
         personDTO.setFirstName("");
         personDTO.setLastName("");

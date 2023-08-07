@@ -21,21 +21,6 @@ public class ListenerFx {
         return listener[0];
     }
 
-    public static ChangeListener<MembershipMessage> createSingleUseEnumListener(
-            ObjectProperty<MembershipMessage> membershipMessageProperty,
-            MembershipMessage expectedMessage,
-            Runnable action) {
-        ChangeListener<MembershipMessage>[] listener = new ChangeListener[1];
-        listener[0] = (observable, oldValue, newValue) -> {
-            if (newValue == expectedMessage) {
-                action.run();
-            }
-            // Remove the listener after it has been triggered once
-            membershipMessageProperty.removeListener(listener[0]);
-        };
-        return listener[0];
-    }
-
     public static ChangeListener<MembershipMessage> createEnumListener(Runnable action) {
         ChangeListener<MembershipMessage> listener = (observable, oldValue, newValue) -> {
             action.run();

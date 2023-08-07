@@ -1,7 +1,6 @@
 package org.ecsail.mvci_membership;
 
 import javafx.beans.property.Property;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -28,9 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.*;
 
 import static org.ecsail.interfaces.ObjectType.Dto.*;
 
@@ -246,18 +243,41 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     private Control createSubmit() {
         Button button = ButtonFx.buttonOf("Submit",60);
         button.setOnAction(event -> {
-            logger.info("createSubmit() button");
-            // get selected radio button
             RadioButton rb = membershipModel.getSelectedRadioForPerson().get(personDTO);
             switch (rb.getText().split(" ")[0]) { // Split the string and get the first word
-//                case "Change" -> { return MembershipMessage.CHANGE_MEMBER_TYPE; }
-//                case "Remove" -> { return MembershipMessage.REMOVE_MEMBER_FROM_MEMBERSHIP; }
+                case "Change" -> changeMemberType();
+                case "Remove" -> removeMemberFromMembership();
                 case "Delete" -> deletePerson();
-//                case "Move" -> { return MembershipMessage.MOVE_MEMBER_TO_MEMBERSHIP; }
+                case "Move" -> movePersonToMembership();
             }
         });
         return button;
     }
+
+    private void movePersonToMembership() {
+//        // TODO move to another msid
+//        int oldMsid = person.getMs_id();
+//        // set memberType to 3 as default
+//        person.setMemberType(3);
+//        person.setOldMsid(oldMsid);
+//        // TODO make sure it is an integer and that this membership exists
+//        person.setMs_id(Integer.parseInt(msidTextField.getText()));
+//        SqlUpdate.updatePerson(person);
+//        // TODO error check to make sure we are in membership view
+//        removeThisTab(personTabPane);
+        //                case "Move" -> { return MembershipMessage.MOVE_MEMBER_TO_MEMBERSHIP; }
+    }
+
+    private void removeMemberFromMembership() {
+        if(userChoosesToRemovePerson())
+            membershipView.sendMessage().accept(MembershipMessage.REMOVE_MEMBER_FROM_MEMBERSHIP);
+    }
+
+    private void changeMemberType() {
+        //        return MembershipMessage.CHANGE_MEMBER_TYPE;
+    }
+
+
 
 //    private Object createData(MembershipMessage message) {
 //        String returnString;
@@ -295,6 +315,18 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
             case Officer -> button.setOnAction(onClick -> deleteOfficer());
         }
         return button;
+    }
+
+    private boolean userChoosesToRemovePerson() {
+        String header = "Remove person from membership";
+        String message = "Are you sure you want to remove " + membershipModel.getSelectedPerson().getFullName() +
+                " from this membership?\n\nIt will leave this person's record free floating in the database, " +
+                "however " + membershipModel.getSelectedPerson().getFullName() + " can be looked back up in " +
+                "the People tab and reattached to this or another membership.";
+        Alert alert = DialogueFx.customAlert(header, message, Alert.AlertType.CONFIRMATION);
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) return true;
+        return false;
     }
 
     private void deletePerson() {

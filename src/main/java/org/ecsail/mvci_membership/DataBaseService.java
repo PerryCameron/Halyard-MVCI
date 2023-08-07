@@ -121,7 +121,7 @@ public class DataBaseService {
     }
 
     protected void removeMemberFromMembership() {
-        System.out.println("remove from membership");
+        System.out.println("remove from membership:" + membershipModel.getSelectedPerson().getFullName());
     }
 
     protected void updateMembershipList() {
@@ -133,7 +133,6 @@ public class DataBaseService {
         HandlingTools.executeQuery(() ->
                 boatRepo.update(membershipModel.getSelectedBoat()), membershipModel.getMainModel(), logger);
     }
-
     protected void updateMembershipId() {
         HandlingTools.executeQuery(() ->
                 membershipIdRepo.update(membershipModel.getSelectedMembershipId()), membershipModel.getMainModel(), logger);
