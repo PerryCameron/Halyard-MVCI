@@ -336,7 +336,7 @@ public class DataBaseService {
                 PersonDTO p = membershipModel.getSelectedPerson();
                 insertNote("New Person: " + p.getFullName() + "(p_id " + p.getpId()
                         + ") added as " + MemberType.getByCode(p.getMemberType()));
-                membershipModel.setReturnMessage(MembershipMessage.INSERT_PERSON);
+                membershipModel.setReturnMessage(MembershipMessage.INSERT_PERSON_SUCCEED);
             });
         }
     }

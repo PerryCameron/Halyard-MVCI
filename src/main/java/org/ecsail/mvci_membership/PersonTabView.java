@@ -259,15 +259,15 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         return button;
     }
 
-    private Object createData(MembershipMessage message) {
-        String returnString;
-        switch (message) {
-            case CHANGE_MEMBER_TYPE -> returnString = membershipModel.getPersonComboBox().get(personDTO).getValue();
-            case MOVE_MEMBER_TO_MEMBERSHIP -> returnString = membershipModel.getPersonTextField().get(personDTO).getText();
-            default -> returnString = "NONE";
-        }
-        return returnString;
-    }
+//    private Object createData(MembershipMessage message) {
+//        String returnString;
+//        switch (message) {
+//            case CHANGE_MEMBER_TYPE -> returnString = membershipModel.getPersonComboBox().get(personDTO).getValue();
+//            case MOVE_MEMBER_TO_MEMBERSHIP -> returnString = membershipModel.getPersonTextField().get(personDTO).getText();
+//            default -> returnString = "NONE";
+//        }
+//        return returnString;
+//    }
 
     private Button createCopyButton(ObjectType.Dto type) {
         Clipboard clipboard = Clipboard.getSystemClipboard();
@@ -303,15 +303,6 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
                 "Are you sure you want to delete " + membershipModel.getSelectedPerson().getFullName() + "?",
                 "Missing Selection",
                 "You need to select a person first"};
-        // listens for a successful delete in database then removes tab
-        ChangeListener<MembershipMessage> personRemoved = ListenerFx.createSingleUseEnumListener(
-                membershipModel.returnMessageProperty(),
-                MembershipMessage.DELETE_MEMBER_FROM_DATABASE_SUCCEED, () -> {
-                    logger.info("Removing tab");
-                    membershipModel.getPeopleTabPane().getTabs().remove(this);
-        });
-        // add dialogue to make sure you want to do this
-        membershipModel.returnMessageProperty().addListener(personRemoved);
         if (DialogueFx.verifyAction(strings, membershipModel.getSelectedPerson()))
             membershipView.sendMessage().accept(MembershipMessage.DELETE_MEMBER_FROM_DATABASE);
     }

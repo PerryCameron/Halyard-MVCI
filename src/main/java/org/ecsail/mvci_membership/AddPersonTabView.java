@@ -1,7 +1,6 @@
 package org.ecsail.mvci_membership;
 
 import javafx.beans.property.Property;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -49,16 +48,16 @@ public class AddPersonTabView extends Tab implements Builder<Tab> {
         return this;
     }
 
-    private void addPerson() {
-            membershipModel.getPeople().add(personDTO);
-            Tab newTab = new PersonTabView(membershipView, new PersonDTO(personDTO)).build();
-            membershipModel.getPeopleTabPane().getTabs().add(newTab);
-            // Select the newly added tab
-            membershipModel.getPeopleTabPane().getSelectionModel().select(newTab);
-            clearPersonDTO();
-    }
+//    private void addPerson() {
+//            membershipModel.getPeople().add(personDTO);
+//            Tab newTab = new PersonTabView(membershipView, new PersonDTO(personDTO)).build();
+//            membershipModel.getPeopleTabPane().getTabs().add(newTab);
+//            // Select the newly added tab
+//            membershipModel.getPeopleTabPane().getSelectionModel().select(newTab);
+//            clearPersonDTO();
+//    }
 
-    private void clearPersonDTO() {
+    protected void clearPersonDTO() {
         personDTO.setFirstName("");
         personDTO.setLastName("");
         personDTO.setNickName("");
@@ -107,11 +106,7 @@ public class AddPersonTabView extends Tab implements Builder<Tab> {
         Button button = ButtonFx.buttonOf("Add", 60);
         button.setOnAction(event -> {
             if (isConsistent()) {
-                // sets a temporary listener, which updates UI after database has been updated
-                ChangeListener<MembershipMessage> dataLoadedListener = ListenerFx.createSingleUseEnumListener(
-                        membershipModel.returnMessageProperty(),
-                        MembershipMessage.INSERT_PERSON, () -> addPerson());
-                membershipModel.returnMessageProperty().addListener(dataLoadedListener);
+                membershipModel.setSelectedPerson(personDTO); // not sure if they are already selected here.
                 // this sends messages to insert
                 membershipView.sendMessage().accept(MembershipMessage.INSERT_PERSON);
             }

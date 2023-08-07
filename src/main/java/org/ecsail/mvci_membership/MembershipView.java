@@ -4,13 +4,16 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.Property;
 import javafx.beans.value.ChangeListener;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.util.Builder;
+import org.ecsail.dto.PersonDTO;
 import org.ecsail.widgetfx.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +42,7 @@ public class MembershipView implements Builder<Region> {
         borderPane.setCenter(creteDivider());
         borderPane.setBottom(createExtrasTabPane());
         vBox.getChildren().add(borderPane);
-        listenForData();
+        setViewListener();
         return vBox;
     }
 
@@ -49,11 +52,38 @@ public class MembershipView implements Builder<Region> {
         return region;
     }
 
-    private void listenForData() {
-        // waits for data to arrive before completing UI
-        ChangeListener<MembershipMessage> dataLoadedListener = ListenerFx.createSingleUseEnumListener(
-                membershipModel.returnMessageProperty(),
-                MembershipMessage.DATA_LOAD_SUCCEED, () -> {
+    private void setViewListener() {
+        ChangeListener<MembershipMessage> viewListener = ListenerFx.createEnumListener(() ->
+                viewMessaging(membershipModel.returnMessageProperty().get()).run());
+        membershipModel.returnMessageProperty().addListener(viewListener);
+    }
+
+    private Runnable viewMessaging(MembershipMessage message) { // when database updates, this makes UI reflect.
+        return () -> {
+            switch (message) {
+                case DATA_LOAD_SUCCEED -> launchDataDependentUI();
+                case DELETE_MEMBER_FROM_DATABASE_SUCCEED -> removeOpenPersonTab();
+                case INSERT_PERSON_SUCCEED -> addPerson();
+            }
+        };
+    }
+
+    private void addPerson() {
+        membershipModel.getPeople().add(membershipModel.getSelectedPerson());
+        Tab newTab = new PersonTabView(this, new PersonDTO(membershipModel.getSelectedPerson())).build();
+        membershipModel.getPeopleTabPane().getTabs().add(newTab);
+        // Select the newly added tab
+        membershipModel.getPeopleTabPane().getSelectionModel().select(newTab);
+        getAddPersonTab().clearPersonDTO(); // clears PersonDTO that is part of this tab.
+        selectExtraTabByName("Notes"); // open notes tab after creating entry
+    }
+
+    private void removeOpenPersonTab() {
+        int selectedIndex = membershipModel.getPeopleTabPane().getSelectionModel().getSelectedIndex();
+        membershipModel.getPeopleTabPane().getTabs().remove(selectedIndex);
+    }
+
+    private void launchDataDependentUI() {
             membershipModel.getPeople().forEach(personDTO -> membershipModel.getPeopleTabPane().getTabs()
                     .add(new PersonTabView(this, personDTO).build()));
             membershipModel.getPeopleTabPane().getTabs().add(new AddPersonTabView(this).build());
@@ -67,8 +97,6 @@ public class MembershipView implements Builder<Region> {
             membershipModel.getExtraTabPane().getTabs().add(new PropertiesTabView(this).build());
             membershipModel.getExtraTabPane().getTabs().add(new AttachmentsTabView(this).build());
             membershipModel.getExtraTabPane().getTabs().add(new AddressTabView(this).build());
-        });
-        membershipModel.returnMessageProperty().addListener(dataLoadedListener);
     }
 
     private Node createExtrasTabPane() {
@@ -121,6 +149,24 @@ public class MembershipView implements Builder<Region> {
         valueText.textProperty().bind(valueBinding);
         hBox.getChildren().addAll(labelText,valueText);
         return hBox;
+    }
+
+    protected void selectExtraTabByName(String name) {
+        for (Tab tab : membershipModel.getExtraTabPane().getTabs()) {
+            if (tab.getText().equals(name)) {
+                membershipModel.getExtraTabPane().getSelectionModel().select(tab);
+                break;
+            }
+        }
+    }
+
+    private AddPersonTabView getAddPersonTab() {
+        for (Tab tab : membershipModel.getPeopleTabPane().getTabs()) {
+            if (tab.getText().equals("Add")) {
+                return (AddPersonTabView) tab;
+            }
+        }
+        return null;
     }
 
     protected MembershipModel getMembershipModel() {
