@@ -6,5 +6,4 @@ public enum MainMessage {
     BACKUP_DATABASE,
     PRIMARY_STAGE_COMPLETE,
     SELECT_TAB
-
 }

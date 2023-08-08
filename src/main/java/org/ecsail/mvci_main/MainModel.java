@@ -16,23 +16,22 @@ public class MainModel {
     private ObservableList<BoardPositionDTO> boardPositionDTOS = FXCollections.observableArrayList();
     private final StringProperty statusLabel = new SimpleStringProperty(""); // keeper here
     private final ObjectProperty<TabPane> mainTabPane = new SimpleObjectProperty();
-//    private final BooleanProperty primaryStageComplete = new SimpleBooleanProperty(false);
     private ObservableMap<String, Timeline> LightAnimationMap = FXCollections.observableHashMap();
     private SimpleObjectProperty<Status.light> lightStatusProperty = new SimpleObjectProperty<>();
     private final ObjectProperty<MainMessage> returnMessage = new SimpleObjectProperty<>();
-    private final IntegerProperty msId = new SimpleIntegerProperty();
+    private Integer msId;
 
 
-    public int getMsId() {
-        return msId.get();
-    }
-
-    public IntegerProperty msIdProperty() {
+    public Integer getMsId() {
         return msId;
     }
 
-    public void setMsId(int msId) {
-        this.msId.set(msId);
+    public void setMsId(Integer msId) {
+        this.msId = msId;
+    }
+
+    public void setStatusLabel(String statusLabel) {
+        this.statusLabel.set(statusLabel);
     }
 
     public MainMessage getReturnMessage() {
