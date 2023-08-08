@@ -20,7 +20,20 @@ public class MainModel {
     private ObservableMap<String, Timeline> LightAnimationMap = FXCollections.observableHashMap();
     private SimpleObjectProperty<Status.light> lightStatusProperty = new SimpleObjectProperty<>();
     private final ObjectProperty<MainMessage> returnMessage = new SimpleObjectProperty<>();
+    private final IntegerProperty msId = new SimpleIntegerProperty();
 
+
+    public int getMsId() {
+        return msId.get();
+    }
+
+    public IntegerProperty msIdProperty() {
+        return msId;
+    }
+
+    public void setMsId(int msId) {
+        this.msId.set(msId);
+    }
 
     public MainMessage getReturnMessage() {
         return returnMessage.get();
@@ -46,12 +59,7 @@ public class MainModel {
         this.lightStatusProperty.set(lightStatusProperty);
     }
 
-//    public BooleanProperty primaryStageCompleteProperty() {
-//        return primaryStageComplete;
-//    }
-//    public void setPrimaryStageComplete(boolean primaryStageComplete) {
-//        this.primaryStageComplete.set(primaryStageComplete);
-//    }
+
     public ObservableList<BoardPositionDTO> getBoardPositionDTOS() {
         return boardPositionDTOS;
     }

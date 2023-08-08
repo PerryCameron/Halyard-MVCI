@@ -67,8 +67,16 @@ public class MainView implements Builder<Region> {
         return () -> {
             switch (message) {
                 case PRIMARY_STAGE_COMPLETE -> action.accept(MainMessage.CREATE_CONNECT_CONTROLLER);
+                case SELECT_TAB -> selectTab();
             }
         };
+    }
+
+    public void selectTab() {
+        mainModel.getMainTabPane().getTabs().stream()
+                .filter(tab -> mainModel.getMsId() == (int) tab.getUserData())
+                .findFirst()
+                .ifPresent(tab -> mainModel.getMainTabPane().getSelectionModel().select(tab));
     }
 
     private Node setUpBottomPane() {
@@ -163,13 +171,6 @@ public class MainView implements Builder<Region> {
         newTab.setUserData(msId);
         mainModel.getMainTabPane().getTabs().add(newTab);
         mainModel.getMainTabPane().getSelectionModel().select(newTab);
-    }
-
-    protected void selectTabByUserData(Object data) {
-            mainModel.getMainTabPane().getTabs().stream()
-                    .filter(tab -> data.equals(tab.getUserData()))
-                    .findFirst()
-                    .ifPresent(tab -> mainModel.getMainTabPane().getSelectionModel().select(tab));
     }
 
     private void updateStatusLights(Status.light status) {

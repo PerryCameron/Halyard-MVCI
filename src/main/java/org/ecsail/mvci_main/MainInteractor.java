@@ -56,20 +56,19 @@ public class MainInteractor implements ConfigFilePaths {
         mainModel.setLightStatusProperty(status);
     }
 
-    public boolean tabAlreadyOpen(int msId) {
-        return mainModel.getMainTabPane().getTabs().stream()
+    public boolean tabIsNotOpen(int msId) {  // find if tab is open
+        boolean tabIsOpen = mainModel.getMainTabPane().getTabs().stream()
                 .anyMatch(tab -> Integer.valueOf(msId).equals(tab.getUserData()));
+        if (tabIsOpen) {
+            Platform.runLater(() -> {
+                mainModel.setMsId(msId);
+                mainModel.setReturnMessage(MainMessage.SELECT_TAB);
+            });
+            return false;
+        }
+        return true;
     }
 
-    protected void selectMatchingTabByUserData(int msId) {
-        System.out.println("Tab with msId of " +msId+ " was open");
-        Platform.runLater(() -> {
-        mainModel.getMainTabPane().getTabs().stream()
-                .filter(tab -> msId == (int) tab.getUserData())
-                .findFirst()
-                .ifPresent(tab -> mainModel.getMainTabPane().getSelectionModel().select(tab));
-        });
-    }
 
 //    public void setChangeStatus(Status.light status) {
 //        Platform.runLater(() -> {
