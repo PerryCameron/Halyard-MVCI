@@ -21,6 +21,18 @@ public class DialogueFx {
         return alert;
     }
 
+    public static Alert errorAlert(String header, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText(header);
+        alert.setContentText(message);
+        tieAlertToStage(alert);
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add("css/dark/dialogue.css");
+        dialogPane.getStyleClass().add("myDialog");
+        alert.showAndWait();
+        return alert;
+    }
+
     public static void customAlertWithShow(String header, String message, Alert.AlertType type) {
         Alert alert = new Alert(type);
         alert.setHeaderText(header);

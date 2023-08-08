@@ -19,6 +19,7 @@ import org.ecsail.connection.Mail;
 import org.ecsail.custom.CustomDatePicker;
 import org.ecsail.dto.EmailDTO;
 import org.ecsail.dto.PersonDTO;
+import org.ecsail.enums.MemberType;
 import org.ecsail.interfaces.ConfigFilePaths;
 import org.ecsail.interfaces.ObjectType;
 import org.ecsail.static_tools.DateTools;
@@ -269,8 +270,30 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     }
 
     private void removeMemberFromMembership() {
-        if(userChoosesToRemovePerson())
-            membershipView.sendMessage().accept(MembershipMessage.REMOVE_MEMBER_FROM_MEMBERSHIP);
+        PersonDTO secondary = null;
+        if (userChoosesToRemovePerson()) {
+            // check if member is of type 1
+            if (membershipModel.getSelectedPerson().getMemberType() == MemberType.getCode(MemberType.PRIMARY)) {
+                // see if there is a 2 that can replace 1
+                for (PersonDTO p : membershipModel.getPeople()) {
+                    if (p.getMemberType() == MemberType.getCode(MemberType.SECONDARY))
+                        secondary = p;
+                }
+                if (secondary != null) {
+                    // message to change primary and secondary
+                    System.out.println("Removing Primary and putting secondary in primary place");
+                } else
+                    DialogueFx.errorAlert("Can not remove " + membershipModel.getSelectedPerson().getFullName()
+                            ,"Can not remove primary without secondary to replace them");
+            } else { // just change this member
+                PersonDTO p = membershipModel.getSelectedPerson();
+                p.setOldMsid(p.getMsId());
+                p.setMsId(0);
+                System.out.println("Removing this person from membership");
+            }
+        }
+
+//            membershipView.sendMessage().accept(MembershipMessage.REMOVE_MEMBER_FROM_MEMBERSHIP);
     }
 
     private void changeMemberType() {

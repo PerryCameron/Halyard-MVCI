@@ -28,6 +28,10 @@ public enum MemberType {
 				.filter(g -> g.code == memberCode)
 				.findFirst().orElse(null);
     }
+
+    public static int getCode(MemberType memberType) {
+        return memberType.getCode();
+    }
     @Override
     public String toString() {
         return this.text;

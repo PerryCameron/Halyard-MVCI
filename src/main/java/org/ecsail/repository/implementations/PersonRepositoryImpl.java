@@ -67,4 +67,5 @@ public class PersonRepositoryImpl implements PersonRepository {
         String deleteSql = "DELETE FROM person WHERE P_ID = ?";
         return template.update(deleteSql, personDTO.getpId());
     }
+
 }
