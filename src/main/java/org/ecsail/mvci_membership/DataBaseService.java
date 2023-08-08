@@ -120,17 +120,17 @@ public class DataBaseService {
         System.out.println("changeMemberType");
     }
 
-    protected void removeMemberFromMembership() {
+    protected void removeMemberFromMembership() { // REMOVE_MEMBER_FROM_MEMBERSHIP
         Platform.runLater(() -> {
-            System.out.println("remove from membership:" + membershipModel.getSelectedPerson().getFullName());
+            System.out.println("remove from membership: " + membershipModel.getSelectedPerson().getFullName());
             membershipModel.setReturnMessage(MembershipMessage.DELETE_MEMBER_FROM_DATABASE_SUCCEED);
         });
 
     }
 
-    protected void swapSecondaryToPrimary() {
+    protected void swapSecondaryToPrimary() { // MOVE_SECONDARY_TO_PRIMARY
         Platform.runLater(() -> {
-        System.out.println(("Swapping secondary to primary"));
+        System.out.println(("Swapping secondary to primary: " + membershipModel.getSelectedPerson().getFullName()));
         membershipModel.setReturnMessage(MembershipMessage.MOVE_SECONDARY_TO_PRIMARY_SUCCEED);
         });
     }

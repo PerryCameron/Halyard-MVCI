@@ -67,9 +67,6 @@ public class MembershipView implements Builder<Region> {
         };
     }
 
-    private void makeSecondaryTabPrimary() {
-    }
-
     private void addPerson() {
         membershipModel.getPeople().add(membershipModel.getSelectedPerson());
         Tab newTab = new PersonTabView(this, new PersonDTO(membershipModel.getSelectedPerson())).build();

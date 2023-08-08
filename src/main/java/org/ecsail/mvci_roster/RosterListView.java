@@ -49,10 +49,10 @@ public class RosterListView implements Builder<Region> {
 
     private Node setUpTableView() {
         VBox vBox = VBoxFx.vBoxOf(new Insets(5,5,0,10));
-        TableView tableView = new RosterTableView(rosterModel).build();
+        TableView tableView = new RosterTableView(this).build();
         rosterModel.setRosterTableView(tableView);
         vBox.getChildren().add(tableView);
-        setTabLaunchListener();
+//        setTabLaunchListener();
         return vBox;
     }
 
@@ -109,12 +109,12 @@ public class RosterListView implements Builder<Region> {
         rosterModel.selectedRadioBoxProperty().addListener(Observable -> action.accept(CHANGE_LIST_TYPE));
     }
 
-    private void setTabLaunchListener() {
-        rosterModel.selectedMembershipListProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue != null);
-            action.accept(LAUNCH_TAB);
-        });
-    }
+//    private void setTabLaunchListener() {
+//        rosterModel.selectedMembershipListProperty().addListener((observable, oldValue, newValue) -> {
+//            if(newValue != null);
+//            action.accept(LAUNCH_TAB);
+//        });
+//    }
 
     private Node setUpFieldSelectedToSearchBox() {
         return VBoxFx.vBoxOfCheckBoxes(this::setAllCheckBoxes);
@@ -171,4 +171,10 @@ public class RosterListView implements Builder<Region> {
         vBox.getChildren().add(comboBox);
         return vBox;
     }
+
+    public RosterModel getRosterModel() {
+        return rosterModel;
+    }
+
+
 }

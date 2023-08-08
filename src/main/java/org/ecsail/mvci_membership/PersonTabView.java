@@ -280,6 +280,8 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
                         .orElse(null);
                 if (secondary != null) { // message to change primary and secondary
                     membershipView.sendMessage().accept(MembershipMessage.REMOVE_MEMBER_FROM_MEMBERSHIP);
+                    secondary.setMemberType(MemberType.getCode(MemberType.PRIMARY));
+                    membershipModel.setSelectedPerson(secondary);
                     membershipView.sendMessage().accept(MembershipMessage.MOVE_SECONDARY_TO_PRIMARY);
                 } else
                     DialogueFx.errorAlert("Can not remove " + membershipModel.getSelectedPerson().getFullName()
@@ -296,18 +298,6 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     private void changeMemberType() {
         //        return MembershipMessage.CHANGE_MEMBER_TYPE;
     }
-
-
-
-//    private Object createData(MembershipMessage message) {
-//        String returnString;
-//        switch (message) {
-//            case CHANGE_MEMBER_TYPE -> returnString = membershipModel.getPersonComboBox().get(personDTO).getValue();
-//            case MOVE_MEMBER_TO_MEMBERSHIP -> returnString = membershipModel.getPersonTextField().get(personDTO).getText();
-//            default -> returnString = "NONE";
-//        }
-//        return returnString;
-//    }
 
     private Button createCopyButton(ObjectType.Dto type) {
         Clipboard clipboard = Clipboard.getSystemClipboard();

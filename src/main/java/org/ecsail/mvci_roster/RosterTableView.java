@@ -11,14 +11,20 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.Builder;
 import org.ecsail.dto.MembershipListDTO;
+import org.ecsail.dto.OfficerDTO;
 import org.ecsail.widgetfx.TableViewFx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static org.ecsail.mvci_roster.RosterMessage.LAUNCH_TAB;
+
 public class RosterTableView implements Builder<TableView> {
     private final RosterModel rosterModel;
-    public RosterTableView(RosterModel rosterModel) {
-        this.rosterModel = rosterModel;
+    private final RosterListView rosterListView;
+
+    public RosterTableView(RosterListView rosterListView) {
+        this.rosterListView = rosterListView;
+        this.rosterModel = rosterListView.getRosterModel();
     }
 
     @Override
@@ -26,12 +32,16 @@ public class RosterTableView implements Builder<TableView> {
         TableView<MembershipListDTO> tableView = TableViewFx.tableViewOf(MembershipListDTO.class);
         tableView.getColumns().addAll(create1(),create2(),create3(),create4(),create5(),create6(),create7(),create8());
         tableView.setPlaceholder(new Label(""));
+        // auto selector
+        TableView.TableViewSelectionModel<MembershipListDTO> selectionModel = tableView.getSelectionModel();
+        selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) rosterModel.setSelectedMembershipList(newSelection);
+        });
         tableView.setRowFactory(tv -> {
             TableRow<MembershipListDTO> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
-                    rosterModel.setSelectedMembershipList(null); // allows listener in RosterView to change if same membership clicked
-                    rosterModel.setSelectedMembershipList(row.getItem());
+                    rosterListView.action.accept(LAUNCH_TAB);
                 }
             });
             return row;
