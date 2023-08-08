@@ -61,9 +61,13 @@ public class MembershipView implements Builder<Region> {
             switch (message) {
                 case DATA_LOAD_SUCCEED -> launchDataDependentUI();
                 case DELETE_MEMBER_FROM_DATABASE_SUCCEED -> removePersonTab();
+                case MOVE_SECONDARY_TO_PRIMARY_SUCCEED -> changeTabName("Secondary", "Primary");
                 case INSERT_PERSON_SUCCEED -> addPerson();
             }
         };
+    }
+
+    private void makeSecondaryTabPrimary() {
     }
 
     private void addPerson() {
@@ -150,21 +154,26 @@ public class MembershipView implements Builder<Region> {
     }
 
     protected void selectExtraTabByName(String name) {
-        for (Tab tab : membershipModel.getExtraTabPane().getTabs()) {
-            if (tab.getText().equals(name)) {
-                membershipModel.getExtraTabPane().getSelectionModel().select(tab);
-                break;
-            }
-        }
+        membershipModel.getExtraTabPane().getTabs().stream()
+                .filter(tab -> tab.getText().equals(name))
+                .findFirst()
+                .ifPresent(tab -> membershipModel.getExtraTabPane().getSelectionModel().select(tab));
     }
 
+    protected void changeTabName(String name, String newName) {
+        membershipModel.getPeopleTabPane().getTabs().stream()
+                .filter(tab -> tab.getText().equals(name))
+                .findFirst()
+                .ifPresent(tab -> tab.setText(newName));
+    }
+
+
     private AddPersonTabView getAddPersonTab() {
-        for (Tab tab : membershipModel.getPeopleTabPane().getTabs()) {
-            if (tab.getText().equals("Add")) {
-                return (AddPersonTabView) tab;
-            }
-        }
-        return null;
+        return membershipModel.getPeopleTabPane().getTabs().stream()
+                .filter(tab -> "Add".equals(tab.getText()))
+                .map(tab -> (AddPersonTabView) tab)
+                .findFirst()
+                .orElse(null);
     }
 
     protected MembershipModel getMembershipModel() {

@@ -270,18 +270,17 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     }
 
     private void removeMemberFromMembership() {
-        PersonDTO secondary = null;
         if (userChoosesToRemovePerson()) {
             // check if member is of type 1
             if (membershipModel.getSelectedPerson().getMemberType() == MemberType.getCode(MemberType.PRIMARY)) {
                 // see if there is a 2 that can replace 1
-                for (PersonDTO p : membershipModel.getPeople()) {
-                    if (p.getMemberType() == MemberType.getCode(MemberType.SECONDARY))
-                        secondary = p;
-                }
-                if (secondary != null) {
-                    // message to change primary and secondary
-                    System.out.println("Removing Primary and putting secondary in primary place");
+                PersonDTO secondary = membershipModel.getPeople().stream()
+                        .filter(p -> p.getMemberType() == MemberType.SECONDARY.getCode())
+                        .findFirst()
+                        .orElse(null);
+                if (secondary != null) { // message to change primary and secondary
+                    membershipView.sendMessage().accept(MembershipMessage.REMOVE_MEMBER_FROM_MEMBERSHIP);
+                    membershipView.sendMessage().accept(MembershipMessage.MOVE_SECONDARY_TO_PRIMARY);
                 } else
                     DialogueFx.errorAlert("Can not remove " + membershipModel.getSelectedPerson().getFullName()
                             ,"Can not remove primary without secondary to replace them");
@@ -289,11 +288,9 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
                 PersonDTO p = membershipModel.getSelectedPerson();
                 p.setOldMsid(p.getMsId());
                 p.setMsId(0);
-                System.out.println("Removing this person from membership");
+                membershipView.sendMessage().accept(MembershipMessage.REMOVE_MEMBER_FROM_MEMBERSHIP);
             }
         }
-
-//            membershipView.sendMessage().accept(MembershipMessage.REMOVE_MEMBER_FROM_MEMBERSHIP);
     }
 
     private void changeMemberType() {

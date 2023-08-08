@@ -51,6 +51,7 @@ public class MembershipController extends Controller {
                     case DELETE_PHONE -> membershipInteractor.getDataBaseService().deletePhone();
                     case CHANGE_MEMBER_TYPE -> membershipInteractor.getDataBaseService().changeMemberType();
                     case REMOVE_MEMBER_FROM_MEMBERSHIP -> membershipInteractor.getDataBaseService().removeMemberFromMembership();
+                    case MOVE_SECONDARY_TO_PRIMARY -> membershipInteractor.getDataBaseService().swapSecondaryToPrimary();
                     case DELETE_MEMBER_FROM_DATABASE -> membershipInteractor.getDataBaseService().deletePerson();
                     case MOVE_MEMBER_TO_MEMBERSHIP -> membershipInteractor.getDataBaseService().movePerson();
                     case UPLOAD_MEMBER_PHOTO -> membershipInteractor.uploadMemberPhoto();

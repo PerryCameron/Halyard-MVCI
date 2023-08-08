@@ -121,24 +121,18 @@ public class DataBaseService {
     }
 
     protected void removeMemberFromMembership() {
-//        PersonDTO secondary = null;
-//        // check if member is of type 1
-//        if(membershipModel.getSelectedPerson().getMemberType() == MemberType.getCode(MemberType.PRIMARY)) {
-//            // see if there is a 2 that can replace 1
-//            for(PersonDTO p: membershipModel.getPeople()) {
-//                if(p.getMemberType() == MemberType.getCode(MemberType.SECONDARY))
-//                    secondary = p;
-//            }
-//            if(secondary != null) {
-//                // message to change primary and secondary
-//            }
-//        } else { // just change this member
-//            PersonDTO p = membershipModel.getSelectedPerson();
-//            p.setOldMsid(p.getMsId());
-//            p.setMsId(0);
-//        }
-//
-//        System.out.println("remove from membership:" + membershipModel.getSelectedPerson().getFullName());
+        Platform.runLater(() -> {
+            System.out.println("remove from membership:" + membershipModel.getSelectedPerson().getFullName());
+            membershipModel.setReturnMessage(MembershipMessage.DELETE_MEMBER_FROM_DATABASE_SUCCEED);
+        });
+
+    }
+
+    protected void swapSecondaryToPrimary() {
+        Platform.runLater(() -> {
+        System.out.println(("Swapping secondary to primary"));
+        membershipModel.setReturnMessage(MembershipMessage.MOVE_SECONDARY_TO_PRIMARY_SUCCEED);
+        });
     }
 
     protected void updateMembershipList() {
