@@ -1,13 +1,8 @@
 package org.ecsail.mvci_main;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.scene.layout.Region;
-import javafx.scene.paint.Color;
-import javafx.util.Duration;
 import org.ecsail.connection.Connections;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.fileio.FileIO;
@@ -62,17 +57,15 @@ public class MainInteractor implements ConfigFilePaths {
     }
 
     public boolean tabAlreadyOpen(int msId) {
-        // here are the tabs
-        mainModel.getMainTabPane().getTabs();
-        // find the one that matches this msId then return true
-        // else
-        return false;
+        return mainModel.getMainTabPane().getTabs().stream()
+                .anyMatch(tab -> Integer.valueOf(msId).equals(tab.getUserData()));
     }
 
-    protected void selectTabByUserData(Object data) {
+    protected void selectMatchingTabByUserData(int msId) {
+        System.out.println("Tab with msId of " +msId+ " was open");
         Platform.runLater(() -> {
         mainModel.getMainTabPane().getTabs().stream()
-                .filter(tab -> data.equals(tab.getUserData()))
+                .filter(tab -> msId == (int) tab.getUserData())
                 .findFirst()
                 .ifPresent(tab -> mainModel.getMainTabPane().getSelectionModel().select(tab));
         });

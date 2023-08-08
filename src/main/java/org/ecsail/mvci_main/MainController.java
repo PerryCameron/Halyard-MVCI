@@ -58,16 +58,13 @@ public class MainController extends Controller implements Status {
     }
 
     public void openMembershipMVCI(MembershipListDTO ml) {
-        //check for tab open with this msid
-        if(mainInteractor.tabAlreadyOpen(ml.getMsId()))
-            mainInteractor.selectTabByUserData(ml);
+        if(mainInteractor.tabAlreadyOpen(ml.getMsId())) mainInteractor.selectMatchingTabByUserData(ml.getMsId());
         else
-        // else open new tab
-        mainView.addTab("Mem " + ml.getMembershipId(), new MembershipController(this, ml).getView(), ml.getMsId());
+        mainView.addNewTab("Mem " + ml.getMembershipId(), new MembershipController(this, ml).getView(), ml.getMsId());
     }
 
     public void openBoatMVCI(BoatListDTO bl) {
-        mainView.addTab("Boat " + bl.getBoatId(), new BoatController(this, bl).getView(), 0);
+        mainView.addNewTab("Boat " + bl.getBoatId(), new BoatController(this, bl).getView(), 0);
     }
 
     public void openTab(String tabName) {
@@ -84,12 +81,12 @@ public class MainController extends Controller implements Status {
             case "Jotform" -> System.out.println("Opening Jotform");
             default -> System.out.println("Invalid input");
         }
-        mainView.addTab(tabName, region,0);
+        mainView.addNewTab(tabName, region,0);
     }
 
     public void openWelcomeMVCI() {
         mainView.closeTabs();
-        mainView.addTab("Welcome",new WelcomeController(this).getView(),0);
+        mainView.addNewTab("Welcome",new WelcomeController(this).getView(),0);
     }
 
     public void loadCommonLists() {
