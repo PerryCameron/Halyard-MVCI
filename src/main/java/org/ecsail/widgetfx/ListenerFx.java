@@ -21,12 +21,13 @@ public class ListenerFx {
         return listener[0];
     }
 
-    public static ChangeListener<MembershipMessage> createEnumListener(Runnable action) {
-        ChangeListener<MembershipMessage> listener = (observable, oldValue, newValue) -> {
+    public static <T extends Enum<T>> ChangeListener<T> createEnumListener(Runnable action) {
+        ChangeListener<T> listener = (observable, oldValue, newValue) -> {
             action.run();
         };
         return listener;
     }
+
 
 
     public static void createListener(BooleanProperty booleanProperty, Runnable action) {

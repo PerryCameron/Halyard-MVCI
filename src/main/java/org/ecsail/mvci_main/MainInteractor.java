@@ -53,12 +53,29 @@ public class MainInteractor implements ConfigFilePaths {
     }
     public void setComplete() {
         logger.info("primaryStage completed");
-        Platform.runLater(() -> mainModel.setPrimaryStageComplete(true));
+        Platform.runLater(() -> mainModel.setReturnMessage(MainMessage.PRIMARY_STAGE_COMPLETE));
     }
 
     public void setChangeStatus(Status.light status) {
         // changing this property causes a listener to react which changes the lights
         mainModel.setLightStatusProperty(status);
+    }
+
+    public boolean tabAlreadyOpen(int msId) {
+        // here are the tabs
+        mainModel.getMainTabPane().getTabs();
+        // find the one that matches this msId then return true
+        // else
+        return false;
+    }
+
+    protected void selectTabByUserData(Object data) {
+        Platform.runLater(() -> {
+        mainModel.getMainTabPane().getTabs().stream()
+                .filter(tab -> data.equals(tab.getUserData()))
+                .findFirst()
+                .ifPresent(tab -> mainModel.getMainTabPane().getSelectionModel().select(tab));
+        });
     }
 
 //    public void setChangeStatus(Status.light status) {

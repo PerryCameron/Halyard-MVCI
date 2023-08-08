@@ -4,6 +4,7 @@ package org.ecsail.mvci_main;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -21,8 +22,8 @@ import javafx.util.Builder;
 import javafx.util.Duration;
 import org.ecsail.BaseApplication;
 import org.ecsail.interfaces.Status;
-import org.ecsail.mvci_boatlist.BoatListMessage;
 import org.ecsail.widgetfx.HBoxFx;
+import org.ecsail.widgetfx.ListenerFx;
 import org.ecsail.widgetfx.MenuFx;
 import org.ecsail.widgetfx.RectangleFX;
 
@@ -34,8 +35,8 @@ import static java.lang.System.getProperty;
 
 public class MainView implements Builder<Region> {
     private final MainModel mainModel;
-    Consumer<MainMessages> action;
-    public MainView(MainModel mainModel, Consumer<MainMessages> m) {
+    Consumer<MainMessage> action;
+    public MainView(MainModel mainModel, Consumer<MainMessage> m) {
         this.mainModel = mainModel;
         action = m;
     }
@@ -48,13 +49,37 @@ public class MainView implements Builder<Region> {
         borderPane.setBottom(setUpBottomPane());
         borderPane.setCenter(setUpCenterPane());
         // closing program with x button
-        BaseApplication.primaryStage.setOnHiding(event -> action.accept(MainMessages.CLOSE_ALL_CONNECTIONS));
+        BaseApplication.primaryStage.setOnHiding(event -> action.accept(MainMessage.CLOSE_ALL_CONNECTIONS));
         Image mainIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/title_bar_icon.png")));
         BaseApplication.primaryStage.getIcons().add(mainIcon);
         BaseApplication.primaryStage.setTitle("Halyard");
-        setPrimaryStageCompleteListener();
+//        setPrimaryStageCompleteListener();
+        setViewListener();
         return borderPane;
     }
+
+    private void setViewListener() {
+        ChangeListener<MainMessage> viewListener = ListenerFx.createEnumListener(() ->
+                viewMessaging(mainModel.returnMessageProperty().get()).run());
+        mainModel.returnMessageProperty().addListener(viewListener);
+    }
+
+    private Runnable viewMessaging(MainMessage message) { // when database updates, this makes UI reflect.
+        return () -> {
+            switch (message) {
+                case PRIMARY_STAGE_COMPLETE -> action.accept(MainMessage.CREATE_CONNECT_CONTROLLER);
+//                case DELETE_MEMBER_FROM_DATABASE_SUCCEED -> removePersonTab();
+//                case MOVE_SECONDARY_TO_PRIMARY_SUCCEED -> changeTabName("Secondary", "Primary");
+//                case INSERT_PERSON_SUCCEED -> addPerson();
+            }
+        };
+    }
+
+//    private void setPrimaryStageCompleteListener() {
+//        mainModel.primaryStageCompleteProperty().addListener((observable, oldValue, newValue) -> {
+//            if(newValue) action.accept(MainMessages.CREATE_CONNECT_CONTROLLER);
+//        });
+//    }
 
     private Node setUpBottomPane() {
         HBox hBox = new HBox();
@@ -132,7 +157,7 @@ public class MainView implements Builder<Region> {
 
     private Menu createFileMenu() {
         Menu menu = new Menu("File");
-        MenuItem backUp = MenuFx.menuItemOf("Backup DataBase", x -> action.accept(MainMessages.BACKUP_DATABASE), KeyCode.N);
+        MenuItem backUp = MenuFx.menuItemOf("Backup DataBase", x -> action.accept(MainMessage.BACKUP_DATABASE), KeyCode.N);
         menu.getItems().add(backUp);
         return menu;
     }
@@ -144,17 +169,21 @@ public class MainView implements Builder<Region> {
     protected void closeTabs() {
         mainModel.getMainTabPane().getTabs().clear();
     }
-    protected void addTab(String name, Region region) {
+    protected void addTab(String name, Region region, Integer msId) {
         Tab newTab = new Tab(name, region);
+        newTab.setUserData(msId);
         mainModel.getMainTabPane().getTabs().add(newTab);
         mainModel.getMainTabPane().getSelectionModel().select(newTab);
     }
 
-    private void setPrimaryStageCompleteListener() {
-        mainModel.primaryStageCompleteProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue) action.accept(MainMessages.CREATE_CONNECT_CONTROLLER);
-        });
+    protected void selectTabByUserData(Object data) {
+            mainModel.getMainTabPane().getTabs().stream()
+                    .filter(tab -> data.equals(tab.getUserData()))
+                    .findFirst()
+                    .ifPresent(tab -> mainModel.getMainTabPane().getSelectionModel().select(tab));
     }
+
+
 
     private void updateStatusLights(Status.light status) {
         switch (status) {

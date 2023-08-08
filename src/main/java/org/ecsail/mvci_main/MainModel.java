@@ -16,11 +16,23 @@ public class MainModel {
     private ObservableList<BoardPositionDTO> boardPositionDTOS = FXCollections.observableArrayList();
     private final StringProperty statusLabel = new SimpleStringProperty(""); // keeper here
     private final ObjectProperty<TabPane> mainTabPane = new SimpleObjectProperty();
-    private final BooleanProperty primaryStageComplete = new SimpleBooleanProperty(false);
+//    private final BooleanProperty primaryStageComplete = new SimpleBooleanProperty(false);
     private ObservableMap<String, Timeline> LightAnimationMap = FXCollections.observableHashMap();
     private SimpleObjectProperty<Status.light> lightStatusProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<MainMessage> returnMessage = new SimpleObjectProperty<>();
 
 
+    public MainMessage getReturnMessage() {
+        return returnMessage.get();
+    }
+
+    public ObjectProperty<MainMessage> returnMessageProperty() {
+        return returnMessage;
+    }
+
+    public void setReturnMessage(MainMessage returnMessage) {
+        this.returnMessage.set(returnMessage);
+    }
 
     public ObservableMap<String, Timeline> getLightAnimationMap() {
         return LightAnimationMap;
@@ -34,12 +46,12 @@ public class MainModel {
         this.lightStatusProperty.set(lightStatusProperty);
     }
 
-    public BooleanProperty primaryStageCompleteProperty() {
-        return primaryStageComplete;
-    }
-    public void setPrimaryStageComplete(boolean primaryStageComplete) {
-        this.primaryStageComplete.set(primaryStageComplete);
-    }
+//    public BooleanProperty primaryStageCompleteProperty() {
+//        return primaryStageComplete;
+//    }
+//    public void setPrimaryStageComplete(boolean primaryStageComplete) {
+//        this.primaryStageComplete.set(primaryStageComplete);
+//    }
     public ObservableList<BoardPositionDTO> getBoardPositionDTOS() {
         return boardPositionDTOS;
     }
