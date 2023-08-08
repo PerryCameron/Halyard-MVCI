@@ -4,6 +4,11 @@ import javafx.scene.control.TabPane;
 
 public class TabPaneFx {
 
+    public static boolean tabIsOpen(int msId, TabPane tabPane) {
+        return tabPane.getTabs().stream()
+                .anyMatch(tab -> Integer.valueOf(msId).equals(tab.getUserData()));
+    }
+
     public static TabPane tabPaneOf(TabPane.TabClosingPolicy t, double width) {
         TabPane tabPane = new TabPane();
         tabPane.setTabClosingPolicy(t);

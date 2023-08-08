@@ -22,10 +22,7 @@ import javafx.util.Builder;
 import javafx.util.Duration;
 import org.ecsail.BaseApplication;
 import org.ecsail.interfaces.Status;
-import org.ecsail.widgetfx.HBoxFx;
-import org.ecsail.widgetfx.ListenerFx;
-import org.ecsail.widgetfx.MenuFx;
-import org.ecsail.widgetfx.RectangleFX;
+import org.ecsail.widgetfx.*;
 
 
 import java.util.Objects;
@@ -167,10 +164,15 @@ public class MainView implements Builder<Region> {
         mainModel.getMainTabPane().getTabs().clear();
     }
     protected void addNewTab(String name, Region region, int msId) {
-        Tab newTab = new Tab(name, region);
-        newTab.setUserData(msId);
-        mainModel.getMainTabPane().getTabs().add(newTab);
-        mainModel.getMainTabPane().getSelectionModel().select(newTab);
+        if (TabPaneFx.tabIsOpen(msId, mainModel.getMainTabPane())) {
+            mainModel.setMsId(msId);
+            selectTab();
+        } else {
+            Tab newTab = new Tab(name, region);
+            newTab.setUserData(msId);
+            mainModel.getMainTabPane().getTabs().add(newTab);
+            mainModel.getMainTabPane().getSelectionModel().select(newTab);
+        }
     }
 
     private void updateStatusLights(Status.light status) {

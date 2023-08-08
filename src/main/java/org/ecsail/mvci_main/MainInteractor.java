@@ -10,6 +10,7 @@ import org.ecsail.interfaces.ConfigFilePaths;
 import org.ecsail.interfaces.Status;
 import org.ecsail.repository.implementations.BoardPositionsRepositoryImpl;
 import org.ecsail.repository.interfaces.BoardPositionsRepository;
+import org.ecsail.widgetfx.TabPaneFx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,9 +58,7 @@ public class MainInteractor implements ConfigFilePaths {
     }
 
     public boolean tabIsNotOpen(int msId) {  // find if tab is open
-        boolean tabIsOpen = mainModel.getMainTabPane().getTabs().stream()
-                .anyMatch(tab -> Integer.valueOf(msId).equals(tab.getUserData()));
-        if (tabIsOpen) {
+        if (TabPaneFx.tabIsOpen(msId, mainModel.getMainTabPane())) {
             Platform.runLater(() -> {
                 mainModel.setMsId(msId);
                 mainModel.setReturnMessage(MainMessage.SELECT_TAB);
