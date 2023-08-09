@@ -20,11 +20,10 @@ public class RosterController extends Controller {
 
     private void action(RosterMessage action) {
         switch(action) {
-            case UPDATE -> System.out.println("Update?");
             case LAUNCH_TAB -> launchTab();
             case SEARCH -> search();
             case EXPORT_XPS -> exportRoster();
-            case CHANGE_LIST_TYPE -> changeListType();
+            case CHANGE_LIST_TYPE, UPDATE_YEAR -> changeListType();
         }
     }
 

@@ -109,13 +109,6 @@ public class RosterListView implements Builder<Region> {
         rosterModel.selectedRadioBoxProperty().addListener(Observable -> action.accept(CHANGE_LIST_TYPE));
     }
 
-//    private void setTabLaunchListener() {
-//        rosterModel.selectedMembershipListProperty().addListener((observable, oldValue, newValue) -> {
-//            if(newValue != null);
-//            action.accept(LAUNCH_TAB);
-//        });
-//    }
-
     private Node setUpFieldSelectedToSearchBox() {
         return VBoxFx.vBoxOfCheckBoxes(this::setAllCheckBoxes);
     }
@@ -166,7 +159,7 @@ public class RosterListView implements Builder<Region> {
         comboBox.getSelectionModel().select(1);
         comboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             rosterModel.setSelectedYear(newValue);
-//            Consumer<BoatMessage> action; TODO
+            action.accept(UPDATE_YEAR);
         });
         vBox.getChildren().add(comboBox);
         return vBox;

@@ -231,7 +231,6 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
         event.consume();
     }
 
-
     private BoatPhotosDTO getDefaultBoatPhotoDTO() {
         return boatModel.getImages().stream()
                 .filter(BoatPhotosDTO::isDefault)
