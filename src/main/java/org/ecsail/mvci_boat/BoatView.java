@@ -10,6 +10,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.TitledPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.*;
@@ -204,30 +205,32 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
             parentVBox.setVisible(true);
         });
         boatModel.dataLoadedProperty().addListener(dataLoadedListener);
-        imageView.setOnDragOver(event -> {
-            /* data is dragged over the target */
-            /* accept it only if it is not dragged from the same node
-             * and if it has a string data */
-            if (event.getGestureSource() != imageView &&
-                    event.getDragboard().hasFiles()) {
-                /* allow for both copying and moving, whatever user chooses */
-                event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-            }
-            event.consume();
-        });
-        imageView.setOnDragDropped(event -> {
-            Dragboard db = event.getDragboard();
-            boolean success = false;
-            if (db.hasFiles()) {
-                boatModel.setSelectedPath(db.getFiles().get(0).getAbsolutePath());
-                action.accept(BoatMessage.INSERT_IMAGE);
-            }
-            event.setDropCompleted(success);
-            event.consume();
-        });
+        imageView.setOnDragOver(event -> handleDragOver(event, imageView));
+        imageView.setOnDragDropped(this::handleDragDrop);
         vBox.getChildren().add(new ImageViewPane(imageView));
         return vBox;
     }
+
+    public void handleDragOver(DragEvent event, ImageView imageView) {
+        if (event.getGestureSource() != imageView && event.getDragboard().hasFiles()) {
+            /* allow for both copying and moving, whatever user chooses */
+            event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+        }
+        event.consume();
+    }
+
+    private void handleDragDrop(DragEvent event) {
+        Dragboard db = event.getDragboard();
+        boolean success = false;
+        if (db.hasFiles()) {
+            boatModel.setSelectedPath(db.getFiles().get(0).getAbsolutePath());
+            action.accept(BoatMessage.INSERT_IMAGE);
+            success = true; // you probably want to set success to true here based on the context.
+        }
+        event.setDropCompleted(success);
+        event.consume();
+    }
+
 
     private BoatPhotosDTO getDefaultBoatPhotoDTO() {
         return boatModel.getImages().stream()
