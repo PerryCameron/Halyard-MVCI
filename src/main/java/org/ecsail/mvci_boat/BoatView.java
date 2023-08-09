@@ -21,6 +21,7 @@ import org.ecsail.interfaces.ConfigFilePaths;
 import org.ecsail.widgetfx.*;
 
 import java.util.Comparator;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -210,7 +211,6 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
             if (event.getGestureSource() != imageView &&
                     event.getDragboard().hasFiles()) {
                 /* allow for both copying and moving, whatever user chooses */
-                //event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
                 event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
             }
             event.consume();
@@ -255,10 +255,16 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
     }
 
     private void setImage() {
-        String localFile = BOAT_LOCAL_PATH + boatModel.getSelectedImage().getFilename();
-        // if we don't have file on local computer then retrieve it
-        if (!FileIO.fileExists(localFile)) action.accept(BoatMessage.DOWNLOAD_IMAGE);
-        Image image = new Image("file:" + localFile);
+        Image image;
+        String localFile;
+        if(boatModel.getSelectedImage().getFilename().equals("no_image.png"))
+            image = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/no_image.png")));
+        else {
+            localFile = BOAT_LOCAL_PATH + boatModel.getSelectedImage().getFilename();
+            // if we don't have file on local computer then retrieve it
+            if (!FileIO.fileExists(localFile)) action.accept(BoatMessage.DOWNLOAD_IMAGE);
+            image = new Image("file:" + localFile);
+        }
         boatModel.getImageView().setImage(image);
     }
 
