@@ -5,5 +5,6 @@ public enum MainMessage {
     CREATE_CONNECT_CONTROLLER,
     BACKUP_DATABASE,
     PRIMARY_STAGE_COMPLETE,
-    SELECT_TAB
+    SELECT_TAB,
+    NONE
 }

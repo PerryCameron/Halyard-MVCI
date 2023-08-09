@@ -21,6 +21,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Builder;
 import javafx.util.Duration;
 import org.ecsail.BaseApplication;
+import org.ecsail.enums.TabTypes;
 import org.ecsail.interfaces.Status;
 import org.ecsail.widgetfx.*;
 
@@ -51,7 +52,18 @@ public class MainView implements Builder<Region> {
         BaseApplication.primaryStage.getIcons().add(mainIcon);
         BaseApplication.primaryStage.setTitle("Halyard");
         setViewListener();
+        tabListener();
         return borderPane;
+    }
+
+    private void tabListener() {
+        mainModel.getMainTabPane().getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldTab, newTab) -> {
+                    if (newTab != null && newTab.getUserData() != null) {
+                        System.out.println(newTab.getUserData().toString());
+                    }
+                }
+        );
     }
 
     private void setViewListener() {
@@ -74,6 +86,7 @@ public class MainView implements Builder<Region> {
                 .filter(tab -> mainModel.getMsId() == (int) tab.getUserData())
                 .findFirst()
                 .ifPresent(tab -> mainModel.getMainTabPane().getSelectionModel().select(tab));
+        mainModel.setReturnMessage(MainMessage.NONE);
     }
 
     private Node setUpBottomPane() {
@@ -163,6 +176,7 @@ public class MainView implements Builder<Region> {
     protected void closeTabs() {
         mainModel.getMainTabPane().getTabs().clear();
     }
+
     protected void addNewTab(String name, Region region, int msId) {
         if (TabPaneFx.tabIsOpen(msId, mainModel.getMainTabPane())) {
             mainModel.setMsId(msId);
@@ -183,6 +197,9 @@ public class MainView implements Builder<Region> {
             case RX_RED -> mainModel.getLightAnimationMap().get("receiveError").playFromStart();
         }
     }
+
+
+
 
 //    private static void startFileLogger() {
 //        try {

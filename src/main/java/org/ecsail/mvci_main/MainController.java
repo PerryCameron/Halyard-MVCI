@@ -74,13 +74,23 @@ public class MainController extends Controller implements Status {
             case "Board of Directors" -> System.out.println("Displaying board of directors list");
             case "Create New Membership" -> System.out.println("Creating new membership");
             case "Deposits" -> System.out.println("Displaying deposits");
-            case "Rosters" -> mainView.addNewTab(tabName, new RosterController(this).getView(),-2);
-            case "Boats" -> mainView.addNewTab(tabName, new BoatListController(this).getView(),-3);
+            case "Rosters" -> openRosterTab(tabName);
+            case "Boats" -> openBoatListTab(tabName);
             case "Notes" -> System.out.println("Displaying notes");
             case "Jotform" -> System.out.println("Opening Jotform");
             default -> System.out.println("Invalid input");
         }
 
+    }
+
+    private void openBoatListTab(String tabName) {
+        if(mainInteractor.tabIsNotOpen(-3))
+        mainView.addNewTab(tabName, new BoatListController(this).getView(),-3);
+    }
+
+    private void openRosterTab(String tabName) {
+        if(mainInteractor.tabIsNotOpen(-2))
+        mainView.addNewTab(tabName, new RosterController(this).getView(),-2);
     }
 
     public void openWelcomeMVCI() {
