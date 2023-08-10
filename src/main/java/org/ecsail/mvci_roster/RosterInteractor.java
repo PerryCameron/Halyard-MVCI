@@ -71,14 +71,16 @@ public class RosterInteractor {
         });
     }
 
-    protected void changeListType() {
+    protected void updateRoster() {
         clearMainRoster();
             Method method;
             try {
                 method = membershipRepo.getClass().getMethod(rosterModel.getSelectedRadioBox().getMethod(), Integer.class);
+                logger.info("Getting roster from data base");
                 ObservableList<MembershipListDTO> updatedRoster
                         = FXCollections.observableArrayList((List<MembershipListDTO>) method.invoke(membershipRepo, rosterModel.getSelectedYear()));
-                updateRoster(updatedRoster);
+                    logger.info("Adding roster to model");
+                    updateRoster(updatedRoster);
                 fillTableView();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -111,6 +113,14 @@ public class RosterInteractor {
             Platform.runLater(() -> rosterModel.getRadioChoices().addAll(list));
         }, rosterModel.getMainModel(), logger);
     }
+
+    protected void getRosterSettings() {
+        HandlingTools.queryForList(() -> {
+            ObservableList<DbRosterSettingsDTO> list = FXCollections.observableArrayList(settingsRepo.getSearchableListItems());
+            Platform.runLater(() -> rosterModel.setRosterSettings(list));
+        }, rosterModel.getMainModel(), logger);
+    }
+
     protected void exportRoster() {
         try {
             new Xls_roster(rosterModel);
@@ -165,12 +175,7 @@ public class RosterInteractor {
                 .orElse(false);
     }
 
-    protected void getRosterSettings() {
-        HandlingTools.queryForList(() -> {
-        ObservableList<DbRosterSettingsDTO> list = FXCollections.observableArrayList(settingsRepo.getSearchableListItems());
-        Platform.runLater(() -> rosterModel.setRosterSettings(list));
-        }, rosterModel.getMainModel(), logger);
-    }
+
 
     protected void setListsLoaded(boolean isLoaded) {
         Platform.runLater(() -> rosterModel.setListsLoaded(isLoaded));

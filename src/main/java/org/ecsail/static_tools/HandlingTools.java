@@ -14,15 +14,15 @@ public class HandlingTools {
         } catch (DataAccessException dae) {
             dae.printStackTrace();
             retrievedFromIndicator(false, model);
-            logger.error("DataAccessException: " + dae.getMessage());
+            logger.error("DataAccessException: " + dae);
         } catch (NullPointerException npe) {
             npe.printStackTrace();
             retrievedFromIndicator(false, model);
-            logger.error("NullPointerException: " + npe.getMessage());
+            logger.error("NullPointerException: " + npe);
         } catch (Exception e) {
             e.printStackTrace();
             retrievedFromIndicator(false, model);
-            logger.error("Exception: " + e.getMessage());
+            logger.error("Exception: " + e);
         }
     }
 

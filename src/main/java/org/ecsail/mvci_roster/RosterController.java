@@ -23,7 +23,7 @@ public class RosterController extends Controller {
             case LAUNCH_TAB -> launchTab();
             case SEARCH -> search();
             case EXPORT_XPS -> exportRoster();
-            case CHANGE_LIST_TYPE, UPDATE_YEAR -> changeListType();
+            case CHANGE_LIST_TYPE, UPDATE_YEAR -> updateRoster();
         }
     }
 
@@ -53,13 +53,13 @@ public class RosterController extends Controller {
         new Thread(task).start();
     }
 
-    private void changeListType() {
+    private void updateRoster() {
         mainController.setSpinnerOffset(-175,-25);
         mainController.showLoadingSpinner(true);
         Task<Void> task = new Task<>() {
             @Override
             protected Void call() {
-                rosterInteractor.changeListType();
+                rosterInteractor.updateRoster();
                 return null;
             }
         };

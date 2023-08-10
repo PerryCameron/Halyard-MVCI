@@ -20,6 +20,8 @@ import org.ecsail.static_tools.HalyardPaths;
 import org.ecsail.widgetfx.HBoxFx;
 import org.ecsail.widgetfx.ListenerFx;
 import org.ecsail.widgetfx.VBoxFx;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.function.Consumer;
 
@@ -31,6 +33,7 @@ public class RosterListView implements Builder<Region> {
 
     RosterModel rosterModel;
     Consumer<RosterMessage> action;
+    private static final Logger logger = LoggerFactory.getLogger(RosterListView.class);
     public RosterListView(RosterModel rm, Consumer<RosterMessage> a) {
         rosterModel = rm;
         action = a;
@@ -40,6 +43,7 @@ public class RosterListView implements Builder<Region> {
     public Region build() {
         BorderPane borderPane = new BorderPane();
         ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(rosterModel.listsLoadedProperty(), () -> {
+            logger.debug("Data has been loaded...");
             borderPane.setLeft(setUpLeftPane());
             borderPane.setCenter(setUpTableView());
         });
@@ -52,7 +56,6 @@ public class RosterListView implements Builder<Region> {
         TableView tableView = new RosterTableView(this).build();
         rosterModel.setRosterTableView(tableView);
         vBox.getChildren().add(tableView);
-//        setTabLaunchListener();
         return vBox;
     }
 
