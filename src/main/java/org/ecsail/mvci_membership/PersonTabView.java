@@ -166,7 +166,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         membershipModel.setSelectedPerson(personDTO);
         switch (input.split(" ")[0]) { // Split the string and get the first word
             case "Change" -> { return MembershipMessage.CHANGE_MEMBER_TYPE; }
-            case "Remove" -> { return MembershipMessage.REMOVE_MEMBER_FROM_MEMBERSHIP; }
+            case "Remove" -> { return MembershipMessage.DETACH_MEMBER_FROM_MEMBERSHIP; }
             case "Delete" -> { return MembershipMessage.DELETE_MEMBER_FROM_DATABASE; }
             case "Move" -> { return MembershipMessage.MOVE_MEMBER_TO_MEMBERSHIP; }
         }
@@ -225,8 +225,8 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
                 child.setVisible(action == MembershipMessage.MOVE_MEMBER_TO_MEMBERSHIP);
                 child.setManaged(action == MembershipMessage.MOVE_MEMBER_TO_MEMBERSHIP);
             } else if (child instanceof Region) {
-                child.setVisible(action == MembershipMessage.DELETE_MEMBER_FROM_DATABASE || action == MembershipMessage.REMOVE_MEMBER_FROM_MEMBERSHIP);
-                child.setManaged(action == MembershipMessage.DELETE_MEMBER_FROM_DATABASE || action == MembershipMessage.REMOVE_MEMBER_FROM_MEMBERSHIP);
+                child.setVisible(action == MembershipMessage.DELETE_MEMBER_FROM_DATABASE || action == MembershipMessage.DETACH_MEMBER_FROM_MEMBERSHIP);
+                child.setManaged(action == MembershipMessage.DELETE_MEMBER_FROM_DATABASE || action == MembershipMessage.DETACH_MEMBER_FROM_MEMBERSHIP);
             }
         });
     }
@@ -274,15 +274,13 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     private void removeMemberFromMembership() {
         if (personToBeRemovedIsPrimaryMember()) {
             if (membershipHasSecondaryPerson()) {
-                removePersonFromMembership(MembershipMessage.REMOVE_PRIMARY_MEMBER_FROM_MEMBERSHIP);
+                removePersonFromMembership(MembershipMessage.DETACH_PRIMARY_MEMBER_FROM_MEMBERSHIP);
                 // secondary gets changed after return message to membershipView
             } else
                 DialogueFx.errorAlert("Can not remove " + membershipModel.getSelectedPerson().getFullName()
                         , "Can not remove primary without secondary to replace them");
-        } else removePersonFromMembership(MembershipMessage.REMOVE_MEMBER_FROM_MEMBERSHIP);
+        } else removePersonFromMembership(MembershipMessage.DETACH_MEMBER_FROM_MEMBERSHIP);
     }
-
-
 
     private void removePersonFromMembership(MembershipMessage message) {
         System.out.println("removePersonFromMembership(); (PersonTabView)");

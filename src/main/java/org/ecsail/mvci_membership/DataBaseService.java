@@ -120,23 +120,26 @@ public class DataBaseService {
         System.out.println("changeMemberType");
     }
 
-    protected void removeMemberFromMembership() { // REMOVE_MEMBER_FROM_MEMBERSHIP
+    protected void detachMemberFromMembership() { // DETACH_MEMBER_FROM_MEMBERSHIP
+        if(HandlingTools.executeQuery(() ->
+                peopleRepo.update(membershipModel.getSelectedPerson()), membershipModel.getMainModel(), logger))
         Platform.runLater(() -> {
-            System.out.println("removeMemberFromMembership(): (DataBaseService) " + membershipModel.getSelectedPerson().getFullName());
             membershipModel.setReturnMessage(MembershipMessage.DELETE_MEMBER_FROM_DATABASE_SUCCEED);
         });
     }
 
-    public void removePrimaryMemberFromMembership() {
+    public void detachPrimaryMemberFromMembership() { // DETACH_PRIMARY_MEMBER_FROM_MEMBERSHIP
+        if(HandlingTools.executeQuery(() ->
+                peopleRepo.update(membershipModel.getSelectedPerson()), membershipModel.getMainModel(), logger))
         Platform.runLater(() -> {
-            System.out.println("removePrimaryMemberFromMembership(): (DataBaseService) " + membershipModel.getSelectedPerson().getFullName());
             membershipModel.setReturnMessage(MembershipMessage.DELETE_PRIMARY_MEMBER_FROM_DATABASE_SUCCEED);
         });
     }
 
     protected void swapSecondaryToPrimary() { // MOVE_SECONDARY_TO_PRIMARY
+        if(HandlingTools.executeQuery(() ->
+                peopleRepo.update(membershipModel.getSelectedPerson()), membershipModel.getMainModel(), logger))
         Platform.runLater(() -> {
-        System.out.println(("Swapping secondary to primary: (DataBasesService) " + membershipModel.getSelectedPerson().getFullName()));
         membershipModel.setReturnMessage(MembershipMessage.MOVE_SECONDARY_TO_PRIMARY_SUCCEED);
         });
     }
