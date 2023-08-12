@@ -13,6 +13,7 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.util.Builder;
 import org.ecsail.dto.PersonDTO;
+import org.ecsail.enums.MemberType;
 import org.ecsail.widgetfx.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,6 +62,7 @@ public class MembershipView implements Builder<Region> {
             switch (message) {
                 case DATA_LOAD_SUCCEED -> launchDataDependentUI();
                 case DELETE_MEMBER_FROM_DATABASE_SUCCEED -> removePersonTab();
+                case DELETE_PRIMARY_MEMBER_FROM_DATABASE_SUCCEED -> afterPrimaryMemberRemoved();
                 case MOVE_SECONDARY_TO_PRIMARY_SUCCEED -> changeTabName("Secondary", "Primary");
                 case INSERT_PERSON_SUCCEED -> addPerson();
             }
@@ -77,9 +79,31 @@ public class MembershipView implements Builder<Region> {
         selectExtraTabByName("Notes"); // open notes tab after creating entry
     }
 
+    private void afterPrimaryMemberRemoved() { // gets called with message after primary removed
+        removePersonTab();
+        moveSecondaryToPrimary();
+    }
+
+    private void moveSecondaryToPrimary() {
+        System.out.print("moveSecondaryToPrimary() (PersonTabView):");
+        membershipModel.setSelectedPerson(getSecondaryMember());
+        logger.info("Moving Secondary to Primary: " + membershipModel.getSelectedPerson().getFullName());
+        membershipModel.getSelectedPerson().setMemberType(MemberType.getCode(MemberType.PRIMARY));
+        action.accept(MembershipMessage.MOVE_SECONDARY_TO_PRIMARY);
+    }
+
+    private PersonDTO getSecondaryMember() {
+        System.out.println("getSecondaryMember()  (PersonTabView)");
+        return membershipModel.getPeople().stream()
+                .filter(p -> p.getMemberType() == MemberType.SECONDARY.getCode())
+                .findFirst()
+                .orElse(null);
+    }
+
     private void removePersonTab() {
-        int selectedIndex = membershipModel.getPeopleTabPane().getSelectionModel().getSelectedIndex();
-        membershipModel.getPeopleTabPane().getTabs().remove(selectedIndex);
+        System.out.println("removePersonTab() membershipView");
+        Tab tab = membershipModel.getPeopleTabPane().getSelectionModel().getSelectedItem();
+        membershipModel.getPeopleTabPane().getTabs().remove(tab);
     }
 
     private void launchDataDependentUI() {

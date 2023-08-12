@@ -162,6 +162,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     }
 
     private MembershipMessage mapStringToEnum(String input) {
+        System.out.println("map String To Enum");
         membershipModel.setSelectedPerson(personDTO);
         switch (input.split(" ")[0]) { // Split the string and get the first word
             case "Change" -> { return MembershipMessage.CHANGE_MEMBER_TYPE; }
@@ -215,6 +216,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     }
 
     private void changeStackPane(MembershipMessage action) {
+        System.out.println("Change Stack Pane");
         membershipModel.getStackPaneMap().get(personDTO).getChildren().forEach(child -> {
             if (child instanceof ComboBox) {
                 child.setVisible(action == MembershipMessage.CHANGE_MEMBER_TYPE);
@@ -247,7 +249,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
             RadioButton rb = membershipModel.getSelectedRadioForPerson().get(personDTO);
             switch (rb.getText().split(" ")[0]) { // Split the string and get the first word
                 case "Change" -> changeMemberType();
-                case "Remove" -> removeMemberFromMembership();
+                case "Remove" -> { if (userChoosesToRemovePerson()) removeMemberFromMembership(); }
                 case "Delete" -> deletePerson();
                 case "Move" -> movePersonToMembership();
             }
@@ -270,29 +272,37 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     }
 
     private void removeMemberFromMembership() {
-        if (userChoosesToRemovePerson()) {
-            // check if member is of type 1
-            if (membershipModel.getSelectedPerson().getMemberType() == MemberType.getCode(MemberType.PRIMARY)) {
-                // see if there is a 2 that can replace 1
-                PersonDTO secondary = membershipModel.getPeople().stream()
-                        .filter(p -> p.getMemberType() == MemberType.SECONDARY.getCode())
-                        .findFirst()
-                        .orElse(null);
-                if (secondary != null) { // message to change primary and secondary
-                    membershipView.sendMessage().accept(MembershipMessage.REMOVE_MEMBER_FROM_MEMBERSHIP);
-                    secondary.setMemberType(MemberType.getCode(MemberType.PRIMARY));
-                    membershipModel.setSelectedPerson(secondary);
-                    membershipView.sendMessage().accept(MembershipMessage.MOVE_SECONDARY_TO_PRIMARY);
-                } else
-                    DialogueFx.errorAlert("Can not remove " + membershipModel.getSelectedPerson().getFullName()
-                            ,"Can not remove primary without secondary to replace them");
-            } else { // just change this member
-                PersonDTO p = membershipModel.getSelectedPerson();
-                p.setOldMsid(p.getMsId());
-                p.setMsId(0);
-                membershipView.sendMessage().accept(MembershipMessage.REMOVE_MEMBER_FROM_MEMBERSHIP);
-            }
-        }
+        if (personToBeRemovedIsPrimaryMember()) {
+            if (membershipHasSecondaryPerson()) {
+                removePersonFromMembership(MembershipMessage.REMOVE_PRIMARY_MEMBER_FROM_MEMBERSHIP);
+                // secondary gets changed after return message to membershipView
+            } else
+                DialogueFx.errorAlert("Can not remove " + membershipModel.getSelectedPerson().getFullName()
+                        , "Can not remove primary without secondary to replace them");
+        } else removePersonFromMembership(MembershipMessage.REMOVE_MEMBER_FROM_MEMBERSHIP);
+    }
+
+
+
+    private void removePersonFromMembership(MembershipMessage message) {
+        System.out.println("removePersonFromMembership(); (PersonTabView)");
+        logger.info("Removing " + personDTO.getFullName());
+        personDTO.setOldMsid(personDTO.getMsId());
+        personDTO.setMsId(0);
+        personDTO.setMemberType(0);
+        membershipModel.setSelectedPerson(personDTO);
+        membershipView.sendMessage().accept(message);
+    }
+
+    private boolean membershipHasSecondaryPerson() {
+        System.out.println("membershipHasSecondaryPerson() (PersonTabView)");
+        return membershipModel.getPeople().stream()
+                .anyMatch(p -> p.getMemberType() == MemberType.SECONDARY.getCode());
+    }
+
+    private boolean personToBeRemovedIsPrimaryMember() {
+        System.out.println("personToBeRemovedIsPrimaryMember() (PersonTabView)");
+        return membershipModel.getSelectedPerson().getMemberType() == MemberType.getCode(MemberType.PRIMARY);
     }
 
     private void changeMemberType() {

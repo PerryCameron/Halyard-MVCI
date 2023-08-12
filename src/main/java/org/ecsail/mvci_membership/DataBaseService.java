@@ -122,20 +122,26 @@ public class DataBaseService {
 
     protected void removeMemberFromMembership() { // REMOVE_MEMBER_FROM_MEMBERSHIP
         Platform.runLater(() -> {
-            System.out.println("remove from membership: " + membershipModel.getSelectedPerson().getFullName());
+            System.out.println("removeMemberFromMembership(): (DataBaseService) " + membershipModel.getSelectedPerson().getFullName());
             membershipModel.setReturnMessage(MembershipMessage.DELETE_MEMBER_FROM_DATABASE_SUCCEED);
         });
+    }
 
+    public void removePrimaryMemberFromMembership() {
+        Platform.runLater(() -> {
+            System.out.println("removePrimaryMemberFromMembership(): (DataBaseService) " + membershipModel.getSelectedPerson().getFullName());
+            membershipModel.setReturnMessage(MembershipMessage.DELETE_PRIMARY_MEMBER_FROM_DATABASE_SUCCEED);
+        });
     }
 
     protected void swapSecondaryToPrimary() { // MOVE_SECONDARY_TO_PRIMARY
         Platform.runLater(() -> {
-        System.out.println(("Swapping secondary to primary: " + membershipModel.getSelectedPerson().getFullName()));
+        System.out.println(("Swapping secondary to primary: (DataBasesService) " + membershipModel.getSelectedPerson().getFullName()));
         membershipModel.setReturnMessage(MembershipMessage.MOVE_SECONDARY_TO_PRIMARY_SUCCEED);
         });
     }
 
-    protected void updateMembershipList() {
+    protected void updateMembershipList() { // UPDATE_MEMBERSHIP_LIST
         HandlingTools.executeQuery(() ->
                 membershipRepo.updateJoinDate(membershipModel.getMembership()), membershipModel.getMainModel(), logger);
     }
@@ -350,4 +356,6 @@ public class DataBaseService {
             });
         }
     }
+
+
 }
