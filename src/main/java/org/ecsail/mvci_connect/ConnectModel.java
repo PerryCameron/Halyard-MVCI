@@ -19,16 +19,55 @@ public class ConnectModel {
     private final DoubleProperty centerPaneHeight = new SimpleDoubleProperty();
     private final ObservableMap<String, HBox> hBoxMap = FXCollections.observableHashMap();
     private final ObservableMap<String, VBox> vBoxMap = FXCollections.observableHashMap();
-    private final StringProperty user = new SimpleStringProperty();
-    private final StringProperty pass = new SimpleStringProperty();
+    private final StringProperty sqlUser = new SimpleStringProperty();
+    private final StringProperty sqlPass = new SimpleStringProperty();
     private final StringProperty host = new SimpleStringProperty();
     private final IntegerProperty localSqlPort = new SimpleIntegerProperty();
+    private final IntegerProperty sshPort = new SimpleIntegerProperty();
     private final BooleanProperty sshUsed = new SimpleBooleanProperty();
     private final BooleanProperty isDefault = new SimpleBooleanProperty();
     private final StringProperty sshUser = new SimpleStringProperty();
     private final StringProperty knownHosts = new SimpleStringProperty();
+    private final StringProperty privateKey = new SimpleStringProperty();
+    private final StringProperty database = new SimpleStringProperty();
     private final StringProperty statusBarText = new SimpleStringProperty();
 
+
+    public int getSshPort() {
+        return sshPort.get();
+    }
+
+    public IntegerProperty sshPortProperty() {
+        return sshPort;
+    }
+
+    public void setSshPort(int sshPort) {
+        this.sshPort.set(sshPort);
+    }
+
+    public String getPrivateKey() {
+        return privateKey.get();
+    }
+
+    public StringProperty privateKeyProperty() {
+        return privateKey;
+    }
+
+    public void setPrivateKey(String privateKey) {
+        this.privateKey.set(privateKey);
+    }
+
+    public String getDatabase() {
+        return database.get();
+    }
+
+    public StringProperty databaseProperty() {
+        return database;
+    }
+
+    public void setDatabase(String database) {
+        this.database.set(database);
+    }
 
     public Stage getConnectStage() {
         return connectStage;
@@ -86,7 +125,7 @@ public class ConnectModel {
         this.sshUser.set(sshUser);
     }
 
-    public boolean isSshUsed() {
+    public boolean sshUsed() {
         return sshUsed.get();
     }
 
@@ -98,28 +137,28 @@ public class ConnectModel {
         this.sshUsed.set(sshUsed);
     }
 
-    public String getUser() {
-        return user.get();
+    public String getSqlUser() {
+        return sqlUser.get();
     }
 
-    public StringProperty userProperty() {
-        return user;
+    public StringProperty sqlUserProperty() {
+        return sqlUser;
     }
 
-    public void setUser(String user) {
-        this.user.set(user);
+    public void setSqlUser(String sqlUser) {
+        this.sqlUser.set(sqlUser);
     }
 
-    public String getPass() {
-        return pass.get();
+    public String getSqlPass() {
+        return sqlPass.get();
     }
 
-    public StringProperty passProperty() {
-        return pass;
+    public StringProperty sqlPassProperty() {
+        return sqlPass;
     }
 
-    public void setPass(String pass) {
-        this.pass.set(pass);
+    public void setSqlPass(String sqlPass) {
+        this.sqlPass.set(sqlPass);
     }
 
     public String getHost() {

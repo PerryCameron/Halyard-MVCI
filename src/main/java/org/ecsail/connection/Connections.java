@@ -32,7 +32,7 @@ public class Connections {
             logger.info("Server Alive interval: " + sshConnection.getSession().getServerAliveInterval());
         } else
             logger.info("SSH connection is not being used");
-        if(createDataBaseConnection(connectModel.getUser(), connectModel.getPass(), loopback, connectModel.getLocalSqlPort())) {
+        if(createDataBaseConnection(connectModel.getSqlUser(), connectModel.getSqlPass(), loopback, connectModel.getLocalSqlPort())) {
             this.scp = new Sftp(sshConnection);
         } else {
             logger.error("Can not connect to SQL server");
