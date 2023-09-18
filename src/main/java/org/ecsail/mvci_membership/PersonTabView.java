@@ -272,8 +272,8 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     }
 
     private void removeMemberFromMembership() {
-        if (personToBeRemovedIsPrimaryMember()) {
-            if (membershipHasSecondaryPerson()) {
+        if (isMemberType(MemberType.PRIMARY)) {
+            if (hasMemberType(MemberType.SECONDARY)) {
                 removePersonFromMembership(MembershipMessage.DETACH_PRIMARY_MEMBER_FROM_MEMBERSHIP);
                 // secondary gets changed after return message to membershipView
             } else
@@ -292,19 +292,74 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         membershipView.sendMessage().accept(message);
     }
 
-    private boolean membershipHasSecondaryPerson() {
-        System.out.println("membershipHasSecondaryPerson() (PersonTabView)");
-        return membershipModel.getPeople().stream()
-                .anyMatch(p -> p.getMemberType() == MemberType.SECONDARY.getCode());
-    }
+//    private boolean membershipHasSecondaryPerson() {
+//        System.out.println("membershipHasSecondaryPerson() (PersonTabView)");
+//        return membershipModel.getPeople().stream()
+//                .anyMatch(p -> p.getMemberType() == MemberType.SECONDARY.getCode());
+//    }
 
-    private boolean personToBeRemovedIsPrimaryMember() {
-        System.out.println("personToBeRemovedIsPrimaryMember() (PersonTabView)");
-        return membershipModel.getSelectedPerson().getMemberType() == MemberType.getCode(MemberType.PRIMARY);
+    private boolean isMemberType(MemberType memberType) {
+        return membershipModel.getSelectedPerson().getMemberType() == MemberType.getCode(memberType);
     }
 
     private void changeMemberType() {
+        String type = membershipModel.getPersonComboBox().get(personDTO).getValue();
+        if(isMemberType(MemberType.PRIMARY)) {
+            changePrimaryToType(type);
+        } else if (isMemberType(MemberType.SECONDARY)) {
+            changeSecondaryToType(type);
+        } else {
+            changeDependentToType(type);
+        }
         //        return MembershipMessage.CHANGE_MEMBER_TYPE;
+    }
+
+    private void changeDependentToType(String type) {
+        switch (type) {
+            case "Primary" -> {
+                if(hasMemberType(MemberType.PRIMARY)) System.out.println("Swap primary and dependent");
+            }
+            case "Secondary" -> {
+                if(hasMemberType(MemberType.SECONDARY)) System.out.println("Swap secondary and dependent");
+                else System.out.println("Make Dependent secondary");
+            }
+        }
+    }
+
+    private void changeSecondaryToType(String type) {
+        switch (type) {
+            case "Primary" -> {
+                if(hasMemberType(MemberType.PRIMARY)) System.out.println("Swap primary and secondary");
+            }
+            case "Dependent" -> {
+                System.out.println("make secondary a dependant");
+            }
+        }
+    }
+
+    private void changePrimaryToType(String type) {
+        switch (type) {
+            case "Secondary" -> {
+                if(hasMemberType(MemberType.SECONDARY)) System.out.println("Swap primary and secondary");
+            }
+            case "Dependent" -> {
+                if(hasMemberType(MemberType.SECONDARY)) {
+                    System.out.println("make primary dependant, make secondary primary");
+                } else {
+                    DialogueFx.errorAlert("Can not move " + membershipModel.getSelectedPerson().getFullName()
+                            , "Can not move primary without secondary to replace them");
+                }
+            }
+        }
+    }
+
+    private boolean hasMemberType(MemberType memberType) {
+        return membershipModel.getPeople().stream()
+                .anyMatch(p -> p.getMemberType() == MemberType.getCode(memberType));
+    }
+
+    private boolean hasOtherMembers() {
+        return membershipModel.getPeople().size() > 1;
     }
 
     private Button createCopyButton(ObjectType.Dto type) {

@@ -12,28 +12,29 @@ public class LoginDTO implements Serializable {
 	private int remoteSqlPort;
 	private int sshPort;
 	private String host;
-	private String user;
-	private String passwd;
+	private String sqlUser;
+	private String sqlPasswd;
 	private String sshUser;
 	private String sshPass;
+	private String database;
 	private String knownHostsFile;
-	private String publicKeyFile;
+	private String privateKeyFile;
 	private boolean isDefault;
 	private boolean sshForward;
 
-	public LoginDTO(int localSqlPort, int remoteSqlPort, int sshPort, String host, String user, String passwd,
-                    String sshUser, String sshPass, String knownHostsFile, String publicKeyFile, boolean isDefault,
-                    boolean sshForward) {
+
+	public LoginDTO(int localSqlPort, int remoteSqlPort, int sshPort, String host, String sqlUser, String sqlPasswd, String sshUser, String sshPass, String database, String knownHostsFile, String privateKeyFile, boolean isDefault, boolean sshForward) {
 		this.localSqlPort = localSqlPort;
 		this.remoteSqlPort = remoteSqlPort;
 		this.sshPort = sshPort;
 		this.host = host;
-		this.user = user;
-		this.passwd = passwd;
+		this.sqlUser = sqlUser;
+		this.sqlPasswd = sqlPasswd;
 		this.sshUser = sshUser;
 		this.sshPass = sshPass;
+		this.database = database;
 		this.knownHostsFile = knownHostsFile;
-		this.publicKeyFile = publicKeyFile;
+		this.privateKeyFile = privateKeyFile;
 		this.isDefault = isDefault;
 		this.sshForward = sshForward;
 	}
@@ -70,20 +71,20 @@ public class LoginDTO implements Serializable {
 		this.host = host;
 	}
 
-	public String getUser() {
-		return user;
+	public String getSqlUser() {
+		return sqlUser;
 	}
 
-	public void setUser(String user) {
-		this.user = user;
+	public void setSqlUser(String sqlUser) {
+		this.sqlUser = sqlUser;
 	}
 
-	public String getPasswd() {
-		return passwd;
+	public String getSqlPasswd() {
+		return sqlPasswd;
 	}
 
-	public void setPasswd(String passwd) {
-		this.passwd = passwd;
+	public void setSqlPasswd(String sqlPasswd) {
+		this.sqlPasswd = sqlPasswd;
 	}
 
 	public String getSshUser() {
@@ -102,6 +103,14 @@ public class LoginDTO implements Serializable {
 		this.sshPass = sshPass;
 	}
 
+	public String getDatabase() {
+		return database;
+	}
+
+	public void setDatabase(String database) {
+		this.database = database;
+	}
+
 	public String getKnownHostsFile() {
 		return knownHostsFile;
 	}
@@ -110,12 +119,12 @@ public class LoginDTO implements Serializable {
 		this.knownHostsFile = knownHostsFile;
 	}
 
-	public String getPublicKeyFile() {
-		return publicKeyFile;
+	public String getPrivateKeyFile() {
+		return privateKeyFile;
 	}
 
-	public void setPublicKeyFile(String publicKeyFile) {
-		this.publicKeyFile = publicKeyFile;
+	public void setPrivateKeyFile(String privateKeyFile) {
+		this.privateKeyFile = privateKeyFile;
 	}
 
 	public boolean isDefault() {
@@ -141,12 +150,13 @@ public class LoginDTO implements Serializable {
 				", remoteSqlPort=" + remoteSqlPort +
 				", sshPort=" + sshPort +
 				", host='" + host + '\'' +
-				", user='" + user + '\'' +
-				", passwd='" + passwd + '\'' +
+				", sqlUser='" + sqlUser + '\'' +
+				", sqlPasswd='" + sqlPasswd + '\'' +
 				", sshUser='" + sshUser + '\'' +
 				", sshPass='" + sshPass + '\'' +
+				", database='" + database + '\'' +
 				", knownHostsFile='" + knownHostsFile + '\'' +
-				", publicKeyFile='" + publicKeyFile + '\'' +
+				", privateKeyFile='" + privateKeyFile + '\'' +
 				", isDefault=" + isDefault +
 				", sshForward=" + sshForward +
 				'}';

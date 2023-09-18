@@ -254,8 +254,8 @@ public class ConnectView implements Builder<Region> {
 
     private void updateFields() {
         LoginDTO newValue = connectModel.getComboBox().getValue();
-        connectModel.setUser(newValue.getUser());
-        connectModel.setPass(newValue.getPasswd());
+        connectModel.setUser(newValue.getSqlUser());
+        connectModel.setPass(newValue.getSqlPasswd());
         connectModel.setHost(newValue.getHost());
         connectModel.setSshUsed(newValue.isSshForward());
         connectModel.setLocalSqlPort(newValue.getLocalSqlPort());
@@ -265,8 +265,8 @@ public class ConnectView implements Builder<Region> {
     }
 
     private void updateSelectedLogin() {
-        connectModel.getComboBox().getValue().setUser(connectModel.getUser());
-        connectModel.getComboBox().getValue().setPasswd(connectModel.getPass());
+        connectModel.getComboBox().getValue().setSqlUser(connectModel.getUser());
+        connectModel.getComboBox().getValue().setSqlPasswd(connectModel.getPass());
         connectModel.getComboBox().getValue().setHost(connectModel.getHost());
         connectModel.getComboBox().getValue().setSshForward(connectModel.isSshUsed());
         connectModel.getComboBox().getValue().setSshUser(connectModel.getSshUser());

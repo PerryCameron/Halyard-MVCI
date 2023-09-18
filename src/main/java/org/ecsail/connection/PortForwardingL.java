@@ -23,7 +23,7 @@ public class PortForwardingL {
         logger.info("Connecting with public key..");
         try {
             jsch.setKnownHosts(login.getKnownHostsFile());
-            jsch.addIdentity(login.getPublicKeyFile());
+            jsch.addIdentity(login.getPrivateKeyFile());
             HostKeyRepository hkr = jsch.getHostKeyRepository();
             HostKey[] hks = hkr.getHostKey();
             if (hks != null) {
