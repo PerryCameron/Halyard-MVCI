@@ -116,6 +116,7 @@ public class ConnectView implements Builder<Region> {
         comboBox.valueProperty().addListener((Observable, oldValue, newValue) -> {
             if(newValue != null) updateFields();
             else connectModel.getComboBox().getSelectionModel().select(connectModel.getComboBox().getItems().size() - 1);
+            System.out.println(connectModel.getComboBox().getValue());
         });
         return hBox;
     }

@@ -51,10 +51,6 @@ public class LoginDTO implements Serializable {
 		return remoteSqlPort;
 	}
 
-	public void setRemoteSqlPort(int remoteSqlPort) {
-		this.remoteSqlPort = remoteSqlPort;
-	}
-
 	public int getSshPort() {
 		return sshPort;
 	}
@@ -94,15 +90,7 @@ public class LoginDTO implements Serializable {
 	public void setSshUser(String sshUser) {
 		this.sshUser = sshUser;
 	}
-
-	public String getSshPass() {
-		return sshPass;
-	}
-
-	public void setSshPass(String sshPass) {
-		this.sshPass = sshPass;
-	}
-
+	
 	public String getDatabase() {
 		return database;
 	}

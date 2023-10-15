@@ -32,7 +32,13 @@ public class Connections {
             logger.info("Server Alive interval: " + sshConnection.getSession().getServerAliveInterval());
         } else
             logger.info("SSH connection is not being used");
-        if(createDataBaseConnection(connectModel.getSqlUser(), connectModel.getSqlPass(), loopback, connectModel.getLocalSqlPort())) {
+        if(createDataBaseConnection(
+                connectModel.getSqlUser(),
+                connectModel.getSqlPass(),
+                loopback,
+                connectModel.getLocalSqlPort(),
+                connectModel.getDatabase()))
+        {
             this.scp = new Sftp(sshConnection);
         } else {
             logger.error("Can not connect to SQL server");
@@ -41,10 +47,10 @@ public class Connections {
         return false;
     }
 
-    protected Boolean createDataBaseConnection(String user, String password, String ip, int port) {
+    protected Boolean createDataBaseConnection(String user, String password, String ip, int port, String database) {
         boolean successful = false;
         try {
-            createDataSource(ip,port,user,password);
+            createDataSource(ip,port,user,password,database);
             setSqlConnection(dataSource.getConnection());
             successful = true;
             logger.info("SQL Connection established  - " + dataSource);
@@ -54,10 +60,10 @@ public class Connections {
         return successful;
     }
 
-    public void createDataSource(String ip, int port, String user, String pass) throws ClassNotFoundException {
+    public void createDataSource(String ip, int port, String user, String pass, String database) throws ClassNotFoundException {
         Class.forName("com.mysql.cj.jdbc.Driver");
         dataSource = new DriverManagerDataSource(
-                "jdbc:mysql://" + ip + ":" + port + "/ECSC_SQL?autoReconnect=true&useSSL=false&serverTimezone=UTC",
+                "jdbc:mysql://" + ip + ":" + port + "/" + database + "?autoReconnect=true&useSSL=false&serverTimezone=UTC",
                 user,
                 pass
         );
