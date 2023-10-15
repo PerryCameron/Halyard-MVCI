@@ -29,12 +29,12 @@ import static org.ecsail.mvci_roster.RosterMessage.*;
 
 
 
-public class RosterListView implements Builder<Region> {
+public class RosterView implements Builder<Region> {
 
     RosterModel rosterModel;
     Consumer<RosterMessage> action;
-    private static final Logger logger = LoggerFactory.getLogger(RosterListView.class);
-    public RosterListView(RosterModel rm, Consumer<RosterMessage> a) {
+    private static final Logger logger = LoggerFactory.getLogger(RosterView.class);
+    public RosterView(RosterModel rm, Consumer<RosterMessage> a) {
         rosterModel = rm;
         action = a;
     }

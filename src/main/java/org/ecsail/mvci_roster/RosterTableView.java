@@ -11,20 +11,17 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.Builder;
 import org.ecsail.dto.MembershipListDTO;
-import org.ecsail.dto.OfficerDTO;
 import org.ecsail.widgetfx.TableViewFx;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static org.ecsail.mvci_roster.RosterMessage.LAUNCH_TAB;
 
 public class RosterTableView implements Builder<TableView> {
     private final RosterModel rosterModel;
-    private final RosterListView rosterListView;
+    private final RosterView rosterView;
 
-    public RosterTableView(RosterListView rosterListView) {
-        this.rosterListView = rosterListView;
-        this.rosterModel = rosterListView.getRosterModel();
+    public RosterTableView(RosterView rosterView) {
+        this.rosterView = rosterView;
+        this.rosterModel = rosterView.getRosterModel();
     }
 
     @Override
@@ -41,7 +38,7 @@ public class RosterTableView implements Builder<TableView> {
             TableRow<MembershipListDTO> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
-                    rosterListView.action.accept(LAUNCH_TAB);
+                    rosterView.action.accept(LAUNCH_TAB);
                 }
             });
             return row;
