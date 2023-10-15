@@ -109,7 +109,10 @@ public class RosterView implements Builder<Region> {
         return vBox;
     }
     protected void setRadioListener() {
-        rosterModel.selectedRadioBoxProperty().addListener(Observable -> action.accept(CHANGE_LIST_TYPE));
+        // this is the one being called on launch of tab
+        rosterModel.selectedRadioBoxProperty().addListener(Observable -> {
+            action.accept(CHANGE_LIST_TYPE);
+        });
     }
 
     private Node setUpFieldSelectedToSearchBox() {

@@ -72,6 +72,7 @@ public class RosterInteractor {
     }
 
     protected void updateRoster() {
+        // I believe problem with tableview not refreshing on first open is in here
         clearMainRoster();
             Method method;
             try {
@@ -79,7 +80,6 @@ public class RosterInteractor {
                 logger.info("Getting roster from data base");
                 ObservableList<MembershipListDTO> updatedRoster
                         = FXCollections.observableArrayList((List<MembershipListDTO>) method.invoke(membershipRepo, rosterModel.getSelectedYear()));
-                    logger.info("Adding roster to model");
                     updateRoster(updatedRoster);
                 fillTableView();
             } catch (Exception e) {
@@ -100,10 +100,14 @@ public class RosterInteractor {
     }
 
     private void sortRoster() {
-        Platform.runLater(() -> rosterModel.getRosters().sort(Comparator.comparing(MembershipListDTO::getMembershipId)));
+        Platform.runLater(() -> {
+            rosterModel.getRosters().sort(Comparator.comparing(MembershipListDTO::getMembershipId));
+            rosterModel.getRosterTableView().refresh(); // this is a hack because sometimes it won't refresh
+        });
     }
 
     private void updateRoster(ObservableList<MembershipListDTO> updatedRoster) {
+        logger.info("Adding roster to model");
         Platform.runLater(() -> rosterModel.getRosters().setAll(setSlipsForRoster(updatedRoster)));
     }
 
