@@ -1,11 +1,17 @@
 package org.ecsail.mvci_membership;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
+import org.apache.commons.compress.compressors.zstandard.ZstdCompressorOutputStream;
+import org.ecsail.widgetfx.ListenerFx;
 import org.ecsail.widgetfx.VBoxFx;
 
 public class InvoiceListView implements Builder<Tab> {
@@ -25,6 +31,8 @@ public class InvoiceListView implements Builder<Tab> {
         VBox.setVgrow(borderPane, Priority.ALWAYS); // causes slip tab to grow to fit vertical space
         vBox.getChildren().add(borderPane);
         tab.setContent(vBox);
+        // Create a listener for tab selection change
+        ListenerFx.createSingleUseTabListener(tab, () -> System.out.println("fire") );
         return tab;
     }
 }
