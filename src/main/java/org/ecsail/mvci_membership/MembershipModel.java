@@ -52,7 +52,20 @@ public class MembershipModel {
     protected SimpleObjectProperty<PhoneDTO> selectedPhone = new SimpleObjectProperty<>();
     protected SimpleObjectProperty<InvoiceDTO> selectedInvoice = new SimpleObjectProperty<>();
     protected StringProperty selectedString = new SimpleStringProperty("");
+    private SimpleIntegerProperty selectedInvoiceCreateYear = new SimpleIntegerProperty(0);
 
+
+    public int getSelectedInvoiceCreateYear() {
+        return selectedInvoiceCreateYear.get();
+    }
+
+    public SimpleIntegerProperty selectedInvoiceCreateYearProperty() {
+        return selectedInvoiceCreateYear;
+    }
+
+    public void setSelectedInvoiceCreateYear(int selectedInvoiceCreateYear) {
+        this.selectedInvoiceCreateYear.set(selectedInvoiceCreateYear);
+    }
 
     public TableView<InvoiceDTO> getInvoiceListTableView() {
         return invoiceListTableView.get();

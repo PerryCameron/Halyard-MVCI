@@ -378,10 +378,14 @@ public class DataBaseService {
 
 
     public void insertInvoice() {
-        System.out.println("Inserting invoice");
+        System.out.println("Inserting invoice for year " + membershipModel.getSelectedInvoiceCreateYear());
     }
 
     public void deleteInvoice() {
-        System.out.println("Deleting Invoice");
+        System.out.println("Deleting Invoice" + membershipModel.getSelectedInvoice().toString());
+    }
+
+    public void loadInvoice() {
+        System.out.println("loading invoice=" + membershipModel.getSelectedInvoice().toString());
     }
 }

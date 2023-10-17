@@ -9,6 +9,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.*;
 import javafx.util.Builder;
 import org.apache.commons.compress.compressors.zstandard.ZstdCompressorOutputStream;
@@ -69,13 +70,17 @@ public class InvoiceListView implements Builder<Tab> {
     }
 
     private Node getYear() {
-        ComboBox comboBox = new ComboBox<Integer>();
+        ComboBox<Integer> comboBox = new ComboBox<>();
         comboBox.setPrefWidth(80);
-        for (int i = Integer.parseInt(Year.now().toString()) + 1; i > 1969; i--) comboBox.getItems().add(i);
-        comboBox.setValue(membershipView.getMembershipModel().getMembership().getSelectedYear()); // sets year for combo box to record year
+        int currentYear = Year.now().getValue();
+        for (int year = currentYear + 1; year > 1969; year--) comboBox.getItems().add(year);
+        int selectedYear = membershipView.getMembershipModel().getMembership().getSelectedYear();
+        comboBox.setValue(selectedYear); // sets year for combo box to record year
+        comboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            membershipView.getMembershipModel().setSelectedInvoiceCreateYear(newValue);
+        });
         return comboBox;
     }
-
 
     private Node addTable() {
         HBox hBox = HBoxFx.hBoxOf(new Insets(5,5,5,5));
@@ -84,6 +89,11 @@ public class InvoiceListView implements Builder<Tab> {
         TableView.TableViewSelectionModel<InvoiceDTO> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) membershipView.getMembershipModel().setSelectedInvoice(newSelection);
+        });
+        tableView.setOnMouseClicked(event -> {
+            if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
+                membershipView.sendMessage().accept(MembershipMessage.LOAD_INVOICE);
+            }
         });
         membershipView.getMembershipModel().setInvoiceListTableView(tableView);
         hBox.getChildren().add(tableView);

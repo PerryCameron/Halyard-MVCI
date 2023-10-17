@@ -47,5 +47,6 @@ public enum MembershipMessage {
     SET_WAIT_LIST,
     EMAIL_IS_PRIMARY_USE,
     LOAD_INVOICES,
+    LOAD_INVOICE,
     LOAD_IDS;
 }
