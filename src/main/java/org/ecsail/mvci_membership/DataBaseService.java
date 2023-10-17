@@ -47,9 +47,9 @@ public class DataBaseService {
         invoiceRepo = new InvoiceRepositoryImpl(dataSource);
     }
 
-    public void getPersonLists(MembershipListDTO ml) { // not on FX thread because lists added before UI is launched
+    public void getPersonLists() { // not on FX thread because lists added before UI is launched
         HandlingTools.queryForList(() -> {
-            List<PersonDTO> personDTOS = peopleRepo.getActivePeopleByMsId(ml.getMsId());
+            List<PersonDTO> personDTOS = peopleRepo.getActivePeopleByMsId(membershipModel.getMembership().getMsId());
             for (PersonDTO person : personDTOS) {
                 person.setPhones(FXCollections.observableArrayList(phoneRepo.getPhoneByPid(person.getpId())));
                 person.setEmail(FXCollections.observableArrayList(emailRepo.getEmail(person.getpId())));
@@ -60,18 +60,32 @@ public class DataBaseService {
         }, membershipModel.getMainModel(), logger);
     }
 
-    public void getIds(MembershipListDTO ml) {
+    public void getIds() {
         HandlingTools.queryForList(() -> {
-            List<MembershipIdDTO> membershipIdDTOS = membershipIdRepo.getIds(ml.getMsId());
+            List<MembershipIdDTO> membershipIdDTOS = membershipIdRepo.getIds(membershipModel.getMembership().getMsId());
             Platform.runLater(() -> {
                 membershipModel.getMembership().setMembershipIdDTOS(FXCollections.observableArrayList(membershipIdDTOS));
+                membershipModel.getIdTableView().setItems(membershipModel.getMembership().getMembershipIdDTOS());
+                membershipModel.getMembership().getMembershipIdDTOS()
+                        .sort(Comparator.comparing(MembershipIdDTO::getFiscalYear).reversed());
             });
         }, membershipModel.getMainModel(), logger);
     }
 
-    public void getBoats(MembershipListDTO ml) {
+    public void getInvoices() {
         HandlingTools.queryForList(() -> {
-            List<BoatDTO> boats = boatRepo.getBoatsByMsId(ml.getMsId());
+            List<InvoiceDTO> invoiceDTOS = invoiceRepo.getInvoicesByMsid(membershipModel.getMembership().getMsId());
+            Platform.runLater(() -> {
+                membershipModel.getMembership().setInvoiceDTOS(FXCollections.observableArrayList(invoiceDTOS));
+                membershipModel.getInvoiceListTableView().setItems(membershipModel.getMembership().getInvoiceDTOS());
+                membershipModel.getMembership().getInvoiceDTOS().sort(Comparator.comparing(InvoiceDTO::getYear).reversed());
+            });
+        }, membershipModel.getMainModel(), logger);
+    }
+
+    public void getBoats() {
+        HandlingTools.queryForList(() -> {
+            List<BoatDTO> boats = boatRepo.getBoatsByMsId(membershipModel.getMembership().getMsId());
             Platform.runLater(() -> {
                 membershipModel.getMembership()
                         .setBoatDTOS(FXCollections.observableArrayList(boats));
@@ -79,17 +93,17 @@ public class DataBaseService {
         }, membershipModel.getMainModel(), logger);
     }
 
-    public void getNotes(MembershipListDTO ml) {
+    public void getNotes() {
         HandlingTools.queryForList(() -> {
-            List<NotesDTO> notesDTOS = notesRepo.getMemosByMsId(ml.getMsId());
+            List<NotesDTO> notesDTOS = notesRepo.getMemosByMsId(membershipModel.getMembership().getMsId());
             Platform.runLater(() -> membershipModel.getMembership()
                     .setNotesDTOS(FXCollections.observableArrayList(notesDTOS)));
         }, membershipModel.getMainModel(), logger);
     }
 
-    public void getSlipInfo(MembershipListDTO ml) {
+    public void getSlipInfo() {
         HandlingTools.queryForList(() -> {
-            Platform.runLater(() -> membershipModel.setSlip(slipRepo.getSlip(ml.getMsId())));
+            Platform.runLater(() -> membershipModel.setSlip(slipRepo.getSlip(membershipModel.getMembership().getMsId())));
         }, membershipModel.getMainModel(), logger);
         logger.info("Slip is loaded");
         Platform.runLater(() -> {
@@ -362,14 +376,5 @@ public class DataBaseService {
         }
     }
 
-    public void getInvoices() {
-        HandlingTools.queryForList(() -> {
-            List<InvoiceDTO> invoiceDTOS = invoiceRepo.getInvoicesByMsid(membershipModel.getMembership().getMsId());
-            Platform.runLater(() -> {
-                membershipModel.getMembership().setInvoiceDTOS(FXCollections.observableArrayList(invoiceDTOS));
-                membershipModel.getInvoiceListTableView().setItems(membershipModel.getMembership().getInvoiceDTOS());
-                membershipModel.getMembership().getInvoiceDTOS().sort(Comparator.comparing(InvoiceDTO::getYear).reversed());
-            });
-        }, membershipModel.getMainModel(), logger);
-    }
+
 }

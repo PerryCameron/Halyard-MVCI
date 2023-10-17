@@ -16,7 +16,7 @@ public class MembershipController extends Controller {
         this.mainController = mc;
         MembershipModel membershipModel = new MembershipModel(ml , mainController.getMainModel());
         this.membershipInteractor = new MembershipInteractor(membershipModel,mainController.getConnections());
-        getDataForMembership(ml);
+        getDataForMembership();
         membershipView = new MembershipView(membershipModel, this::editRow);
     }
 
@@ -56,7 +56,8 @@ public class MembershipController extends Controller {
                     case DELETE_MEMBER_FROM_DATABASE -> membershipInteractor.getDataBaseService().deletePerson();
                     case MOVE_MEMBER_TO_MEMBERSHIP -> membershipInteractor.getDataBaseService().movePerson();
                     case UPLOAD_MEMBER_PHOTO -> membershipInteractor.uploadMemberPhoto();
-                    case LOAD_INVOICES -> membershipInteractor.getDataBaseService().getInvoices();
+                    case LOAD_INVOICES -> loadSmallTab(MembershipMessage.LOAD_INVOICES);
+                    case LOAD_IDS -> loadSmallTab(MembershipMessage.LOAD_IDS);
                 }
                 return null;
             }
@@ -64,17 +65,36 @@ public class MembershipController extends Controller {
         new Thread(task).start();
     }
 
-    private void getDataForMembership(MembershipListDTO ml) {
+    private void loadSmallTab(MembershipMessage type) {
+        mainController.setSpinnerOffset(-400,150);
+        mainController.showLoadingSpinner(true);
+        Task<Void> task = new Task<>() {
+            @Override
+            protected Void call() {
+                switch (type) {
+                   case LOAD_INVOICES -> membershipInteractor.getDataBaseService().getInvoices();
+                   case LOAD_IDS -> membershipInteractor.getDataBaseService().getIds();
+                }
+                return null;
+            }
+        };
+        task.setOnSucceeded(e -> {
+            mainController.showLoadingSpinner(false);
+        });
+        new Thread(task).start();
+    }
+
+    private void getDataForMembership() {
         mainController.setSpinnerOffset(50,50);
         mainController.showLoadingSpinner(true);
         Task<Void> task = new Task<>() {
             @Override
             protected Void call() {
-                membershipInteractor.getDataBaseService().getPersonLists(ml);
-                membershipInteractor.getDataBaseService().getSlipInfo(ml);
-                membershipInteractor.getDataBaseService().getBoats(ml);
-                membershipInteractor.getDataBaseService().getNotes(ml);
-                membershipInteractor.getDataBaseService().getIds(ml);
+                membershipInteractor.getDataBaseService().getPersonLists();
+                membershipInteractor.getDataBaseService().getSlipInfo();
+                membershipInteractor.getDataBaseService().getBoats();
+                membershipInteractor.getDataBaseService().getNotes();
+//                membershipInteractor.getDataBaseService().getIds(ml);
                 return null;
             }
         };

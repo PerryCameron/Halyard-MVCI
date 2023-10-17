@@ -39,6 +39,7 @@ public class MembershipIdView implements Builder<Tab> {
         VBox vBox = VBoxFx.vBoxOf(new Insets(2,2,2,2),"custom-tap-pane-frame",true); // makes outer border
         vBox.getChildren().add(innerVBox());
         tab.setContent(vBox);
+        ListenerFx.createSingleUseTabListener(tab, () -> membershipView.sendMessage().accept(MembershipMessage.LOAD_IDS) );
         return tab;
     }
 
@@ -103,9 +104,6 @@ public class MembershipIdView implements Builder<Tab> {
 
     private Node addTable() {
         TableView<MembershipIdDTO> tableView = TableViewFx.tableViewOf(MembershipIdDTO.class);
-        membershipModel.getMembership().getMembershipIdDTOS()
-                .sort(Comparator.comparing(MembershipIdDTO::getFiscalYear).reversed());
-        tableView.setItems(membershipView.getMembershipModel().getMembership().getMembershipIdDTOS());
         tableView.getColumns().addAll(col1(),col2(),col3(),col4(),col5());
         TableView.TableViewSelectionModel<MembershipIdDTO> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
