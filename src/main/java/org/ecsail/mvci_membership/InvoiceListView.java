@@ -5,15 +5,11 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.util.Builder;
 import org.apache.commons.compress.compressors.zstandard.ZstdCompressorOutputStream;
 import org.ecsail.dto.InvoiceDTO;
@@ -23,6 +19,7 @@ import org.ecsail.widgetfx.ListenerFx;
 import org.ecsail.widgetfx.TableViewFx;
 import org.ecsail.widgetfx.VBoxFx;
 
+import java.time.Year;
 import java.util.Comparator;
 
 public class InvoiceListView implements Builder<Tab> {
@@ -49,17 +46,44 @@ public class InvoiceListView implements Builder<Tab> {
         return tab;
     }
 
+    private Node createRecordAddBox() {
+        HBox hBox = HBoxFx.hBoxOf(new Insets(7,2,5,10), 80);
+        hBox.getChildren().addAll(createInvoiceAdder(), getButton("Delete"));
+        return hBox;
+    }
+
+    private Node createInvoiceAdder() {
+        HBox hBox = HBoxFx.hBoxOf(5, Pos.CENTER_LEFT);
+        Label label = new Label("Create new Fiscal Year Record:");
+        hBox.getChildren().addAll(label, getYear(),getButton("Add"));
+        return hBox;
+    }
+
+    private Node getButton(String type) {
+        Button button = new Button(type);
+        return button;
+    }
+
+    private Node getYear() {
+        ComboBox comboBox = new ComboBox<Integer>();
+        comboBox.setPrefWidth(80);
+        for (int i = Integer.parseInt(Year.now().toString()) + 1; i > 1969; i--) comboBox.getItems().add(i);
+        comboBox.setValue(membershipView.getMembershipModel().getMembership().getSelectedYear()); // sets year for combo box to record year
+        return comboBox;
+    }
+
+
     private Node addTable() {
+        HBox hBox = HBoxFx.hBoxOf(new Insets(5,5,5,5));
         TableView<InvoiceDTO> tableView = TableViewFx.tableViewOf(InvoiceDTO.class);
-//        membershipModel.getMembership().getMembershipIdDTOS()
-//                .sort(Comparator.comparing(InvoiceDTO::getFiscalYear).reversed());
         tableView.getColumns().addAll(col1(),col2(),col3(),col4(),col5());
         TableView.TableViewSelectionModel<InvoiceDTO> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) membershipView.getMembershipModel().setSelectedInvoice(newSelection);
         });
         membershipView.getMembershipModel().setInvoiceListTableView(tableView);
-        return tableView;
+        hBox.getChildren().add(tableView);
+        return hBox;
     }
 
     private TableColumn<InvoiceDTO,Integer> col1() { //
@@ -101,8 +125,5 @@ public class InvoiceListView implements Builder<Tab> {
         return col;
     }
 
-    private Node createRecordAddBox() {
-        HBox hBox = HBoxFx.hBoxOf(new Insets(2,2,2,2), 20);
-        return hBox;
-    }
+
 }

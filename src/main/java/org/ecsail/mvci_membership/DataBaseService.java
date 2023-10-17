@@ -368,7 +368,7 @@ public class DataBaseService {
             Platform.runLater(() -> {
                 membershipModel.getMembership().setInvoiceDTOS(FXCollections.observableArrayList(invoiceDTOS));
                 membershipModel.getInvoiceListTableView().setItems(membershipModel.getMembership().getInvoiceDTOS());
-                System.out.println("Invoices=" + membershipModel.getMembership().getInvoiceDTOS().size());
+                membershipModel.getMembership().getInvoiceDTOS().sort(Comparator.comparing(InvoiceDTO::getYear).reversed());
             });
         }, membershipModel.getMainModel(), logger);
     }
