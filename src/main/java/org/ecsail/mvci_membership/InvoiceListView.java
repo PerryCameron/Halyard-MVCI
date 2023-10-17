@@ -61,6 +61,10 @@ public class InvoiceListView implements Builder<Tab> {
 
     private Node getButton(String type) {
         Button button = new Button(type);
+        switch (type) {
+            case "Add" -> button.setOnAction(event -> membershipView.sendMessage().accept(MembershipMessage.INSERT_INVOICE));
+            case "Delete" -> button.setOnAction(event -> membershipView.sendMessage().accept(MembershipMessage.DELETE_INVOICE));
+        }
         return button;
     }
 

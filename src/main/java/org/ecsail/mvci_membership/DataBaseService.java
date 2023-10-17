@@ -377,4 +377,11 @@ public class DataBaseService {
     }
 
 
+    public void insertInvoice() {
+        System.out.println("Inserting invoice");
+    }
+
+    public void deleteInvoice() {
+        System.out.println("Deleting Invoice");
+    }
 }

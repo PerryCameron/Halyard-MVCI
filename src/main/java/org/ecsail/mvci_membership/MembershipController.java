@@ -42,6 +42,7 @@ public class MembershipController extends Controller {
                     case INSERT_OFFICER -> membershipInteractor.getDataBaseService().insertOfficer();
                     case INSERT_PERSON -> membershipInteractor.getDataBaseService().insertPerson();
                     case INSERT_PHONE -> membershipInteractor.getDataBaseService().insertPhone();
+                    case INSERT_INVOICE -> membershipInteractor.getDataBaseService().insertInvoice();
                     case DELETE_BOAT -> membershipInteractor.getDataBaseService().deleteBoat();
                     case DELETE_AWARD -> membershipInteractor.getDataBaseService().deleteAward();
                     case DELETE_EMAIL -> membershipInteractor.getDataBaseService().deleteEmail();
@@ -49,6 +50,7 @@ public class MembershipController extends Controller {
                     case DELETE_NOTE -> membershipInteractor.getDataBaseService().deleteNote();
                     case DELETE_OFFICER -> membershipInteractor.getDataBaseService().deleteOfficer();
                     case DELETE_PHONE -> membershipInteractor.getDataBaseService().deletePhone();
+                    case DELETE_INVOICE -> membershipInteractor.getDataBaseService().deleteInvoice();
                     case CHANGE_MEMBER_TYPE -> membershipInteractor.getDataBaseService().changeMemberType();
                     case DETACH_MEMBER_FROM_MEMBERSHIP -> membershipInteractor.getDataBaseService().detachMemberFromMembership();
                     case DETACH_PRIMARY_MEMBER_FROM_MEMBERSHIP -> membershipInteractor.getDataBaseService().detachPrimaryMemberFromMembership();
