@@ -25,6 +25,7 @@ public class MembershipListDTO {
 	private ObservableList<BoatDTO> boatDTOS = FXCollections.observableArrayList();
 	private ObservableList<NotesDTO> notesDTOS = FXCollections.observableArrayList();
 	private ObservableList<MembershipIdDTO> membershipIdDTOS = FXCollections.observableArrayList();
+	private ObservableList<InvoiceDTO> invoiceDTOS = FXCollections.observableArrayList();
 
 	public MembershipListDTO(Integer msId, Integer pId, Integer membershipId, String joinDate, String memType, String address, String city,
 							 String state, String zip, String lastName, String firstName, String slip, Integer subLeaser,
@@ -114,17 +115,7 @@ public class MembershipListDTO {
 		this.pId.set(pId);
 	}
 
-//	public int getPid() {
-//		return pId.get();
-//	}
-//
-//	public IntegerProperty pIdProperty() {
-//		return pId;
-//	}
-//
-//	public void setPid(int pId) {
-//		this.pId.set(pId);
-//	}
+
 
 	public String getJoinDate() {
 		return joinDate.get();
@@ -268,6 +259,14 @@ public class MembershipListDTO {
 
 	public void setSelectedYear(int selectedYear) {
 		this.selectedYear.set(selectedYear);
+	}
+
+	public ObservableList<InvoiceDTO> getInvoiceDTOS() {
+		return invoiceDTOS;
+	}
+
+	public void setInvoiceDTOS(ObservableList<InvoiceDTO> invoiceDTOS) {
+		this.invoiceDTOS = invoiceDTOS;
 	}
 
 	@Override

@@ -137,7 +137,6 @@ public class RosterView implements Builder<Region> {
         rosterModel.textFieldStringProperty().bindBidirectional(textField.textProperty());
         hBox.getChildren().addAll(text, textField);
         PauseTransition pause = new PauseTransition(Duration.seconds(1));
-        // this is awesome, stole from stackoverflow.com
         textField.textProperty().addListener(
                 (observable, oldValue, newValue) -> {
                     pause.setOnFinished(event -> action.accept(SEARCH));

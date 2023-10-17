@@ -21,8 +21,6 @@ public class InvoiceListView implements Builder<Tab> {
         tab.setText("Invoices");
         VBox vBox = VBoxFx.vBoxOf(new Insets(2,2,2,2),"custom-tap-pane-frame",false); // makes outer border
         BorderPane borderPane = new BorderPane();
-//        borderPane.setLeft(setSlipInfo());
-//        borderPane.setCenter(setSlipImage());
         borderPane.setId("box-background-light");
         VBox.setVgrow(borderPane, Priority.ALWAYS); // causes slip tab to grow to fit vertical space
         vBox.getChildren().add(borderPane);
