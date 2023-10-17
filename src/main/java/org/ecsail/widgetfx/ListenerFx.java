@@ -44,16 +44,4 @@ public class ListenerFx {
         };
         return listener;
     }
-
-
-
-    public static void createListener(BooleanProperty booleanProperty, Runnable action) {
-        ChangeListener<Boolean> listener = (observable, oldValue, newValue) -> {
-            if(newValue) action.run();
-        };
-        booleanProperty.addListener(listener);
-    }
-
-
-
 }

@@ -60,7 +60,7 @@ public class MembershipController extends Controller {
                     case UPLOAD_MEMBER_PHOTO -> membershipInteractor.uploadMemberPhoto();
                     case LOAD_INVOICES -> loadSmallTab(MembershipMessage.LOAD_INVOICES);
                     case LOAD_IDS -> loadSmallTab(MembershipMessage.LOAD_IDS);
-                    case LOAD_INVOICE -> membershipInteractor.getDataBaseService().loadInvoice(); // will need to move to load small tab
+                    case LOAD_INVOICE -> loadSmallTab(MembershipMessage.LOAD_INVOICE);
                 }
                 return null;
             }
@@ -77,6 +77,7 @@ public class MembershipController extends Controller {
                 switch (type) {
                    case LOAD_INVOICES -> membershipInteractor.getDataBaseService().getInvoices();
                    case LOAD_IDS -> membershipInteractor.getDataBaseService().getIds();
+                   case LOAD_INVOICE -> membershipInteractor.getDataBaseService().loadInvoice();
                 }
                 return null;
             }

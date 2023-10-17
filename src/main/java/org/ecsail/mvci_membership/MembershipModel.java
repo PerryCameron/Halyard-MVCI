@@ -42,16 +42,16 @@ public class MembershipModel {
     private StringProperty membershipId = new SimpleStringProperty("");
     private final MainModel mainModel;
     private ObservableMap<String,Control> slipControls = FXCollections.observableHashMap();
-    protected SimpleObjectProperty<NotesDTO> selectedNote = new SimpleObjectProperty<>();
-    protected SimpleObjectProperty<AwardDTO> selectedAward = new SimpleObjectProperty<>();
-    protected SimpleObjectProperty<BoatDTO> selectedBoat = new SimpleObjectProperty<>();
-    protected SimpleObjectProperty<EmailDTO> selectedEmail = new SimpleObjectProperty<>();
-    protected SimpleObjectProperty<MembershipIdDTO> selectedMembershipId = new SimpleObjectProperty<>();
-    protected SimpleObjectProperty<OfficerDTO> selectedOfficer = new SimpleObjectProperty<>();
-    protected SimpleObjectProperty<PersonDTO> selectedPerson = new SimpleObjectProperty<>();
-    protected SimpleObjectProperty<PhoneDTO> selectedPhone = new SimpleObjectProperty<>();
-    protected SimpleObjectProperty<InvoiceDTO> selectedInvoice = new SimpleObjectProperty<>();
-    protected StringProperty selectedString = new SimpleStringProperty("");
+    private SimpleObjectProperty<NotesDTO> selectedNote = new SimpleObjectProperty<>();
+    private SimpleObjectProperty<AwardDTO> selectedAward = new SimpleObjectProperty<>();
+    private SimpleObjectProperty<BoatDTO> selectedBoat = new SimpleObjectProperty<>();
+    private SimpleObjectProperty<EmailDTO> selectedEmail = new SimpleObjectProperty<>();
+    private SimpleObjectProperty<MembershipIdDTO> selectedMembershipId = new SimpleObjectProperty<>();
+    private SimpleObjectProperty<OfficerDTO> selectedOfficer = new SimpleObjectProperty<>();
+    private SimpleObjectProperty<PersonDTO> selectedPerson = new SimpleObjectProperty<>();
+    private SimpleObjectProperty<PhoneDTO> selectedPhone = new SimpleObjectProperty<>();
+    private SimpleObjectProperty<InvoiceDTO> selectedInvoice = new SimpleObjectProperty<>();
+    private StringProperty selectedString = new SimpleStringProperty("");
     private SimpleIntegerProperty selectedInvoiceCreateYear = new SimpleIntegerProperty(0);
 
 

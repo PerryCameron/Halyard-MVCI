@@ -1,6 +1,8 @@
 package org.ecsail.dto;
 
 import javafx.beans.property.*;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 public class InvoiceDTO {
     private final IntegerProperty id;
@@ -15,7 +17,7 @@ public class InvoiceDTO {
     private final BooleanProperty closed;
     private final BooleanProperty supplemental;
     private final StringProperty maxCredit;
-
+    private ObservableList<InvoiceItemDTO> itemDTOS = FXCollections.observableArrayList();
 
     public InvoiceDTO(Integer id, Integer msId, Integer year, String paid, String total, String credit, String balance,
                       Integer batch, Boolean committed, Boolean closed, Boolean supplemental, String maxCredit) {
