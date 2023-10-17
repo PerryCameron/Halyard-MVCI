@@ -32,6 +32,7 @@ public class MembershipModel {
     private final SimpleObjectProperty<TableView<BoatDTO>> boatTableView = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TableView<NotesDTO>> notesTableView = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TableView<MembershipIdDTO>> idTableView = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<TableView<InvoiceDTO>> invoiceListTableView = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TabPane> peopleTabPane = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TabPane> infoTabPane = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TabPane> extraTabPane = new SimpleObjectProperty<>();
@@ -49,8 +50,33 @@ public class MembershipModel {
     protected SimpleObjectProperty<OfficerDTO> selectedOfficer = new SimpleObjectProperty<>();
     protected SimpleObjectProperty<PersonDTO> selectedPerson = new SimpleObjectProperty<>();
     protected SimpleObjectProperty<PhoneDTO> selectedPhone = new SimpleObjectProperty<>();
+    protected SimpleObjectProperty<InvoiceDTO> selectedInvoice = new SimpleObjectProperty<>();
     protected StringProperty selectedString = new SimpleStringProperty("");
 
+
+    public TableView<InvoiceDTO> getInvoiceListTableView() {
+        return invoiceListTableView.get();
+    }
+
+    public SimpleObjectProperty<TableView<InvoiceDTO>> invoiceListTableViewProperty() {
+        return invoiceListTableView;
+    }
+
+    public void setInvoiceListTableView(TableView<InvoiceDTO> invoiceListTableView) {
+        this.invoiceListTableView.set(invoiceListTableView);
+    }
+
+    public InvoiceDTO getSelectedInvoice() {
+        return selectedInvoice.get();
+    }
+
+    public SimpleObjectProperty<InvoiceDTO> selectedInvoiceProperty() {
+        return selectedInvoice;
+    }
+
+    public void setSelectedInvoice(InvoiceDTO selectedInvoice) {
+        this.selectedInvoice.set(selectedInvoice);
+    }
 
     public MembershipMessage getReturnMessage() {
         return returnMessage.get();

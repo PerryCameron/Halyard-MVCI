@@ -367,6 +367,8 @@ public class DataBaseService {
             List<InvoiceDTO> invoiceDTOS = invoiceRepo.getInvoicesByMsid(membershipModel.getMembership().getMsId());
             Platform.runLater(() -> {
                 membershipModel.getMembership().setInvoiceDTOS(FXCollections.observableArrayList(invoiceDTOS));
+                membershipModel.getInvoiceListTableView().setItems(membershipModel.getMembership().getInvoiceDTOS());
+                System.out.println("Invoices=" + membershipModel.getMembership().getInvoiceDTOS().size());
             });
         }, membershipModel.getMainModel(), logger);
     }
