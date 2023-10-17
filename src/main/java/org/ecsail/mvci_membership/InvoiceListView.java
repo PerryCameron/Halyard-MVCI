@@ -32,7 +32,7 @@ public class InvoiceListView implements Builder<Tab> {
         vBox.getChildren().add(borderPane);
         tab.setContent(vBox);
         // Create a listener for tab selection change
-        ListenerFx.createSingleUseTabListener(tab, () -> System.out.println("fire") );
+        ListenerFx.createSingleUseTabListener(tab, () -> membershipView.sendMessage().accept(MembershipMessage.LOAD_INVOICES) );
         return tab;
     }
 }

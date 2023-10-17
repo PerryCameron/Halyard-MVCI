@@ -29,6 +29,7 @@ public class DataBaseService {
     private final SlipRepository slipRepo;
     private final NotesRepository notesRepo;
     private final MembershipRepository membershipRepo;
+    private final InvoiceRepository invoiceRepo;
 
 
     public DataBaseService(DataSource dataSource, MembershipModel membershipModel) {
@@ -43,6 +44,7 @@ public class DataBaseService {
         slipRepo = new SlipRepositoryImpl(dataSource);
         notesRepo = new NotesRepositoryImpl(dataSource);
         membershipRepo = new MembershipRepositoryImpl(dataSource);
+        invoiceRepo = new InvoiceRepositoryImpl(dataSource);
     }
 
     public void getPersonLists(MembershipListDTO ml) { // not on FX thread because lists added before UI is launched
@@ -360,5 +362,12 @@ public class DataBaseService {
         }
     }
 
-
+    public void getInvoices() {
+        HandlingTools.queryForList(() -> {
+            List<InvoiceDTO> invoiceDTOS = invoiceRepo.getInvoicesByMsid(membershipModel.getMembership().getMsId());
+            Platform.runLater(() -> {
+                membershipModel.getMembership().setInvoiceDTOS(FXCollections.observableArrayList(invoiceDTOS));
+            });
+        }, membershipModel.getMainModel(), logger);
+    }
 }

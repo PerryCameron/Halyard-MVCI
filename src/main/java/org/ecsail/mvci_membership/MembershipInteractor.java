@@ -30,4 +30,7 @@ public class MembershipInteractor implements SlipUser {
     public void uploadMemberPhoto() {
         System.out.println("uploading photo");
     }
+
+    public void loadInvoices() {
+    }
 }
