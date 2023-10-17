@@ -385,7 +385,18 @@ public class DataBaseService {
         System.out.println("Deleting Invoice" + membershipModel.getSelectedInvoice().toString());
     }
 
+//    public void loadInvoice() {
+//
+//        System.out.println("loading invoice=" + membershipModel.getSelectedInvoice().toString());
+//    }
+
     public void loadInvoice() {
-        System.out.println("loading invoice=" + membershipModel.getSelectedInvoice().toString());
+        HandlingTools.queryForList(() -> {
+            List<InvoiceItemDTO> invoiceItemDTOS = invoiceRepo.getInvoiceItemsByInvoiceId(membershipModel.getSelectedInvoice().getId());
+            System.out.println("invoice items=" + invoiceItemDTOS.size());
+            Platform.runLater(() -> {
+                membershipModel.getSelectedInvoice().setItemDTOS(FXCollections.observableArrayList(invoiceItemDTOS));
+            });
+        }, membershipModel.getMainModel(), logger);
     }
 }

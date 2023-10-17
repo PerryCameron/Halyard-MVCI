@@ -27,8 +27,6 @@ import java.util.function.Consumer;
 
 import static org.ecsail.mvci_roster.RosterMessage.*;
 
-
-
 public class RosterView implements Builder<Region> {
 
     RosterModel rosterModel;

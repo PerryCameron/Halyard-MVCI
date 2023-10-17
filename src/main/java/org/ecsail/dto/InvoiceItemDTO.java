@@ -3,7 +3,6 @@ package org.ecsail.dto;
 import javafx.beans.property.*;
 
 public class InvoiceItemDTO {
-
     IntegerProperty id;
     IntegerProperty invoiceId;
     IntegerProperty msId;
@@ -35,102 +34,81 @@ public class InvoiceItemDTO {
         this.qty = new SimpleIntegerProperty(0);
     }
 
-
     public final IntegerProperty idProperty() {
         return this.id;
     }
-
 
     public final int getId() {
         return this.idProperty().get();
     }
 
-
     public final void setId(final int id) {
         this.idProperty().set(id);
     }
-
 
     public final IntegerProperty invoiceIdProperty() {
         return this.invoiceId;
     }
 
-
     public final int getInvoiceId() {
         return this.invoiceIdProperty().get();
     }
-
 
     public final void setInvoiceId(final int invoiceId) {
         this.invoiceIdProperty().set(invoiceId);
     }
 
-
     public final IntegerProperty msIdProperty() {
         return this.msId;
     }
-
 
     public final int getMsId() {
         return this.msIdProperty().get();
     }
 
-
     public final IntegerProperty yearProperty() {
         return this.year;
     }
-
 
     public final int getYear() {
         return this.yearProperty().get();
     }
 
-
     public final void setYear(final int year) {
         this.yearProperty().set(year);
     }
-
 
     public final StringProperty fieldNameProperty() {
         return this.fieldName;
     }
 
-
     public final String getFieldName() {
         return this.fieldNameProperty().get();
     }
-
 
     public final void setFieldName(final String fieldName) {
         this.fieldNameProperty().set(fieldName);
     }
 
-
-
     public final BooleanProperty creditProperty() {
         return this.credit;
     }
-
 
     public final boolean isCredit() {
         return this.creditProperty().get();
     }
 
-
     public final void setCredit(final boolean credit) {
         this.creditProperty().set(credit);
     }
-
 
     public final StringProperty valueProperty() {
         return this.value;
     }
 
-
     public final String getValue() {
         return this.valueProperty().get();
     }
-
 
     public final void setValue(final String value) {
         this.valueProperty().set(value);

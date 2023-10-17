@@ -244,6 +244,14 @@ public class InvoiceDTO {
         this.maxCreditProperty().set(maxCredit);
     }
 
+    public ObservableList<InvoiceItemDTO> getItemDTOS() {
+        return itemDTOS;
+    }
+
+    public void setItemDTOS(ObservableList<InvoiceItemDTO> itemDTOS) {
+        this.itemDTOS = itemDTOS;
+    }
+
     @Override
     public String toString() {
         return "InvoiceDTO{" +

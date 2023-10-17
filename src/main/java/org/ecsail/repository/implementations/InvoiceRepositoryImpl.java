@@ -3,8 +3,10 @@ package org.ecsail.repository.implementations;
 
 import org.ecsail.dto.DepositDTO;
 import org.ecsail.dto.InvoiceDTO;
+import org.ecsail.dto.InvoiceItemDTO;
 import org.ecsail.dto.InvoiceWithMemberInfoDTO;
 import org.ecsail.repository.interfaces.InvoiceRepository;
+import org.ecsail.repository.rowmappers.InvoiceItemRowMapper;
 import org.ecsail.repository.rowmappers.InvoiceRowMapper;
 import org.ecsail.repository.rowmappers.InvoiceWithMemberInfoRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -50,6 +52,12 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
                 "left join membership_id mi on i.MS_ID = mi.MS_ID " +
                 "where i.FISCAL_YEAR=? and mi.FISCAL_YEAR=? and p.MEMBER_TYPE=1 and i.COMMITTED=true";
         return template.query(query, new InvoiceWithMemberInfoRowMapper(), new Object[] {year,year});
+    }
+
+    @Override
+    public List<InvoiceItemDTO> getInvoiceItemsByInvoiceId(int id) {
+        String query = "SELECT * FROM invoice_item WHERE invoice_id=?";
+        return template.query(query, new InvoiceItemRowMapper(), id);
     }
 
     @Override
