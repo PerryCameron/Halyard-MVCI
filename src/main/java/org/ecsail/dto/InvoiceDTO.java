@@ -19,6 +19,8 @@ public class InvoiceDTO {
     private final StringProperty maxCredit;
     private ObservableList<InvoiceItemDTO> itemDTOS = FXCollections.observableArrayList();
     private PaymentDTO paymentDTO;
+    private SimpleBooleanProperty listLoaded = new SimpleBooleanProperty(false);
+
 
     public InvoiceDTO(Integer id, Integer msId, Integer year, String paid, String total, String credit, String balance,
                       Integer batch, Boolean committed, Boolean closed, Boolean supplemental, String maxCredit) {
@@ -34,6 +36,7 @@ public class InvoiceDTO {
         this.closed = new SimpleBooleanProperty(closed);
         this.supplemental = new SimpleBooleanProperty(supplemental);
         this.maxCredit = new SimpleStringProperty(maxCredit);
+        System.out.println(listLoaded);
     }
 
     public InvoiceDTO(Integer msId, Integer year) {
@@ -50,6 +53,7 @@ public class InvoiceDTO {
         this.closed = new SimpleBooleanProperty(false);
         this.supplemental = new SimpleBooleanProperty(false);
         this.maxCredit = new SimpleStringProperty("0.00");
+        System.out.println(listLoaded);
     }
 
     public InvoiceDTO() {  // used for mock invoice
@@ -65,6 +69,7 @@ public class InvoiceDTO {
         this.closed = new SimpleBooleanProperty(false);
         this.supplemental = new SimpleBooleanProperty(false);
         this.maxCredit = new SimpleStringProperty("");
+        System.out.println(listLoaded);
     }
 
     public PaymentDTO getPaymentDTO() {
@@ -259,6 +264,18 @@ public class InvoiceDTO {
 
     public void setItemDTOS(ObservableList<InvoiceItemDTO> itemDTOS) {
         this.itemDTOS = itemDTOS;
+    }
+
+    public boolean isListLoaded() {
+        return listLoaded.get();
+    }
+
+    public SimpleBooleanProperty listLoadedProperty() {
+        return listLoaded;
+    }
+
+    public void setListLoaded(boolean listLoaded) {
+        this.listLoaded.set(listLoaded);
     }
 
     @Override

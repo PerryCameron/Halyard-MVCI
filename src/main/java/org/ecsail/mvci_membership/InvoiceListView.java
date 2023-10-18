@@ -21,7 +21,6 @@ import java.time.Year;
 
 public class InvoiceListView implements Builder<Tab> {
     private final MembershipView membershipView;
-
     public InvoiceListView(MembershipView membershipView) {
         this.membershipView = membershipView;
     }
@@ -39,7 +38,7 @@ public class InvoiceListView implements Builder<Tab> {
         vBox.getChildren().add(borderPane);
         tab.setContent(vBox);
         // Create a listener for tab selection change
-        ListenerFx.createSingleUseTabListener(tab, () -> membershipView.sendMessage().accept(MembershipMessage.LOAD_INVOICES) );
+        ListenerFx.createSingleUseTabListener(tab, () -> membershipView.sendMessage().accept(MembershipMessage.LOAD_INVOICES));
         return tab;
     }
 
@@ -88,10 +87,10 @@ public class InvoiceListView implements Builder<Tab> {
         });
         tableView.setOnMouseClicked(event -> {
             if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
-                membershipView.sendMessage().accept(MembershipMessage.LOAD_INVOICE);
                 Tab tab = new InvoiceView(membershipView).build();
                 membershipView.getMembershipModel().getInfoTabPane().getTabs().add(tab);
                 membershipView.getMembershipModel().getInfoTabPane().getSelectionModel().select(tab);
+                membershipView.sendMessage().accept(MembershipMessage.LOAD_INVOICE);
             }
         });
         membershipView.getMembershipModel().setInvoiceListTableView(tableView);

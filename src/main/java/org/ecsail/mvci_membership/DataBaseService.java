@@ -393,9 +393,11 @@ public class DataBaseService {
     public void loadInvoice() {
         HandlingTools.queryForList(() -> {
             List<InvoiceItemDTO> invoiceItemDTOS = invoiceRepo.getInvoiceItemsByInvoiceId(membershipModel.getSelectedInvoice().getId());
-            System.out.println("invoice items=" + invoiceItemDTOS.size());
             Platform.runLater(() -> {
                 membershipModel.getSelectedInvoice().setItemDTOS(FXCollections.observableArrayList(invoiceItemDTOS));
+                membershipModel.getSelectedInvoice().setListLoaded(true);
+                System.out.println("BooleanProperty@" + membershipModel.getSelectedInvoice().listLoadedProperty().hashCode()
+                        + " set to: " + membershipModel.getSelectedInvoice().isListLoaded());
             });
         }, membershipModel.getMainModel(), logger);
     }
