@@ -12,6 +12,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import org.ecsail.dto.InvoiceDTO;
+import org.ecsail.dto.InvoiceItemDTO;
 import org.ecsail.widgetfx.HBoxFx;
 import org.ecsail.widgetfx.ListenerFx;
 import org.ecsail.widgetfx.TableViewFx;
@@ -31,13 +32,24 @@ public class InvoiceView implements Builder<Tab> {
     public Tab build() {
         Tab tab = new Tab();
         tab.setText(String.valueOf(invoiceDTO.getYear()));
-        VBox vBox = VBoxFx.vBoxOf(new Insets(2,2,2,2),"custom-tap-pane-frame",false); // makes outer border
-        BorderPane borderPane = new BorderPane();
-        borderPane.setId("box-background-light");
-        VBox.setVgrow(borderPane, Priority.ALWAYS); // causes slip tab to grow to fit vertical space
-        vBox.getChildren().add(borderPane);
-        tab.setContent(vBox);
+        if(invoiceDTO.isCommitted()) tab.setContent(showInvoice());
+        else tab.setContent(showEditableInvoice());
         return tab;
     }
 
+    private Node showEditableInvoice() {
+        VBox vBox = VBoxFx.vBoxOf(new Insets(2,2,2,2),"custom-tap-pane-frame",false); // makes outer border
+        return vBox;
+    }
+
+    private Node showInvoice() {
+        System.out.println("showInvoice() dto=" + invoiceDTO.getItemDTOS().size());
+        VBox vBox = VBoxFx.vBoxOf(new Insets(2,2,2,2),"custom-tap-pane-frame",false); // makes outer border
+        vBox.getChildren().add(HBoxFx.customHBoxHeader());
+        for(InvoiceItemDTO item: invoiceDTO.getItemDTOS()) {
+            System.out.println("adding" + item.getFieldName());
+            vBox.getChildren().add(HBoxFx.customHBox(item));
+        }
+        return vBox;
+    }
 }

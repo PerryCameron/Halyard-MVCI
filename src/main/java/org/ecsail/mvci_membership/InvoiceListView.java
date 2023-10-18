@@ -1,28 +1,23 @@
 package org.ecsail.mvci_membership;
 
-import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseButton;
-import javafx.scene.layout.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import javafx.util.Builder;
-import org.apache.commons.compress.compressors.zstandard.ZstdCompressorOutputStream;
 import org.ecsail.dto.InvoiceDTO;
-import org.ecsail.dto.MembershipIdDTO;
 import org.ecsail.widgetfx.HBoxFx;
 import org.ecsail.widgetfx.ListenerFx;
 import org.ecsail.widgetfx.TableViewFx;
 import org.ecsail.widgetfx.VBoxFx;
 
 import java.time.Year;
-import java.util.Comparator;
 
 public class InvoiceListView implements Builder<Tab> {
     private final MembershipView membershipView;
@@ -93,10 +88,10 @@ public class InvoiceListView implements Builder<Tab> {
         });
         tableView.setOnMouseClicked(event -> {
             if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
+                membershipView.sendMessage().accept(MembershipMessage.LOAD_INVOICE);
                 Tab tab = new InvoiceView(membershipView).build();
                 membershipView.getMembershipModel().getInfoTabPane().getTabs().add(tab);
                 membershipView.getMembershipModel().getInfoTabPane().getSelectionModel().select(tab);
-                membershipView.sendMessage().accept(MembershipMessage.LOAD_INVOICE);
             }
         });
         membershipView.getMembershipModel().setInvoiceListTableView(tableView);

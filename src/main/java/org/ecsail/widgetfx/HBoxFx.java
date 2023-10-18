@@ -16,11 +16,25 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+import org.ecsail.dto.InvoiceItemDTO;
 import org.ecsail.mvci_boatlist.BoatListMessage;
 
+import java.math.BigDecimal;
 import java.util.function.Consumer;
 
 public class HBoxFx {
+
+    public static HBox customHBox(InvoiceItemDTO item) {
+        HBox hBox = new HBox();
+        hBox.getChildren().addAll(new Label(item.getFieldName()), new Label(String.valueOf(item.getQty())), new Label(item.getValue()));
+        return hBox;
+    }
+
+    public static HBox customHBoxHeader() {
+        HBox hBox = new HBox();
+        hBox.getChildren().addAll(new Label("Fee"), new Label("Qty"), new Label("Total"));
+        return hBox;
+    }
 
     public static HBox boundBoxOf(ObjectProperty<HBox> objectProperty) {
         HBox hBox = new HBox();

@@ -18,6 +18,7 @@ public class InvoiceDTO {
     private final BooleanProperty supplemental;
     private final StringProperty maxCredit;
     private ObservableList<InvoiceItemDTO> itemDTOS = FXCollections.observableArrayList();
+    private PaymentDTO paymentDTO;
 
     public InvoiceDTO(Integer id, Integer msId, Integer year, String paid, String total, String credit, String balance,
                       Integer batch, Boolean committed, Boolean closed, Boolean supplemental, String maxCredit) {
@@ -64,6 +65,14 @@ public class InvoiceDTO {
         this.closed = new SimpleBooleanProperty(false);
         this.supplemental = new SimpleBooleanProperty(false);
         this.maxCredit = new SimpleStringProperty("");
+    }
+
+    public PaymentDTO getPaymentDTO() {
+        return paymentDTO;
+    }
+
+    public void setPaymentDTO(PaymentDTO paymentDTO) {
+        this.paymentDTO = paymentDTO;
     }
 
     public final IntegerProperty idProperty() {
