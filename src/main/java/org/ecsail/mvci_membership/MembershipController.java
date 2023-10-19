@@ -100,7 +100,6 @@ public class MembershipController extends Controller {
                 membershipInteractor.getDataBaseService().getSlipInfo();
                 membershipInteractor.getDataBaseService().getBoats();
                 membershipInteractor.getDataBaseService().getNotes();
-//                membershipInteractor.getDataBaseService().getIds(ml);
                 return null;
             }
         };

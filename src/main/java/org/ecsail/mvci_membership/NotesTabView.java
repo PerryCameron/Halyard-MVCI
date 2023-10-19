@@ -14,6 +14,7 @@ import org.ecsail.dto.NotesDTO;
 import org.ecsail.widgetfx.*;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 
 public class NotesTabView implements Builder<Tab> {
     private final MembershipView membershipView;
@@ -37,17 +38,14 @@ public class NotesTabView implements Builder<Tab> {
 
     private Node getButtonControls() {
         VBox vBox = VBoxFx.vBoxOf(5.0, new Insets(10, 5, 5, 10));
-        vBox.getChildren().addAll(createButton("Add"), createButton("Delete"));
+        vBox.getChildren().addAll(
+                ButtonFx.buttonOf("Add", 60, () -> insertNote()),
+                ButtonFx.buttonOf("Delete", 60, () -> deleteNote()));
         return vBox;
     }
 
-    private Node createButton(String text) {
-        Button button = ButtonFx.buttonOf(text, 60);
-        switch (text) {
-            case "Delete" -> button.setOnAction(event -> deleteNote());
-            case "Add" -> button.setOnAction(event -> membershipView.sendMessage().accept(MembershipMessage.INSERT_NOTE));
-        }
-        return button;
+    private void insertNote() {
+        membershipView.sendMessage().accept(MembershipMessage.INSERT_NOTE);
     }
 
     private void deleteNote() {

@@ -101,6 +101,7 @@ public class DataBaseService {
             List<NotesDTO> notesDTOS = notesRepo.getMemosByMsId(membershipModel.getMembership().getMsId());
             Platform.runLater(() -> membershipModel.getMembership()
                     .setNotesDTOS(FXCollections.observableArrayList(notesDTOS)));
+            membershipModel.getMembership().getNotesDTOS().sort(Comparator.comparing(NotesDTO::getMemoDate).reversed());
         }, membershipModel.getMainModel(), logger);
     }
 
