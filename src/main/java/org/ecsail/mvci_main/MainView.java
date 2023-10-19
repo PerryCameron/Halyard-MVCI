@@ -47,24 +47,24 @@ public class MainView implements Builder<Region> {
         borderPane.setBottom(setUpBottomPane());
         borderPane.setCenter(setUpCenterPane());
         // closing program with x button
-        BaseApplication.primaryStage.setOnHiding(event -> action.accept(MainMessage.CLOSE_ALL_CONNECTIONS));
+        BaseApplication.primaryStage.setOnHiding(event -> action.accept(MainMessage.CLOSE_ALL_CONNECTIONS_AND_EXIT));
         Image mainIcon = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/title_bar_icon.png")));
         BaseApplication.primaryStage.getIcons().add(mainIcon);
         BaseApplication.primaryStage.setTitle("Halyard");
         setViewListener();
-        tabListener();
+//        tabListener();
         return borderPane;
     }
 
-    private void tabListener() {
-        mainModel.getMainTabPane().getSelectionModel().selectedItemProperty().addListener(
-                (observable, oldTab, newTab) -> {
-                    if (newTab != null && newTab.getUserData() != null) {
-                        System.out.println(newTab.getUserData().toString());
-                    }
-                }
-        );
-    }
+//    private void tabListener() {
+//        mainModel.getMainTabPane().getSelectionModel().selectedItemProperty().addListener(
+//                (observable, oldTab, newTab) -> {
+//                    if (newTab != null && newTab.getUserData() != null) {
+//                        System.out.println(newTab.getUserData().toString());
+//                    }
+//                }
+//        );
+//    }
 
     private void setViewListener() {
         ChangeListener<MainMessage> viewListener = ListenerFx.createEnumListener(() ->
@@ -165,8 +165,9 @@ public class MainView implements Builder<Region> {
 
     private Menu createFileMenu() {
         Menu menu = new Menu("File");
-        MenuItem backUp = MenuFx.menuItemOf("Backup DataBase", x -> action.accept(MainMessage.BACKUP_DATABASE), KeyCode.N);
-        menu.getItems().add(backUp);
+        MenuItem backUp = MenuFx.menuItemOf("Backup DataBase", x -> action.accept(MainMessage.BACKUP_DATABASE), null);
+        MenuItem close = MenuFx.menuItemOf("Close Connection", x -> action.accept(MainMessage.CLOSE_ALL_CONNECTIONS), null);
+        menu.getItems().addAll(close,backUp);
         return menu;
     }
 

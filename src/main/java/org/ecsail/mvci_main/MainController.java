@@ -35,6 +35,7 @@ public class MainController extends Controller implements Status {
 
     private void action(MainMessage action) {
         switch (action) {
+            case CLOSE_ALL_CONNECTIONS_AND_EXIT -> closeAllConnectionsAndExit();
             case CLOSE_ALL_CONNECTIONS -> closeAllConnections();
             case CREATE_CONNECT_CONTROLLER -> createConnectController();
             case BACKUP_DATABASE -> backUpDatabase();
@@ -67,7 +68,6 @@ public class MainController extends Controller implements Status {
     }
 
     public void openTab(String tabName) {
-        Region region = null;
         switch (tabName) {
             case "People" -> System.out.println("Displaying people list");
             case "Slips" -> System.out.println("Displaying slips list");
@@ -126,8 +126,18 @@ public class MainController extends Controller implements Status {
         return mainInteractor.getMainModel();
     }
 
+    private void closeAllConnectionsAndExit() {
+        Platform.runLater(() -> {
+            connectController.closeConnection();
+        });
+    }
+
     private void closeAllConnections() {
-        Platform.runLater(connectController.closeConnection());
+        Platform.runLater(() -> {
+            connectController.closeConnection();
+            mainInteractor.getMainModel().getMainTabPane().getTabs().clear();
+            createConnectController();
+        });
     }
 
     @Override

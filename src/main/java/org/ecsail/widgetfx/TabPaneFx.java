@@ -22,6 +22,7 @@ public class TabPaneFx {
         TabPane tabPane = new TabPane();
         tabPane.setTabClosingPolicy(t);
         tabPane.setPrefWidth(width);
+//        tabPane.prefWidthProperty().bind(hBox.widthProperty().multiply(0.5));
         tabPane.setId(id);
         return tabPane;
     }
