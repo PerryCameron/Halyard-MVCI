@@ -44,7 +44,7 @@ public class InvoiceView implements Builder<Tab> {
     }
 
     private Node showCommittedInvoice() {
-        VBox vBox = VBoxFx.vBoxOf(new Insets(2,2,2,2)); // makes outer border
+        VBox vBox = VBoxFx.vBoxOf(new Insets(10,0,0,0)); // makes outer border
         vBox.getStyleClass().add("standard-box");
         vBox.getChildren().addAll(HBoxFx.customHBoxHeader(),RegionFx.regionHeightOf(10.0));
         invoiceDTO.getItemDTOS().stream()
@@ -56,7 +56,8 @@ public class InvoiceView implements Builder<Tab> {
         HBox hBox = HBoxFx.hBoxOf(new Insets(10,15,5,0),10);
         VBox buttonBox = VBoxFx.vBoxOf(10.0, new Insets(25,5,5,20));
         buttonBox.getChildren().addAll(
-                ButtonFx.buttonOf("Add Note",100, () -> System.out.println("Add Note")),
+                ButtonFx.buttonOf("Add Note",100, () ->
+                        membershipView.sendMessage().accept(MembershipMessage.INSERT_INVOICE_NOTE)),
                 ButtonFx.buttonOf("Edit",100, () -> System.out.println("Edit")));
         hBox.getChildren().addAll(HBoxFx.customHBox(invoiceDTO),buttonBox);
         vBox.getChildren().addAll(hBox, VBoxFx.customVBox(invoiceDTO));

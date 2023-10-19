@@ -40,6 +40,7 @@ public class MembershipController extends Controller {
                     case INSERT_EMAIL -> membershipInteractor.getDataBaseService().insertEmail();
                     case INSERT_MEMBERSHIP_ID -> membershipInteractor.getDataBaseService().insertMembershipId();
                     case INSERT_NOTE -> membershipInteractor.getDataBaseService().insertNote("");
+                    case INSERT_INVOICE_NOTE -> membershipInteractor.getDataBaseService().insertInvoiceNote();
                     case INSERT_OFFICER -> membershipInteractor.getDataBaseService().insertOfficer();
                     case INSERT_PERSON -> membershipInteractor.getDataBaseService().insertPerson();
                     case INSERT_PHONE -> membershipInteractor.getDataBaseService().insertPhone();

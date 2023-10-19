@@ -15,6 +15,7 @@ public enum MembershipMessage {
     INSERT_EMAIL,
     INSERT_MEMBERSHIP_ID,
     INSERT_NOTE,
+    INSERT_INVOICE_NOTE,
     INSERT_OFFICER,
     INSERT_PHONE,
     INSERT_PERSON,

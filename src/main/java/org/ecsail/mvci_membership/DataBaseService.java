@@ -401,4 +401,14 @@ public class DataBaseService {
             });
         }, membershipModel.getMainModel(), logger);
     }
+
+    public void insertInvoiceNote() {
+        NotesDTO notesDTO = new NotesDTO("I", membershipModel.getMembership().getMsId());
+        if (HandlingTools.executeQuery(() -> notesRepo.insertNote(notesDTO), membershipModel.getMainModel(), logger)) {
+            Platform.runLater(() -> membershipModel.getExtraTabPane().getTabs().stream()
+                    .filter(tab -> "Notes".equals(tab.getText()))
+                    .findFirst()
+                    .ifPresent(tab -> membershipModel.getExtraTabPane().getSelectionModel().select(tab)));
+        }
+    }
 }
