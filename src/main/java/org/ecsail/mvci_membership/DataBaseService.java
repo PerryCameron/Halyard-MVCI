@@ -25,11 +25,11 @@ public class DataBaseService {
     private final OfficerRepository officerRepo;
     private final MembershipIdRepository membershipIdRepo;
     private final BoatRepository boatRepo;
-    private static final Logger logger = LoggerFactory.getLogger(DataBaseService.class);
     private final SlipRepository slipRepo;
     private final NotesRepository notesRepo;
     private final MembershipRepository membershipRepo;
     private final InvoiceRepository invoiceRepo;
+    private static final Logger logger = LoggerFactory.getLogger(DataBaseService.class);
 
 
     public DataBaseService(DataSource dataSource, MembershipModel membershipModel) {
@@ -393,11 +393,11 @@ public class DataBaseService {
     public void loadInvoice() {
         HandlingTools.queryForList(() -> {
             List<InvoiceItemDTO> invoiceItemDTOS = invoiceRepo.getInvoiceItemsByInvoiceId(membershipModel.getSelectedInvoice().getId());
+            List<PaymentDTO> paymentDTOS = invoiceRepo.getPaymentByInvoiceId(membershipModel.getSelectedInvoice().getId());
             Platform.runLater(() -> {
                 membershipModel.getSelectedInvoice().setItemDTOS(FXCollections.observableArrayList(invoiceItemDTOS));
+                membershipModel.getSelectedInvoice().setPaymentDTOS(FXCollections.observableArrayList(paymentDTOS));
                 membershipModel.getSelectedInvoice().setListLoaded(true);
-                System.out.println("BooleanProperty@" + membershipModel.getSelectedInvoice().listLoadedProperty().hashCode()
-                        + " set to: " + membershipModel.getSelectedInvoice().isListLoaded());
             });
         }, membershipModel.getMainModel(), logger);
     }

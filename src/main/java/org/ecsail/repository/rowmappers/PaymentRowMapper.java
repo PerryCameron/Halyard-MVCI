@@ -1,19 +1,22 @@
 package org.ecsail.repository.rowmappers;
 
-import org.ecsail.dto.EmailDTO;
+import org.ecsail.dto.PaymentDTO;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class EmailRowMapper implements RowMapper<EmailDTO> {
+public class PaymentRowMapper implements RowMapper<PaymentDTO> {
     @Override
-    public EmailDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
-        return new EmailDTO(
-                rs.getInt("EMAIL_ID")
-                ,rs.getInt("p_id")
-                ,rs.getBoolean("primary_use")
-                ,rs.getString("email")
-                ,rs.getBoolean("EMAIL_LISTED"));
+    public PaymentDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
+        return new PaymentDTO(
+                rs.getInt("pay_id"),
+                rs.getInt("INVOICE_ID"),
+                rs.getString("CHECK_NUMBER"),
+                rs.getString("PAYMENT_TYPE"),
+                rs.getString("PAYMENT_DATE"),
+                rs.getString("AMOUNT"),
+                rs.getInt("DEPOSIT_ID")
+        );
     }
 }

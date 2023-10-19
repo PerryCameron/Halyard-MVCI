@@ -4,10 +4,13 @@ import javafx.beans.property.DoubleProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import org.ecsail.dto.InvoiceDTO;
+import org.ecsail.dto.PaymentDTO;
 
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -126,6 +129,16 @@ public class VBoxFx {
         titledPane.setExpanded(false);
         titledPane.setContent(checkBoxes.get());
         vBox.getChildren().add(titledPane);
+        return vBox;
+    }
+
+    public static VBox customVBox(InvoiceDTO invoiceDTO) {
+        VBox vBox = vBoxOf(new Insets(5,5,5,20));
+        Label date = new Label("Payment Date: " + invoiceDTO.getPaymentDTOS().get(0).getPaymentDate());
+        date.getStyleClass().add("standard-black-label");
+        Label deposit = new Label("Deposit Number: " + invoiceDTO.getBatch());
+        deposit.getStyleClass().add("standard-black-label");
+        vBox.getChildren().addAll(date, deposit);
         return vBox;
     }
 

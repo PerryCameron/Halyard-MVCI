@@ -6,14 +6,11 @@ import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.control.Separator;
 import javafx.scene.control.Tab;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import org.ecsail.dto.InvoiceDTO;
-import org.ecsail.dto.InvoiceItemDTO;
-import org.ecsail.widgetfx.HBoxFx;
-import org.ecsail.widgetfx.ListenerFx;
-import org.ecsail.widgetfx.RegionFx;
-import org.ecsail.widgetfx.VBoxFx;
+import org.ecsail.widgetfx.*;
 
 
 public class InvoiceView implements Builder<Tab> {
@@ -50,13 +47,21 @@ public class InvoiceView implements Builder<Tab> {
         VBox vBox = VBoxFx.vBoxOf(new Insets(2,2,2,2)); // makes outer border
         vBox.getStyleClass().add("standard-box");
         vBox.getChildren().addAll(HBoxFx.customHBoxHeader(),RegionFx.regionHeightOf(10.0));
-        for(InvoiceItemDTO item: invoiceDTO.getItemDTOS()) {
-            if(!item.getValue().equals("0.00"))
-            vBox.getChildren().add(HBoxFx.customHBox(item));
-        }
-
+        invoiceDTO.getItemDTOS().stream()
+                .filter(item -> !item.getValue().equals("0.00"))
+                .map(HBoxFx::customHBox)
+                .forEach(vBox.getChildren()::add);
         Separator separator = new Separator(Orientation.HORIZONTAL);
-        vBox.getChildren().addAll(RegionFx.regionHeightOf(10.0),separator);
+        vBox.getChildren().addAll(RegionFx.regionHeightOf(20.0),separator);
+        HBox hBox = HBoxFx.hBoxOf(new Insets(10,15,5,0),10);
+        VBox buttonBox = VBoxFx.vBoxOf(10.0, new Insets(25,5,5,20));
+        buttonBox.getChildren().addAll(
+                ButtonFx.buttonOf("Add Note",100, () -> System.out.println("Add Note")),
+                ButtonFx.buttonOf("Edit",100, () -> System.out.println("Edit")));
+        hBox.getChildren().addAll(HBoxFx.customHBox(invoiceDTO),buttonBox);
+        vBox.getChildren().addAll(hBox, VBoxFx.customVBox(invoiceDTO));
         return vBox;
     }
+
+
 }

@@ -19,6 +19,13 @@ public class ButtonFx {
         return button;
     }
 
+    public static Button buttonOf(String text, double width, Runnable runnable) {
+        Button button = new Button(text);
+        button.setPrefWidth(width);
+        button.setOnAction(event -> runnable.run());
+        return button;
+    }
+
     public static ToggleButton toggleButtonOf(String text, double width, ToggleGroup tg) {
         ToggleButton button = new ToggleButton(text);
         button.setPrefWidth(width);

@@ -1,14 +1,12 @@
 package org.ecsail.repository.implementations;
 
 
-import org.ecsail.dto.DepositDTO;
-import org.ecsail.dto.InvoiceDTO;
-import org.ecsail.dto.InvoiceItemDTO;
-import org.ecsail.dto.InvoiceWithMemberInfoDTO;
+import org.ecsail.dto.*;
 import org.ecsail.repository.interfaces.InvoiceRepository;
 import org.ecsail.repository.rowmappers.InvoiceItemRowMapper;
 import org.ecsail.repository.rowmappers.InvoiceRowMapper;
 import org.ecsail.repository.rowmappers.InvoiceWithMemberInfoRowMapper;
+import org.ecsail.repository.rowmappers.PaymentRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
@@ -58,6 +56,12 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
     public List<InvoiceItemDTO> getInvoiceItemsByInvoiceId(int id) {
         String query = "SELECT * FROM invoice_item WHERE invoice_id=?";
         return template.query(query, new InvoiceItemRowMapper(), id);
+    }
+
+    @Override
+    public List<PaymentDTO> getPaymentByInvoiceId(int id) {
+        String query = "SELECT * from payment where INVOICE_ID=?";
+        return template.query(query, new PaymentRowMapper(), id);
     }
 
     @Override
