@@ -2,6 +2,7 @@ package org.ecsail.mvci_membership;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
+import javafx.scene.control.TableColumn;
 import org.ecsail.dto.*;
 import org.ecsail.enums.MemberType;
 import org.ecsail.interfaces.SlipUser;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import javax.sql.DataSource;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 
 public class DataBaseService {
     private final MembershipModel membershipModel;
@@ -376,7 +378,6 @@ public class DataBaseService {
         }
     }
 
-
     public void insertInvoice() {
         System.out.println("Inserting invoice for year " + membershipModel.getSelectedInvoiceCreateYear());
     }
@@ -385,30 +386,42 @@ public class DataBaseService {
         System.out.println("Deleting Invoice" + membershipModel.getSelectedInvoice().toString());
     }
 
-//    public void loadInvoice() {
-//
-//        System.out.println("loading invoice=" + membershipModel.getSelectedInvoice().toString());
-//    }
-
     public void loadInvoice() {
         HandlingTools.queryForList(() -> {
             List<InvoiceItemDTO> invoiceItemDTOS = invoiceRepo.getInvoiceItemsByInvoiceId(membershipModel.getSelectedInvoice().getId());
             List<PaymentDTO> paymentDTOS = invoiceRepo.getPaymentByInvoiceId(membershipModel.getSelectedInvoice().getId());
             Platform.runLater(() -> {
+                membershipModel.getSelectedInvoice().getItemDTOS().clear();
+                membershipModel.getSelectedInvoice().getPaymentDTOS().clear();
                 membershipModel.getSelectedInvoice().setItemDTOS(FXCollections.observableArrayList(invoiceItemDTOS));
                 membershipModel.getSelectedInvoice().setPaymentDTOS(FXCollections.observableArrayList(paymentDTOS));
-                membershipModel.getSelectedInvoice().setListLoaded(true);
+                // always choose the opposite of what the boolean is so the listener will trigger
+                membershipModel.getSelectedInvoice().setListLoaded(!membershipModel.getSelectedInvoice().isListLoaded());
             });
         }, membershipModel.getMainModel(), logger);
     }
 
     public void insertInvoiceNote() {
         NotesDTO notesDTO = new NotesDTO("I", membershipModel.getMembership().getMsId());
+        notesDTO.setInvoiceId(membershipModel.getSelectedInvoice().getId());
         if (HandlingTools.executeQuery(() -> notesRepo.insertNote(notesDTO), membershipModel.getMainModel(), logger)) {
-            Platform.runLater(() -> membershipModel.getExtraTabPane().getTabs().stream()
-                    .filter(tab -> "Notes".equals(tab.getText()))
-                    .findFirst()
-                    .ifPresent(tab -> membershipModel.getExtraTabPane().getSelectionModel().select(tab)));
+            Platform.runLater(() -> {
+                membershipModel.getMembership().getNotesDTOS().add(notesDTO);
+                membershipModel.getMembership().getNotesDTOS().sort(Comparator.comparing(NotesDTO::getMemoDate).reversed());
+                membershipModel.getExtraTabPane().getTabs().stream()
+                        .filter(tab -> "Notes".equals(tab.getText()))
+                        .findFirst()
+                        .ifPresent(tab -> membershipModel.getExtraTabPane().getSelectionModel().select(tab));
+                // let us open it for editing
+                membershipModel.getNotesTableView().getSelectionModel().select(0);
+                Optional<TableColumn<NotesDTO, String>> noteColumn = membershipModel
+                        .getNotesTableView().getColumns().stream()
+                        .filter(column -> "Note".equals(column.getText()))
+                        .map(column -> (TableColumn<NotesDTO, String>) column)
+                        .findFirst();
+                membershipModel.getNotesTableView().requestFocus();
+                membershipModel.getNotesTableView().edit(0, noteColumn.get());
+            });
         }
     }
 }

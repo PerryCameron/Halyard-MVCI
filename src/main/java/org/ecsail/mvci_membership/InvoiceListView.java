@@ -16,6 +16,7 @@ import org.ecsail.widgetfx.HBoxFx;
 import org.ecsail.widgetfx.ListenerFx;
 import org.ecsail.widgetfx.TableViewFx;
 import org.ecsail.widgetfx.VBoxFx;
+import java.util.regex.Pattern;
 
 import java.time.Year;
 
@@ -87,6 +88,12 @@ public class InvoiceListView implements Builder<Tab> {
         });
         tableView.setOnMouseClicked(event -> {
             if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
+                // Regex pattern to match a 4-digit integer
+                Pattern yearPattern = Pattern.compile("^\\d{4}$");
+                // Stream through tabs and remove ones matching the pattern
+                membershipView.getMembershipModel().getInfoTabPane().getTabs().removeIf(t ->
+                        yearPattern.matcher(t.getText()).matches()
+                );
                 Tab tab = new InvoiceView(membershipView).build();
                 membershipView.getMembershipModel().getInfoTabPane().getTabs().add(tab);
                 membershipView.getMembershipModel().getInfoTabPane().getSelectionModel().select(tab);
