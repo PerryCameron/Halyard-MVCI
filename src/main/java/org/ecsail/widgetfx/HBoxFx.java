@@ -1,38 +1,51 @@
 package org.ecsail.widgetfx;
 
-import javafx.animation.PauseTransition;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Control;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
-import javafx.scene.layout.Region;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
-import javafx.util.Duration;
+import javafx.scene.layout.*;
 import org.ecsail.dto.InvoiceItemDTO;
-import org.ecsail.mvci_boatlist.BoatListMessage;
-
-import java.math.BigDecimal;
-import java.util.function.Consumer;
 
 public class HBoxFx {
 
     public static HBox customHBox(InvoiceItemDTO item) {
-        HBox hBox = new HBox();
-        hBox.getChildren().addAll(new Label(item.getFieldName()), new Label(String.valueOf(item.getQty())), new Label(item.getValue()));
+        HBox hBox = HBoxFx.hBoxOf(new Insets(0,20,5,20));
+        Label p1Label = new Label(item.getFieldName());
+        Label p2Label = new Label(String.valueOf(item.getQty()));
+        Label p3Label = new Label(item.getValue());
+        p2Label.getStyleClass().add("standard-black-label");
+        if(item.isCredit()) p3Label.getStyleClass().add("standard-red-label");
+        else p3Label.getStyleClass().add("standard-black-label");
+        Pane p1 = new Pane(p1Label);
+        Pane p2 = new Pane(p2Label);
+        HBox p3 = new HBox(p3Label);
+        p3.setAlignment(Pos.CENTER_RIGHT);
+        p1.prefWidthProperty().bind(hBox.widthProperty().multiply(0.5));
+        p2.prefWidthProperty().bind(hBox.widthProperty().multiply(0.25));
+        p3.prefWidthProperty().bind(hBox.widthProperty().multiply(0.25));
+        hBox.getChildren().addAll(p1,p2,p3);
         return hBox;
     }
 
     public static HBox customHBoxHeader() {
-        HBox hBox = new HBox();
-        hBox.getChildren().addAll(new Label("Fee"), new Label("Qty"), new Label("Total"));
+        HBox hBox = HBoxFx.hBoxOf(new Insets(0,20,0,20));
+        Label p1Label = new Label("Fee");
+        Label p2Label = new Label("Qty");
+        Label p3Label = new Label("Total");
+        p1Label.getStyleClass().add("standard-bold-label");
+        p2Label.getStyleClass().add("standard-bold-label");
+        p3Label.getStyleClass().add("standard-bold-label");
+        Pane p1 = new Pane(p1Label);
+        Pane p2 = new Pane(p2Label);
+        HBox p3 = new HBox(p3Label);
+        p3.setAlignment(Pos.CENTER_RIGHT);
+        p1.prefWidthProperty().bind(hBox.widthProperty().multiply(0.45));
+        p2.prefWidthProperty().bind(hBox.widthProperty().multiply(0.3));
+        p3.prefWidthProperty().bind(hBox.widthProperty().multiply(0.25));
+        hBox.getChildren().addAll(p1,p2,p3);
         return hBox;
     }
 
@@ -143,5 +156,4 @@ public class HBoxFx {
         hBox.getChildren().add(region);
         return hBox;
     }
-
 }

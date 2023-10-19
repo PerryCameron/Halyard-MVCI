@@ -127,3 +127,24 @@
 #datepicker-tableview .text-field {
     -fx-background-color: white;
 }
+
+.standard-box {
+    -fx-background-color: #6c7179;
+    -fx-border-color: #807f7f;
+    -fx-border-width: 2px;
+    -fx-border-style: solid;
+}
+
+.standard-black-label {
+    -fx-text-fill: black;
+}
+
+.standard-red-label {
+    -fx-text-fill: #921111;
+}
+
+.standard-bold-label {
+    -fx-text-fill: black;
+    -fx-font-size: 12pt;
+    -fx-font-weight: bold;
+}
