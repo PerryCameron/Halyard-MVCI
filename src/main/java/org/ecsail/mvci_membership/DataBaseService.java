@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -402,12 +403,15 @@ public class DataBaseService {
     }
 
     public void insertInvoiceNote() {
+        // create our DTO
         NotesDTO notesDTO = new NotesDTO("I", membershipModel.getMembership().getMsId());
         notesDTO.setInvoiceId(membershipModel.getSelectedInvoice().getId());
+        notesDTO.setMemoDate(LocalDate.parse(membershipModel.getSelectedInvoice().getPaymentDTOS().get(0).getPaymentDate()));
+        // add noteDTO to database
         if (HandlingTools.executeQuery(() -> notesRepo.insertNote(notesDTO), membershipModel.getMainModel(), logger)) {
             Platform.runLater(() -> {
-                membershipModel.getMembership().getNotesDTOS().add(notesDTO);
-                membershipModel.getMembership().getNotesDTOS().sort(Comparator.comparing(NotesDTO::getMemoDate).reversed());
+                // add and sort
+                membershipModel.getMembership().getNotesDTOS().add(0, notesDTO);
                 membershipModel.getExtraTabPane().getTabs().stream()
                         .filter(tab -> "Notes".equals(tab.getText()))
                         .findFirst()
