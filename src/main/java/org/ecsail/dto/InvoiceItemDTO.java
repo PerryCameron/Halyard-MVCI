@@ -11,8 +11,9 @@ public class InvoiceItemDTO {
     BooleanProperty credit;
     StringProperty value;
     IntegerProperty qty;
+    BooleanProperty isCategory;
 
-    public InvoiceItemDTO(Integer id, Integer invoiceId, Integer msId, Integer year, String fieldName, Boolean credit, String value, Integer qty) {
+    public InvoiceItemDTO(Integer id, Integer invoiceId, Integer msId, Integer year, String fieldName, Boolean credit, String value, Integer qty, Boolean isCategory) {
         this.id = new SimpleIntegerProperty(id);
         this.invoiceId = new SimpleIntegerProperty(invoiceId);
         this.msId = new SimpleIntegerProperty(msId);
@@ -21,6 +22,7 @@ public class InvoiceItemDTO {
         this.credit = new SimpleBooleanProperty(credit);
         this.value = new SimpleStringProperty(value);
         this.qty = new SimpleIntegerProperty(qty);
+        this.isCategory = new SimpleBooleanProperty(isCategory);
     }
 
     public InvoiceItemDTO(Integer invoiceId, Integer msId, Integer year, String fieldName) {
@@ -32,6 +34,7 @@ public class InvoiceItemDTO {
         this.credit = new SimpleBooleanProperty(false);
         this.value = new SimpleStringProperty("0.00");
         this.qty = new SimpleIntegerProperty(0);
+        this.isCategory = new SimpleBooleanProperty(false);
     }
 
     public final IntegerProperty idProperty() {
@@ -129,6 +132,18 @@ public class InvoiceItemDTO {
         this.qtyProperty().set(qty);
     }
 
+    public boolean isIsCategory() {
+        return isCategory.get();
+    }
+
+    public BooleanProperty isCategoryProperty() {
+        return isCategory;
+    }
+
+    public void setIsCategory(boolean isCategory) {
+        this.isCategory.set(isCategory);
+    }
+
     @Override
     public String toString() {
         return "InvoiceItemDTO{" +
@@ -140,6 +155,7 @@ public class InvoiceItemDTO {
                 ", credit=" + credit +
                 ", value=" + value +
                 ", qty=" + qty +
+                ", isCategory=" + isCategory +
                 '}';
     }
 }
