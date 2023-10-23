@@ -4,6 +4,7 @@ package org.ecsail.mvci_main;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.scene.Scene;
+import javafx.scene.control.Tab;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import org.ecsail.connection.Connections;
@@ -136,6 +137,7 @@ public class MainController extends Controller implements Status {
         Platform.runLater(() -> {
             connectController.closeConnection();
             mainInteractor.getMainModel().getMainTabPane().getTabs().clear();
+            getMainModel().getMainTabPane().getTabs().add(new Tab("Log in"));
             createConnectController();
         });
     }
