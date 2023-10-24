@@ -403,6 +403,17 @@ public class DataBaseService {
         }, membershipModel.getMainModel(), logger);
     }
 
+    public void loadFees() {
+        HandlingTools.queryForList(() -> {
+            List<FeeDTO> feeDTOS = invoiceRepo.getFeesFromYear(membershipModel.getSelectedInvoice().getYear());
+
+            Platform.runLater(() -> {
+                membershipModel.getSelectedInvoice().setFeeDTOS(FXCollections.observableArrayList(feeDTOS));
+                membershipModel.getSelectedInvoice().feesLoadedProperty().set(!membershipModel.getSelectedInvoice().isFeesLoaded());
+            });
+        }, membershipModel.getMainModel(), logger);
+    }
+
     public void insertInvoiceNote() {
         // create our DTO
         NotesDTO notesDTO = new NotesDTO("I", membershipModel.getMembership().getMsId());
@@ -429,4 +440,6 @@ public class DataBaseService {
             });
         }
     }
+
+
 }

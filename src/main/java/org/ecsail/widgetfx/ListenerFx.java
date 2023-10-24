@@ -15,9 +15,6 @@ import org.ecsail.dto.InvoiceItemDTO;
 import org.ecsail.mvci_membership.MembershipMessage;
 
 public class ListenerFx {
-
-
-
     public static void createSingleUseTabListener(Tab tab, Runnable action) {
         // Create a listener for tab selection change
         ChangeListener<Boolean> tabSelectionListener = new ChangeListener<>() {
@@ -35,13 +32,13 @@ public class ListenerFx {
     }
 
     public static ChangeListener<Boolean> createSingleUseListener(BooleanProperty booleanProperty, Runnable action) {
-        System.out.println("BooleanProperty@" + booleanProperty.hashCode()
-                + " set to: " + booleanProperty.get());
+        System.out.println("createSingleUseListener(BooleanProperty booleanProperty, Runnable action)");
+        System.out.println("bool=" + booleanProperty.get());
         ChangeListener<Boolean>[] listener = new ChangeListener[1];
         listener[0] = (observable, oldValue, newValue) -> {
-            action.run();
-            // Remove the listener after it has been triggered once
-            booleanProperty.removeListener(listener[0]);
+                action.run();
+                // Remove the listener after it has been triggered once
+                booleanProperty.removeListener(listener[0]);
         };
         return listener[0];
     }

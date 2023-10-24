@@ -49,5 +49,7 @@ public enum MembershipMessage {
     EMAIL_IS_PRIMARY_USE,
     LOAD_INVOICES,
     LOAD_INVOICE,
+    LOAD_FEES,
     LOAD_IDS;
+
 }

@@ -30,10 +30,17 @@ public class InvoiceView implements Builder<Tab> {
         return tab;
     }
 
-    private ChangeListener<Boolean> getDataLoadedListener(Tab tab) {
+    private ChangeListener<Boolean> getDataLoadedListener(Tab tab) { // used on load to determine what is displayed
         return ListenerFx.createSingleUseListener(invoiceDTO.listLoadedProperty(), () -> {  // data is loaded
-            if(invoiceDTO.isCommitted()) tab.setContent(showCommittedInvoice());
-            else tab.setContent(showEditableInvoice());
+            if (invoiceDTO.isCommitted()) tab.setContent(showCommittedInvoice()); // is committed no need to load more data
+            else if (invoiceDTO.getFeeDTOS().isEmpty()) { // invoice is not committed and (feeDTO and DbInvoiceDTO) are not populated
+                invoiceDTO.feesLoadedProperty().addListener(
+                        ListenerFx.createSingleUseListener(invoiceDTO.feesLoadedProperty(), () ->
+                    tab.setContent(showEditableInvoice())));
+                membershipView.sendMessage().accept(MembershipMessage.LOAD_FEES);
+            } else { // is not committed but data is already loaded (feeDTO and DbInvoiceDTO)
+                tab.setContent(showEditableInvoice());
+            }
         });
     }
 
