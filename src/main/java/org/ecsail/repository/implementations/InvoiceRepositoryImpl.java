@@ -3,10 +3,7 @@ package org.ecsail.repository.implementations;
 
 import org.ecsail.dto.*;
 import org.ecsail.repository.interfaces.InvoiceRepository;
-import org.ecsail.repository.rowmappers.InvoiceItemRowMapper;
-import org.ecsail.repository.rowmappers.InvoiceRowMapper;
-import org.ecsail.repository.rowmappers.InvoiceWithMemberInfoRowMapper;
-import org.ecsail.repository.rowmappers.PaymentRowMapper;
+import org.ecsail.repository.rowmappers.*;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
@@ -69,5 +66,11 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
         String query = "SELECT MAX(batch) FROM invoice WHERE committed=true AND fiscal_year=:year";
         Map<String, Object> params = Collections.singletonMap("year", year);
         return Optional.ofNullable(template.queryForObject(query, Integer.class, params)).orElse(0);
+    }
+
+    @Override
+    public List<FeeDTO> getFeesFromYear(int year) {
+        String query = "SELECT * FROM fee WHERE fee_year=?";
+        return template.query(query, new FeeRowMapper(), year);
     }
 }
