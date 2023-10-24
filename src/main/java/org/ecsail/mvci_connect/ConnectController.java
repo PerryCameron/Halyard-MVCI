@@ -60,8 +60,7 @@ public class ConnectController extends Controller {
         thread.start();
     }
 
-    public Runnable closeConnection() {
-        return () -> {
+    public void closeConnection() {
             try {
                 connectInteractor.getConnections().getSqlConnection().close();
                 connectInteractor.logInfo("SQL: Connection closed");
@@ -80,7 +79,6 @@ public class ConnectController extends Controller {
                     e.printStackTrace();
                 }
             }
-        };
     }
 
     public Stage getStage() {

@@ -36,7 +36,7 @@ public class MainController extends Controller implements Status {
 
     private void action(MainMessage action) {
         switch (action) {
-            case CLOSE_ALL_CONNECTIONS_AND_EXIT -> closeAllConnectionsAndExit();
+            case CLOSE_ALL_CONNECTIONS_AND_EXIT -> connectController.closeConnection();
             case CLOSE_ALL_CONNECTIONS -> closeAllConnections();
             case CREATE_CONNECT_CONTROLLER -> createConnectController();
             case BACKUP_DATABASE -> backUpDatabase();
@@ -127,15 +127,9 @@ public class MainController extends Controller implements Status {
         return mainInteractor.getMainModel();
     }
 
-    private void closeAllConnectionsAndExit() {
-        Platform.runLater(() -> {
-            connectController.closeConnection();
-        });
-    }
-
     private void closeAllConnections() {
+        connectController.closeConnection();
         Platform.runLater(() -> {
-            connectController.closeConnection();
             mainInteractor.getMainModel().getMainTabPane().getTabs().clear();
             getMainModel().getMainTabPane().getTabs().add(new Tab("Log in"));
             createConnectController();
