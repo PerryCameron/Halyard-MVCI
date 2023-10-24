@@ -21,7 +21,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Builder;
 import javafx.util.Duration;
 import org.ecsail.BaseApplication;
-import org.ecsail.enums.TabTypes;
 import org.ecsail.interfaces.Status;
 import org.ecsail.widgetfx.*;
 
@@ -179,7 +178,7 @@ public class MainView implements Builder<Region> {
     }
 
     protected void addNewTab(String name, Region region, int msId) {
-        if (TabPaneFx.tabIsOpen(msId, mainModel.getMainTabPane())) {
+        if (PaneFx.tabIsOpen(msId, mainModel.getMainTabPane())) {
             mainModel.setMsId(msId);
             selectTab();
         } else {

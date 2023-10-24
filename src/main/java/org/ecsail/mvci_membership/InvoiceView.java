@@ -4,6 +4,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.HBox;
@@ -11,7 +12,6 @@ import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import org.ecsail.dto.InvoiceDTO;
 import org.ecsail.widgetfx.*;
-
 
 public class InvoiceView implements Builder<Tab> {
     private final MembershipView membershipView;
@@ -31,22 +31,25 @@ public class InvoiceView implements Builder<Tab> {
     }
 
     private ChangeListener<Boolean> getDataLoadedListener(Tab tab) {
-        return ListenerFx.createSingleUseListener(invoiceDTO.listLoadedProperty(), () -> {
+        return ListenerFx.createSingleUseListener(invoiceDTO.listLoadedProperty(), () -> {  // data is loaded
             if(invoiceDTO.isCommitted()) tab.setContent(showCommittedInvoice());
             else tab.setContent(showEditableInvoice());
         });
     }
 
     private Node showEditableInvoice() {
+        ScrollPane scrollPane = PaneFx.scrollPaneOf();
         VBox vBox = VBoxFx.vBoxOf(new Insets(2,2,2,2)); // makes outer border
+        scrollPane.setContent(vBox);
         vBox.getStyleClass().add("standard-box");
+        vBox.getChildren().addAll(HBoxFx.customHBoxHeader(false),RegionFx.regionHeightOf(10.0));
         return vBox;
     }
 
     private Node showCommittedInvoice() {
         VBox vBox = VBoxFx.vBoxOf(new Insets(10,0,0,0)); // makes outer border
         vBox.getStyleClass().add("standard-box");
-        vBox.getChildren().addAll(HBoxFx.customHBoxHeader(),RegionFx.regionHeightOf(10.0));
+        vBox.getChildren().addAll(HBoxFx.customHBoxHeader(true),RegionFx.regionHeightOf(10.0));
         invoiceDTO.getItemDTOS().stream()
                 .filter(item -> !item.getValue().equals("0.00"))
                 .map(HBoxFx::customHBox)
@@ -63,6 +66,4 @@ public class InvoiceView implements Builder<Tab> {
         vBox.getChildren().addAll(hBox, VBoxFx.customVBox(invoiceDTO));
         return vBox;
     }
-
-
 }

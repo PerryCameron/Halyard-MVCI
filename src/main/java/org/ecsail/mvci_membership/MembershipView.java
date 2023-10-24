@@ -124,7 +124,7 @@ public class MembershipView implements Builder<Region> {
 
     private Node createExtrasTabPane() {
         HBox hBox = HBoxFx.hBoxOf(new Insets(10,0,0,0)); // provides space between
-        TabPane tabPane = TabPaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE,"custom-tab-pane");
+        TabPane tabPane = PaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE,"custom-tab-pane");
         HBox.setHgrow(tabPane,Priority.ALWAYS);
         membershipModel.setExtraTabPane(tabPane);
         hBox.getChildren().add(tabPane);
@@ -132,14 +132,14 @@ public class MembershipView implements Builder<Region> {
     }
 
     private Node createInfoTabPane() {
-        TabPane tabPane = TabPaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE, 498,"custom-tab-pane");
+        TabPane tabPane = PaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE, 498,"custom-tab-pane");
         VBox.setVgrow(tabPane,Priority.ALWAYS);  // this works in combo with Vgrow in SlapTabView
         membershipModel.setInfoTabPane(tabPane);
         return tabPane;
     }
 
     private Node createPeopleTabPane() {
-        TabPane tabPane = TabPaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE, 498,"custom-tab-pane");
+        TabPane tabPane = PaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE, 498,"custom-tab-pane");
         membershipModel.setPeopleTabPane(tabPane);
         membershipModel.getPeopleTabPane().getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
             if(newTab.getText().equals("Add")) {

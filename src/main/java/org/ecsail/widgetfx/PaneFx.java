@@ -1,9 +1,12 @@
 package org.ecsail.widgetfx;
 
-import javafx.scene.control.Tab;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TabPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 
-public class TabPaneFx {
+public class PaneFx {
 
     public static boolean tabIsOpen(int msId, TabPane tabPane) {
         return tabPane.getTabs().stream()
@@ -32,5 +35,12 @@ public class TabPaneFx {
         tabPane.setTabClosingPolicy(t);
         tabPane.setId(id);
         return tabPane;
+    }
+
+    public static ScrollPane scrollPaneOf() {
+        ScrollPane scrollPane = new ScrollPane();
+        HBox.setHgrow(scrollPane, Priority.ALWAYS);
+        VBox.setVgrow(scrollPane, Priority.ALWAYS);
+        return scrollPane;
     }
 }

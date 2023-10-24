@@ -10,6 +10,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import org.ecsail.dto.InvoiceDTO;
 import org.ecsail.dto.InvoiceItemDTO;
 
@@ -160,8 +162,8 @@ public class HBoxFx {
         return hBox;
     }
 
-    public static HBox customHBoxHeader() {
-        HBox hBox = HBoxFx.hBoxOf(new Insets(0,20,0,20));
+    public static HBox customHBoxHeader(boolean isCommitted) {
+        HBox hBox = hBoxOf(new Insets(0,20,0,20));
         Label p1Label = new Label("Fee");
         Label p2Label = new Label("Qty");
         Label p3Label = new Label("Total");
@@ -172,9 +174,16 @@ public class HBoxFx {
         Pane p2 = new Pane(p2Label);
         HBox p3 = new HBox(p3Label);
         p3.setAlignment(Pos.CENTER_RIGHT);
-        p1.prefWidthProperty().bind(hBox.widthProperty().multiply(0.45));
-        p2.prefWidthProperty().bind(hBox.widthProperty().multiply(0.3));
-        p3.prefWidthProperty().bind(hBox.widthProperty().multiply(0.25));
+        if(isCommitted) {
+            p1.prefWidthProperty().bind(hBox.widthProperty().multiply(0.47));
+            p2.prefWidthProperty().bind(hBox.widthProperty().multiply(0.28));
+            p3.prefWidthProperty().bind(hBox.widthProperty().multiply(0.25));
+        } else {
+            p2Label.setText("Price");
+            p1.prefWidthProperty().bind(hBox.widthProperty().multiply(0.4));
+            p2.prefWidthProperty().bind(hBox.widthProperty().multiply(0.35));
+            p3.prefWidthProperty().bind(hBox.widthProperty().multiply(0.25));
+        }
         hBox.getChildren().addAll(p1,p2,p3);
         return hBox;
     }
