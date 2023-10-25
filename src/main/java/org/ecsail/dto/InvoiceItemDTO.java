@@ -12,8 +12,9 @@ public class InvoiceItemDTO {
     StringProperty value;
     IntegerProperty qty;
     BooleanProperty isCategory;
+    StringProperty category;
 
-    public InvoiceItemDTO(Integer id, Integer invoiceId, Integer msId, Integer year, String fieldName, Boolean credit, String value, Integer qty, Boolean isCategory) {
+    public InvoiceItemDTO(Integer id, Integer invoiceId, Integer msId, Integer year, String fieldName, Boolean credit, String value, Integer qty, Boolean isCategory, String category) {
         this.id = new SimpleIntegerProperty(id);
         this.invoiceId = new SimpleIntegerProperty(invoiceId);
         this.msId = new SimpleIntegerProperty(msId);
@@ -23,6 +24,7 @@ public class InvoiceItemDTO {
         this.value = new SimpleStringProperty(value);
         this.qty = new SimpleIntegerProperty(qty);
         this.isCategory = new SimpleBooleanProperty(isCategory);
+        this.category = new SimpleStringProperty(category);
     }
 
     public InvoiceItemDTO(Integer invoiceId, Integer msId, Integer year, String fieldName) {
@@ -35,6 +37,7 @@ public class InvoiceItemDTO {
         this.value = new SimpleStringProperty("0.00");
         this.qty = new SimpleIntegerProperty(0);
         this.isCategory = new SimpleBooleanProperty(false);
+        this.category = new SimpleStringProperty("none");
     }
 
     public final IntegerProperty idProperty() {
