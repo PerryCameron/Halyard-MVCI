@@ -10,6 +10,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
+import org.ecsail.dto.DbInvoiceDTO;
 import org.ecsail.dto.InvoiceDTO;
 import org.ecsail.widgetfx.*;
 
@@ -48,6 +49,9 @@ public class InvoiceView implements Builder<Tab> {
         scrollPane.setContent(vBox);
         vBox.getStyleClass().add("standard-box");
         vBox.getChildren().addAll(HBoxFx.customHBoxHeader(false),RegionFx.regionHeightOf(10.0));
+        for (DbInvoiceDTO dbInvoiceDTO : invoiceDTO.getDbInvoiceDTOS()) {
+            vBox.getChildren().add(new InvoiceItemRow(invoiceDTO, dbInvoiceDTO));
+        }
         return vBox;
     }
 
