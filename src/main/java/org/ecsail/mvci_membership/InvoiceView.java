@@ -26,22 +26,20 @@ public class InvoiceView implements Builder<Tab> {
     public Tab build() {
         Tab tab = new Tab();
         tab.setText(String.valueOf(invoiceDTO.getYear()));
-        invoiceDTO.listLoadedProperty().addListener(getDataLoadedListener(tab));
-        return tab;
-    }
-
-    private ChangeListener<Boolean> getDataLoadedListener(Tab tab) { // used on load to determine what is displayed
-        return ListenerFx.createSingleUseListener(invoiceDTO.listLoadedProperty(), () -> {  // data is loaded
+        ChangeListener<Boolean> dataLoadedListener =
+                ListenerFx.createSingleUseListener(invoiceDTO.listLoadedProperty(), () -> {  // data is loaded
             if (invoiceDTO.isCommitted()) tab.setContent(showCommittedInvoice()); // is committed no need to load more data
             else if (invoiceDTO.getFeeDTOS().isEmpty()) { // invoice is not committed and (feeDTO and DbInvoiceDTO) are not populated
                 invoiceDTO.feesLoadedProperty().addListener(
                         ListenerFx.createSingleUseListener(invoiceDTO.feesLoadedProperty(), () ->
-                    tab.setContent(showEditableInvoice())));
+                                tab.setContent(showEditableInvoice())));
                 membershipView.sendMessage().accept(MembershipMessage.LOAD_FEES);
             } else { // is not committed but data is already loaded (feeDTO and DbInvoiceDTO)
                 tab.setContent(showEditableInvoice());
             }
         });
+        invoiceDTO.listLoadedProperty().addListener(dataLoadedListener);
+        return tab;
     }
 
     private Node showEditableInvoice() {
@@ -57,7 +55,7 @@ public class InvoiceView implements Builder<Tab> {
         VBox vBox = VBoxFx.vBoxOf(new Insets(10,0,0,0)); // makes outer border
         vBox.getStyleClass().add("standard-box");
         vBox.getChildren().addAll(HBoxFx.customHBoxHeader(true),RegionFx.regionHeightOf(10.0));
-        invoiceDTO.getItemDTOS().stream()
+        invoiceDTO.getInvoiceItemDTOS().stream()
                 .filter(item -> !item.getValue().equals("0.00"))
                 .map(HBoxFx::customHBox)
                 .forEach(vBox.getChildren()::add);

@@ -19,7 +19,7 @@ public class InvoiceDTO {
     private final StringProperty maxCredit;
     private final BooleanProperty listLoaded = new SimpleBooleanProperty(false);
     private final BooleanProperty feesLoaded = new SimpleBooleanProperty(false);
-    private ObservableList<InvoiceItemDTO> itemDTOS = FXCollections.observableArrayList();
+    private ObservableList<DbInvoiceDTO> dbInvoiceDTOS = FXCollections.observableArrayList();
     private ObservableList<PaymentDTO> paymentDTOS = FXCollections.observableArrayList();
     private ObservableList<FeeDTO> feeDTOS = FXCollections.observableArrayList();
     private ObservableList<InvoiceItemDTO> invoiceItemDTOS = FXCollections.observableArrayList();
@@ -185,12 +185,15 @@ public class InvoiceDTO {
     public final void setMaxCredit(final String maxCredit) {
         this.maxCreditProperty().set(maxCredit);
     }
-    public ObservableList<InvoiceItemDTO> getItemDTOS() {
-        return itemDTOS;
+
+    public ObservableList<DbInvoiceDTO> getDbInvoiceDTOS() {
+        return dbInvoiceDTOS;
     }
-    public void setItemDTOS(ObservableList<InvoiceItemDTO> itemDTOS) {
-        this.itemDTOS = itemDTOS;
+
+    public void setDbInvoiceDTOS(ObservableList<DbInvoiceDTO> dbInvoiceDTOS) {
+        this.dbInvoiceDTOS = dbInvoiceDTOS;
     }
+
     public boolean isListLoaded() {
         return listLoaded.get();
     }

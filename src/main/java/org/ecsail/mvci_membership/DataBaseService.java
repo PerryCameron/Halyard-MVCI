@@ -393,9 +393,9 @@ public class DataBaseService {
             List<InvoiceItemDTO> invoiceItemDTOS = invoiceRepo.getInvoiceItemsByInvoiceId(membershipModel.getSelectedInvoice().getId());
             List<PaymentDTO> paymentDTOS = invoiceRepo.getPaymentByInvoiceId(membershipModel.getSelectedInvoice().getId());
             Platform.runLater(() -> {
-                membershipModel.getSelectedInvoice().getItemDTOS().clear();
+                membershipModel.getSelectedInvoice().getInvoiceItemDTOS().clear();
                 membershipModel.getSelectedInvoice().getPaymentDTOS().clear();
-                membershipModel.getSelectedInvoice().setItemDTOS(FXCollections.observableArrayList(invoiceItemDTOS));
+                membershipModel.getSelectedInvoice().setInvoiceItemDTOS(FXCollections.observableArrayList(invoiceItemDTOS));
                 membershipModel.getSelectedInvoice().setPaymentDTOS(FXCollections.observableArrayList(paymentDTOS));
                 // always choose the opposite of what the boolean is so the listener will trigger
                 membershipModel.getSelectedInvoice().setListLoaded(!membershipModel.getSelectedInvoice().isListLoaded());
@@ -406,9 +406,10 @@ public class DataBaseService {
     public void loadFees() {
         HandlingTools.queryForList(() -> {
             List<FeeDTO> feeDTOS = invoiceRepo.getFeesFromYear(membershipModel.getSelectedInvoice().getYear());
-
+            List<DbInvoiceDTO> dbInvoiceDTOS = invoiceRepo.getDbInvoiceByYear(membershipModel.getSelectedInvoice().getYear());
             Platform.runLater(() -> {
                 membershipModel.getSelectedInvoice().setFeeDTOS(FXCollections.observableArrayList(feeDTOS));
+                membershipModel.getSelectedInvoice().setDbInvoiceDTOS(FXCollections.observableArrayList(dbInvoiceDTOS));
                 membershipModel.getSelectedInvoice().feesLoadedProperty().set(!membershipModel.getSelectedInvoice().isFeesLoaded());
             });
         }, membershipModel.getMainModel(), logger);
