@@ -73,4 +73,10 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
         String query = "SELECT * FROM fee WHERE fee_year=?";
         return template.query(query, new FeeRowMapper(), year);
     }
+
+    @Override
+    public List<DbInvoiceDTO> getDbInvoiceByYear(int year) {
+        String query = "SELECT * FROM db_invoice WHERE FISCAL_YEAR=?";
+        return template.query(query, new DbInvoiceRowMapper(), year);
+    }
 }
