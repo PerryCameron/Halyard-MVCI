@@ -148,3 +148,14 @@
     -fx-font-size: 12pt;
     -fx-font-weight: bold;
 }
+
+.scroll-pane-border {
+    -fx-background-color: #6c7179;
+    -fx-border-color: #807f7f;
+    -fx-border-width: 2px;
+    -fx-border-style: solid;
+}
+
+.scroll-pane-border .thumb {
+    -fx-background-color: #ececec;
+}

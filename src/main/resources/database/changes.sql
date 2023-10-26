@@ -21,7 +21,7 @@ alter table invoice_item
 # updating kayak rows to match
 UPDATE invoice_item
 SET category = 'Kayak'
-WHERE FIELD_NAME IN ('Kayak Shed Key', 'Kayak Rack', 'Kayak Beach Rack') and FISCAL_YEAR=2023;
+WHERE FIELD_NAME IN ('Kayak Shed', 'Kayak Rack', 'Kayak Beach Rack') and FISCAL_YEAR=2023;
 # ECSC_SQL> UPDATE invoice_item
 #           SET category = 'kayak'
 #           WHERE FIELD_NAME IN ('Kayak Shed Key', 'Kayak Rack', 'Kayak Beach Rack') and FISCAL_YEAR=2023

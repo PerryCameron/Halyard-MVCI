@@ -6,6 +6,7 @@ import javafx.geometry.Orientation;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import org.ecsail.dto.DbInvoiceDTO;
@@ -27,35 +28,38 @@ public class InvoiceView implements Builder<Tab> {
     public Tab build() {
         Tab tab = new Tab();
         tab.setText(String.valueOf(invoiceDTO.getYear()));
+        ScrollPane scrollPane = PaneFx.scrollPaneOf();
+        scrollPane.getStyleClass().add("scroll-pane-border");
         ChangeListener<Boolean> dataLoadedListener =
                 ListenerFx.createSingleUseListener(invoiceDTO.listLoadedProperty(), () -> {  // data is loaded
             if (invoiceDTO.isCommitted()) tab.setContent(showCommittedInvoice()); // is committed no need to load more data
             else if (invoiceDTO.getFeeDTOS().isEmpty()) { // invoice is not committed and (feeDTO and DbInvoiceDTO) are not populated
                 invoiceDTO.feesLoadedProperty().addListener(
                         ListenerFx.createSingleUseListener(invoiceDTO.feesLoadedProperty(), () ->
-                                tab.setContent(showEditableInvoice())));
+                                scrollPane.setContent(showEditableInvoice())));
                 membershipView.sendMessage().accept(MembershipMessage.LOAD_FEES);
             } else { // is not committed but data is already loaded (feeDTO and DbInvoiceDTO)
-                tab.setContent(showEditableInvoice());
+                scrollPane.setContent(showEditableInvoice());
             }
         });
+        tab.setContent(scrollPane);
         invoiceDTO.listLoadedProperty().addListener(dataLoadedListener);
         return tab;
     }
 
     private Node showEditableInvoice() {
-        ScrollPane scrollPane = PaneFx.scrollPaneOf();
-        VBox vBox = VBoxFx.vBoxOf(new Insets(2,2,2,2)); // makes outer border
-        scrollPane.setContent(vBox);
-        vBox.getStyleClass().add("standard-box");
-        vBox.getChildren().addAll(HBoxFx.customHBoxHeader(false),RegionFx.regionHeightOf(10.0));
-        invoiceDTO.getDbInvoiceDTOS().sort(Comparator.comparing(DbInvoiceDTO::getOrder));
+        VBox vBox = VBoxFx.vBoxOf(5.0,new Insets(10,0,0,7)); // makes outer border
+//        HBox.setHgrow(vBox, Priority.ALWAYS);
+//        vBox.getChildren().addAll(HBoxFx.customHBoxHeader(false),RegionFx.regionHeightOf(10.0));
+        invoiceDTO.getDbInvoiceDTOS().sort(Comparator.comparing(DbInvoiceDTO::getOrder).reversed());
         for (DbInvoiceDTO dbInvoiceDTO : invoiceDTO.getDbInvoiceDTOS()) {
             if(dbInvoiceDTO.isItemized())
             vBox.getChildren().add(new TitledPane(dbInvoiceDTO.getFieldName(), new InvoiceItemGroup(invoiceDTO, dbInvoiceDTO)));
             else
             vBox.getChildren().add(new InvoiceItemRow(invoiceDTO, dbInvoiceDTO));
         }
+//        vBox.prefWidthProperty().bind(hBox.widthProperty());
+        vBox.setPrefWidth(470);
         return vBox;
     }
 

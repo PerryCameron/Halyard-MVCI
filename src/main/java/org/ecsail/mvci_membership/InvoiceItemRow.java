@@ -1,6 +1,8 @@
 package org.ecsail.mvci_membership;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -43,12 +45,72 @@ public class InvoiceItemRow extends HBox {
         VBox vBox1 = VBoxFx.vBoxOf(140.0 ,Pos.CENTER_LEFT);
         vBox1.getChildren().add(new Label(invoiceItemDTO.getFieldName() + ":"));
         VBox vBox2 = VBoxFx.vBoxOf(65.0 ,Pos.CENTER_LEFT);
+        vBox2.getChildren().add(widgetControl());
         VBox vBox3 = VBoxFx.vBoxOf(30.0 ,Pos.CENTER_RIGHT);
+        vBox3.getChildren().add(addMultiple());
         VBox vBox4 = VBoxFx.vBoxOf(50.0 ,Pos.CENTER_RIGHT);
+        vBox4.getChildren().add(new Label("0.00"));
         VBox vBox5 = VBoxFx.vBoxOf(70.0 ,Pos.CENTER_RIGHT);
+        vBox5.getChildren().add(new Label("0.00"));
 //        if(feeDTO != null)
 //            vBox5.getChildren().add(new Label(feeDTO.getFieldName()));
         getChildren().addAll(vBox1,vBox2,vBox3,vBox4,vBox5);
+    }
+
+    private Node addMultiple() {
+        Label label = new Label();
+        if(dbInvoiceDTO.isMultiplied()) label.setText("X");
+        return label;
+    }
+
+    private Control widgetControl() {
+                switch (dbInvoiceDTO.getWidgetType()) {
+            case "text-field" -> {
+                textField = new TextField();
+                textField.setPrefWidth(dbInvoiceDTO.getWidth());
+                textField.setText(invoiceItemDTO.getValue());
+//                setTextFieldListener();
+                // below if statement added because it needed to update dues.
+//                if(!invoiceItemDTO.getValue().equals("0.00")) {
+//                    invoiceItemDTO.setQty(1);
+//                    updateBalance();
+//                    checkIfNotCommittedAndUpdateSql();
+//                }
+                return textField;
+            }
+            case "spinner","itemized" -> {
+                spinner = new Spinner<>();
+                spinner.setPrefWidth(dbInvoiceDTO.getWidth());
+                int max = dbInvoiceDTO.getMaxQty();
+                int value = invoiceItemDTO.getQty();
+                SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, max, value);
+                spinner.setValueFactory(valueFactory);
+
+//                price.setText(String.valueOf(feeDTO.getFieldValue()));
+////                setSpinnerListener();
+//                if (dbInvoiceDTO.isPrice_editable())
+//                    setPriceChangeListener(new TextField(price.getText()));
+                return spinner;
+            }
+            case "combo-box" -> {
+                comboBox = new ComboBox<>();
+                comboBox.setPrefWidth(dbInvoiceDTO.getWidth());
+//                price.setText(String.valueOf(fee.getFieldValue()));
+//                // fill comboBox
+//                for (int j = 0; j < dbInvoiceDTO.getMaxQty(); j++) comboBox.getItems().add(j);
+//                comboBox.getSelectionModel().select(invoiceItemDTO.getQty());
+////                setComboBoxListener();
+//                if (dbInvoiceDTO.isPrice_editable())
+//                    setPriceChangeListener(new TextField(price.getText()));
+                return comboBox;
+            }
+            case "none" -> {
+                textField = new TextField("none");
+                textField.setVisible(false);
+                return textField;
+            }
+        }
+        return null;
     }
 
 //    private Control setControlWidget() {
