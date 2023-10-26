@@ -135,7 +135,7 @@ public class InvoiceItemDTO {
         this.qtyProperty().set(qty);
     }
 
-    public boolean isIsCategory() {
+    public boolean isCategory() {
         return isCategory.get();
     }
 
@@ -145,6 +145,18 @@ public class InvoiceItemDTO {
 
     public void setIsCategory(boolean isCategory) {
         this.isCategory.set(isCategory);
+    }
+
+    public String getCategory() {
+        return category.get();
+    }
+
+    public StringProperty categoryProperty() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category.set(category);
     }
 
     @Override

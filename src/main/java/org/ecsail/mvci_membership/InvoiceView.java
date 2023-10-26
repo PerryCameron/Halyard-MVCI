@@ -4,15 +4,15 @@ import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Separator;
-import javafx.scene.control.Tab;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import org.ecsail.dto.DbInvoiceDTO;
 import org.ecsail.dto.InvoiceDTO;
 import org.ecsail.widgetfx.*;
+
+import java.util.Comparator;
 
 public class InvoiceView implements Builder<Tab> {
     private final MembershipView membershipView;
@@ -49,7 +49,11 @@ public class InvoiceView implements Builder<Tab> {
         scrollPane.setContent(vBox);
         vBox.getStyleClass().add("standard-box");
         vBox.getChildren().addAll(HBoxFx.customHBoxHeader(false),RegionFx.regionHeightOf(10.0));
+        invoiceDTO.getDbInvoiceDTOS().sort(Comparator.comparing(DbInvoiceDTO::getOrder));
         for (DbInvoiceDTO dbInvoiceDTO : invoiceDTO.getDbInvoiceDTOS()) {
+            if(dbInvoiceDTO.isItemized())
+            vBox.getChildren().add(new TitledPane(dbInvoiceDTO.getFieldName(), new InvoiceItemGroup(invoiceDTO, dbInvoiceDTO)));
+            else
             vBox.getChildren().add(new InvoiceItemRow(invoiceDTO, dbInvoiceDTO));
         }
         return vBox;

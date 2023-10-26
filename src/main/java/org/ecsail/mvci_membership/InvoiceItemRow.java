@@ -13,30 +13,41 @@ import org.ecsail.widgetfx.VBoxFx;
 
 public class InvoiceItemRow extends HBox {
 
-    private final InvoiceDTO invoiceDTO;
-    private final DbInvoiceDTO dbInvoiceDTO;
+    private InvoiceDTO invoiceDTO;
+    private DbInvoiceDTO dbInvoiceDTO;
     protected InvoiceItemDTO invoiceItemDTO;
     private FeeDTO feeDTO = null;
     private TextField textField;
     private Spinner<Integer> spinner;
     private ComboBox<Integer> comboBox;
 
+    public InvoiceItemRow(InvoiceItemDTO invoiceItemDTO, InvoiceItemGroup invoiceItemGroup) {  // this is used for sub items to groups
+        this.invoiceDTO = invoiceItemGroup.getInvoiceDTO();
+        this.dbInvoiceDTO = invoiceItemGroup.getDbInvoiceDTO();
+        this.invoiceItemDTO = invoiceItemDTO;
+        buildRow();
+    }
 
-
-    public InvoiceItemRow(InvoiceDTO invoiceDTO, DbInvoiceDTO dbInvoiceDTO) {
+    public InvoiceItemRow(InvoiceDTO invoiceDTO, DbInvoiceDTO dbInvoiceDTO) { // this is for items
         this.invoiceDTO = invoiceDTO;
         this.dbInvoiceDTO = dbInvoiceDTO;
         this.invoiceItemDTO = setItem();
-        for (FeeDTO f : invoiceDTO.getFeeDTOS()) {
+        buildRow();
+    }
+
+    private void buildRow() {
+        for (FeeDTO f: invoiceDTO.getFeeDTOS()) {
             if (dbInvoiceDTO.getFieldName().equals(f.getFieldName()))
                 this.feeDTO = f;
         }
         VBox vBox1 = VBoxFx.vBoxOf(140.0 ,Pos.CENTER_LEFT);
-        vBox1.getChildren().add(new Label(dbInvoiceDTO.getFieldName() + ":"));
+        vBox1.getChildren().add(new Label(invoiceItemDTO.getFieldName() + ":"));
         VBox vBox2 = VBoxFx.vBoxOf(65.0 ,Pos.CENTER_LEFT);
         VBox vBox3 = VBoxFx.vBoxOf(30.0 ,Pos.CENTER_RIGHT);
         VBox vBox4 = VBoxFx.vBoxOf(50.0 ,Pos.CENTER_RIGHT);
         VBox vBox5 = VBoxFx.vBoxOf(70.0 ,Pos.CENTER_RIGHT);
+//        if(feeDTO != null)
+//            vBox5.getChildren().add(new Label(feeDTO.getFieldName()));
         getChildren().addAll(vBox1,vBox2,vBox3,vBox4,vBox5);
     }
 
