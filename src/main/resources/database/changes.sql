@@ -44,3 +44,41 @@ WHERE FIELD_NAME IN ('Beam Over 5 foot', 'Beam Under 5 foot') and FISCAL_YEAR=20
 #           SET category = 'Summer Storage'
 #           WHERE FIELD_NAME IN ('Beam Over 5 foot', 'Beam Under 5 foot') and FISCAL_YEAR=2023
 #               [2023-10-25 16:33:05] 672 rows affected in 250 ms
+
+
+
+
+
+
+
+# This is designed to update Kayak rows to match new format (this fucking works, lol)
+-- Begin a transaction to ensure data consistency
+START TRANSACTION;
+
+-- Calculate SUM(QTY) and SUM(VALUE) for each MS_ID for the specified FIELD_NAMEs
+CREATE TEMPORARY TABLE TempSums AS
+SELECT
+    MS_ID,
+    SUM(QTY) as total_qty,
+    SUM(VALUE) as total_value
+FROM
+    invoice_item
+WHERE
+        FIELD_NAME IN ('Kayak Rack', 'Kayak Beach Rack', 'Kayak Shed')
+  AND FISCAL_YEAR = 2023
+GROUP BY
+    MS_ID;
+
+-- Update the Kayak rows using the summed values
+UPDATE
+    invoice_item as ii
+        JOIN
+        TempSums ts ON ii.MS_ID = ts.MS_ID
+SET
+    ii.QTY = ts.total_qty,
+    ii.VALUE = ts.total_value
+WHERE
+        ii.FIELD_NAME = 'Kayak' AND ii.FISCAL_YEAR = 2023;
+
+-- Commit the transaction
+COMMIT;

@@ -19,6 +19,7 @@ public class InvoiceItemRow extends HBox {
     private InvoiceDTO invoiceDTO;
     private DbInvoiceDTO dbInvoiceDTO;
     private InvoiceItemDTO invoiceItemDTO;
+    private InvoiceItemGroup invoiceItemGroup = null;
     private FeeDTO feeDTO = null;
     private TextField textField;
     private Spinner<Integer> spinner;
@@ -28,6 +29,7 @@ public class InvoiceItemRow extends HBox {
         this.invoiceDTO = invoiceItemGroup.getInvoiceDTO();
         this.dbInvoiceDTO = invoiceItemGroup.getDbInvoiceDTO();
         this.invoiceItemDTO = invoiceItemDTO;
+        this.invoiceItemGroup = invoiceItemGroup;
         buildRow();
     }
 
@@ -44,11 +46,11 @@ public class InvoiceItemRow extends HBox {
         vBox1.getChildren().add(new Label(invoiceItemDTO.getFieldName() + ":"));
         VBox vBox2 = VBoxFx.vBoxOf(65.0, Pos.CENTER_LEFT);
         vBox2.getChildren().add(widgetControl());
-        VBox vBox3 = VBoxFx.vBoxOf(30.0, Pos.CENTER_RIGHT);
+        VBox vBox3 = VBoxFx.vBoxOf(40.0, Pos.CENTER_RIGHT);
         vBox3.getChildren().add(addMultiple());
-        VBox vBox4 = VBoxFx.vBoxOf(60.0, Pos.CENTER_RIGHT);
+        VBox vBox4 = VBoxFx.vBoxOf(70.0, Pos.CENTER_RIGHT);
         vBox4.getChildren().add(addFee());
-        VBox vBox5 = VBoxFx.vBoxOf(90.0, Pos.CENTER_RIGHT);
+        VBox vBox5 = VBoxFx.vBoxOf(110.0, Pos.CENTER_RIGHT);
         vBox5.getChildren().add(totalLabel());
         getChildren().addAll(vBox1, vBox2, vBox3, vBox4);
         if(invoiceItemDTO.getCategory().equals("none")) getChildren().add(vBox5);
@@ -57,19 +59,20 @@ public class InvoiceItemRow extends HBox {
     private Node totalLabel() {
         if(!invoiceItemDTO.getCategory().equals("none")) return new Region();
         Label label = new Label();
+        label.getStyleClass().add("standard-black-label");
         label.textProperty().bind(invoiceItemDTO.valueProperty());
         return label;
     }
 
     private FeeDTO attachCorrectFeeDTO() {
         if (dbInvoiceDTO.isAutoPopulate()) return null;
-        for (FeeDTO f : invoiceDTO.getFeeDTOS()) {
+        for (FeeDTO feeDTO : invoiceDTO.getFeeDTOS()) {
             if (!invoiceItemDTO.getCategory().equals("none")) {  // add fees for category invoice items
-                if (invoiceItemDTO.getFieldName().equals(f.getDescription()))
-                    return f;
+                if (invoiceItemDTO.getFieldName().equals(feeDTO.getDescription()))
+                    return feeDTO;
             } else {  // add fees for invoice items
-                if (invoiceItemDTO.getFieldName().equals(f.getFieldName()))
-                    return f;
+                if (invoiceItemDTO.getFieldName().equals(feeDTO.getFieldName()))
+                    return feeDTO;
             }
         }
         return null;
@@ -77,6 +80,7 @@ public class InvoiceItemRow extends HBox {
 
     private Node addFee() {
         Label label = new Label("");
+        label.getStyleClass().add("standard-black-label");
         if (feeDTO != null) label.setText(feeDTO.getFieldValue());
         return label;
     }
@@ -105,8 +109,6 @@ public class InvoiceItemRow extends HBox {
             case "spinner", "itemized" -> {
                 spinner = new Spinner<>();
                 spinner.setPrefWidth(dbInvoiceDTO.getWidth());
-
-//                price.setText(String.valueOf(feeDTO.getFieldValue()));
                 setSpinnerListener();
 //                if (dbInvoiceDTO.isPrice_editable())
 //                    setPriceChangeListener(new TextField(price.getText()));
@@ -155,6 +157,7 @@ public class InvoiceItemRow extends HBox {
             String calculatedTotal = String.valueOf(new BigDecimal(feeDTO.getFieldValue()).multiply(BigDecimal.valueOf(newValue)));
             invoiceItemDTO.setValue(calculatedTotal);
             invoiceItemDTO.setQty(newValue);
+            if(invoiceItemGroup != null) invoiceItemGroup.updateGroupTotal();
 //            updateBalance();
         });
     }

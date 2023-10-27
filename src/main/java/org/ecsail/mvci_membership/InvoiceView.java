@@ -4,9 +4,11 @@ import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Separator;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import org.ecsail.dto.DbInvoiceDTO;
@@ -48,14 +50,16 @@ public class InvoiceView implements Builder<Tab> {
     }
 
     private Node showEditableInvoice() {
-        VBox vBox = VBoxFx.vBoxOf(5.0,new Insets(10,0,0,7)); // makes outer border
-//        HBox.setHgrow(vBox, Priority.ALWAYS);
-//        vBox.getChildren().addAll(HBoxFx.customHBoxHeader(false),RegionFx.regionHeightOf(10.0));
+        VBox vBox = VBoxFx.vBoxOf(5.0,new Insets(10,0,0,15)); // makes outer border
+        vBox.getChildren().addAll(HBoxFx.customHBoxHeader(false),RegionFx.regionHeightOf(10.0));
         invoiceDTO.getDbInvoiceDTOS().sort(Comparator.comparing(DbInvoiceDTO::getOrder).reversed());
         for (DbInvoiceDTO dbInvoiceDTO : invoiceDTO.getDbInvoiceDTOS()) {
-            if(dbInvoiceDTO.isItemized())
-            vBox.getChildren().add(new TitledPane(dbInvoiceDTO.getFieldName(), new InvoiceItemGroup(invoiceDTO, dbInvoiceDTO)));
-            else
+            if(dbInvoiceDTO.isItemized()) {
+                TitledPane titledPane = new TitledPane(dbInvoiceDTO.getFieldName(), new InvoiceItemGroup(invoiceDTO, dbInvoiceDTO));
+                titledPane.getStyleClass().add("custom-title-pane");
+                titledPane.setExpanded(false);
+                vBox.getChildren().add(titledPane);
+            } else
             vBox.getChildren().add(new InvoiceItemRow(invoiceDTO, dbInvoiceDTO));
         }
 //        vBox.prefWidthProperty().bind(hBox.widthProperty());

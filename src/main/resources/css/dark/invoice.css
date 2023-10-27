@@ -42,18 +42,18 @@
     -fx-font-weight: bold;
 }
 
-.custom-titlepane .content {
+.custom-title-pane .content {
     -fx-border-width: 0;
 }
 
-.custom-titlepane > .title {
+.custom-title-pane > .title {
     -fx-background-color: transparent;
     -fx-background-insets: 0, 1, 2;
     -fx-background-radius: 3 3 0 0, 2 2 0 0, 1 1 0 0;
     -fx-padding: 0.3333em 0.75em 0.3333em 0.75em; /* 4 9 4 9 */
 }
 
-.custom-titlepane > .title:hover {
+.custom-title-pane > .title:hover {
     -fx-background-color: #1658e7;
 }
 
