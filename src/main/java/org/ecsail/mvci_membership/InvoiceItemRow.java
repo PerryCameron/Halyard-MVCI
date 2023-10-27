@@ -1,10 +1,10 @@
 package org.ecsail.mvci_membership;
 
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import org.ecsail.dto.DbInvoiceDTO;
 import org.ecsail.dto.FeeDTO;
@@ -12,12 +12,13 @@ import org.ecsail.dto.InvoiceDTO;
 import org.ecsail.dto.InvoiceItemDTO;
 import org.ecsail.widgetfx.VBoxFx;
 
+import java.math.BigDecimal;
+
 
 public class InvoiceItemRow extends HBox {
-
     private InvoiceDTO invoiceDTO;
     private DbInvoiceDTO dbInvoiceDTO;
-    protected InvoiceItemDTO invoiceItemDTO;
+    private InvoiceItemDTO invoiceItemDTO;
     private FeeDTO feeDTO = null;
     private TextField textField;
     private Spinner<Integer> spinner;
@@ -38,33 +39,56 @@ public class InvoiceItemRow extends HBox {
     }
 
     private void buildRow() {
-        for (FeeDTO f: invoiceDTO.getFeeDTOS()) {
-            if (dbInvoiceDTO.getFieldName().equals(f.getFieldName()))
-                this.feeDTO = f;
-        }
-        VBox vBox1 = VBoxFx.vBoxOf(140.0 ,Pos.CENTER_LEFT);
+        this.feeDTO = attachCorrectFeeDTO();
+        VBox vBox1 = VBoxFx.vBoxOf(140.0, Pos.CENTER_LEFT);
         vBox1.getChildren().add(new Label(invoiceItemDTO.getFieldName() + ":"));
-        VBox vBox2 = VBoxFx.vBoxOf(65.0 ,Pos.CENTER_LEFT);
+        VBox vBox2 = VBoxFx.vBoxOf(65.0, Pos.CENTER_LEFT);
         vBox2.getChildren().add(widgetControl());
-        VBox vBox3 = VBoxFx.vBoxOf(30.0 ,Pos.CENTER_RIGHT);
+        VBox vBox3 = VBoxFx.vBoxOf(30.0, Pos.CENTER_RIGHT);
         vBox3.getChildren().add(addMultiple());
-        VBox vBox4 = VBoxFx.vBoxOf(50.0 ,Pos.CENTER_RIGHT);
-        vBox4.getChildren().add(new Label("0.00"));
-        VBox vBox5 = VBoxFx.vBoxOf(70.0 ,Pos.CENTER_RIGHT);
-        vBox5.getChildren().add(new Label("0.00"));
-//        if(feeDTO != null)
-//            vBox5.getChildren().add(new Label(feeDTO.getFieldName()));
-        getChildren().addAll(vBox1,vBox2,vBox3,vBox4,vBox5);
+        VBox vBox4 = VBoxFx.vBoxOf(60.0, Pos.CENTER_RIGHT);
+        vBox4.getChildren().add(addFee());
+        VBox vBox5 = VBoxFx.vBoxOf(90.0, Pos.CENTER_RIGHT);
+        vBox5.getChildren().add(totalLabel());
+        getChildren().addAll(vBox1, vBox2, vBox3, vBox4);
+        if(invoiceItemDTO.getCategory().equals("none")) getChildren().add(vBox5);
+    }
+
+    private Node totalLabel() {
+        if(!invoiceItemDTO.getCategory().equals("none")) return new Region();
+        Label label = new Label();
+        label.textProperty().bind(invoiceItemDTO.valueProperty());
+        return label;
+    }
+
+    private FeeDTO attachCorrectFeeDTO() {
+        if (dbInvoiceDTO.isAutoPopulate()) return null;
+        for (FeeDTO f : invoiceDTO.getFeeDTOS()) {
+            if (!invoiceItemDTO.getCategory().equals("none")) {  // add fees for category invoice items
+                if (invoiceItemDTO.getFieldName().equals(f.getDescription()))
+                    return f;
+            } else {  // add fees for invoice items
+                if (invoiceItemDTO.getFieldName().equals(f.getFieldName()))
+                    return f;
+            }
+        }
+        return null;
+    }
+
+    private Node addFee() {
+        Label label = new Label("");
+        if (feeDTO != null) label.setText(feeDTO.getFieldValue());
+        return label;
     }
 
     private Node addMultiple() {
         Label label = new Label();
-        if(dbInvoiceDTO.isMultiplied()) label.setText("X");
+        if (dbInvoiceDTO.isMultiplied()) label.setText("X");
         return label;
     }
 
     private Control widgetControl() {
-                switch (dbInvoiceDTO.getWidgetType()) {
+        switch (dbInvoiceDTO.getWidgetType()) {
             case "text-field" -> {
                 textField = new TextField();
                 textField.setPrefWidth(dbInvoiceDTO.getWidth());
@@ -78,16 +102,12 @@ public class InvoiceItemRow extends HBox {
 //                }
                 return textField;
             }
-            case "spinner","itemized" -> {
+            case "spinner", "itemized" -> {
                 spinner = new Spinner<>();
                 spinner.setPrefWidth(dbInvoiceDTO.getWidth());
-                int max = dbInvoiceDTO.getMaxQty();
-                int value = invoiceItemDTO.getQty();
-                SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, max, value);
-                spinner.setValueFactory(valueFactory);
 
 //                price.setText(String.valueOf(feeDTO.getFieldValue()));
-////                setSpinnerListener();
+                setSpinnerListener();
 //                if (dbInvoiceDTO.isPrice_editable())
 //                    setPriceChangeListener(new TextField(price.getText()));
                 return spinner;
@@ -113,70 +133,34 @@ public class InvoiceItemRow extends HBox {
         return null;
     }
 
-//    private Control setControlWidget() {
-//        switch (dbInvoiceDTO.getWidgetType()) {
-//            case "text-field" -> {
-//                textField = new TextField();
-//                textField.setPrefWidth(dbInvoiceDTO.getWidth());
-//                textField.setText(invoiceItemDTO.getValue());
-////                setTextFieldListener();
-//                // below if statement added because it needed to update dues.
-//                if(!invoiceItemDTO.getValue().equals("0.00")) {
-//                    invoiceItemDTO.setQty(1);
-//                    updateBalance();
-//                    checkIfNotCommittedAndUpdateSql();
-//                }
-//                return textField;
-//            }
-//            case "spinner" -> {
-//                spinner = new Spinner<>();
-//                spinner.setPrefWidth(dbInvoiceDTO.getWidth());
-//                price.setText(String.valueOf(feeDTO.getFieldValue()));
-////                setSpinnerListener();
-//                if (dbInvoiceDTO.isPrice_editable())
-//                    setPriceChangeListener(new TextField(price.getText()));
-//                return spinner;
-//            }
-//            case "combo-box" -> {
-//                comboBox = new ComboBox<>();
-//                comboBox.setPrefWidth(dbInvoiceDTO.getWidth());
-//                price.setText(String.valueOf(fee.getFieldValue()));
-//                // fill comboBox
-//                for (int j = 0; j < dbInvoiceDTO.getMaxQty(); j++) comboBox.getItems().add(j);
-//                comboBox.getSelectionModel().select(invoiceItemDTO.getQty());
-////                setComboBoxListener();
-//                if (dbInvoiceDTO.isPrice_editable())
-//                    setPriceChangeListener(new TextField(price.getText()));
-//                return comboBox;
-//            }
-//            case "itemized" -> { // more complex so layout and logic in different class
-//                // setForTitledPane(); <- gets called in setEdit() in normal but here in mock
-//                TitledPane titledPane = new TitledPane(fee.getFieldName(),new ItemizedCategory(this));
-//                titledPane.setExpanded(false);
-//                titledPane.getStyleClass().add("custom-titlepane");
-//                return titledPane;
-//            }
-//            case "none" -> {
-//                textField = new TextField("none");
-//                textField.setVisible(false);
-//                return textField;
-//            }
-//        }
-//        return null;
-//    }
-
     private InvoiceItemDTO setItem() {
         // we will match this db_invoice to invoiceItem, if nothing found then create an invoice item
         InvoiceItemDTO currentInvoiceItem = invoiceDTO.getInvoiceItemDTOS().stream()
                 .filter(i -> i.getFieldName().equals(dbInvoiceDTO.getFieldName())).findFirst().orElse(null);
-        if(currentInvoiceItem == null) return addNewInvoiceItem();
+        if (currentInvoiceItem == null) return addNewInvoiceItem();
         return currentInvoiceItem;
     }
 
     private InvoiceItemDTO addNewInvoiceItem() { //
-        InvoiceItemDTO newInvoiceItem = new InvoiceItemDTO(invoiceDTO.getId(),invoiceDTO.getMsId(),invoiceDTO.getYear(),dbInvoiceDTO.getFieldName());
+        InvoiceItemDTO newInvoiceItem = new InvoiceItemDTO(invoiceDTO.getId(), invoiceDTO.getMsId(), invoiceDTO.getYear(), dbInvoiceDTO.getFieldName());
         invoiceDTO.getInvoiceItemDTOS().add(newInvoiceItem);
 //        SqlInsert.addInvoiceItemRecord(newInvoiceItem);
         return newInvoiceItem;
     }
+
+    private void setSpinnerListener() {
+        SpinnerValueFactory<Integer> spinnerValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, dbInvoiceDTO.getMaxQty(), invoiceItemDTO.getQty());
+        spinner.setValueFactory(spinnerValueFactory);
+        spinner.valueProperty().addListener((observable, oldValue, newValue) -> {
+            String calculatedTotal = String.valueOf(new BigDecimal(feeDTO.getFieldValue()).multiply(BigDecimal.valueOf(newValue)));
+            invoiceItemDTO.setValue(calculatedTotal);
+            invoiceItemDTO.setQty(newValue);
+//            updateBalance();
+        });
+    }
+
+    private void updateBalance() {
+
+    }
+
 }
