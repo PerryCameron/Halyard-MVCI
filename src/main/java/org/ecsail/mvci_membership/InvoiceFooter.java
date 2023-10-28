@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -26,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InvoiceFooter implements Builder<Region> {
-
     private final InvoiceView invoiceView;
     private final InvoiceDTO invoiceDTO;
     TableView<PaymentDTO> tableView;
@@ -38,7 +38,7 @@ public class InvoiceFooter implements Builder<Region> {
 
     @Override
     public Region build() {
-        VBox vBox = new VBox();
+        VBox vBox = VBoxFx.vBoxOf(new Insets(0,0,10,0));
         vBox.getChildren().addAll(tableBox(), totalsBox());
         return vBox;
     }
@@ -50,7 +50,12 @@ public class InvoiceFooter implements Builder<Region> {
     }
 
     private Node controlBox() {
-        VBox vBox = new VBox(5);
+        VBox vBox = VBoxFx.vBoxOf(90.0, 10.0, new Insets(10,0,0,20));
+        vBox.getChildren().addAll(new CheckBox("Renew"),
+                ButtonFx.buttonOf("Commit", 70, () -> {
+                    System.out.println("Committing");
+                })
+        );
         return vBox;
     }
 
@@ -71,7 +76,7 @@ public class InvoiceFooter implements Builder<Region> {
         value.textProperty().bind(stringProperty);
         VBox vBox1 = VBoxFx.vBoxOf(200.0, Pos.CENTER_LEFT);
         vBox1.getChildren().add(label);
-        VBox vBox2 = VBoxFx.vBoxOf(150.0, Pos.CENTER_RIGHT);
+        VBox vBox2 = VBoxFx.vBoxOf(160.0, Pos.CENTER_RIGHT);
         vBox2.getChildren().add(value);
         hBox.getChildren().addAll(vBox1,vBox2);
         return hBox;
@@ -150,9 +155,7 @@ public class InvoiceFooter implements Builder<Region> {
             var paymentType = PaymentType.getByCode(paymentCode);
             return new SimpleObjectProperty<>(paymentType);
         });
-
         col2.setCellFactory(ComboBoxTableCell.forTableColumn(paymentTypeList));
-
         col2.setOnEditCommit((TableColumn.CellEditEvent<PaymentDTO, PaymentType> event) -> {
             var pos = event.getTablePosition();
             var newPaymentType = event.getNewValue();
