@@ -1,18 +1,10 @@
 package org.ecsail.widgetfx;
 
 import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.scene.control.Tab;
-import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
-import org.ecsail.BaseApplication;
-import org.ecsail.dto.InvoiceItemDTO;
-import org.ecsail.mvci_membership.MembershipMessage;
 
 public class ListenerFx {
     public static void createSingleUseTabListener(Tab tab, Runnable action) {
@@ -32,8 +24,6 @@ public class ListenerFx {
     }
 
     public static ChangeListener<Boolean> createSingleUseListener(BooleanProperty booleanProperty, Runnable action) {
-        System.out.println("createSingleUseListener(BooleanProperty booleanProperty, Runnable action)");
-        System.out.println("bool=" + booleanProperty.get());
         ChangeListener<Boolean>[] listener = new ChangeListener[1];
         listener[0] = (observable, oldValue, newValue) -> {
                 action.run();
@@ -44,7 +34,13 @@ public class ListenerFx {
     }
 
     public static <T extends Enum<T>> ChangeListener<T> createEnumListener(Runnable action) {
-        ChangeListener<T> listener = (observable, oldValue, newValue) -> action.run();
-        return listener;
+        return (observable, oldValue, newValue) -> action.run();
+    }
+
+    public static ChangeListener<String> createMultipleUseChangeListener(Runnable action) {
+        return (observable, oldValue, newValue) -> {
+            // This code will run whenever the value changes
+            action.run();
+        };
     }
 }

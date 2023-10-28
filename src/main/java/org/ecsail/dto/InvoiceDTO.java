@@ -4,6 +4,8 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
+import java.math.BigDecimal;
+
 public class InvoiceDTO {
     private final IntegerProperty id;
     private final IntegerProperty msId;
@@ -70,6 +72,37 @@ public class InvoiceDTO {
         this.supplemental = new SimpleBooleanProperty(false);
         this.maxCredit = new SimpleStringProperty("");
     }
+
+    public void updateBalance() {
+        BigDecimal zero = BigDecimal.ZERO;
+
+        BigDecimal totalCredit = invoiceItemDTOS.stream()
+                .filter(InvoiceItemDTO::isCredit)
+                .map(i -> new BigDecimal(i.getValue()))
+                .reduce(zero, BigDecimal::add);
+
+        BigDecimal totalFees = invoiceItemDTOS.stream()
+                .filter(i -> !i.isCredit() && i.getCategory().equals("none"))
+                .map(i -> new BigDecimal(i.getValue()))
+                .reduce(zero, BigDecimal::add);
+
+        BigDecimal totalPayments = paymentDTOS.stream()
+                .map(p -> new BigDecimal(p.getPaymentAmount()))
+                .reduce(zero, BigDecimal::add);
+
+        BigDecimal balance = totalFees.subtract(totalCredit).subtract(totalPayments);
+
+        setCredit(totalCredit.toString());
+        setTotal(totalFees.toString());
+        setPaid(totalPayments.toString());
+        setBalance(balance.toString());
+
+        System.out.println("Total Fees: " + getTotal());
+        System.out.println("Total Credit: " + getCredit());
+        System.out.println("Payment: " + getPaid());
+        System.out.println("Balance: " + getBalance());
+    }
+
 
     public ObservableList<PaymentDTO> getPaymentDTOS() {
         return paymentDTOS;

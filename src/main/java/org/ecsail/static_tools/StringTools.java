@@ -6,6 +6,7 @@ import javafx.beans.property.SimpleStringProperty;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Arrays;
 import java.util.List;
 import java.util.StringJoiner;
@@ -104,6 +105,19 @@ public class StringTools {
 				"KS","KY","LA","ME","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR",
 				"MD","MA","MI","MN","MS","MO","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA",
 				"WV","WI","WY");
+	}
+
+	public static String validateCurrency(String input) {
+		// Regular expression to check if the input is a proper integer or has decimal places
+		String regex = "^\\d+(\\.\\d{1,})?$";
+		if (input.matches(regex)) {
+			BigDecimal value = new BigDecimal(input);
+			// Round to 2 decimal places
+			value = value.setScale(2, RoundingMode.HALF_UP);
+			return String.format("%.2f", value);
+		} else {
+			return "0.00";
+		}
 	}
 	
 }

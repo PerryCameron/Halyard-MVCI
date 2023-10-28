@@ -1,5 +1,6 @@
 package org.ecsail.mvci_membership;
 
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
@@ -10,20 +11,21 @@ import org.ecsail.dto.DbInvoiceDTO;
 import org.ecsail.dto.FeeDTO;
 import org.ecsail.dto.InvoiceDTO;
 import org.ecsail.dto.InvoiceItemDTO;
+import org.ecsail.static_tools.StringTools;
+import org.ecsail.widgetfx.ListenerFx;
 import org.ecsail.widgetfx.VBoxFx;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 
 public class InvoiceItemRow extends HBox {
     private InvoiceDTO invoiceDTO;
-    private DbInvoiceDTO dbInvoiceDTO;
-    private InvoiceItemDTO invoiceItemDTO;
+    private DbInvoiceDTO dbInvoiceDTO; // LIST of these in InvoiceDTO, this one is relevant here
+    private InvoiceItemDTO invoiceItemDTO; // LIST of these in InvoiceDTO, this one is relevant here
     private InvoiceItemGroup invoiceItemGroup = null;
-    private FeeDTO feeDTO = null;
-    private TextField textField;
-    private Spinner<Integer> spinner;
-    private ComboBox<Integer> comboBox;
+    private FeeDTO feeDTO = null; // LIST of these in InvoiceDTO, this one is relevant here
+
 
     public InvoiceItemRow(InvoiceItemDTO invoiceItemDTO, InvoiceItemGroup invoiceItemGroup) {  // this is used for groups
         this.invoiceDTO = invoiceItemGroup.getInvoiceDTO();
@@ -42,6 +44,7 @@ public class InvoiceItemRow extends HBox {
 
     private void buildRow() {
         this.feeDTO = attachCorrectFeeDTO();
+        invoiceItemDTO.valueProperty().addListener(ListenerFx.createMultipleUseChangeListener(updateBalance()));
         VBox vBox1 = VBoxFx.vBoxOf(140.0, Pos.CENTER_LEFT);
         vBox1.getChildren().add(new Label(invoiceItemDTO.getFieldName() + ":"));
         VBox vBox2 = VBoxFx.vBoxOf(65.0, Pos.CENTER_LEFT);
@@ -92,47 +95,48 @@ public class InvoiceItemRow extends HBox {
     }
 
     private Control widgetControl() {
+        TextField textField;
+        ComboBox<Integer> comboBox;
         switch (dbInvoiceDTO.getWidgetType()) {
-            case "text-field" -> {
-                textField = new TextField();
-                textField.setPrefWidth(dbInvoiceDTO.getWidth());
-                textField.setText(invoiceItemDTO.getValue());
-//                setTextFieldListener();
-                // below if statement added because it needed to update dues.
-//                if(!invoiceItemDTO.getValue().equals("0.00")) {
-//                    invoiceItemDTO.setQty(1);
-//                    updateBalance();
-//                    checkIfNotCommittedAndUpdateSql();
-//                }
-                return textField;
-            }
-            case "spinner", "itemized" -> {
-                spinner = new Spinner<>();
-                spinner.setPrefWidth(dbInvoiceDTO.getWidth());
-                setSpinnerListener();
-//                if (dbInvoiceDTO.isPrice_editable())
-//                    setPriceChangeListener(new TextField(price.getText()));
-                return spinner;
-            }
-            case "combo-box" -> {
-                comboBox = new ComboBox<>();
-                comboBox.setPrefWidth(dbInvoiceDTO.getWidth());
-//                price.setText(String.valueOf(fee.getFieldValue()));
-//                // fill comboBox
-//                for (int j = 0; j < dbInvoiceDTO.getMaxQty(); j++) comboBox.getItems().add(j);
-//                comboBox.getSelectionModel().select(invoiceItemDTO.getQty());
-////                setComboBoxListener();
-//                if (dbInvoiceDTO.isPrice_editable())
-//                    setPriceChangeListener(new TextField(price.getText()));
-                return comboBox;
-            }
-            case "none" -> {
+            case "text-field" -> { return createTextField(); }
+            case "spinner", "itemized" -> { return createSpinner(); } // may make "itemized-spinner", "itemized-textfield" etc in future
+            case "none" -> { // I think this is never called
                 textField = new TextField("none");
                 textField.setVisible(false);
                 return textField;
             }
         }
         return null;
+    }
+
+    private Control createTextField() {
+        TextField textField = new TextField();
+        textField.setPrefWidth(dbInvoiceDTO.getWidth());
+        textField.setText(invoiceItemDTO.getValue());
+        textField.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
+            if (oldValue) {  // we have focused and unfocused
+                invoiceItemDTO.setValue(StringTools.validateCurrency(textField.getText()));
+                invoiceDTO.updateBalance();
+            }
+        });
+        return textField;
+    }
+
+    private Control createSpinner() {
+        Spinner<Integer> spinner = new Spinner<>();
+        spinner.setPrefWidth(dbInvoiceDTO.getWidth());
+        SpinnerValueFactory<Integer> spinnerValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, dbInvoiceDTO.getMaxQty(), invoiceItemDTO.getQty());
+        spinner.setValueFactory(spinnerValueFactory);
+        spinner.valueProperty().addListener((observable, oldValue, newValue) -> {
+            String calculatedTotal = String.valueOf(new BigDecimal(feeDTO.getFieldValue()).multiply(BigDecimal.valueOf(newValue)));
+            invoiceItemDTO.setValue(calculatedTotal);
+            invoiceItemDTO.setQty(newValue);
+            if(invoiceItemGroup != null) invoiceItemGroup.updateGroupTotal();
+            //                if (dbInvoiceDTO.isPrice_editable())
+//                    setPriceChangeListener(new TextField(price.getText()));
+        invoiceDTO.updateBalance();
+        });
+        return spinner;
     }
 
     private InvoiceItemDTO setItem() {
@@ -150,20 +154,11 @@ public class InvoiceItemRow extends HBox {
         return newInvoiceItem;
     }
 
-    private void setSpinnerListener() {
-        SpinnerValueFactory<Integer> spinnerValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, dbInvoiceDTO.getMaxQty(), invoiceItemDTO.getQty());
-        spinner.setValueFactory(spinnerValueFactory);
-        spinner.valueProperty().addListener((observable, oldValue, newValue) -> {
-            String calculatedTotal = String.valueOf(new BigDecimal(feeDTO.getFieldValue()).multiply(BigDecimal.valueOf(newValue)));
-            invoiceItemDTO.setValue(calculatedTotal);
-            invoiceItemDTO.setQty(newValue);
-            if(invoiceItemGroup != null) invoiceItemGroup.updateGroupTotal();
-//            updateBalance();
-        });
-    }
 
-    private void updateBalance() {
-
+    private Runnable updateBalance() {
+        return () -> {
+            System.out.println("test");
+        };
     }
 
 }
