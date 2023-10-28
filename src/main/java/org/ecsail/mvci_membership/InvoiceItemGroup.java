@@ -9,6 +9,7 @@ import org.ecsail.dto.InvoiceDTO;
 import org.ecsail.dto.InvoiceItemDTO;
 import org.ecsail.widgetfx.HBoxFx;
 import org.ecsail.widgetfx.LabelFx;
+import org.ecsail.widgetfx.ListenerFx;
 import org.ecsail.widgetfx.VBoxFx;
 
 import java.math.BigDecimal;
@@ -24,6 +25,7 @@ public class InvoiceItemGroup extends HBox {
         this.invoiceDTO = invoiceDTO;
         this.dbInvoiceDTO = dbInvoiceDTO;
         this.invoiceItemDTO = getInvoiceItem();
+        invoiceItemDTO.valueProperty().addListener(ListenerFx.createMultipleUseChangeListener(invoiceDTO.updateBalance()));
         this.getStyleClass().add("standard-box");
         VBox vBox = VBoxFx.vBoxOf(5.0, new Insets(5, 0, 3, 0));
         HBox hBox = HBoxFx.hBoxOf(Pos.CENTER_RIGHT, 120.0, 5);  // width should match vbox5 in invoiceItemRow
