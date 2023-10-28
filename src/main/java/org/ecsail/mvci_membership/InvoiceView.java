@@ -62,7 +62,7 @@ public class InvoiceView implements Builder<Tab> {
             } else
             vBox.getChildren().add(new InvoiceItemRow(invoiceDTO, dbInvoiceDTO));
         }
-
+        vBox.getChildren().add(new InvoiceFooter(this).build());
         return vBox;
     }
 
@@ -85,5 +85,13 @@ public class InvoiceView implements Builder<Tab> {
         hBox.getChildren().addAll(HBoxFx.customHBox(invoiceDTO),buttonBox);
         vBox.getChildren().addAll(hBox, VBoxFx.customVBox(invoiceDTO));
         return vBox;
+    }
+
+    public InvoiceDTO getInvoiceDTO() {
+        return invoiceDTO;
+    }
+
+    public MembershipView getMembershipView() {
+        return membershipView;
     }
 }
