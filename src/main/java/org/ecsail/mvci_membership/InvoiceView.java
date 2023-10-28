@@ -1,6 +1,5 @@
 package org.ecsail.mvci_membership;
 
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -58,12 +57,12 @@ public class InvoiceView implements Builder<Tab> {
             if(dbInvoiceDTO.isItemized()) {
                 TitledPane titledPane = new TitledPane(dbInvoiceDTO.getFieldName(), new InvoiceItemGroup(invoiceDTO, dbInvoiceDTO));
                 titledPane.getStyleClass().add("custom-title-pane");
-
                 titledPane.setExpanded(false);
                 vBox.getChildren().add(titledPane);
             } else
             vBox.getChildren().add(new InvoiceItemRow(invoiceDTO, dbInvoiceDTO));
         }
+
         return vBox;
     }
 

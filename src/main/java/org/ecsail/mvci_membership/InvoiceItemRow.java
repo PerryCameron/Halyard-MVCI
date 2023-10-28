@@ -16,8 +16,6 @@ import org.ecsail.widgetfx.ListenerFx;
 import org.ecsail.widgetfx.VBoxFx;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
-
 
 public class InvoiceItemRow extends HBox {
     private InvoiceDTO invoiceDTO;
@@ -44,7 +42,7 @@ public class InvoiceItemRow extends HBox {
 
     private void buildRow() {
         this.feeDTO = attachCorrectFeeDTO();
-        invoiceItemDTO.valueProperty().addListener(ListenerFx.createMultipleUseChangeListener(updateBalance()));
+        invoiceItemDTO.valueProperty().addListener(ListenerFx.createMultipleUseChangeListener(invoiceDTO.updateBalance()));
         VBox vBox1 = VBoxFx.vBoxOf(140.0, Pos.CENTER_LEFT);
         vBox1.getChildren().add(new Label(invoiceItemDTO.getFieldName() + ":"));
         VBox vBox2 = VBoxFx.vBoxOf(65.0, Pos.CENTER_LEFT);
@@ -62,6 +60,9 @@ public class InvoiceItemRow extends HBox {
     private Node totalLabel() {
         if(!invoiceItemDTO.getCategory().equals("none")) return new Region();
         Label label = new Label();
+        if(invoiceItemDTO.isCredit())
+        label.getStyleClass().add("standard-red-label");
+        else
         label.getStyleClass().add("standard-black-label");
         label.textProperty().bind(invoiceItemDTO.valueProperty());
         return label;
@@ -114,10 +115,8 @@ public class InvoiceItemRow extends HBox {
         textField.setPrefWidth(dbInvoiceDTO.getWidth());
         textField.setText(invoiceItemDTO.getValue());
         textField.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-            if (oldValue) {  // we have focused and unfocused
+            if (oldValue)  // we have focused and unfocused
                 invoiceItemDTO.setValue(StringTools.validateCurrency(textField.getText()));
-                invoiceDTO.updateBalance();
-            }
         });
         return textField;
     }
@@ -131,10 +130,7 @@ public class InvoiceItemRow extends HBox {
             String calculatedTotal = String.valueOf(new BigDecimal(feeDTO.getFieldValue()).multiply(BigDecimal.valueOf(newValue)));
             invoiceItemDTO.setValue(calculatedTotal);
             invoiceItemDTO.setQty(newValue);
-            if(invoiceItemGroup != null) invoiceItemGroup.updateGroupTotal();
-            //                if (dbInvoiceDTO.isPrice_editable())
-//                    setPriceChangeListener(new TextField(price.getText()));
-        invoiceDTO.updateBalance();
+            if (invoiceItemGroup != null) invoiceItemGroup.updateGroupTotal();
         });
         return spinner;
     }
@@ -153,12 +149,4 @@ public class InvoiceItemRow extends HBox {
 //        SqlInsert.addInvoiceItemRecord(newInvoiceItem);
         return newInvoiceItem;
     }
-
-
-    private Runnable updateBalance() {
-        return () -> {
-            System.out.println("test");
-        };
-    }
-
 }
