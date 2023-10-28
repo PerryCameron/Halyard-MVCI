@@ -52,8 +52,8 @@ public class PhoneTableView implements Builder<TableView<PhoneDTO>> {
     }
 
     private TableColumn<PhoneDTO,String> createColumn1() {
-        TableColumn<PhoneDTO, String> Col1 = TableColumnFx.tableColumnOf(PhoneDTO::phoneProperty,"Phone");
-        Col1.setOnEditCommit(
+        TableColumn<PhoneDTO, String> col1 = TableColumnFx.tableColumnOf(PhoneDTO::phoneProperty,"Phone");
+        col1.setOnEditCommit(
                 new EventHandler<>() {
                     @Override
                     public void handle(TableColumn.CellEditEvent<PhoneDTO, String> t) {
@@ -102,8 +102,8 @@ public class PhoneTableView implements Builder<TableView<PhoneDTO>> {
                     }
                 }
         );
-        Col1.setMaxWidth( 1f * Integer.MAX_VALUE * 50);   // Phone
-        return Col1;
+        col1.setMaxWidth( 1f * Integer.MAX_VALUE * 50);   // Phone
+        return col1;
     }
 
     private TableColumn<PhoneDTO,PhoneType> createColumn2() {
