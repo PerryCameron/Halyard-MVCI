@@ -1,5 +1,6 @@
 package org.ecsail.mvci_membership;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -51,25 +52,24 @@ public class InvoiceView implements Builder<Tab> {
 
     private Node showEditableInvoice() {
         VBox vBox = VBoxFx.vBoxOf(5.0,new Insets(10,0,0,15)); // makes outer border
-        vBox.getChildren().addAll(HBoxFx.customHBoxHeader(false),RegionFx.regionHeightOf(10.0));
+        vBox.getChildren().add(HBoxFx.customHBoxHeader(false));
         invoiceDTO.getDbInvoiceDTOS().sort(Comparator.comparing(DbInvoiceDTO::getOrder).reversed());
         for (DbInvoiceDTO dbInvoiceDTO : invoiceDTO.getDbInvoiceDTOS()) {
             if(dbInvoiceDTO.isItemized()) {
                 TitledPane titledPane = new TitledPane(dbInvoiceDTO.getFieldName(), new InvoiceItemGroup(invoiceDTO, dbInvoiceDTO));
                 titledPane.getStyleClass().add("custom-title-pane");
+
                 titledPane.setExpanded(false);
                 vBox.getChildren().add(titledPane);
             } else
             vBox.getChildren().add(new InvoiceItemRow(invoiceDTO, dbInvoiceDTO));
         }
-//        vBox.prefWidthProperty().bind(hBox.widthProperty());
-        vBox.setPrefWidth(470);
         return vBox;
     }
 
     private Node showCommittedInvoice() {
-        VBox vBox = VBoxFx.vBoxOf(new Insets(10,0,0,0)); // makes outer border
-        vBox.getStyleClass().add("standard-box");
+        VBox vBox = VBoxFx.vBoxOf(new Insets(10,15,0,15)); // makes outer border
+        vBox.getStyleClass().add("standard-bordered-box");
         vBox.getChildren().addAll(HBoxFx.customHBoxHeader(true),RegionFx.regionHeightOf(10.0));
         invoiceDTO.getInvoiceItemDTOS().stream()
                 .filter(item -> !item.getValue().equals("0.00"))

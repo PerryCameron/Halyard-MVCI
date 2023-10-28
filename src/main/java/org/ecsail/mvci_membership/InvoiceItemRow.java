@@ -25,7 +25,7 @@ public class InvoiceItemRow extends HBox {
     private Spinner<Integer> spinner;
     private ComboBox<Integer> comboBox;
 
-    public InvoiceItemRow(InvoiceItemDTO invoiceItemDTO, InvoiceItemGroup invoiceItemGroup) {  // this is used for sub items to groups
+    public InvoiceItemRow(InvoiceItemDTO invoiceItemDTO, InvoiceItemGroup invoiceItemGroup) {  // this is used for groups
         this.invoiceDTO = invoiceItemGroup.getInvoiceDTO();
         this.dbInvoiceDTO = invoiceItemGroup.getDbInvoiceDTO();
         this.invoiceItemDTO = invoiceItemDTO;
@@ -33,7 +33,7 @@ public class InvoiceItemRow extends HBox {
         buildRow();
     }
 
-    public InvoiceItemRow(InvoiceDTO invoiceDTO, DbInvoiceDTO dbInvoiceDTO) { // this is for items
+    public InvoiceItemRow(InvoiceDTO invoiceDTO, DbInvoiceDTO dbInvoiceDTO) { // this is for individual items
         this.invoiceDTO = invoiceDTO;
         this.dbInvoiceDTO = dbInvoiceDTO;
         this.invoiceItemDTO = setItem();
@@ -50,7 +50,7 @@ public class InvoiceItemRow extends HBox {
         vBox3.getChildren().add(addMultiple());
         VBox vBox4 = VBoxFx.vBoxOf(70.0, Pos.CENTER_RIGHT);
         vBox4.getChildren().add(addFee());
-        VBox vBox5 = VBoxFx.vBoxOf(110.0, Pos.CENTER_RIGHT);
+        VBox vBox5 = VBoxFx.vBoxOf(120.0, Pos.CENTER_RIGHT); // width should match HBox in ItemGroup
         vBox5.getChildren().add(totalLabel());
         getChildren().addAll(vBox1, vBox2, vBox3, vBox4);
         if(invoiceItemDTO.getCategory().equals("none")) getChildren().add(vBox5);

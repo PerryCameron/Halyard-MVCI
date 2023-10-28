@@ -11,4 +11,10 @@ public class LabelFx {
         label.textProperty().bind(stringProperty);
         return label;
     }
+
+    public static Label labelOf(String value, String cssClass) {
+        Label label = new Label(value);
+        label.getStyleClass().add(cssClass);
+        return label;
+    }
 }

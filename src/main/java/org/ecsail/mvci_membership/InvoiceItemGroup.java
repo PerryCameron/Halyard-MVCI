@@ -15,17 +15,18 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 
 public class InvoiceItemGroup extends HBox {
-    private InvoiceDTO invoiceDTO;
-    private DbInvoiceDTO dbInvoiceDTO;
-    private InvoiceItemDTO invoiceItemDTO;
+    private final InvoiceDTO invoiceDTO;
+    private final DbInvoiceDTO dbInvoiceDTO;
+    private final InvoiceItemDTO invoiceItemDTO;
     private final ArrayList<InvoiceItemDTO> subItems = new ArrayList<>();
 
     public InvoiceItemGroup(InvoiceDTO invoiceDTO, DbInvoiceDTO dbInvoiceDTO) {
         this.invoiceDTO = invoiceDTO;
         this.dbInvoiceDTO = dbInvoiceDTO;
         this.invoiceItemDTO = getInvoiceItem();
+        this.getStyleClass().add("standard-box");
         VBox vBox = VBoxFx.vBoxOf(5.0, new Insets(5, 0, 3, 0));
-        HBox hBox = HBoxFx.hBoxOf(Pos.CENTER_RIGHT, 110.0, 5);
+        HBox hBox = HBoxFx.hBoxOf(Pos.CENTER_RIGHT, 120.0, 5);  // width should match vbox5 in invoiceItemRow
         hBox.getChildren().add(LabelFx.labelOf(invoiceItemDTO.getValue(), "standard-black-label", invoiceItemDTO.valueProperty()));
         getChildren().addAll(vBox, hBox);
         invoiceDTO.getInvoiceItemDTOS().stream()
@@ -55,15 +56,7 @@ public class InvoiceItemGroup extends HBox {
         return invoiceDTO;
     }
 
-    public void setInvoiceDTO(InvoiceDTO invoiceDTO) {
-        this.invoiceDTO = invoiceDTO;
-    }
-
     public DbInvoiceDTO getDbInvoiceDTO() {
         return dbInvoiceDTO;
-    }
-
-    public void setDbInvoiceDTO(DbInvoiceDTO dbInvoiceDTO) {
-        this.dbInvoiceDTO = dbInvoiceDTO;
     }
 }

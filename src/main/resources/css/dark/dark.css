@@ -128,11 +128,15 @@
     -fx-background-color: white;
 }
 
-.standard-box {
+.standard-bordered-box {
     -fx-background-color: #6c7179;
     -fx-border-color: #807f7f;
     -fx-border-width: 2px;
     -fx-border-style: solid;
+}
+
+.standard-box {
+    -fx-background-color: #6c7179;
 }
 
 .standard-black-label {

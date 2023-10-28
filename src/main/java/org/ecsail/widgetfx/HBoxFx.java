@@ -10,8 +10,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import org.ecsail.dto.InvoiceDTO;
 import org.ecsail.dto.InvoiceItemDTO;
 
@@ -55,6 +53,14 @@ public class HBoxFx {
         HBox box = new HBox();
         box.setAlignment(alignment);
         box.setPrefWidth(prefWidth);
+        return box;
+    }
+
+    public static HBox hBoxOf(Pos alignment, double prefWidth, Node node) {
+        HBox box = new HBox();
+        box.setAlignment(alignment);
+        box.setPrefWidth(prefWidth);
+        box.getChildren().add(node);
         return box;
     }
 
@@ -117,34 +123,29 @@ public class HBoxFx {
         return hBox;
     }
 
-    public static HBox customHBox(InvoiceDTO invoiceDTO) {
-        HBox hBox = HBoxFx.hBoxOf(new Insets(10,0,5,20));
+    public static HBox customHBox(InvoiceDTO invoiceDTO) {  // used for committed invoice totals
+        HBox hBox = HBoxFx.hBoxOf(new Insets(10, 0, 5, 20));
         VBox labels = new VBox(5);
         VBox amounts = new VBox(5);
         amounts.setAlignment(Pos.CENTER_RIGHT);
-        labels.getChildren().addAll(
-            new Label("Total Fees:"),
-            new Label("Total Credit:"),
-            new Label("Payment:"),
-            new Label("Balance:")
-        );
-        Label fees = new Label(invoiceDTO.getTotal());
-        Label credit = new Label(invoiceDTO.getCredit());
-        Label payment = new Label(invoiceDTO.getPaid());             // Sum up all BigDecimal values
-        Label total = new Label(invoiceDTO.getBalance());
-        fees.getStyleClass().add("standard-black-label");
-        credit.getStyleClass().add("standard-red-label");
-        payment.getStyleClass().add("standard-black-label");
-        total.getStyleClass().add("standard-black-label");
-        amounts.getChildren().addAll(fees,credit,payment,total);
         labels.prefWidthProperty().bind(hBox.widthProperty().multiply(0.5));
         amounts.prefWidthProperty().bind(hBox.widthProperty().multiply(0.5));
+        labels.getChildren().addAll(
+                new Label("Total Fees:"),
+                new Label("Total Credit:"),
+                new Label("Payment:"),
+                new Label("Balance:"));
+        amounts.getChildren().addAll(
+                LabelFx.labelOf(invoiceDTO.getTotal(), "standard-black-label"),
+                LabelFx.labelOf(invoiceDTO.getCredit(), "standard-red-label"),
+                LabelFx.labelOf(invoiceDTO.getPaid(), "standard-black-label"),
+                LabelFx.labelOf(invoiceDTO.getBalance(), "standard-black-label"));
         hBox.getChildren().addAll(labels, amounts);
         return hBox;
     }
 
-    public static HBox customHBox(InvoiceItemDTO item) {
-        HBox hBox = HBoxFx.hBoxOf(new Insets(0,20,5,20));
+    public static HBox customHBox(InvoiceItemDTO item) {  // used for committed invoice items
+        HBox hBox = HBoxFx.hBoxOf(new Insets(0,20,5,0));
         Label p1Label = new Label(item.getFieldName()+":");
         Label p2Label = new Label(String.valueOf(item.getQty()));
         Label p3Label = new Label(item.getValue());
@@ -152,37 +153,27 @@ public class HBoxFx {
         if(item.isCredit()) p3Label.getStyleClass().add("standard-red-label");
         else p3Label.getStyleClass().add("standard-black-label");
         Pane p1 = new Pane(p1Label);
-        Pane p2 = new Pane(p2Label);
+        HBox p2 = new HBox(p2Label);
         HBox p3 = new HBox(p3Label);
         p3.setAlignment(Pos.CENTER_RIGHT);
-        p1.prefWidthProperty().bind(hBox.widthProperty().multiply(0.5));
-        p2.prefWidthProperty().bind(hBox.widthProperty().multiply(0.25));
-        p3.prefWidthProperty().bind(hBox.widthProperty().multiply(0.25));
+        p2.setAlignment(Pos.CENTER_RIGHT);
+        p1.setPrefWidth(140);
+        p2.setPrefWidth(130);
+        p3.setPrefWidth(165);
         hBox.getChildren().addAll(p1,p2,p3);
         return hBox;
     }
 
     public static HBox customHBoxHeader(boolean isCommitted) {
-        HBox hBox = hBoxOf(new Insets(0,20,0,20));
-        Label p1Label = new Label("Fee");
-        Label p2Label = new Label("Qty");
-        Label p3Label = new Label("Total");
-        p1Label.getStyleClass().add("standard-bold-label");
-        p2Label.getStyleClass().add("standard-bold-label");
-        p3Label.getStyleClass().add("standard-bold-label");
-        Pane p1 = new Pane(p1Label);
-        Pane p2 = new Pane(p2Label);
-        HBox p3 = new HBox(p3Label);
-        p3.setAlignment(Pos.CENTER_RIGHT);
+        HBox hBox = hBoxOf(new Insets(0,20,0,0));
+        HBox p1 = hBoxOf(Pos.CENTER_LEFT,140.0, LabelFx.labelOf("Fee","standard-bold-label"));
+        HBox p2,p3;
         if(isCommitted) {
-            p1.prefWidthProperty().bind(hBox.widthProperty().multiply(0.47));
-            p2.prefWidthProperty().bind(hBox.widthProperty().multiply(0.28));
-            p3.prefWidthProperty().bind(hBox.widthProperty().multiply(0.25));
+            p2 = hBoxOf(Pos.CENTER_RIGHT, 135.0, LabelFx.labelOf("Qty", "standard-bold-label"));
+            p3 = hBoxOf(Pos.CENTER_RIGHT, 160.0, LabelFx.labelOf("Total", "standard-bold-label"));
         } else {
-            p2Label.setText("Price");
-            p1.prefWidthProperty().bind(hBox.widthProperty().multiply(0.4));
-            p2.prefWidthProperty().bind(hBox.widthProperty().multiply(0.35));
-            p3.prefWidthProperty().bind(hBox.widthProperty().multiply(0.25));
+            p2 = hBoxOf(Pos.CENTER_RIGHT, 175.0, LabelFx.labelOf("Price", "standard-bold-label"));
+            p3 = hBoxOf(Pos.CENTER_RIGHT, 120.0, LabelFx.labelOf("Total", "standard-bold-label"));
         }
         hBox.getChildren().addAll(p1,p2,p3);
         return hBox;
