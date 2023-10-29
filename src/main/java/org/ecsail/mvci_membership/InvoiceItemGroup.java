@@ -28,12 +28,15 @@ public class InvoiceItemGroup extends HBox {
         this.invoiceDTO = invoiceView.getInvoiceDTO();
         this.dbInvoiceDTO = dbInvoiceDTO;
         this.invoiceItemDTO = getInvoiceItem();
-
-        invoiceItemDTO.valueProperty().addListener(ListenerFx.createMultipleUseChangeListener(() -> {
-            invoiceDTO.updateBalance();
-            invoiceView.getMembershipView().getMembershipModel().setSelectedInvoiceItem(invoiceItemDTO);
-            invoiceView.getMembershipView().sendMessage().accept(MembershipMessage.UPDATE_INVOICE);
-        }));
+//        invoiceItemDTO.valueProperty().addListener(ListenerFx.createMultipleUseChangeListener(() -> {
+//            System.out.println("Group listener triggered");
+//            invoiceDTO.updateBalance();
+//            invoiceView.getMembershipView().getMembershipModel().setSelectedInvoiceItem(invoiceItemDTO);
+//
+//            invoiceView.getMembershipView().sendMessage().accept(MembershipMessage.UPDATE_INVOICE);
+//            updateGroupTotal();
+//            subItems.forEach(System.out::println);
+//        }));
         this.getStyleClass().add("standard-box");
         VBox vBox = VBoxFx.vBoxOf(5.0, new Insets(5, 0, 3, 0));
         HBox hBox = HBoxFx.hBoxOf(Pos.CENTER_RIGHT, 120.0, 5);  // width should match vbox5 in invoiceItemRow
@@ -56,6 +59,7 @@ public class InvoiceItemGroup extends HBox {
     }
 
     public void updateGroupTotal() {
+        System.out.println("updateGroupTotal()");
         BigDecimal total = subItems.stream()
                 .map(i -> new BigDecimal(i.getValue()))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
@@ -72,5 +76,9 @@ public class InvoiceItemGroup extends HBox {
 
     public InvoiceView getInvoiceView() {
         return invoiceView;
+    }
+
+    public InvoiceItemDTO getInvoiceItemDTO() {
+        return invoiceItemDTO;
     }
 }

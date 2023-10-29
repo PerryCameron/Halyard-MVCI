@@ -211,6 +211,8 @@ public class DataBaseService {
     public void updateInvoice() {
         HandlingTools.executeQuery(() ->
                 invoiceRepo.update(membershipModel.getSelectedInvoice()), membershipModel.getMainModel(), logger);
+    }
+    public void updateInvoiceItem() {
         HandlingTools.executeQuery(() ->
                 invoiceRepo.update(membershipModel.getSelectedInvoiceItem()), membershipModel.getMainModel(), logger);
     }
@@ -448,6 +450,7 @@ public class DataBaseService {
             });
         }
     }
+
 
 
 }

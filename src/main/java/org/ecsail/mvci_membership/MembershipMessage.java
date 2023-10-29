@@ -11,6 +11,7 @@ public enum MembershipMessage {
     UPDATE_PHONE,
     UPDATE_PERSON,
     UPDATE_INVOICE,
+    UPDATE_INVOICE_ITEM,
     INSERT_AWARD,
     INSERT_BOAT,
     INSERT_EMAIL,

@@ -19,9 +19,9 @@ import java.math.BigDecimal;
 
 public class InvoiceItemRow extends HBox {
     private final InvoiceView invoiceView;
-    private InvoiceDTO invoiceDTO;
-    private DbInvoiceDTO dbInvoiceDTO; // LIST of these in InvoiceDTO, this one is relevant here
-    private InvoiceItemDTO invoiceItemDTO; // LIST of these in InvoiceDTO, this one is relevant here
+    private final InvoiceDTO invoiceDTO;
+    private final DbInvoiceDTO dbInvoiceDTO; // LIST of these in InvoiceDTO, this one is relevant here
+    private final InvoiceItemDTO invoiceItemDTO; // LIST of these in InvoiceDTO, this one is relevant here
     private InvoiceItemGroup invoiceItemGroup = null;
     private FeeDTO feeDTO = null; // LIST of these in InvoiceDTO, this one is relevant here
 
@@ -46,9 +46,17 @@ public class InvoiceItemRow extends HBox {
     private void buildRow() {
         this.feeDTO = attachCorrectFeeDTO();
         invoiceItemDTO.valueProperty().addListener(ListenerFx.createMultipleUseChangeListener( () -> {
-            invoiceDTO.updateBalance();
+            System.out.println("InvoiceItem Changed: " + invoiceItemDTO.getFieldName() + " = " + invoiceItemDTO.getValue());
             invoiceView.getMembershipView().getMembershipModel().setSelectedInvoiceItem(invoiceItemDTO);
+            invoiceView.getMembershipView().sendMessage().accept(MembershipMessage.UPDATE_INVOICE_ITEM);
+            if (invoiceItemGroup != null) {
+                invoiceItemGroup.updateGroupTotal();  // important this updates before balance
+                invoiceView.getMembershipView().getMembershipModel().setSelectedInvoiceItem(invoiceItemGroup.getInvoiceItemDTO());
+                invoiceView.getMembershipView().sendMessage().accept(MembershipMessage.UPDATE_INVOICE_ITEM);
+            }
+            invoiceDTO.updateBalance();
             invoiceView.getMembershipView().sendMessage().accept(MembershipMessage.UPDATE_INVOICE);
+            invoiceDTO.showItems();
         }));
         VBox vBox1 = VBoxFx.vBoxOf(140.0, Pos.CENTER_LEFT);
         vBox1.getChildren().add(new Label(invoiceItemDTO.getFieldName() + ":"));
@@ -68,9 +76,9 @@ public class InvoiceItemRow extends HBox {
         if(!invoiceItemDTO.getCategoryItem().equals("none")) return new Region();
         Label label = new Label();
         if(invoiceItemDTO.isCredit())
-        label.getStyleClass().add("standard-red-label");
+            label.getStyleClass().add("standard-red-label");
         else
-        label.getStyleClass().add("standard-black-label");
+            label.getStyleClass().add("standard-black-label");
         label.textProperty().bind(invoiceItemDTO.valueProperty());
         return label;
     }
@@ -104,10 +112,9 @@ public class InvoiceItemRow extends HBox {
 
     private Control widgetControl() {
         TextField textField;
-        ComboBox<Integer> comboBox;
         switch (dbInvoiceDTO.getWidgetType()) {
             case "text-field" -> { return createTextField(); }
-            case "spinner", "itemized" -> { return createSpinner(); } // may make "itemized-spinner", "itemized-textfield" etc in future
+            case "spinner", "itemized" -> { return createSpinner(); } // may make "itemized-spinner", "itemized-textField" etc. in future
             case "none" -> { // I think this is never called
                 textField = new TextField("none");
                 textField.setVisible(false);
@@ -138,7 +145,7 @@ public class InvoiceItemRow extends HBox {
             invoiceItemDTO.setValue(calculatedTotal);
             System.out.println("calculatedTotal=" + calculatedTotal);
             invoiceItemDTO.setQty(newValue);
-            if (invoiceItemGroup != null) invoiceItemGroup.updateGroupTotal();
+//            if (invoiceItemGroup != null) invoiceItemGroup.updateGroupTotal();
         });
         return spinner;
     }

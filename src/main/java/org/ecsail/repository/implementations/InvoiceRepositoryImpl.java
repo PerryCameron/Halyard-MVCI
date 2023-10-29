@@ -91,11 +91,11 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
                 "INVOICE_ID = :invoiceId, " +
                 "MS_ID = :msId, " +
                 "FISCAL_YEAR = :year, " +
-                "FIELD_NAME = :fieldName, " + // added comma
-                "IS_CREDIT = :credit, " + // added comma
-                "VALUE = :value, " + // added comma
-                "QTY = :qty, " + // added comma
-                "CATEGORY = :category, " + // added comma
+                "FIELD_NAME = :fieldName, " +
+                "IS_CREDIT = :credit, " +
+                "VALUE = :value, " +
+                "QTY = :qty, " +
+                "CATEGORY = :category, " +
                 "CATEGORY_ITEM = :categoryItem " +
                 "WHERE ID = :id";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(invoiceItemDTO);

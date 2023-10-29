@@ -35,6 +35,7 @@ public class MembershipController extends Controller {
                     case UPDATE_OFFICER -> membershipInteractor.getDataBaseService().updateOfficer();
                     case UPDATE_PERSON -> membershipInteractor.getDataBaseService().updatePerson();
                     case UPDATE_INVOICE -> membershipInteractor.getDataBaseService().updateInvoice();
+                    case UPDATE_INVOICE_ITEM -> membershipInteractor.getDataBaseService().updateInvoiceItem();
                     case INSERT_BOAT -> membershipInteractor.getDataBaseService().insertBoat();
                     case INSERT_AWARD -> membershipInteractor.getDataBaseService().insertAward();
                     case INSERT_EMAIL -> membershipInteractor.getDataBaseService().insertEmail();

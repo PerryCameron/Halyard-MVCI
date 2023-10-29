@@ -73,6 +73,18 @@ public class InvoiceDTO {
         this.maxCredit = new SimpleStringProperty("");
     }
 
+    public void showItems() {
+        invoiceItemDTOS.stream().filter(item -> (item.getCategoryItem().equals("none"))).forEach(each -> {
+                    System.out.println(each.getFieldName() + " = " + each.getValue());
+                }
+        );
+        System.out.println("------------------------");
+        System.out.println("Total Fees:   " + getTotal());
+        System.out.println("Total Credit: " + getCredit());
+        System.out.println("Payment:      " + getPaid());
+        System.out.println("Balance:      " + getBalance());
+    }
+
     public void updateBalance() {
         BigDecimal zero = BigDecimal.ZERO;
 
@@ -96,10 +108,6 @@ public class InvoiceDTO {
         setTotal(totalFees.toString());
         setPaid(totalPayments.toString());
         setBalance(balance.toString());
-            System.out.println("Total Fees: " + getTotal());
-            System.out.println("Total Credit: " + getCredit());
-            System.out.println("Payment: " + getPaid());
-            System.out.println("Balance: " + getBalance());
     }
 
 
