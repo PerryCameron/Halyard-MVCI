@@ -95,8 +95,8 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
                 "IS_CREDIT = :credit, " + // added comma
                 "VALUE = :value, " + // added comma
                 "QTY = :qty, " + // added comma
-                "IS_CATEGORY = :isCategory, " + // added comma
-                "CATEGORY = :category " +
+                "CATEGORY = :category, " + // added comma
+                "CATEGORY_ITEM = :categoryItem " +
                 "WHERE ID = :id";
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(invoiceItemDTO);
         return namedParameterJdbcTemplate.update(query, namedParameters);

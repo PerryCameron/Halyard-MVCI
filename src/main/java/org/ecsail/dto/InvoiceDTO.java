@@ -82,7 +82,7 @@ public class InvoiceDTO {
                 .reduce(zero, BigDecimal::add);
 
         BigDecimal totalFees = invoiceItemDTOS.stream()
-                .filter(i -> !i.isCredit() && i.getCategory().equals("none"))
+                .filter(i -> !i.isCredit() && i.getCategoryItem().equals("none"))
                 .map(i -> new BigDecimal(i.getValue()))
                 .reduce(zero, BigDecimal::add);
 

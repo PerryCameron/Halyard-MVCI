@@ -20,7 +20,7 @@ public class InvoiceItemRowMapper implements RowMapper<InvoiceItemDTO> {
                 rs.getBoolean("IS_CREDIT"),
                 rs.getString("VALUE"),
                 rs.getInt("QTY"),
-                rs.getBoolean("IS_CATEGORY"),
-                rs.getString("CATEGORY"));
+                rs.getBoolean("CATEGORY"),
+                rs.getString("CATEGORY_ITEM"));
     }
 }

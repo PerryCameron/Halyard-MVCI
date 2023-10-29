@@ -17,10 +17,11 @@ import java.util.ArrayList;
 
 public class InvoiceItemGroup extends HBox {
     private final InvoiceDTO invoiceDTO;
+    private final InvoiceView invoiceView;
     private final DbInvoiceDTO dbInvoiceDTO;
     private final InvoiceItemDTO invoiceItemDTO;
     private final ArrayList<InvoiceItemDTO> subItems = new ArrayList<>();
-    private final InvoiceView invoiceView;
+
 
     public InvoiceItemGroup(InvoiceView invoiceView, DbInvoiceDTO dbInvoiceDTO) {
         this.invoiceView = invoiceView;
@@ -39,7 +40,7 @@ public class InvoiceItemGroup extends HBox {
         hBox.getChildren().add(LabelFx.labelOf(invoiceItemDTO.getValue(), "standard-black-label", invoiceItemDTO.valueProperty()));
         getChildren().addAll(vBox, hBox);
         invoiceDTO.getInvoiceItemDTOS().stream()
-                .filter(i -> i.getCategory().equals(dbInvoiceDTO.getFieldName()))
+                .filter(i -> i.getCategoryItem().equals(dbInvoiceDTO.getFieldName()))
                 .forEach(i -> {
                     subItems.add(i);
                     vBox.getChildren().add(new InvoiceItemRow(i, this));

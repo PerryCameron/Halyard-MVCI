@@ -61,11 +61,11 @@ public class InvoiceItemRow extends HBox {
         VBox vBox5 = VBoxFx.vBoxOf(120.0, Pos.CENTER_RIGHT); // width should match HBox in InvoiceItemGroup
         vBox5.getChildren().add(totalLabel());
         getChildren().addAll(vBox1, vBox2, vBox3, vBox4);
-        if(invoiceItemDTO.getCategory().equals("none")) getChildren().add(vBox5);
+        if(invoiceItemDTO.getCategoryItem().equals("none")) getChildren().add(vBox5);
     }
 
     private Node totalLabel() {
-        if(!invoiceItemDTO.getCategory().equals("none")) return new Region();
+        if(!invoiceItemDTO.getCategoryItem().equals("none")) return new Region();
         Label label = new Label();
         if(invoiceItemDTO.isCredit())
         label.getStyleClass().add("standard-red-label");
@@ -78,7 +78,7 @@ public class InvoiceItemRow extends HBox {
     private FeeDTO attachCorrectFeeDTO() {
         if (dbInvoiceDTO.isAutoPopulate()) return null;
         for (FeeDTO feeDTO : invoiceDTO.getFeeDTOS()) {
-            if (!invoiceItemDTO.getCategory().equals("none")) {  // add fees for category invoice items
+            if (!invoiceItemDTO.getCategoryItem().equals("none")) {  // add fees for category invoice items
                 if (invoiceItemDTO.getFieldName().equals(feeDTO.getDescription()))
                     return feeDTO;
             } else {  // add fees for invoice items
@@ -136,6 +136,7 @@ public class InvoiceItemRow extends HBox {
         spinner.valueProperty().addListener((observable, oldValue, newValue) -> {
             String calculatedTotal = String.valueOf(new BigDecimal(feeDTO.getFieldValue()).multiply(BigDecimal.valueOf(newValue)));
             invoiceItemDTO.setValue(calculatedTotal);
+            System.out.println("calculatedTotal=" + calculatedTotal);
             invoiceItemDTO.setQty(newValue);
             if (invoiceItemGroup != null) invoiceItemGroup.updateGroupTotal();
         });

@@ -11,10 +11,10 @@ public class InvoiceItemDTO {
     BooleanProperty credit;
     StringProperty value;
     IntegerProperty qty;
-    BooleanProperty isCategory;
-    StringProperty category;
+    BooleanProperty category;
+    StringProperty categoryItem;
 
-    public InvoiceItemDTO(Integer id, Integer invoiceId, Integer msId, Integer year, String fieldName, Boolean credit, String value, Integer qty, Boolean isCategory, String category) {
+    public InvoiceItemDTO(Integer id, Integer invoiceId, Integer msId, Integer year, String fieldName, Boolean credit, String value, Integer qty, Boolean category, String categoryItem) {
         this.id = new SimpleIntegerProperty(id);
         this.invoiceId = new SimpleIntegerProperty(invoiceId);
         this.msId = new SimpleIntegerProperty(msId);
@@ -23,8 +23,8 @@ public class InvoiceItemDTO {
         this.credit = new SimpleBooleanProperty(credit);
         this.value = new SimpleStringProperty(value);
         this.qty = new SimpleIntegerProperty(qty);
-        this.isCategory = new SimpleBooleanProperty(isCategory);
-        this.category = new SimpleStringProperty(category);
+        this.category = new SimpleBooleanProperty(category);
+        this.categoryItem = new SimpleStringProperty(categoryItem);
     }
 
     public InvoiceItemDTO(Integer invoiceId, Integer msId, Integer year, String fieldName) {
@@ -36,8 +36,8 @@ public class InvoiceItemDTO {
         this.credit = new SimpleBooleanProperty(false);
         this.value = new SimpleStringProperty("0.00");
         this.qty = new SimpleIntegerProperty(0);
-        this.isCategory = new SimpleBooleanProperty(false);
-        this.category = new SimpleStringProperty("none");
+        this.category = new SimpleBooleanProperty(false);
+        this.categoryItem = new SimpleStringProperty("none");
     }
 
     public final IntegerProperty idProperty() {
@@ -135,31 +135,28 @@ public class InvoiceItemDTO {
         this.qtyProperty().set(qty);
     }
 
-    public boolean isCategory() {
-        return isCategory.get();
-    }
-    public boolean isIsCategory() {
-        return isCategory.get();
-    }
-
-    public BooleanProperty isCategoryProperty() {
-        return isCategory;
-    }
-
-    public void setIsCategory(boolean isCategory) {
-        this.isCategory.set(isCategory);
-    }
-
-    public String getCategory() {
+    public boolean getCategory() {
         return category.get();
     }
 
-    public StringProperty categoryProperty() {
+    public BooleanProperty categoryProperty() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(boolean category) {
         this.category.set(category);
+    }
+
+    public String getCategoryItem() {
+        return categoryItem.get();
+    }
+
+    public StringProperty categoryItemProperty() {
+        return categoryItem;
+    }
+
+    public void setCategoryItem(String categoryItem) {
+        this.categoryItem.set(categoryItem);
     }
 
     @Override
@@ -173,7 +170,8 @@ public class InvoiceItemDTO {
                 ", credit=" + credit +
                 ", value=" + value +
                 ", qty=" + qty +
-                ", isCategory=" + isCategory +
+                ", category=" + category +
+                ", categoryItem=" + categoryItem +
                 '}';
     }
 }
