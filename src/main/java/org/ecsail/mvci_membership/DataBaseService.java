@@ -442,5 +442,7 @@ public class DataBaseService {
         }
     }
 
-
+    public void updateInvoiceItem() {
+        System.out.println(membershipModel.getSelectedInvoiceItem());
+    }
 }

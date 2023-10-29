@@ -1,6 +1,5 @@
 package org.ecsail.mvci_membership;
 
-import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.scene.layout.Region;
 import org.ecsail.dto.MembershipListDTO;
@@ -35,6 +34,7 @@ public class MembershipController extends Controller {
                     case UPDATE_PHONE -> membershipInteractor.getDataBaseService().updatePhone();
                     case UPDATE_OFFICER -> membershipInteractor.getDataBaseService().updateOfficer();
                     case UPDATE_PERSON -> membershipInteractor.getDataBaseService().updatePerson();
+                    case UPDATE_INVOICE -> membershipInteractor.getDataBaseService().updateInvoiceItem();
                     case INSERT_BOAT -> membershipInteractor.getDataBaseService().insertBoat();
                     case INSERT_AWARD -> membershipInteractor.getDataBaseService().insertAward();
                     case INSERT_EMAIL -> membershipInteractor.getDataBaseService().insertEmail();

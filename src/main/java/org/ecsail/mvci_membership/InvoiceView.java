@@ -55,12 +55,12 @@ public class InvoiceView implements Builder<Tab> {
         invoiceDTO.getDbInvoiceDTOS().sort(Comparator.comparing(DbInvoiceDTO::getOrder).reversed());
         for (DbInvoiceDTO dbInvoiceDTO : invoiceDTO.getDbInvoiceDTOS()) {
             if(dbInvoiceDTO.isItemized()) {
-                TitledPane titledPane = new TitledPane(dbInvoiceDTO.getFieldName(), new InvoiceItemGroup(invoiceDTO, dbInvoiceDTO));
+                TitledPane titledPane = new TitledPane(dbInvoiceDTO.getFieldName(), new InvoiceItemGroup(this, dbInvoiceDTO));
                 titledPane.getStyleClass().add("custom-title-pane");
                 titledPane.setExpanded(false);
                 vBox.getChildren().add(titledPane);
             } else
-            vBox.getChildren().add(new InvoiceItemRow(invoiceDTO, dbInvoiceDTO));
+            vBox.getChildren().add(new InvoiceItemRow(invoiceDTO, dbInvoiceDTO, this));
         }
         vBox.getChildren().add(new InvoiceFooter(this).build());
         return vBox;

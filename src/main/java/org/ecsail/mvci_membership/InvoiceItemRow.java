@@ -18,6 +18,7 @@ import org.ecsail.widgetfx.VBoxFx;
 import java.math.BigDecimal;
 
 public class InvoiceItemRow extends HBox {
+    private final InvoiceView invoiceView;
     private InvoiceDTO invoiceDTO;
     private DbInvoiceDTO dbInvoiceDTO; // LIST of these in InvoiceDTO, this one is relevant here
     private InvoiceItemDTO invoiceItemDTO; // LIST of these in InvoiceDTO, this one is relevant here
@@ -30,19 +31,25 @@ public class InvoiceItemRow extends HBox {
         this.dbInvoiceDTO = invoiceItemGroup.getDbInvoiceDTO();
         this.invoiceItemDTO = invoiceItemDTO;
         this.invoiceItemGroup = invoiceItemGroup;
+        this.invoiceView = invoiceItemGroup.getInvoiceView();
         buildRow();
     }
 
-    public InvoiceItemRow(InvoiceDTO invoiceDTO, DbInvoiceDTO dbInvoiceDTO) { // this is for individual items
+    public InvoiceItemRow(InvoiceDTO invoiceDTO, DbInvoiceDTO dbInvoiceDTO, InvoiceView invoiceView) { // this is for individual items
         this.invoiceDTO = invoiceDTO;
         this.dbInvoiceDTO = dbInvoiceDTO;
         this.invoiceItemDTO = setItem();
+        this.invoiceView = invoiceView;
         buildRow();
     }
 
     private void buildRow() {
         this.feeDTO = attachCorrectFeeDTO();
-        invoiceItemDTO.valueProperty().addListener(ListenerFx.createMultipleUseChangeListener(invoiceDTO.updateBalance()));
+        invoiceItemDTO.valueProperty().addListener(ListenerFx.createMultipleUseChangeListener( () -> {
+            invoiceDTO.updateBalance();
+            invoiceView.getMembershipView().getMembershipModel().setSelectedInvoiceItem(invoiceItemDTO);
+            invoiceView.getMembershipView().sendMessage().accept(MembershipMessage.UPDATE_INVOICE);
+        }));
         VBox vBox1 = VBoxFx.vBoxOf(140.0, Pos.CENTER_LEFT);
         vBox1.getChildren().add(new Label(invoiceItemDTO.getFieldName() + ":"));
         VBox vBox2 = VBoxFx.vBoxOf(65.0, Pos.CENTER_LEFT);
@@ -51,7 +58,7 @@ public class InvoiceItemRow extends HBox {
         vBox3.getChildren().add(addMultiple());
         VBox vBox4 = VBoxFx.vBoxOf(70.0, Pos.CENTER_RIGHT);
         vBox4.getChildren().add(addFee());
-        VBox vBox5 = VBoxFx.vBoxOf(120.0, Pos.CENTER_RIGHT); // width should match HBox in ItemGroup
+        VBox vBox5 = VBoxFx.vBoxOf(120.0, Pos.CENTER_RIGHT); // width should match HBox in InvoiceItemGroup
         vBox5.getChildren().add(totalLabel());
         getChildren().addAll(vBox1, vBox2, vBox3, vBox4);
         if(invoiceItemDTO.getCategory().equals("none")) getChildren().add(vBox5);

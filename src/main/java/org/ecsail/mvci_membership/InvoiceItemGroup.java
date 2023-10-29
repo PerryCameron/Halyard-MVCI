@@ -20,12 +20,18 @@ public class InvoiceItemGroup extends HBox {
     private final DbInvoiceDTO dbInvoiceDTO;
     private final InvoiceItemDTO invoiceItemDTO;
     private final ArrayList<InvoiceItemDTO> subItems = new ArrayList<>();
+    private final InvoiceView invoiceView;
 
-    public InvoiceItemGroup(InvoiceDTO invoiceDTO, DbInvoiceDTO dbInvoiceDTO) {
-        this.invoiceDTO = invoiceDTO;
+    public InvoiceItemGroup(InvoiceView invoiceView, DbInvoiceDTO dbInvoiceDTO) {
+        this.invoiceView = invoiceView;
+        this.invoiceDTO = invoiceView.getInvoiceDTO();
         this.dbInvoiceDTO = dbInvoiceDTO;
         this.invoiceItemDTO = getInvoiceItem();
-        invoiceItemDTO.valueProperty().addListener(ListenerFx.createMultipleUseChangeListener(invoiceDTO.updateBalance()));
+        invoiceItemDTO.valueProperty().addListener(ListenerFx.createMultipleUseChangeListener(() -> {
+            invoiceDTO.updateBalance();
+            invoiceView.getMembershipView().getMembershipModel().setSelectedInvoiceItem(invoiceItemDTO);
+            invoiceView.getMembershipView().sendMessage().accept(MembershipMessage.UPDATE_INVOICE);
+        }));
         this.getStyleClass().add("standard-box");
         VBox vBox = VBoxFx.vBoxOf(5.0, new Insets(5, 0, 3, 0));
         HBox hBox = HBoxFx.hBoxOf(Pos.CENTER_RIGHT, 120.0, 5);  // width should match vbox5 in invoiceItemRow
@@ -60,5 +66,9 @@ public class InvoiceItemGroup extends HBox {
 
     public DbInvoiceDTO getDbInvoiceDTO() {
         return dbInvoiceDTO;
+    }
+
+    public InvoiceView getInvoiceView() {
+        return invoiceView;
     }
 }

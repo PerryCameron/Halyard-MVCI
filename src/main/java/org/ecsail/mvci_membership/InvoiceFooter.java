@@ -83,13 +83,13 @@ public class InvoiceFooter implements Builder<Region> {
     }
 
     private Node tableBox() {
-        HBox hBox = HBoxFx.hBoxOf(new Insets(10,0,0,0),10.0);
+        HBox hBox = HBoxFx.hBoxOf(new Insets(10,5,0,0),10.0);
         hBox.getChildren().addAll(tableView(), buttonBox());
         return hBox;
     }
 
     private Node buttonBox() {
-        VBox vBox = new VBox(5);
+        VBox vBox = VBoxFx.vBoxOf(5.0, new Insets(0,5,0,0));
         vBox.getChildren().addAll(
                 ButtonFx.buttonOf("Add", 60, () -> {
                     PaymentDTO paymentDTO = new PaymentDTO(0, invoiceDTO.getId(), null, "CH", DateTools.getDate(), "0", 1);

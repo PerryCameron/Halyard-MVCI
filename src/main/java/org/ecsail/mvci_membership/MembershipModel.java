@@ -51,9 +51,22 @@ public class MembershipModel {
     private SimpleObjectProperty<PersonDTO> selectedPerson = new SimpleObjectProperty<>();
     private SimpleObjectProperty<PhoneDTO> selectedPhone = new SimpleObjectProperty<>();
     private SimpleObjectProperty<InvoiceDTO> selectedInvoice = new SimpleObjectProperty<>();
+    private SimpleObjectProperty<InvoiceItemDTO> selectedInvoiceItem = new SimpleObjectProperty<>();
     private StringProperty selectedString = new SimpleStringProperty("");
     private SimpleIntegerProperty selectedInvoiceCreateYear = new SimpleIntegerProperty(0);
 
+
+    public InvoiceItemDTO getSelectedInvoiceItem() {
+        return selectedInvoiceItem.get();
+    }
+
+    public SimpleObjectProperty<InvoiceItemDTO> selectedInvoiceItemProperty() {
+        return selectedInvoiceItem;
+    }
+
+    public void setSelectedInvoiceItem(InvoiceItemDTO selectedInvoiceItem) {
+        this.selectedInvoiceItem.set(selectedInvoiceItem);
+    }
 
     public int getSelectedInvoiceCreateYear() {
         return selectedInvoiceCreateYear.get();
