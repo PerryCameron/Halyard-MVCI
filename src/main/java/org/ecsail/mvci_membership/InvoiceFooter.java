@@ -53,7 +53,8 @@ public class InvoiceFooter implements Builder<Region> {
         VBox vBox = VBoxFx.vBoxOf(90.0, 10.0, new Insets(10,0,0,20));
         vBox.getChildren().addAll(new CheckBox("Renew"),
                 ButtonFx.buttonOf("Commit", 70, () -> {
-                    System.out.println("Committing");
+                    invoiceDTO.showItems();
+                    invoiceView.getMembershipView().sendMessage().accept(MembershipMessage.UPDATE_INVOICE);
                 })
         );
         return vBox;

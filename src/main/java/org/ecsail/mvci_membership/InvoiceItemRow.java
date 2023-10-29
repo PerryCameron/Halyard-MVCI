@@ -12,7 +12,6 @@ import org.ecsail.dto.FeeDTO;
 import org.ecsail.dto.InvoiceDTO;
 import org.ecsail.dto.InvoiceItemDTO;
 import org.ecsail.static_tools.StringTools;
-import org.ecsail.widgetfx.ListenerFx;
 import org.ecsail.widgetfx.VBoxFx;
 
 import java.math.BigDecimal;
@@ -45,19 +44,6 @@ public class InvoiceItemRow extends HBox {
 
     private void buildRow() {
         this.feeDTO = attachCorrectFeeDTO();
-        invoiceItemDTO.valueProperty().addListener(ListenerFx.createMultipleUseChangeListener( () -> {
-            System.out.println("InvoiceItem Changed: " + invoiceItemDTO.getFieldName() + " = " + invoiceItemDTO.getValue());
-            invoiceView.getMembershipView().getMembershipModel().setSelectedInvoiceItem(invoiceItemDTO);
-            invoiceView.getMembershipView().sendMessage().accept(MembershipMessage.UPDATE_INVOICE_ITEM);
-            if (invoiceItemGroup != null) {
-                invoiceItemGroup.updateGroupTotal();  // important this updates before balance
-                invoiceView.getMembershipView().getMembershipModel().setSelectedInvoiceItem(invoiceItemGroup.getInvoiceItemDTO());
-                invoiceView.getMembershipView().sendMessage().accept(MembershipMessage.UPDATE_INVOICE_ITEM);
-            }
-            invoiceDTO.updateBalance();
-            invoiceView.getMembershipView().sendMessage().accept(MembershipMessage.UPDATE_INVOICE);
-            invoiceDTO.showItems();
-        }));
         VBox vBox1 = VBoxFx.vBoxOf(140.0, Pos.CENTER_LEFT);
         vBox1.getChildren().add(new Label(invoiceItemDTO.getFieldName() + ":"));
         VBox vBox2 = VBoxFx.vBoxOf(65.0, Pos.CENTER_LEFT);
@@ -129,8 +115,10 @@ public class InvoiceItemRow extends HBox {
         textField.setPrefWidth(dbInvoiceDTO.getWidth());
         textField.setText(invoiceItemDTO.getValue());
         textField.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
-            if (oldValue)  // we have focused and unfocused
+            if (oldValue) { // we have focused and unfocused
                 invoiceItemDTO.setValue(StringTools.validateCurrency(textField.getText()));
+                updateItem();
+            }
         });
         return textField;
     }
@@ -143,11 +131,15 @@ public class InvoiceItemRow extends HBox {
         spinner.valueProperty().addListener((observable, oldValue, newValue) -> {
             String calculatedTotal = String.valueOf(new BigDecimal(feeDTO.getFieldValue()).multiply(BigDecimal.valueOf(newValue)));
             invoiceItemDTO.setValue(calculatedTotal);
-            System.out.println("calculatedTotal=" + calculatedTotal);
             invoiceItemDTO.setQty(newValue);
-//            if (invoiceItemGroup != null) invoiceItemGroup.updateGroupTotal();
+            updateItem();
         });
         return spinner;
+    }
+
+    private void updateItem() {
+        if (invoiceItemGroup != null) invoiceItemGroup.updateGroupValues();  // important this updates before balance
+        invoiceDTO.updateBalance();
     }
 
     private InvoiceItemDTO setItem() {
@@ -158,10 +150,9 @@ public class InvoiceItemRow extends HBox {
         return currentInvoiceItem;
     }
 
-    private InvoiceItemDTO addNewInvoiceItem() { //
+    private InvoiceItemDTO addNewInvoiceItem() {
         InvoiceItemDTO newInvoiceItem = new InvoiceItemDTO(invoiceDTO.getId(), invoiceDTO.getMsId(), invoiceDTO.getYear(), dbInvoiceDTO.getFieldName());
         invoiceDTO.getInvoiceItemDTOS().add(newInvoiceItem);
-//        SqlInsert.addInvoiceItemRecord(newInvoiceItem);
         return newInvoiceItem;
     }
 }

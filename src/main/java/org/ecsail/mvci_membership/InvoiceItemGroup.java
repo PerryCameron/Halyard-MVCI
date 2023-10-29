@@ -9,7 +9,6 @@ import org.ecsail.dto.InvoiceDTO;
 import org.ecsail.dto.InvoiceItemDTO;
 import org.ecsail.widgetfx.HBoxFx;
 import org.ecsail.widgetfx.LabelFx;
-import org.ecsail.widgetfx.ListenerFx;
 import org.ecsail.widgetfx.VBoxFx;
 
 import java.math.BigDecimal;
@@ -22,21 +21,11 @@ public class InvoiceItemGroup extends HBox {
     private final InvoiceItemDTO invoiceItemDTO;
     private final ArrayList<InvoiceItemDTO> subItems = new ArrayList<>();
 
-
     public InvoiceItemGroup(InvoiceView invoiceView, DbInvoiceDTO dbInvoiceDTO) {
         this.invoiceView = invoiceView;
         this.invoiceDTO = invoiceView.getInvoiceDTO();
         this.dbInvoiceDTO = dbInvoiceDTO;
         this.invoiceItemDTO = getInvoiceItem();
-//        invoiceItemDTO.valueProperty().addListener(ListenerFx.createMultipleUseChangeListener(() -> {
-//            System.out.println("Group listener triggered");
-//            invoiceDTO.updateBalance();
-//            invoiceView.getMembershipView().getMembershipModel().setSelectedInvoiceItem(invoiceItemDTO);
-//
-//            invoiceView.getMembershipView().sendMessage().accept(MembershipMessage.UPDATE_INVOICE);
-//            updateGroupTotal();
-//            subItems.forEach(System.out::println);
-//        }));
         this.getStyleClass().add("standard-box");
         VBox vBox = VBoxFx.vBoxOf(5.0, new Insets(5, 0, 3, 0));
         HBox hBox = HBoxFx.hBoxOf(Pos.CENTER_RIGHT, 120.0, 5);  // width should match vbox5 in invoiceItemRow
@@ -58,12 +47,22 @@ public class InvoiceItemGroup extends HBox {
                 .orElse(null);
     }
 
-    public void updateGroupTotal() {
-        System.out.println("updateGroupTotal()");
+    public void updateGroupValues() {
+        invoiceItemDTO.setValue(updateGroupTotal());
+        invoiceItemDTO.setQty(updateGroupQty());
+    }
+
+    private String updateGroupTotal() {
         BigDecimal total = subItems.stream()
                 .map(i -> new BigDecimal(i.getValue()))
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
-        invoiceItemDTO.setValue(total.toString());
+        return total.toString();
+    }
+
+    private int updateGroupQty() {
+        return subItems.stream()
+                .mapToInt(InvoiceItemDTO::getQty)
+                .sum();
     }
 
     public InvoiceDTO getInvoiceDTO() {

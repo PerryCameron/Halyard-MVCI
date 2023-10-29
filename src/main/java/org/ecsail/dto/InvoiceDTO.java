@@ -74,8 +74,11 @@ public class InvoiceDTO {
     }
 
     public void showItems() {
-        invoiceItemDTOS.stream().filter(item -> (item.getCategoryItem().equals("none"))).forEach(each -> {
-                    System.out.println(each.getFieldName() + " = " + each.getValue());
+        invoiceItemDTOS.stream().forEach(each -> {
+            System.out.printf("%-20s = %-10s | Qty = %-5d%n",
+                    each.getFieldName(),
+                    each.getValue(),
+                    each.getQty());
                 }
         );
         System.out.println("------------------------");

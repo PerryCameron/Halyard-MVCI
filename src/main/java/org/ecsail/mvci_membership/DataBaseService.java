@@ -208,10 +208,24 @@ public class DataBaseService {
                 peopleRepo.update(membershipModel.getSelectedPerson()), membershipModel.getMainModel(), logger);
     }
 
-    public void updateInvoice() {
-        HandlingTools.executeQuery(() ->
+    public boolean updateInvoice() {
+        int totalUpdated = 0; // To keep track of how many items were successfully updated
+        for (InvoiceItemDTO item : membershipModel.getSelectedInvoice().getInvoiceItemDTOS()) {
+            boolean updated = HandlingTools.executeQuery(() ->
+                    invoiceRepo.update(item), membershipModel.getMainModel(), logger);
+            // Assuming that a return value of 1 from the update method indicates success
+            if (!updated) {
+                System.err.println("Failed to update InvoiceItemDTO with ID: " + item.getId());
+                break; // Exit the loop if the update is not successful
+            }
+            totalUpdated++;
+        }
+        if(totalUpdated == membershipModel.getSelectedInvoice().getInvoiceItemDTOS().size())
+            return HandlingTools.executeQuery(() ->
                 invoiceRepo.update(membershipModel.getSelectedInvoice()), membershipModel.getMainModel(), logger);
+        return false;
     }
+
     public void updateInvoiceItem() {
         HandlingTools.executeQuery(() ->
                 invoiceRepo.update(membershipModel.getSelectedInvoiceItem()), membershipModel.getMainModel(), logger);
