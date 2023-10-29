@@ -14,5 +14,7 @@ public interface InvoiceRepository {
     int getBatchNumber(String year);
     List<FeeDTO> getFeesFromYear(int year);
     List<DbInvoiceDTO> getDbInvoiceByYear(int year);
+    int update(InvoiceItemDTO invoiceItemDTO);
+    int update(InvoiceDTO invoiceDTO);
 
 }

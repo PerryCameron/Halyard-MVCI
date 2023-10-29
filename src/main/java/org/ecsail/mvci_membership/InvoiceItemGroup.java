@@ -27,6 +27,7 @@ public class InvoiceItemGroup extends HBox {
         this.invoiceDTO = invoiceView.getInvoiceDTO();
         this.dbInvoiceDTO = dbInvoiceDTO;
         this.invoiceItemDTO = getInvoiceItem();
+
         invoiceItemDTO.valueProperty().addListener(ListenerFx.createMultipleUseChangeListener(() -> {
             invoiceDTO.updateBalance();
             invoiceView.getMembershipView().getMembershipModel().setSelectedInvoiceItem(invoiceItemDTO);

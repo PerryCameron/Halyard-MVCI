@@ -73,8 +73,7 @@ public class InvoiceDTO {
         this.maxCredit = new SimpleStringProperty("");
     }
 
-    public Runnable updateBalance() {
-        return () -> {
+    public void updateBalance() {
         BigDecimal zero = BigDecimal.ZERO;
 
         BigDecimal totalCredit = invoiceItemDTOS.stream()
@@ -101,7 +100,6 @@ public class InvoiceDTO {
             System.out.println("Total Credit: " + getCredit());
             System.out.println("Payment: " + getPaid());
             System.out.println("Balance: " + getBalance());
-        };
     }
 
 

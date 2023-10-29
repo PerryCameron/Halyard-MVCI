@@ -208,6 +208,13 @@ public class DataBaseService {
                 peopleRepo.update(membershipModel.getSelectedPerson()), membershipModel.getMainModel(), logger);
     }
 
+    public void updateInvoice() {
+        HandlingTools.executeQuery(() ->
+                invoiceRepo.update(membershipModel.getSelectedInvoice()), membershipModel.getMainModel(), logger);
+        HandlingTools.executeQuery(() ->
+                invoiceRepo.update(membershipModel.getSelectedInvoiceItem()), membershipModel.getMainModel(), logger);
+    }
+
     protected void deletePerson() {
         if (HandlingTools.executeQuery(() -> peopleRepo.delete(membershipModel.getSelectedPerson()),
                 membershipModel.getMainModel(), logger))
@@ -442,7 +449,5 @@ public class DataBaseService {
         }
     }
 
-    public void updateInvoiceItem() {
-        System.out.println(membershipModel.getSelectedInvoiceItem());
-    }
+
 }

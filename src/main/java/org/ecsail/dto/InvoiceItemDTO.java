@@ -138,6 +138,9 @@ public class InvoiceItemDTO {
     public boolean isCategory() {
         return isCategory.get();
     }
+    public boolean isIsCategory() {
+        return isCategory.get();
+    }
 
     public BooleanProperty isCategoryProperty() {
         return isCategory;
