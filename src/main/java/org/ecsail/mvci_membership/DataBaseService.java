@@ -9,6 +9,7 @@ import org.ecsail.enums.Success;
 import org.ecsail.interfaces.SlipUser;
 import org.ecsail.repository.implementations.*;
 import org.ecsail.repository.interfaces.*;
+import org.ecsail.static_tools.DateTools;
 import org.ecsail.static_tools.HandlingTools;
 import org.ecsail.widgetfx.TableViewFx;
 import org.slf4j.Logger;
@@ -222,6 +223,11 @@ public class DataBaseService {
             invoiceRepo.update(membershipModel.getSelectedInvoice()), membershipModel.getMainModel(), logger);
     }
 
+    public void updatePayment() {
+        HandlingTools.executeQuery(() ->
+                invoiceRepo.update(membershipModel.getSelectedPayment()), membershipModel.getMainModel(), logger);
+    }
+
     protected void deletePerson() {
         if (HandlingTools.executeQuery(() -> peopleRepo.delete(membershipModel.getSelectedPerson()),
                 membershipModel.getMainModel(), logger))
@@ -394,6 +400,15 @@ public class DataBaseService {
         }
     }
 
+    public void insertPayment() {
+        PaymentDTO paymentDTO = new PaymentDTO(0, membershipModel.getSelectedInvoice().getId(), null, "CH", DateTools.getDate(), "0", 1);
+        if(HandlingTools.executeQuery(() -> invoiceRepo.insert(paymentDTO), membershipModel.getMainModel(), logger)) {
+            Platform.runLater(() -> {
+                membershipModel.getSelectedInvoice().getPaymentDTOS().add(paymentDTO);
+            });
+        } else System.out.println("Failed to add paymentDTO");
+    }
+
     public void insertInvoice() {
         System.out.println("Inserting invoice for year " + membershipModel.getSelectedInvoiceCreateYear());
     }
@@ -455,7 +470,4 @@ public class DataBaseService {
             });
         }
     }
-
-
-
 }

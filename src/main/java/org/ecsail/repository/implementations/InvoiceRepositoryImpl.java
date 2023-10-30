@@ -8,6 +8,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
 import javax.sql.DataSource;
 import java.util.*;
@@ -64,6 +66,23 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
     }
 
     @Override
+    public int insert(PaymentDTO paymentDTO) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+                String query = "INSERT INTO payment ( " +
+                        "INVOICE_ID, " +
+                        "CHECK_NUMBER, " +
+                        "PAYMENT_TYPE, " +
+                        "PAYMENT_DATE, " +
+                        "AMOUNT, " +
+                        "DEPOSIT_ID) " +
+                "VALUES (:invoiceId, :checkNumber, :paymentType, :paymentDate, :PaymentAmount, :depositId)";
+                SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(paymentDTO);
+                int affectedRows = namedParameterJdbcTemplate.update(query, namedParameters, keyHolder);
+        paymentDTO.setPayId(keyHolder.getKey().intValue());
+        return affectedRows;
+    }
+
+    @Override
     public  int getBatchNumber(String year) {
         String query = "SELECT MAX(batch) FROM invoice WHERE committed=true AND fiscal_year=:year";
         Map<String, Object> params = Collections.singletonMap("year", year);
@@ -101,6 +120,8 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
         return namedParameterJdbcTemplate.update(query, namedParameters);
     }
 
+
+
     @Override
     public int[] updateBatch(InvoiceDTO invoiceDTO) {
         List<InvoiceItemDTO> invoiceItems = invoiceDTO.getInvoiceItemDTOS();
@@ -125,5 +146,19 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
         if(Arrays.stream(updateResults).sum() == invoiceItems.size())
             number[updateResults.length] = update(invoiceDTO);
         return number;
+    }
+
+    @Override
+    public int update(PaymentDTO paymentDTO) {
+        String query = "UPDATE payment set " +
+                "INVOICE_ID = :invoiceId, " +
+                "CHECK_NUMBER = :checkNumber, " +
+                "PAYMENT_TYPE = :paymentType, " +
+                "PAYMENT_DATE = :paymentDate, " +
+                "AMOUNT = :PaymentAmount, " +
+                "DEPOSIT_ID = :depositId " +
+                "WHERE PAY_ID = :payId";
+        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(paymentDTO);
+        return namedParameterJdbcTemplate.update(query, namedParameters);
     }
 }

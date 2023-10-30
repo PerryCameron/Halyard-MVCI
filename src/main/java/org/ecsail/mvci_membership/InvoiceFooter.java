@@ -8,10 +8,7 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
@@ -26,8 +23,10 @@ import org.ecsail.static_tools.DateTools;
 import org.ecsail.widgetfx.*;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class InvoiceFooter implements Builder<Region> {
     private final InvoiceView invoiceView;
@@ -110,17 +109,14 @@ public class InvoiceFooter implements Builder<Region> {
     private Node buttonBox() {
         VBox vBox = VBoxFx.vBoxOf(5.0, new Insets(0,5,0,0));
         vBox.getChildren().addAll(
-                ButtonFx.buttonOf("Add", 60, () -> {
-                    PaymentDTO paymentDTO = new PaymentDTO(0, invoiceDTO.getId(), null, "CH", DateTools.getDate(), "0", 1);
-                    // adds to database and updates pay_id
-                    System.out.println("Insert payment into database");
-                    invoiceDTO.getPaymentDTOS().add(paymentDTO); // let's add it to our GUI
-                }),
+                ButtonFx.buttonOf("Add", 60, () ->
+                    invoiceView.getMembershipView().sendMessage().accept(MembershipMessage.INSERT_PAYMENT)),
                 ButtonFx.buttonOf("Delete", 60, () -> {
-                    int selectedIndex = tableView.getSelectionModel().getSelectedIndex();
-                    if (selectedIndex >= 0) // is something selected?
-                        System.out.println("Delete Payment Entry from database");
-                    tableView.getItems().remove(selectedIndex); // remove it from our GUI
+                    PaymentDTO paymentDTO = tableView.getSelectionModel().getSelectedItem();
+                    if (paymentDTO != null) // is something selected?
+                        invoiceView.getMembershipView().getMembershipModel().setSelectedPayment(paymentDTO);
+
+//                    tableView.getItems().remove(selectedIndex); // remove it from our GUI
 //                    BigDecimal totalPaidAmount = new BigDecimal(SqlPayment.getTotalAmount(parent.invoice.getId()));
 //                    parent.totalPaymentText.setText(String.valueOf(totalPaidAmount.setScale(2)));
 //                    parent.invoice.setPaid(String.valueOf(totalPaidAmount.setScale(2)));
@@ -151,15 +147,15 @@ public class InvoiceFooter implements Builder<Region> {
                 t -> {
                     t.getTableView().getItems().get(
                             t.getTablePosition().getRow()).setPaymentAmount(String.valueOf(new BigDecimal(t.getNewValue()).setScale(2)));
-//                    var pay_id = t.getTableView().getItems().get(t.getTablePosition().getRow()).getPay_id();
-//                    BigDecimal amount = new BigDecimal(t.getNewValue());
-//                    SqlUpdate.updatePayment(pay_id, "amount", String.valueOf(amount.setScale(2)));
-//                    // This adds all the amounts together
-//                    BigDecimal totalPaidAmount = new BigDecimal(SqlPayment.getTotalAmount(parent.getInvoice().getId())).setScale(2);
-//                    String totalAmountPaid = String.valueOf(totalPaidAmount.setScale(2));
-//                    parent.parent.totalPaymentText.setText(totalAmountPaid);
-//                    parent.getInvoice().setPaid(totalAmountPaid);
-//                    parent.updateTotals();
+                    PaymentDTO paymentDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
+                    invoiceView.getMembershipView().getMembershipModel().setSelectedPayment(paymentDTO);
+                    invoiceView.getMembershipView().sendMessage().accept(MembershipMessage.UPDATE_PAYMENT);
+                    BigDecimal payments = new BigDecimal("0.00");
+                    for(PaymentDTO p: invoiceView.getMembershipView().getMembershipModel().getSelectedInvoice().getPaymentDTOS()) {  // not adding properly
+                        payments = payments.add(new BigDecimal(p.getPaymentAmount()));
+                    }
+                    invoiceDTO.setPaid(payments.toString());
+                    invoiceDTO.updateBalance();
                 }
         );
         return col1;
@@ -170,20 +166,19 @@ public class InvoiceFooter implements Builder<Region> {
         TableColumn<PaymentDTO, PaymentType> col2 = new TableColumn<>("Type");
         col2.setStyle("-fx-alignment: CENTER;");
         col2.setCellValueFactory(param -> {
-            var thisPayment = param.getValue();
-            var paymentCode = thisPayment.getPaymentType();
-            var paymentType = PaymentType.getByCode(paymentCode);
+            PaymentDTO paymentDTO = param.getValue();
+            String paymentCode = paymentDTO.getPaymentType();
+            PaymentType paymentType = PaymentType.getByCode(paymentCode);
             return new SimpleObjectProperty<>(paymentType);
         });
         col2.setCellFactory(ComboBoxTableCell.forTableColumn(paymentTypeList));
         col2.setOnEditCommit((TableColumn.CellEditEvent<PaymentDTO, PaymentType> event) -> {
-            var pos = event.getTablePosition();
-            var newPaymentType = event.getNewValue();
-            var row = pos.getRow();
-            var thisPayment = event.getTableView().getItems().get(row);
-//            SqlUpdate.updatePayment(thisPayment.getPay_id(), "payment_type", newPaymentType.getCode());
-            // need to update paid from here
-            thisPayment.setPaymentType(newPaymentType.getCode());
+            TablePosition<PaymentDTO, PaymentType> pos = event.getTablePosition();
+            PaymentType newPaymentType = event.getNewValue();
+            PaymentDTO paymentDTO = event.getTableView().getItems().get(pos.getRow());
+            invoiceView.getMembershipView().getMembershipModel().setSelectedPayment(paymentDTO);
+            invoiceView.getMembershipView().sendMessage().accept(MembershipMessage.UPDATE_PAYMENT);
+            paymentDTO.setPaymentType(newPaymentType.getCode());
         });
         col2.setMaxWidth(1f * Integer.MAX_VALUE * 20);
         return col2;
@@ -192,14 +187,7 @@ public class InvoiceFooter implements Builder<Region> {
     private TableColumn<PaymentDTO,String> column3() {
         TableColumn<PaymentDTO, String> col3 = TableColumnFx.tableColumnOf(PaymentDTO::checkNumberProperty,"Check #");
         col3.setStyle("-fx-alignment: CENTER-LEFT;");
-        col3.setOnEditCommit(
-                t -> {
-                    t.getTableView().getItems().get(
-                            t.getTablePosition().getRow()).setCheckNumber(t.getNewValue());
-                    var pay_id = t.getTableView().getItems().get(t.getTablePosition().getRow()).getPay_id();
-//                    SqlUpdate.updatePayment(pay_id, "CHECK_NUMBER", t.getNewValue());
-                }
-        );
+        col3.setOnEditCommit(t -> updatePayment(t));
         col3.setMaxWidth(1f * Integer.MAX_VALUE * 35);
         return col3;
     }
@@ -207,17 +195,16 @@ public class InvoiceFooter implements Builder<Region> {
     private TableColumn<PaymentDTO,String> column4() {
         TableColumn<PaymentDTO, String> col4 = TableColumnFx.tableColumnOf(PaymentDTO::paymentDateProperty,"Date");
         col4.setStyle("-fx-alignment: CENTER-LEFT;");
-        col4.setOnEditCommit(
-                t -> {
-                    t.getTableView().getItems().get(
-                            t.getTablePosition().getRow()).setPaymentDate(t.getNewValue());
-                    var pay_id = t.getTableView().getItems().get(t.getTablePosition().getRow()).getPay_id();
-//                    SqlUpdate.updatePayment(pay_id, "payment_date", t.getNewValue());
-                    //	SqlUpdate.updatePhone("phone", phone_id, t.getNewValue());
-                }
-        );
+        col4.setOnEditCommit(t -> updatePayment(t));
         col4.setMaxWidth(1f * Integer.MAX_VALUE * 25);
         return col4;
+    }
+
+    private void updatePayment(TableColumn.CellEditEvent<PaymentDTO, String> t) {
+        PaymentDTO paymentDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
+        paymentDTO.setCheckNumber(t.getNewValue());
+        invoiceView.getMembershipView().getMembershipModel().setSelectedPayment(paymentDTO);
+        invoiceView.getMembershipView().sendMessage().accept(MembershipMessage.UPDATE_PAYMENT);
     }
 
 }

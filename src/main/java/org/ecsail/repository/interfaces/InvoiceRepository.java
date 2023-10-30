@@ -11,9 +11,11 @@ public interface InvoiceRepository {
     List<InvoiceWithMemberInfoDTO> getInvoicesWithMembershipInfoByYear(String year);
     List<InvoiceItemDTO> getInvoiceItemsByInvoiceId(int id);
     List<PaymentDTO> getPaymentByInvoiceId(int id);
+    int insert(PaymentDTO paymentDTO);
     int getBatchNumber(String year);
     List<FeeDTO> getFeesFromYear(int year);
     List<DbInvoiceDTO> getDbInvoiceByYear(int year);
     int update(InvoiceDTO invoiceDTO);
     int[] updateBatch(InvoiceDTO invoiceDTO);
+    int update(PaymentDTO paymentDTO);
 }

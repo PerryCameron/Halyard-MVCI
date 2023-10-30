@@ -52,10 +52,24 @@ public class MembershipModel {
     private SimpleObjectProperty<PersonDTO> selectedPerson = new SimpleObjectProperty<>();
     private SimpleObjectProperty<PhoneDTO> selectedPhone = new SimpleObjectProperty<>();
     private SimpleObjectProperty<InvoiceDTO> selectedInvoice = new SimpleObjectProperty<>();
+    private SimpleObjectProperty<PaymentDTO> selectedPayment = new SimpleObjectProperty<>();
     private StringProperty selectedString = new SimpleStringProperty("");
     private SimpleIntegerProperty selectedInvoiceCreateYear = new SimpleIntegerProperty(0);
     private SimpleObjectProperty<Success> invoiceSaved = new SimpleObjectProperty(Success.NULL);
 
+
+
+    public PaymentDTO getSelectedPayment() {
+        return selectedPayment.get();
+    }
+
+    public SimpleObjectProperty<PaymentDTO> selectedPaymentProperty() {
+        return selectedPayment;
+    }
+
+    public void setSelectedPayment(PaymentDTO selectedPayment) {
+        this.selectedPayment.set(selectedPayment);
+    }
 
     public Success getInvoiceSaved() {
         return invoiceSaved.get();

@@ -6,52 +6,52 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class PaymentDTO {
-	private IntegerProperty pay_id;
-	private IntegerProperty invoice_id;
+	private IntegerProperty payId;
+	private IntegerProperty invoiceId;
 	private StringProperty checkNumber;
 	private StringProperty paymentType;
 	private StringProperty paymentDate;
 	private StringProperty PaymentAmount;
-	private IntegerProperty deposit_id;
+	private IntegerProperty depositId;
 	
-	public PaymentDTO(Integer pay_id, Integer invoice_id, String checkNumber, String paymentType, String paymentDate,
-                      String paymentAmount, Integer deposit_id) {
-		this.pay_id = new SimpleIntegerProperty(pay_id);
-		this.invoice_id = new SimpleIntegerProperty(invoice_id);
+	public PaymentDTO(Integer payId, Integer invoiceId, String checkNumber, String paymentType, String paymentDate,
+					  String paymentAmount, Integer depositId) {
+		this.payId = new SimpleIntegerProperty(payId);
+		this.invoiceId = new SimpleIntegerProperty(invoiceId);
 		this.checkNumber = new SimpleStringProperty(checkNumber);
 		this.paymentType = new SimpleStringProperty(paymentType);
 		this.paymentDate = new SimpleStringProperty(paymentDate);
 		this.PaymentAmount = new SimpleStringProperty(paymentAmount);
-		this.deposit_id = new SimpleIntegerProperty(deposit_id);
+		this.depositId = new SimpleIntegerProperty(depositId);
 	}
 
-	public final IntegerProperty pay_idProperty() {
-		return this.pay_id;
-	}
-	
-
-	public final int getPay_id() {
-		return this.pay_idProperty().get();
+	public final IntegerProperty payIdProperty() {
+		return this.payId;
 	}
 	
 
-	public final void setPay_id(final int pay_id) {
-		this.pay_idProperty().set(pay_id);
+	public final int getPayId() {
+		return this.payIdProperty().get();
 	}
 	
 
-	public final IntegerProperty invoice_idProperty() {
-		return this.invoice_id;
+	public final void setPayId(final int payId) {
+		this.payIdProperty().set(payId);
 	}
 	
 
-	public final int getInvoice_id() {
-		return this.invoice_idProperty().get();
+	public final IntegerProperty invoiceIdProperty() {
+		return this.invoiceId;
 	}
 	
 
-	public final void setInvoice_id(final int invoice_id) {
-		this.invoice_idProperty().set(invoice_id);
+	public final int getInvoiceId() {
+		return this.invoiceIdProperty().get();
+	}
+	
+
+	public final void setInvoiceId(final int invoiceId) {
+		this.invoiceIdProperty().set(invoiceId);
 	}
 	
 
@@ -115,24 +115,24 @@ public class PaymentDTO {
 	}
 
 
-	public final IntegerProperty deposit_idProperty() {
-		return this.deposit_id;
+	public final IntegerProperty depositIdProperty() {
+		return this.depositId;
 	}
 	
 
-	public final int getDeposit_id() {
-		return this.deposit_idProperty().get();
+	public final int getDepositId() {
+		return this.depositIdProperty().get();
 	}
 	
 
-	public final void setDeposit_id(final int deposit_id) {
-		this.deposit_idProperty().set(deposit_id);
+	public final void setDepositId(final int depositId) {
+		this.depositIdProperty().set(depositId);
 	}
 
 	@Override
 	public String toString() {
-		return "Object_Payment [pay_id=" + pay_id + ", invoice_id=" + invoice_id + ", checkNumber=" + checkNumber
+		return "Object_Payment [pay_id=" + payId + ", invoice_id=" + invoiceId + ", checkNumber=" + checkNumber
 				+ ", paymentType=" + paymentType + ", paymentDate=" + paymentDate + ", PaymentAmount=" + PaymentAmount
-				+ ", deposit_id=" + deposit_id + "]";
+				+ ", deposit_id=" + depositId + "]";
 	}
 }

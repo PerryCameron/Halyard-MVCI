@@ -17,7 +17,6 @@ import org.ecsail.widgetfx.VBoxFx;
 import java.math.BigDecimal;
 
 public class InvoiceItemRow extends HBox {
-//    private final InvoiceView invoiceView;
     private final InvoiceDTO invoiceDTO;
     private final DbInvoiceDTO dbInvoiceDTO; // LIST of these in InvoiceDTO, this one is relevant here
     private final InvoiceItemDTO invoiceItemDTO; // LIST of these in InvoiceDTO, this one is relevant here
@@ -30,7 +29,6 @@ public class InvoiceItemRow extends HBox {
         this.dbInvoiceDTO = invoiceItemGroup.getDbInvoiceDTO();
         this.invoiceItemDTO = invoiceItemDTO;
         this.invoiceItemGroup = invoiceItemGroup;
-//        this.invoiceView = invoiceItemGroup.getInvoiceView();
         buildRow();
     }
 
@@ -38,7 +36,6 @@ public class InvoiceItemRow extends HBox {
         this.invoiceDTO = invoiceDTO;
         this.dbInvoiceDTO = dbInvoiceDTO;
         this.invoiceItemDTO = setItem();
-//        this.invoiceView = invoiceView;
         buildRow();
     }
 
@@ -107,7 +104,6 @@ public class InvoiceItemRow extends HBox {
                 return textField;
             }
         }
-        System.out.println("There was no matching widget for " + dbInvoiceDTO );
         return null;
     }
 
