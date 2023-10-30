@@ -53,6 +53,7 @@ public class InvoiceView implements Builder<Tab> {
         return tab;
     }
 
+
     private Node showEditableInvoice() {
         VBox vBox = VBoxFx.vBoxOf(5.0,new Insets(10,0,0,15)); // makes outer border
         vBox.getChildren().add(HBoxFx.customHBoxHeader(false));
@@ -107,6 +108,7 @@ public class InvoiceView implements Builder<Tab> {
     }
 
     private void showEditView() {  // this is pretty much identical to
+//        membershipView.sendMessage().accept(MembershipMessage.LOAD_FEES); This did not solve
         CustomTools.removeExistingTabAndCreateNew(membershipView); // also used in InvoiceListView and invoiceFooter
         getMembershipView().getMembershipModel().setInvoiceSaved(Success.NULL);
     }

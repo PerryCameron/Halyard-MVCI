@@ -32,7 +32,7 @@ import java.util.List;
 public class InvoiceFooter implements Builder<Region> {
     private final InvoiceView invoiceView;
     private final InvoiceDTO invoiceDTO;
-    TableView<PaymentDTO> tableView;
+    private TableView<PaymentDTO> tableView;
 
     public InvoiceFooter(InvoiceView invoiceView) {
         this.invoiceView = invoiceView;
@@ -73,9 +73,8 @@ public class InvoiceFooter implements Builder<Region> {
             }
     }
 
-    private void showCommittedView() {  // this is pretty much identicle to
-        MembershipView membershipView = invoiceView.getMembershipView();
-        CustomTools.removeExistingTabAndCreateNew(membershipView); // also used in InvoiceListView
+    private void showCommittedView() {  // this is pretty much identical to
+        CustomTools.removeExistingTabAndCreateNew(invoiceView.getMembershipView()); // also used in InvoiceListView
         invoiceView.getMembershipView().getMembershipModel().setInvoiceSaved(Success.NULL);
     }
 
@@ -133,6 +132,7 @@ public class InvoiceFooter implements Builder<Region> {
 
     private TableView<PaymentDTO> tableView() {
         this.tableView = TableViewFx.tableViewOf(PaymentDTO.class, 115);
+        System.out.println("PaymentDTOs size is=" + invoiceDTO.getPaymentDTOS().size());
         tableView.setItems(invoiceDTO.getPaymentDTOS());
         List<TableColumn<PaymentDTO, ?>> columns = new ArrayList<>();
         columns.add(column1());

@@ -88,6 +88,13 @@ public class InvoiceDTO {
         System.out.println("Balance:      " + getBalance());
     }
 
+    public void showObjects() {
+        System.out.println("Invoice ID= " + this.getId());
+        System.out.println("InvoiceItem size= " + getInvoiceItemDTOS().size());
+        System.out.println("DbInvoice size= " + getDbInvoiceDTOS().size());
+        System.out.println("PaymentDTO size= " + getPaymentDTOS().size());
+    }
+
     public void updateBalance() {
         BigDecimal zero = BigDecimal.ZERO;
 

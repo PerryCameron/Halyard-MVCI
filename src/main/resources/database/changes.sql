@@ -18,6 +18,11 @@ update invoice_item set invoice_item.CATEGORY=true where FIELD_NAME='Kayak';
 alter table invoice_item
     add CATEGORY_ITEM varchar(50) default 'none' not null;
 
+#################################################################################################
+#                       2023  Changes
+#
+#################################################################################################
+
 # updating kayak rows to match
 UPDATE invoice_item
 SET CATEGORY_ITEM = 'Kayak'
@@ -45,13 +50,7 @@ WHERE FIELD_NAME IN ('Beam Over 5 foot', 'Beam Under 5 foot') and FISCAL_YEAR=20
 #           WHERE FIELD_NAME IN ('Beam Over 5 foot', 'Beam Under 5 foot') and FISCAL_YEAR=2023
 #               [2023-10-25 16:33:05] 672 rows affected in 250 ms
 
-
-
-
-
-
-
-# This is designed to update Kayak rows to match new format (this fucking works, lol)
+# This is designed to update Kayak rows to match new format (this fucking works, lol) For 2023
 -- Begin a transaction to ensure data consistency
 START TRANSACTION;
 
@@ -79,6 +78,69 @@ SET
     ii.VALUE = ts.total_value
 WHERE
         ii.FIELD_NAME = 'Kayak' AND ii.FISCAL_YEAR = 2023;
+
+-- Commit the transaction
+COMMIT;
+
+#################################################################################################
+#                       2022  Changes
+#
+#################################################################################################
+delete from invoice_item where FIELD_NAME='new entry' and FISCAL_YEAR='2022';
+# ECSC_SQL> delete from invoice_item where FIELD_NAME='new entry' and FISCAL_YEAR='2022'
+#     [2023-10-30 14:34:14] 1 row affected in 228 ms
+delete from invoice_item where FIELD_NAME='Testing' and FISCAL_YEAR='2022';
+# ECSC_SQL> delete from invoice_item where FIELD_NAME='Testing' and FISCAL_YEAR='2022'
+#     [2023-10-30 14:36:10] 1 row affected in 228 ms
+update db_invoice set widget_type='spinner' where widget_type='combo-box';  # NO more combo boxes, takes care of all years
+# ECSC_SQL> update db_invoice set widget_type='spinner' where widget_type='combo-box'
+#     [2023-10-30 14:44:06] 49 rows affected in 181 ms
+
+UPDATE invoice_item
+SET CATEGORY_ITEM = 'Kayak'
+WHERE FIELD_NAME IN ('Kayak Shed', 'Kayak Rack', 'Kayak Beach Rack') and FISCAL_YEAR=2022;
+# ECSC_SQL> UPDATE invoice_item
+#           SET CATEGORY_ITEM = 'Kayak'
+#           WHERE FIELD_NAME IN ('Kayak Shed', 'Kayak Rack', 'Kayak Beach Rack') and FISCAL_YEAR=2022
+#               [2023-10-30 13:34:26] 1,068 rows affected in 291 ms
+
+# updating key rows to match
+UPDATE invoice_item
+SET CATEGORY_ITEM = 'Keys'
+WHERE FIELD_NAME IN ('Gate Key', 'Sail Loft Key', 'Kayak Shed Key') and FISCAL_YEAR=2022;
+# ECSC_SQL> UPDATE invoice_item
+#           SET CATEGORY_ITEM = 'Keys'
+#           WHERE FIELD_NAME IN ('Gate Key', 'Sail Loft Key', 'Kayak Shed Key') and FISCAL_YEAR=2022
+#               [2023-10-30 13:35:17] 1,068 rows affected in 219 ms
+
+# This is designed to update Kayak rows to match new format (this fucking works, lol)
+-- Begin a transaction to ensure data consistency
+START TRANSACTION;
+
+-- Calculate SUM(QTY) and SUM(VALUE) for each MS_ID for the specified FIELD_NAMEs For 2022
+CREATE TEMPORARY TABLE TempSums AS
+SELECT
+    MS_ID,
+    SUM(QTY) as total_qty,
+    SUM(VALUE) as total_value
+FROM
+    invoice_item
+WHERE
+        FIELD_NAME IN ('Kayak Rack', 'Kayak Beach Rack', 'Kayak Shed')
+  AND FISCAL_YEAR = 2022
+GROUP BY
+    MS_ID;
+
+-- Update the Kayak rows using the summed values
+UPDATE
+    invoice_item as ii
+        JOIN
+        TempSums ts ON ii.MS_ID = ts.MS_ID
+SET
+    ii.QTY = ts.total_qty,
+    ii.VALUE = ts.total_value
+WHERE
+        ii.FIELD_NAME = 'Kayak' AND ii.FISCAL_YEAR = 2022;
 
 -- Commit the transaction
 COMMIT;
