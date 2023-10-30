@@ -82,23 +82,6 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
         return template.query(query, new DbInvoiceRowMapper(), year);
     }
 
-//    @Override
-//    public int update(InvoiceItemDTO invoiceItemDTO) {
-//        String query = "UPDATE invoice_item SET " +
-//                "INVOICE_ID = :invoiceId, " +
-//                "MS_ID = :msId, " +
-//                "FISCAL_YEAR = :year, " +
-//                "FIELD_NAME = :fieldName, " +
-//                "IS_CREDIT = :credit, " +
-//                "VALUE = :value, " +
-//                "QTY = :qty, " +
-//                "CATEGORY = :category, " +
-//                "CATEGORY_ITEM = :categoryItem " +
-//                "WHERE ID = :id";
-//        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(invoiceItemDTO);
-//        return namedParameterJdbcTemplate.update(query, namedParameters);
-//    }
-
     @Override
     public int update(InvoiceDTO invoiceDTO) {
         String query = "UPDATE invoice SET " +
@@ -132,7 +115,6 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
                 "CATEGORY = :category, " +
                 "CATEGORY_ITEM = :categoryItem " +
                 "WHERE ID = :id";
-
         List<SqlParameterSource> parameters = new ArrayList<>();
         for (InvoiceItemDTO invoiceItemDTO : invoiceItems) {
             parameters.add(new BeanPropertySqlParameterSource(invoiceItemDTO));

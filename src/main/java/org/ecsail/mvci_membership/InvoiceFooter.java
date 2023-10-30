@@ -1,16 +1,15 @@
 package org.ecsail.mvci_membership;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
@@ -19,12 +18,15 @@ import javafx.util.Builder;
 import org.ecsail.dto.InvoiceDTO;
 import org.ecsail.dto.PaymentDTO;
 import org.ecsail.enums.PaymentType;
+import org.ecsail.enums.Success;
+import org.ecsail.static_tools.CustomTools;
 import org.ecsail.static_tools.DateTools;
 import org.ecsail.widgetfx.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class InvoiceFooter implements Builder<Region> {
     private final InvoiceView invoiceView;
@@ -53,11 +55,33 @@ public class InvoiceFooter implements Builder<Region> {
         VBox vBox = VBoxFx.vBoxOf(90.0, 10.0, new Insets(10,0,0,20));
         vBox.getChildren().addAll(new CheckBox("Renew"),
                 ButtonFx.buttonOf("Commit", 70, () -> {
+                    invoiceDTO.setCommitted(true);
                     invoiceDTO.showItems();
                     invoiceView.getMembershipView().sendMessage().accept(MembershipMessage.UPDATE_INVOICE);
+                    setInvoiceSaveListener();
                 })
         );
         return vBox;
+    }
+
+    private void setInvoiceSaveListener() {
+        ChangeListener<Success> viewListener = ListenerFx.createEnumListener(() ->
+                viewMessaging(invoiceView.getMembershipView().getMembershipModel().invoiceSavedProperty().get()).run());
+        invoiceView.getMembershipView().getMembershipModel().invoiceSavedProperty().addListener(viewListener);
+    }
+
+    private Runnable viewMessaging(Success success) { // when database updates, this makes UI reflect.
+        return () -> {
+            switch (success) {
+                case YES -> Platform.runLater(() -> showCommittedView());
+                case NO -> System.out.println("We didn't succeed in updating invoice");
+            }
+        };
+    }
+
+    private void showCommittedView() {  // this is pretty much identicle to
+        MembershipView membershipView = invoiceView.getMembershipView();
+        CustomTools.removeExistingTabAndCreateNew(membershipView); // also used in InvoiceListView
     }
 
     private Node lineTotalsBox() {

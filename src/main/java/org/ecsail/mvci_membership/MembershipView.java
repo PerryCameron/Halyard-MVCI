@@ -197,11 +197,11 @@ public class MembershipView implements Builder<Region> {
                 .orElse(null);
     }
 
-    protected MembershipModel getMembershipModel() {
+    public MembershipModel getMembershipModel() {
         return membershipModel;
     }
 
-    protected Consumer<MembershipMessage> sendMessage() {
+    public Consumer<MembershipMessage> sendMessage() {
         return action;
     }
 }

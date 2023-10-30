@@ -12,6 +12,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import org.ecsail.dto.InvoiceDTO;
+import org.ecsail.static_tools.CustomTools;
 import org.ecsail.widgetfx.HBoxFx;
 import org.ecsail.widgetfx.ListenerFx;
 import org.ecsail.widgetfx.TableViewFx;
@@ -88,16 +89,7 @@ public class InvoiceListView implements Builder<Tab> {
         });
         tableView.setOnMouseClicked(event -> {
             if (event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
-                // Regex pattern to match a 4-digit integer
-                Pattern yearPattern = Pattern.compile("^\\d{4}$");
-                // Stream through tabs and remove ones matching the pattern
-                membershipView.getMembershipModel().getInfoTabPane().getTabs().removeIf(t ->
-                        yearPattern.matcher(t.getText()).matches()
-                );
-                Tab tab = new InvoiceView(membershipView).build();
-                membershipView.getMembershipModel().getInfoTabPane().getTabs().add(tab);
-                membershipView.getMembershipModel().getInfoTabPane().getSelectionModel().select(tab);
-                membershipView.sendMessage().accept(MembershipMessage.LOAD_INVOICE);
+                CustomTools.removeExistingTabAndCreateNew(membershipView); // also used in InvoiceFooter
             }
         });
         membershipView.getMembershipModel().setInvoiceListTableView(tableView);

@@ -9,6 +9,7 @@ import javafx.scene.layout.StackPane;
 import org.ecsail.custom.CustomDatePicker;
 import org.ecsail.dto.*;
 import org.ecsail.enums.MemberType;
+import org.ecsail.enums.Success;
 import org.ecsail.interfaces.SlipUser;
 import org.ecsail.mvci_main.MainModel;
 
@@ -51,21 +52,21 @@ public class MembershipModel {
     private SimpleObjectProperty<PersonDTO> selectedPerson = new SimpleObjectProperty<>();
     private SimpleObjectProperty<PhoneDTO> selectedPhone = new SimpleObjectProperty<>();
     private SimpleObjectProperty<InvoiceDTO> selectedInvoice = new SimpleObjectProperty<>();
-    private SimpleObjectProperty<InvoiceItemDTO> selectedInvoiceItem = new SimpleObjectProperty<>();
     private StringProperty selectedString = new SimpleStringProperty("");
     private SimpleIntegerProperty selectedInvoiceCreateYear = new SimpleIntegerProperty(0);
+    private SimpleObjectProperty<Success> invoiceSaved = new SimpleObjectProperty(Success.NULL);
 
 
-    public InvoiceItemDTO getSelectedInvoiceItem() {
-        return selectedInvoiceItem.get();
+    public Success getInvoiceSaved() {
+        return invoiceSaved.get();
     }
 
-    public SimpleObjectProperty<InvoiceItemDTO> selectedInvoiceItemProperty() {
-        return selectedInvoiceItem;
+    public SimpleObjectProperty<Success> invoiceSavedProperty() {
+        return invoiceSaved;
     }
 
-    public void setSelectedInvoiceItem(InvoiceItemDTO selectedInvoiceItem) {
-        this.selectedInvoiceItem.set(selectedInvoiceItem);
+    public void setInvoiceSaved(Success invoiceSaved) {
+        this.invoiceSaved.set(invoiceSaved);
     }
 
     public int getSelectedInvoiceCreateYear() {

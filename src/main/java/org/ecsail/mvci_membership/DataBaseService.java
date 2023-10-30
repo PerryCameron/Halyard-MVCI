@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.scene.control.TableColumn;
 import org.ecsail.dto.*;
 import org.ecsail.enums.MemberType;
+import org.ecsail.enums.Success;
 import org.ecsail.interfaces.SlipUser;
 import org.ecsail.repository.implementations.*;
 import org.ecsail.repository.interfaces.*;
@@ -209,9 +210,11 @@ public class DataBaseService {
     }
 
     public void updateInvoice() {
-        HandlingTools.executeBatchQuery(() ->
+        boolean successful = HandlingTools.executeBatchQuery(() ->
                 invoiceRepo.updateBatch(membershipModel.getSelectedInvoice()), membershipModel.getMainModel(), logger
         );
+        if(successful) membershipModel.setInvoiceSaved(Success.YES);
+        else membershipModel.setInvoiceSaved(Success.NO);
     }
 
     protected void deletePerson() {
