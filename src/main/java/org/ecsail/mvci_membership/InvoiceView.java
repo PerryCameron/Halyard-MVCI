@@ -6,10 +6,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.scene.Node;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Separator;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TitledPane;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
@@ -85,27 +82,28 @@ public class InvoiceView implements Builder<Tab> {
         vBox.getChildren().addAll(RegionFx.regionHeightOf(20.0),separator);
         HBox hBox = HBoxFx.hBoxOf(new Insets(10,15,5,0),10);
         VBox buttonBox = VBoxFx.vBoxOf(10.0, new Insets(25,5,5,20));
-        buttonBox.getChildren().addAll(
-                ButtonFx.buttonOf("Add Note",100, () ->
-                        membershipView.sendMessage().accept(MembershipMessage.INSERT_INVOICE_NOTE)),
-                ButtonFx.buttonOf("Edit",100, () -> {
-                    invoiceDTO.setCommitted(false);
-                    membershipView.sendMessage().accept(MembershipMessage.UPDATE_INVOICE);
-                    successProperty().addListener(ListenerFx.createEnumListener(() ->
-                            viewMessaging(successProperty().get())));
-
-                    })
-        );
+        buttonBox.getChildren().addAll(getAddNoteButton(), getEditButton());
         hBox.getChildren().addAll(HBoxFx.customHBox(invoiceDTO),buttonBox);
         vBox.getChildren().addAll(hBox, VBoxFx.customVBox(invoiceDTO));
         return vBox;
     }
 
-    private void viewMessaging(Success success) { // when database updates, this makes UI reflect.
-        switch (success) {
-            case YES -> Platform.runLater(() -> showEditView());
-            case NO -> System.out.println("We didn't succeed in updating invoice");
-        }
+    private Button getEditButton() {
+        return ButtonFx.buttonOf("Edit", 100, () -> {
+            invoiceDTO.setCommitted(false);
+            membershipView.sendMessage().accept(MembershipMessage.UPDATE_INVOICE);
+            successProperty().addListener(ListenerFx.createOneTimeEnumListener(() -> {
+                switch (successProperty().get()) {
+                    case YES -> Platform.runLater(() -> showEditView());
+                    case NO -> System.out.println("We didn't succeed in updating invoice");
+                }
+            }));
+        });
+    }
+
+    private Control getAddNoteButton() {
+        return ButtonFx.buttonOf("Add Note", 100, () ->
+                membershipView.sendMessage().accept(MembershipMessage.INSERT_INVOICE_NOTE));
     }
 
     private void showEditView() {  // this is pretty much identical to

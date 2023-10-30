@@ -59,7 +59,7 @@ public class InvoiceFooter implements Builder<Region> {
                     invoiceDTO.setCommitted(true);
                     invoiceDTO.showItems();
                     invoiceView.getMembershipView().sendMessage().accept(MembershipMessage.UPDATE_INVOICE);
-                    invoiceView.successProperty().addListener(ListenerFx.createEnumListener(() ->
+                    invoiceView.successProperty().addListener(ListenerFx.createOneTimeEnumListener(() ->
                             viewMessaging(invoiceView.successProperty().get())));
                 })
         );
@@ -68,7 +68,7 @@ public class InvoiceFooter implements Builder<Region> {
 
     private void viewMessaging(Success success) { // when database updates, this makes UI reflect.
             switch (success) {
-                case YES -> Platform.runLater(() -> showCommittedView());
+                case YES -> Platform.runLater(this::showCommittedView);
                 case NO -> System.out.println("We didn't succeed in updating invoice");
             }
     }
