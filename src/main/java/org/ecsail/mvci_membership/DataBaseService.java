@@ -300,6 +300,13 @@ public class DataBaseService {
             });
     }
 
+    public void deletePayment() {
+        PaymentDTO paymentDTO = membershipModel.getSelectedPayment();
+        if (HandlingTools.executeQuery(() -> invoiceRepo.delete(paymentDTO),
+                membershipModel.getMainModel(), logger))
+            Platform.runLater(() -> membershipModel.getSelectedInvoice().getPaymentDTOS().remove(paymentDTO));
+    }
+
     public void insertPhone() {
         PhoneDTO phoneDTO = new PhoneDTO(membershipModel.getSelectedPerson().getpId());
         if (HandlingTools.executeQuery(() -> phoneRepo.insert(phoneDTO), membershipModel.getMainModel(), logger)) {

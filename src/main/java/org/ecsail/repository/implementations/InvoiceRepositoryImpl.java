@@ -161,4 +161,10 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
         SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(paymentDTO);
         return namedParameterJdbcTemplate.update(query, namedParameters);
     }
+
+    @Override
+    public int delete(PaymentDTO paymentDTO) {
+        String query = "DELETE FROM payment WHERE PAY_ID = ?";
+        return template.update(query, paymentDTO.getPayId());
+    }
 }

@@ -18,4 +18,5 @@ public interface InvoiceRepository {
     int update(InvoiceDTO invoiceDTO);
     int[] updateBatch(InvoiceDTO invoiceDTO);
     int update(PaymentDTO paymentDTO);
+    int delete(PaymentDTO paymentDTO);
 }

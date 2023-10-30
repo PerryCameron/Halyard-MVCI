@@ -19,14 +19,11 @@ import org.ecsail.dto.PaymentDTO;
 import org.ecsail.enums.PaymentType;
 import org.ecsail.enums.Success;
 import org.ecsail.static_tools.CustomTools;
-import org.ecsail.static_tools.DateTools;
 import org.ecsail.widgetfx.*;
 
 import java.math.BigDecimal;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class InvoiceFooter implements Builder<Region> {
     private final InvoiceView invoiceView;
@@ -115,12 +112,8 @@ public class InvoiceFooter implements Builder<Region> {
                     PaymentDTO paymentDTO = tableView.getSelectionModel().getSelectedItem();
                     if (paymentDTO != null) // is something selected?
                         invoiceView.getMembershipView().getMembershipModel().setSelectedPayment(paymentDTO);
-
-//                    tableView.getItems().remove(selectedIndex); // remove it from our GUI
-//                    BigDecimal totalPaidAmount = new BigDecimal(SqlPayment.getTotalAmount(parent.invoice.getId()));
-//                    parent.totalPaymentText.setText(String.valueOf(totalPaidAmount.setScale(2)));
-//                    parent.invoice.setPaid(String.valueOf(totalPaidAmount.setScale(2)));
-//                    updateTotals();
+                    invoiceView.getMembershipView().sendMessage().accept(MembershipMessage.DELETE_PAYMENT);
+                    addPaymentsAndUpdateBalance();
                 })
         );
         return vBox;
@@ -150,15 +143,19 @@ public class InvoiceFooter implements Builder<Region> {
                     PaymentDTO paymentDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                     invoiceView.getMembershipView().getMembershipModel().setSelectedPayment(paymentDTO);
                     invoiceView.getMembershipView().sendMessage().accept(MembershipMessage.UPDATE_PAYMENT);
-                    BigDecimal payments = new BigDecimal("0.00");
-                    for(PaymentDTO p: invoiceView.getMembershipView().getMembershipModel().getSelectedInvoice().getPaymentDTOS()) {  // not adding properly
-                        payments = payments.add(new BigDecimal(p.getPaymentAmount()));
-                    }
-                    invoiceDTO.setPaid(payments.toString());
-                    invoiceDTO.updateBalance();
+                    addPaymentsAndUpdateBalance();
                 }
         );
         return col1;
+    }
+
+    private void addPaymentsAndUpdateBalance() {
+        BigDecimal payments = invoiceView.getMembershipView().getMembershipModel().getSelectedInvoice().getPaymentDTOS()
+                .stream()
+                .map(p -> new BigDecimal(p.getPaymentAmount()))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        invoiceDTO.setPaid(payments.toString());
+        invoiceDTO.updateBalance();
     }
 
     private TableColumn<PaymentDTO,PaymentType> column2() {
