@@ -4,6 +4,7 @@ import org.ecsail.mvci_main.MainModel;
 import org.slf4j.Logger;
 import org.springframework.dao.DataAccessException;
 
+import java.util.Arrays;
 import java.util.function.Supplier;
 
 public class HandlingTools {
@@ -39,6 +40,28 @@ public class HandlingTools {
             npe.printStackTrace();
             savedToIndicator(false, model);
             logger.error("An exception occurred", npe);
+        } catch (Exception e) {
+            e.printStackTrace();
+            savedToIndicator(false, model);
+            logger.error("An exception occurred", e);
+        }
+        return false;
+    }
+
+    public static boolean executeBatchQuery(Supplier<int[]> operation, MainModel model, Logger logger) {
+        try {
+            int[] rowsUpdated = operation.get();
+            savedToIndicator(Arrays.stream(rowsUpdated).allMatch(value -> value == 1), model);
+            logger.info("Successfully updated " + rowsUpdated.length + " rows");
+            return true;
+        } catch (DataAccessException e) {
+            e.printStackTrace();
+            savedToIndicator(false, model);
+            logger.error("An exception occurred", e);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            savedToIndicator(false, model);
+            logger.error("An exception occurred", e);
         } catch (Exception e) {
             e.printStackTrace();
             savedToIndicator(false, model);

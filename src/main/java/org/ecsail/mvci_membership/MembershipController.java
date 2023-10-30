@@ -34,8 +34,7 @@ public class MembershipController extends Controller {
                     case UPDATE_PHONE -> membershipInteractor.getDataBaseService().updatePhone();
                     case UPDATE_OFFICER -> membershipInteractor.getDataBaseService().updateOfficer();
                     case UPDATE_PERSON -> membershipInteractor.getDataBaseService().updatePerson();
-                    case UPDATE_INVOICE -> membershipInteractor.getDataBaseService().updateInvoice();
-                    case UPDATE_INVOICE_ITEM -> membershipInteractor.getDataBaseService().updateInvoiceItem();
+                    case UPDATE_INVOICE -> loadSmallTab(MembershipMessage.UPDATE_INVOICE);
                     case INSERT_BOAT -> membershipInteractor.getDataBaseService().insertBoat();
                     case INSERT_AWARD -> membershipInteractor.getDataBaseService().insertAward();
                     case INSERT_EMAIL -> membershipInteractor.getDataBaseService().insertEmail();
@@ -73,16 +72,17 @@ public class MembershipController extends Controller {
     }
 
     private void loadSmallTab(MembershipMessage type) {
-        mainController.setSpinnerOffset(-400,150);
+        mainController.setSpinnerOffset(-400, 150);
         mainController.showLoadingSpinner(true);
         Task<Void> task = new Task<>() {
             @Override
             protected Void call() {
                 switch (type) {
-                   case LOAD_INVOICES -> membershipInteractor.getDataBaseService().getInvoices();
-                   case LOAD_IDS -> membershipInteractor.getDataBaseService().getIds();
-                   case LOAD_INVOICE -> membershipInteractor.getDataBaseService().loadInvoice();
-                   case LOAD_FEES -> membershipInteractor.getDataBaseService().loadFees();
+                    case LOAD_INVOICES -> membershipInteractor.getDataBaseService().getInvoices();
+                    case LOAD_IDS -> membershipInteractor.getDataBaseService().getIds();
+                    case LOAD_INVOICE -> membershipInteractor.getDataBaseService().loadInvoice();
+                    case LOAD_FEES -> membershipInteractor.getDataBaseService().loadFees();
+                    case UPDATE_INVOICE -> membershipInteractor.getDataBaseService().updateInvoice();
                 }
                 return null;
             }
