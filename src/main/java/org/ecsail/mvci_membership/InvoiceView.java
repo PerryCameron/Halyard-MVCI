@@ -1,5 +1,7 @@
 package org.ecsail.mvci_membership;
 
+import javafx.application.Platform;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
@@ -13,6 +15,8 @@ import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import org.ecsail.dto.DbInvoiceDTO;
 import org.ecsail.dto.InvoiceDTO;
+import org.ecsail.enums.Success;
+import org.ecsail.static_tools.CustomTools;
 import org.ecsail.widgetfx.*;
 
 import java.util.Comparator;
@@ -20,10 +24,13 @@ import java.util.Comparator;
 public class InvoiceView implements Builder<Tab> {
     private final MembershipView membershipView;
     private InvoiceDTO invoiceDTO;
+    private SimpleObjectProperty<Success> success;  // used to notify of successful transactions
+
 
     public InvoiceView(MembershipView membershipView) {
         this.membershipView = membershipView;
         this.invoiceDTO = membershipView.getMembershipModel().getSelectedInvoice();
+        this.success = membershipView.getMembershipModel().invoiceSavedProperty();
     }
 
     @Override
@@ -81,10 +88,29 @@ public class InvoiceView implements Builder<Tab> {
         buttonBox.getChildren().addAll(
                 ButtonFx.buttonOf("Add Note",100, () ->
                         membershipView.sendMessage().accept(MembershipMessage.INSERT_INVOICE_NOTE)),
-                ButtonFx.buttonOf("Edit",100, () -> System.out.println("Edit")));
+                ButtonFx.buttonOf("Edit",100, () -> {
+                    invoiceDTO.setCommitted(false);
+                    membershipView.sendMessage().accept(MembershipMessage.UPDATE_INVOICE);
+                    successProperty().addListener(ListenerFx.createEnumListener(() ->
+                            viewMessaging(successProperty().get())));
+
+                    })
+        );
         hBox.getChildren().addAll(HBoxFx.customHBox(invoiceDTO),buttonBox);
         vBox.getChildren().addAll(hBox, VBoxFx.customVBox(invoiceDTO));
         return vBox;
+    }
+
+    private void viewMessaging(Success success) { // when database updates, this makes UI reflect.
+        switch (success) {
+            case YES -> Platform.runLater(() -> showEditView());
+            case NO -> System.out.println("We didn't succeed in updating invoice");
+        }
+    }
+
+    private void showEditView() {  // this is pretty much identical to
+        CustomTools.removeExistingTabAndCreateNew(membershipView); // also used in InvoiceListView and invoiceFooter
+        getMembershipView().getMembershipModel().setInvoiceSaved(Success.NULL);
     }
 
     public InvoiceDTO getInvoiceDTO() {
@@ -93,5 +119,9 @@ public class InvoiceView implements Builder<Tab> {
 
     public MembershipView getMembershipView() {
         return membershipView;
+    }
+
+    public SimpleObjectProperty<Success> successProperty() {
+        return success;
     }
 }

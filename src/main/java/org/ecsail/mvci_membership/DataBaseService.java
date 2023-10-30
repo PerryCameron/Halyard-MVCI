@@ -217,6 +217,11 @@ public class DataBaseService {
         else membershipModel.setInvoiceSaved(Success.NO);
     }
 
+    public void updateInvoiceOnly() {
+    HandlingTools.executeQuery(() ->
+            invoiceRepo.update(membershipModel.getSelectedInvoice()), membershipModel.getMainModel(), logger);
+    }
+
     protected void deletePerson() {
         if (HandlingTools.executeQuery(() -> peopleRepo.delete(membershipModel.getSelectedPerson()),
                 membershipModel.getMainModel(), logger))

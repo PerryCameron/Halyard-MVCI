@@ -36,6 +36,8 @@ public class ListenerFx {
         return (observable, oldValue, newValue) -> action.run();
     }
 
+
+
     public static ChangeListener<String> createMultipleUseChangeListener(Runnable action) {
         return (observable, oldValue, newValue) -> {
             // This code will run whenever the value changes
