@@ -79,4 +79,8 @@ public class WelcomeInteractor {
     public void taskOnFailed(WorkerStateEvent e) {
         logger.error(e.toString());
     }
+
+    public String getTab() {
+        return welcomeModel.getTabName();
+    }
 }

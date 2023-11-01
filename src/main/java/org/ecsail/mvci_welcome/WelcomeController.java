@@ -2,9 +2,7 @@ package org.ecsail.mvci_welcome;
 
 import javafx.concurrent.Task;
 import javafx.scene.layout.Region;
-import org.ecsail.BaseApplication;
 import org.ecsail.mvci_main.MainController;
-import org.ecsail.mvci_main.MainModel;
 
 public class WelcomeController {
 
@@ -16,12 +14,17 @@ public class WelcomeController {
         this.mainController = mainController;
         welcomeInteractor = new WelcomeInteractor(welcomeModel, mainController.getConnections());
         getStatisticsOnLaunch();
-        this.welcomeView = new WelcomeView(welcomeModel, this::refreshStats, this::updateStats, this::openTab);
+        this.welcomeView = new WelcomeView(welcomeModel, this::action);
     }
 
-    private void openTab(String tab) {
-        mainController.openTab(tab);
+    private void action(WelcomeMessage message) {
+        switch (message) {
+            case OPEN_TAB -> mainController.openTab(welcomeInteractor.getTab());
+            case RELOAD_STATS -> welcomeInteractor.reloadStats();
+            case UPDATE_STATS -> updateStats();
+        };
     }
+
 
     private void getStatisticsOnLaunch() {
             Task<Void> task = new Task<>() {
@@ -31,15 +34,10 @@ public class WelcomeController {
                     return null;
                 }
             };
-            task.setOnSucceeded(e -> {
-                welcomeInteractor.setStatSucceeded();
-            });
+            task.setOnSucceeded(e -> welcomeInteractor.setStatSucceeded());
             new Thread(task).start();
     }
 
-    private void refreshStats() {
-        welcomeInteractor.reloadStats();
-    }
 
     public void updateStats() {
         Task<Void> task = new Task<>() {

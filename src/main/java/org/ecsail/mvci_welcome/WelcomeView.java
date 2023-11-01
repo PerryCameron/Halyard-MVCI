@@ -14,7 +14,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Builder;
-import org.ecsail.BaseApplication;
 import org.ecsail.interfaces.ChartConstants;
 import org.ecsail.widgetfx.ButtonFx;
 import org.ecsail.widgetfx.EventFx;
@@ -29,15 +28,16 @@ import java.util.stream.IntStream;
 
 public class WelcomeView implements Builder<Region>, ChartConstants {
     WelcomeModel welcomeModel;
-    Runnable reloadStats;
-    Runnable updateStats;
-    Consumer openTab;
+    private final Consumer<WelcomeMessage> action;
+//    Runnable updateStats;
+//    Consumer openTab;
 
-    public WelcomeView(WelcomeModel wm, Runnable rs, Runnable us, Consumer<String> o) {
+    public WelcomeView(WelcomeModel wm, Consumer<WelcomeMessage> a) {
         this.welcomeModel = wm;
-        this.reloadStats = rs;
-        this.updateStats = us;
-        this.openTab = o;
+        this.action = a;
+//        this.reloadStats = rs;
+//        this.updateStats = us;
+//        this.openTab = o;
     }
 
     @Override
@@ -73,7 +73,7 @@ public class WelcomeView implements Builder<Region>, ChartConstants {
             // locate in middle of application
             stage.addEventHandler(WindowEvent.WINDOW_SHOWN, EventFx.setStageLocation(stage));
             stage.show();
-            updateStats.run();
+            action.accept(WelcomeMessage.UPDATE_STATS);
             welcomeModel.dataBaseStatisticsRefreshedProperty().addListener((observable, oldValue, newValue) -> {
                 if(newValue) stage.close();
                 welcomeModel.setDataBaseStatisticsRefreshed(false);
@@ -98,12 +98,15 @@ public class WelcomeView implements Builder<Region>, ChartConstants {
 
     private Node createYearSpanComboBox() {
         var comboBox = new ComboBox<Integer>();
-        IntStream.rangeClosed(10, Year.now().getValue() - 1)
+        int maxSpan = Year.now().getValue() - 1970 + 1;  // +1 to include the current year in the span
+        IntStream.rangeClosed(21, maxSpan)
                 .forEach(comboBox.getItems()::add);
+//        IntStream.rangeClosed(10, Year.now().getValue() - 1)
+//                .forEach(comboBox.getItems()::add);
         comboBox.setValue(welcomeModel.getYearSpan());
         comboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             welcomeModel.setYearSpan(newValue);
-            reloadStats.run();
+            action.accept(WelcomeMessage.RELOAD_STATS);
             welcomeModel.getMembershipBarChart().refreshChart();
             welcomeModel.getMembershipStackedBarChart().refreshChart();
         });
@@ -119,7 +122,7 @@ public class WelcomeView implements Builder<Region>, ChartConstants {
                 .forEach(comboBox.getItems()::add);
         comboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             welcomeModel.setDefaultStartYear(newValue);
-            reloadStats.run();
+            action.accept(WelcomeMessage.RELOAD_STATS);
             welcomeModel.getMembershipBarChart().refreshChart();
             welcomeModel.getMembershipStackedBarChart().refreshChart();
         });
@@ -142,9 +145,12 @@ public class WelcomeView implements Builder<Region>, ChartConstants {
         return vBox;
     }
 
-    private Node newBigButton(String tab) {
-        Button button = ButtonFx.bigButton(tab);
-        button.setOnAction((event) -> openTab.accept(tab));
+    private Node newBigButton(String category) {
+        Button button = ButtonFx.bigButton(category);
+        button.setOnAction((event) -> {
+            welcomeModel.setTabName(category);
+            action.accept(WelcomeMessage.OPEN_TAB);
+        });
         return button;
     }
 }
