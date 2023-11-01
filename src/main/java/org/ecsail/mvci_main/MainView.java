@@ -147,7 +147,7 @@ public class MainView implements Builder<Region> {
     private Node setUpMenuBar() {
         MenuBar menuBar = new MenuBar();
         if(isMac()) menuBar.setUseSystemMenuBar(true);
-        menuBar.getMenus().addAll(createEditMenu(),createFileMenu());
+        menuBar.getMenus().addAll(createFileMenu(),createEditMenu());
         return menuBar;
     }
     private Menu createEditMenu() {
