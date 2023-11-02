@@ -2,9 +2,10 @@ package org.ecsail.mvci_welcome;
 
 import javafx.concurrent.Task;
 import javafx.scene.layout.Region;
+import org.ecsail.interfaces.Controller;
 import org.ecsail.mvci_main.MainController;
 
-public class WelcomeController {
+public class WelcomeController extends Controller<WelcomeMessage> {
 
     WelcomeView welcomeView;
     WelcomeInteractor welcomeInteractor;
@@ -17,7 +18,8 @@ public class WelcomeController {
         this.welcomeView = new WelcomeView(welcomeModel, this::action);
     }
 
-    private void action(WelcomeMessage message) {
+    @Override
+    public void action(WelcomeMessage message) {
         switch (message) {
             case OPEN_TAB -> mainController.openTab(welcomeInteractor.getTab());
             case RELOAD_STATS -> welcomeInteractor.reloadStats();

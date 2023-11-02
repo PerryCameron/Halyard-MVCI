@@ -13,7 +13,7 @@ import org.ecsail.mvci_main.MainController;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class ConnectController extends Controller {
+public class ConnectController extends Controller<ConnectMessage> {
     MainController mainController;
     ConnectView connectView;
     ConnectInteractor connectInteractor;
@@ -22,11 +22,15 @@ public class ConnectController extends Controller {
         ConnectModel connectModel = new ConnectModel();
         this.mainController = mainController;
         connectInteractor = new ConnectInteractor(connectModel);
-        connectView = new ConnectView(connectModel, this::saveLogins, this::loginSupply, this::connectToServer);
+        connectView = new ConnectView(connectModel, this::action, this::loginSupply);
     }
-
-    private void saveLogins() {
-        connectInteractor.saveLoginObjects();
+    @Override
+    public void action(ConnectMessage actionEnum) {
+        switch (actionEnum) {
+            case SAVE_LOGINS -> connectInteractor.saveLoginObjects();
+            case CONNECT_TO_SERVER -> connectToServer();
+            case SUPPLY_LOGINS -> System.out.println("supply logins");
+        }
     }
 
     private ArrayList<LoginDTO> loginSupply () {
@@ -37,6 +41,8 @@ public class ConnectController extends Controller {
     public Region getView() {
         return connectView.build();
     }
+
+
 
     private void connectToServer() {
         Task<Boolean> connectTask = new Task<>() {

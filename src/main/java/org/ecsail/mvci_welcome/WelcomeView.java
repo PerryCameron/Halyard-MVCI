@@ -99,7 +99,7 @@ public class WelcomeView implements Builder<Region>, ChartConstants {
             System.out.println("setting year span to: " + newValue);
             welcomeModel.setYearSpan(newValue);
             ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(welcomeModel.refreshChartsProperty(), () -> {
-                refreshChart();
+                refreshCharts();
             });
             welcomeModel.refreshChartsProperty().addListener(dataLoadedListener);
             action.accept(WelcomeMessage.RELOAD_STATS);
@@ -117,7 +117,7 @@ public class WelcomeView implements Builder<Region>, ChartConstants {
         comboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             welcomeModel.setDefaultStartYear(newValue);
             ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(welcomeModel.refreshChartsProperty(), () -> {
-                refreshChart();
+                refreshCharts();
             });
             welcomeModel.refreshChartsProperty().addListener(dataLoadedListener);
             action.accept(WelcomeMessage.RELOAD_STATS);
@@ -150,8 +150,7 @@ public class WelcomeView implements Builder<Region>, ChartConstants {
         return button;
     }
 
-    private void refreshChart() {
-        System.out.println("Calling refreshChart()");
+    private void refreshCharts() {
         welcomeModel.getMembershipBarChart().refreshChart();
         welcomeModel.getMembershipStackedBarChart().refreshChart();
     }

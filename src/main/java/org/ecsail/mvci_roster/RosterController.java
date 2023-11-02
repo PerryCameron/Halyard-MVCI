@@ -5,7 +5,7 @@ import javafx.scene.layout.Region;
 import org.ecsail.interfaces.Controller;
 import org.ecsail.mvci_main.MainController;
 
-public class RosterController extends Controller {
+public class RosterController extends Controller<RosterMessage> {
     MainController mainController;
     RosterInteractor rosterInteractor;
     RosterView rosterView;
@@ -17,8 +17,8 @@ public class RosterController extends Controller {
         rosterView = new RosterView(rosterModel, this::action);
         getRosterData();
     }
-
-    private void action(RosterMessage action) {
+    @Override
+    public void action(RosterMessage action) {
         switch(action) {
             case LAUNCH_TAB -> launchTab();
             case SEARCH -> search();

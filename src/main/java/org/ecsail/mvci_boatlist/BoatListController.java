@@ -5,7 +5,7 @@ import javafx.scene.layout.Region;
 import org.ecsail.interfaces.Controller;
 import org.ecsail.mvci_main.MainController;
 
-public class BoatListController extends Controller {
+public class BoatListController extends Controller<BoatListMessage> {
     MainController mainController;
     BoatListInteractor boatListInteractor;
     BoatListView boatListView;
@@ -17,8 +17,8 @@ public class BoatListController extends Controller {
         boatListView = new BoatListView(boatListModel, this::action);
         getBoatListData();
     }
-
-    private void action(BoatListMessage action) {
+    @Override
+    public void action(BoatListMessage action) {
         switch (action) {
             case SEARCH -> search();
             case CHANGE_LIST -> changeList();

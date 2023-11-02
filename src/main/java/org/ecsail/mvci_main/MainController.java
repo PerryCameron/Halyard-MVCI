@@ -20,7 +20,7 @@ import org.ecsail.mvci_membership.MembershipController;
 import org.ecsail.mvci_roster.RosterController;
 import org.ecsail.mvci_welcome.WelcomeController;
 
-public class MainController extends Controller implements Status {
+public class MainController extends Controller<MainMessage> implements Status {
 
     private final MainInteractor mainInteractor;
     private final MainView mainView;
@@ -33,8 +33,8 @@ public class MainController extends Controller implements Status {
         mainView = new MainView(mainModel, this::action);
         mainInteractor.setComplete();
     }
-
-    private void action(MainMessage action) {
+    @Override
+    public void action(MainMessage action) {
         switch (action) {
             case CLOSE_ALL_CONNECTIONS_AND_EXIT -> connectController.closeConnection();
             case CLOSE_ALL_CONNECTIONS -> closeAllConnections();
@@ -55,13 +55,13 @@ public class MainController extends Controller implements Status {
     }
 
     public void createLoadingController() {
-        loadingController = new LoadingController(this);
+        loadingController = new LoadingController();
         loadingController.getStage().setScene(new Scene(loadingController.getView(), Color.TRANSPARENT));
     }
 
     public void openMembershipMVCI(MembershipListDTO m) {
-        if(mainInteractor.tabIsNotOpen(m.getMsId()))
-        mainView.addNewTab("Mem " + m.getMembershipId(), new MembershipController(this, m).getView(), m.getMsId());
+        if (mainInteractor.tabIsNotOpen(m.getMsId()))
+            mainView.addNewTab("Mem " + m.getMembershipId(), new MembershipController(this, m).getView(), m.getMsId());
     }
 
     public void openBoatMVCI(BoatListDTO b) {
@@ -85,18 +85,18 @@ public class MainController extends Controller implements Status {
     }
 
     private void openBoatListTab(String tabName) {
-        if(mainInteractor.tabIsNotOpen(-3))
-        mainView.addNewTab(tabName, new BoatListController(this).getView(),-3);
+        if (mainInteractor.tabIsNotOpen(-3))
+            mainView.addNewTab(tabName, new BoatListController(this).getView(), -3);
     }
 
     private void openRosterTab(String tabName) {
-        if(mainInteractor.tabIsNotOpen(-2))
-        mainView.addNewTab(tabName, new RosterController(this).getView(),-2);
+        if (mainInteractor.tabIsNotOpen(-2))
+            mainView.addNewTab(tabName, new RosterController(this).getView(), -2);
     }
 
     public void openWelcomeMVCI() {
         mainView.closeTabs();
-        mainView.addNewTab("Welcome",new WelcomeController(this).getView(),-1);
+        mainView.addNewTab("Welcome", new WelcomeController(this).getView(), -1);
     }
 
     public void loadCommonLists() {
@@ -116,7 +116,7 @@ public class MainController extends Controller implements Status {
     }
 
     public void setSpinnerOffset(double x, double y) {
-        loadingController.setOffset(x,y);
+        loadingController.setOffset(x, y);
     }
 
     public Connections getConnections() {
@@ -137,9 +137,11 @@ public class MainController extends Controller implements Status {
     }
 
     @Override
-    public Region getView() { return mainView.build(); }
+    public Region getView() {
+        return mainView.build();
+    }
 
-    public void setStatus(String status) { mainInteractor.setStatus(status); }
-
-    public void setChangeStatus(Status.light status) { mainInteractor.setChangeStatus(status); }
+    public void setStatus(String status) {
+        mainInteractor.setStatus(status);
+    }
 }

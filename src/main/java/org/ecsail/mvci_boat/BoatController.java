@@ -2,11 +2,12 @@ package org.ecsail.mvci_boat;
 
 import javafx.concurrent.Task;
 import javafx.scene.layout.Region;
+import org.apache.poi.ss.formula.functions.T;
 import org.ecsail.dto.BoatListDTO;
 import org.ecsail.interfaces.Controller;
 import org.ecsail.mvci_main.MainController;
 
-public class BoatController extends Controller {
+public class BoatController extends Controller<BoatMessage> {
     MainController mainController;
     BoatInteractor boatInteractor;
     BoatView boatView;
@@ -20,12 +21,12 @@ public class BoatController extends Controller {
         getBoatData();
     }
 
-    private void action(BoatMessage action) {
+    @Override
+    public void action(BoatMessage action) {
         Task<Void> task = new Task<>() {
             @Override
             protected Void call() {
-                switch(action)
-                {
+                switch (action) {
                     case UPDATE_BOAT -> boatInteractor.updateBoat();
                     case UPDATE_NOTE -> boatInteractor.updateNote();
                     case INSERT_IMAGE -> insertImage();

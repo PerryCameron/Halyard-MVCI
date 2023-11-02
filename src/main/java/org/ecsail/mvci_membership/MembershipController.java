@@ -6,7 +6,7 @@ import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.interfaces.Controller;
 import org.ecsail.mvci_main.MainController;
 
-public class MembershipController extends Controller {
+public class MembershipController extends Controller<MembershipMessage> {
 
     MembershipInteractor membershipInteractor;
     MembershipView membershipView;
@@ -17,10 +17,11 @@ public class MembershipController extends Controller {
         MembershipModel membershipModel = new MembershipModel(ml , mainController.getMainModel());
         this.membershipInteractor = new MembershipInteractor(membershipModel,mainController.getConnections());
         getDataForMembership();
-        membershipView = new MembershipView(membershipModel, this::editRow);
+        membershipView = new MembershipView(membershipModel, this::action);
     }
 
-    private void editRow(MembershipMessage type) {
+    @Override
+    public void action(MembershipMessage type) {
         Task<Void> task = new Task<>() {
             @Override
             protected Void call() {

@@ -25,19 +25,19 @@ import org.ecsail.widgetfx.TextFx;
 import org.ecsail.widgetfx.VBoxFx;
 
 import java.util.Objects;
+import java.util.function.Consumer;
 
 public class ConnectView implements Builder<Region> {
     private final ConnectModel connectModel;
     private final RunState runState;
-    private final Runnable saveLogins;
-    private final Runnable connect;
+    Consumer<ConnectMessage> action;
+
     private final LoginDTOListSupplier loginSupplier;
-    public ConnectView(ConnectModel model, Runnable saveLogins, LoginDTOListSupplier loginSupplier, Runnable connect) {
+    public ConnectView(ConnectModel model, Consumer<ConnectMessage> action, LoginDTOListSupplier loginSupplier) {
         this.connectModel = model;
         this.runState = new RunStateImpl(model);
         this.loginSupplier = loginSupplier;
-        this.saveLogins = saveLogins;
-        this.connect = connect;
+        this.action = action;
     }
 
     @Override
@@ -135,7 +135,7 @@ public class ConnectView implements Builder<Region> {
         Button loginButton = new Button("Login");
         loginButton.setOnAction((event) -> {
             connectModel.setRotateShipWheel(true);
-            connect.run();
+            action.accept(ConnectMessage.CONNECT_TO_SERVER);
         });
         Button cancelButton = new Button("Cancel");
         cancelButton.setOnAction((event) -> System.exit(0));
@@ -261,13 +261,13 @@ public class ConnectView implements Builder<Region> {
         buttonSave.setOnAction(event -> {
             updateSelectedLogin();
             runState.setMode(RunState.Mode.NORMAL);
-            saveLogins.run();
+            action.accept(ConnectMessage.SAVE_LOGINS);
             updateFields();
         });
         Button buttonDelete = new Button("Delete");
         buttonDelete.setOnAction(event -> {
             connectModel.getComboBox().getItems().remove(connectModel.getComboBox().getValue());
-            saveLogins.run();
+            action.accept(ConnectMessage.SAVE_LOGINS);
             runState.setMode(RunState.Mode.NORMAL);
         });
         Button buttonCancel = new Button("Cancel");

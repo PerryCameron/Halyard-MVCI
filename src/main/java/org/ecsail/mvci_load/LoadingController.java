@@ -3,17 +3,14 @@ package org.ecsail.mvci_load;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import org.ecsail.interfaces.Controller;
-import org.ecsail.mvci_main.MainController;
 
-public class LoadingController extends Controller {
+public class LoadingController extends Controller<LoadMessage> {
 
-    private final MainController mainController;
     private LoadingInteractor loadingInteractor;
     private LoadingModel loadingModel;
     private LoadingView loadingView;
 
-    public LoadingController(MainController mainController) {
-        this.mainController = mainController;
+    public LoadingController() {
         loadingModel = new LoadingModel();
         loadingView = new LoadingView(loadingModel);
         loadingInteractor = new LoadingInteractor(loadingModel);
@@ -22,6 +19,11 @@ public class LoadingController extends Controller {
     @Override
     public Region getView() {
         return loadingView.build();
+    }
+
+    @Override
+    public void action(LoadMessage actionEnum) {
+        // No messages to receive here
     }
 
     public Stage getStage() {
