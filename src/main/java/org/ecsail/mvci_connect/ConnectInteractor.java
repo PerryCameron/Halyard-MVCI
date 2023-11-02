@@ -23,7 +23,7 @@ public class ConnectInteractor implements ConfigFilePaths {
         this.connections = new Connections(connectModel);
     }
 
-    public List<LoginDTO> supplyLogins() {
+    public void supplyLogins() {
         List<LoginDTO> loginDTOS = new ArrayList<>();
         if (FileIO.hostFileExists(LOGIN_FILE))
             openLoginObjects(loginDTOS);
@@ -31,7 +31,7 @@ public class ConnectInteractor implements ConfigFilePaths {
             logger.info("Starting application for first time");
             loginDTOS.add(ObjectFx.createLoginDTO()); // we are starting application for the first time
         }
-        return loginDTOS;
+        connectModel.setLoginDTOS((ArrayList<LoginDTO>) loginDTOS);
     }
 
     public static void openLoginObjects(List<LoginDTO> logins) {

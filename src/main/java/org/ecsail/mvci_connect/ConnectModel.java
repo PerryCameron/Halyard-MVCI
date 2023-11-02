@@ -9,6 +9,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.ecsail.dto.LoginDTO;
 
+import java.util.ArrayList;
+
 public class ConnectModel {
 
     protected Stage connectStage = new Stage();
@@ -31,6 +33,7 @@ public class ConnectModel {
     private final StringProperty privateKey = new SimpleStringProperty();
     private final StringProperty database = new SimpleStringProperty();
     private final StringProperty statusBarText = new SimpleStringProperty();
+    private ArrayList<LoginDTO> loginDTOS = new ArrayList<>();
 
 
     public int getSshPort() {
@@ -234,5 +237,13 @@ public class ConnectModel {
 
     public void setStatusBarText(String statusBarText) {
         this.statusBarText.set(statusBarText);
+    }
+
+    public ArrayList<LoginDTO> getLoginDTOS() {
+        return loginDTOS;
+    }
+
+    public void setLoginDTOS(ArrayList<LoginDTO> loginDTOS) {
+        this.loginDTOS = loginDTOS;
     }
 }

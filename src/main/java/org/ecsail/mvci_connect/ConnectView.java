@@ -32,11 +32,10 @@ public class ConnectView implements Builder<Region> {
     private final RunState runState;
     Consumer<ConnectMessage> action;
 
-    private final LoginDTOListSupplier loginSupplier;
-    public ConnectView(ConnectModel model, Consumer<ConnectMessage> action, LoginDTOListSupplier loginSupplier) {
+//    private final LoginDTOListSupplier loginSupplier;
+    public ConnectView(ConnectModel model, Consumer<ConnectMessage> action) {
         this.connectModel = model;
         this.runState = new RunStateImpl(model);
-        this.loginSupplier = loginSupplier;
         this.action = action;
     }
 
@@ -108,7 +107,7 @@ public class ConnectView implements Builder<Region> {
     private Node createComboBox() {
         HBox hBox = new HBox();
         connectModel.getHBoxMap().put("host-combo-box",hBox);
-        LogInComboBox comboBox = new LogInComboBox(200, loginSupplier.getLoginDTOs());
+        LogInComboBox comboBox = new LogInComboBox(200, connectModel.getLoginDTOS());
         connectModel.setComboBox(comboBox);
         comboBox.setValue(comboBox.getItems().stream().filter(LoginDTO::isDefault).findFirst().orElse(null));
         updateFields();
