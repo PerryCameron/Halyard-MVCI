@@ -43,6 +43,7 @@ public class InvoiceFooter implements Builder<Region> {
     public Region build() {
         VBox vBox = VBoxFx.vBoxOf(new Insets(0,0,10,0));
         vBox.getChildren().addAll(tableBox(), totalsBox());
+        addPaymentsAndUpdateBalance();
         return vBox;
     }
 
@@ -54,7 +55,9 @@ public class InvoiceFooter implements Builder<Region> {
 
     private Node controlBox() {
         VBox vBox = VBoxFx.vBoxOf(90.0, 10.0, new Insets(10,0,0,20));
-        vBox.getChildren().addAll(addCommitButton(),addRenewCheckBox());
+        vBox.getChildren().add(addCommitButton());
+        if(!invoiceDTO.isSupplemental())
+            vBox.getChildren().add(addRenewCheckBox());
         return vBox;
     }
 
@@ -133,18 +136,24 @@ public class InvoiceFooter implements Builder<Region> {
 
     private Node buttonBox() {
         VBox vBox = VBoxFx.vBoxOf(5.0, new Insets(0,5,0,0));
-        vBox.getChildren().addAll(
-                ButtonFx.buttonOf("Add", 60, () ->
-                    invoiceView.getMembershipView().sendMessage().accept(MembershipMessage.INSERT_PAYMENT)),
-                ButtonFx.buttonOf("Delete", 60, () -> {
-                    PaymentDTO paymentDTO = tableView.getSelectionModel().getSelectedItem();
-                    if (paymentDTO != null) // is something selected?
-                        invoiceView.getMembershipView().getMembershipModel().setSelectedPayment(paymentDTO);
-                    invoiceView.getMembershipView().sendMessage().accept(MembershipMessage.DELETE_PAYMENT);
-                    addPaymentsAndUpdateBalance();
-                })
-        );
+        vBox.getChildren().addAll(getAddButton(), getDeleteButton());
         return vBox;
+    }
+
+    private Button getDeleteButton() {
+        return ButtonFx.buttonOf("Delete", 60, () -> {
+            PaymentDTO paymentDTO = tableView.getSelectionModel().getSelectedItem();
+            if (paymentDTO != null) // is something selected?
+                invoiceView.getMembershipView().getMembershipModel().setSelectedPayment(paymentDTO);
+            invoiceView.getMembershipView().sendMessage().accept(MembershipMessage.DELETE_PAYMENT);
+            invoiceView.getMembershipView().getMembershipModel().getSelectedInvoice().getPaymentDTOS().remove(paymentDTO);
+            addPaymentsAndUpdateBalance();
+        });
+    }
+
+    private Button getAddButton() {
+        return ButtonFx.buttonOf("Add", 60, () ->
+                invoiceView.getMembershipView().sendMessage().accept(MembershipMessage.INSERT_PAYMENT));
     }
 
     private TableView<PaymentDTO> tableView() {
