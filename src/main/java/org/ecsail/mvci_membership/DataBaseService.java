@@ -483,4 +483,12 @@ public class DataBaseService {
             });
         }
     }
+
+    public void invoiceExists() {
+        int selectedYear = membershipModel.getSelectedInvoiceCreateYear();
+        boolean exists = HandlingTools.executeExistsQuery(() ->
+                invoiceRepo.exists(membershipModel.getMembership(),selectedYear), membershipModel.getMainModel(), logger);
+        System.out.println("A record for " + selectedYear + " exists: " + exists);
+    }
 }
+//        HandlingTools.executeQuery(() -> invoiceRepo.insert(paymentDTO), membershipModel.getMainModel(), logger))

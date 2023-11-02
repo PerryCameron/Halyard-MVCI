@@ -19,4 +19,5 @@ public interface InvoiceRepository {
     int[] updateBatch(InvoiceDTO invoiceDTO);
     int update(PaymentDTO paymentDTO);
     int delete(PaymentDTO paymentDTO);
+    boolean exists(MembershipListDTO membershipListDTO, int year);
 }

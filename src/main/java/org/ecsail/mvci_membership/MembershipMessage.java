@@ -57,5 +57,6 @@ public enum MembershipMessage {
     LOAD_INVOICES,
     LOAD_INVOICE,
     LOAD_FEES,
-    LOAD_IDS;
+    LOAD_IDS,
+    INVOICE_EXISTS;
 }

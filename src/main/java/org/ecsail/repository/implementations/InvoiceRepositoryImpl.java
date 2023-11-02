@@ -167,4 +167,12 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
         String query = "DELETE FROM payment WHERE PAY_ID = ?";
         return template.update(query, paymentDTO.getPayId());
     }
+
+
+
+    @Override
+    public boolean exists(MembershipListDTO membershipListDTO, int year) {
+        String query = "SELECT EXISTS(SELECT * FROM invoice WHERE ms_id=? AND fiscal_year=?)";
+        return template.queryForObject(query, Boolean.class, membershipListDTO.getMsId(), year);
+    }
 }

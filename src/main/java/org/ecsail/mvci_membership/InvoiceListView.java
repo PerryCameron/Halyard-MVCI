@@ -12,11 +12,9 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import org.ecsail.dto.InvoiceDTO;
+import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.static_tools.CustomTools;
-import org.ecsail.widgetfx.HBoxFx;
-import org.ecsail.widgetfx.ListenerFx;
-import org.ecsail.widgetfx.TableViewFx;
-import org.ecsail.widgetfx.VBoxFx;
+import org.ecsail.widgetfx.*;
 
 import java.time.Year;
 
@@ -45,24 +43,33 @@ public class InvoiceListView implements Builder<Tab> {
 
     private Node createRecordAddBox() {
         HBox hBox = HBoxFx.hBoxOf(new Insets(7,2,5,10), 80);
-        hBox.getChildren().addAll(createInvoiceAdder(), getButton("Delete"));
+        hBox.getChildren().addAll(createInvoiceAdder(), createDeleteButton());
         return hBox;
     }
+
 
     private Node createInvoiceAdder() {
         HBox hBox = HBoxFx.hBoxOf(5, Pos.CENTER_LEFT);
         Label label = new Label("Create new Fiscal Year Record:");
-        hBox.getChildren().addAll(label, getYear(),getButton("Add"));
+        hBox.getChildren().addAll(label, getYear(),createAddButton());
         return hBox;
     }
 
-    private Node getButton(String type) {
-        Button button = new Button(type);
-        switch (type) {
-            case "Add" -> button.setOnAction(event -> membershipView.sendMessage().accept(MembershipMessage.INSERT_INVOICE));
-            case "Delete" -> button.setOnAction(event -> membershipView.sendMessage().accept(MembershipMessage.DELETE_INVOICE));
-        }
-        return button;
+    private Control createAddButton() {
+        return ButtonFx.buttonOf("Add", 60, () -> {
+            MembershipListDTO membership = membershipView.getMembershipModel().getMembership();
+            InvoiceDTO invoiceDTO = new InvoiceDTO(membership.getMsId(), membershipView.getMembershipModel().getSelectedInvoiceCreateYear());
+            membershipView.getMembershipModel().setSelectedInvoice(invoiceDTO);
+            membershipView.sendMessage().accept(MembershipMessage.INVOICE_EXISTS);
+
+//            membershipView.sendMessage().accept(MembershipMessage.INSERT_INVOICE);
+        });
+    }
+
+    private Node createDeleteButton() {
+        return ButtonFx.buttonOf("Delete", 60, () -> {
+            membershipView.sendMessage().accept(MembershipMessage.DELETE_INVOICE);
+        });
     }
 
     private Node getYear() {
@@ -72,6 +79,7 @@ public class InvoiceListView implements Builder<Tab> {
         for (int year = currentYear + 1; year > 1969; year--) comboBox.getItems().add(year);
         int selectedYear = membershipView.getMembershipModel().getMembership().getSelectedYear();
         comboBox.setValue(selectedYear); // sets year for combo box to record year
+        membershipView.getMembershipModel().setSelectedInvoiceCreateYear(selectedYear); // sets initial for combo-box
         comboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             membershipView.getMembershipModel().setSelectedInvoiceCreateYear(newValue);
         });
