@@ -1,6 +1,8 @@
 package org.ecsail.mvci_membership;
 
 import javafx.application.Platform;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -15,6 +17,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import org.ecsail.dto.InvoiceDTO;
+import org.ecsail.dto.MembershipIdDTO;
 import org.ecsail.dto.PaymentDTO;
 import org.ecsail.enums.PaymentType;
 import org.ecsail.enums.Success;
@@ -26,9 +29,10 @@ import java.math.RoundingMode;
 import java.util.Arrays;
 
 public class InvoiceFooter implements Builder<Region> {
-    private final InvoiceView invoiceView;
-    private final InvoiceDTO invoiceDTO;
+    private InvoiceView invoiceView;
+    private InvoiceDTO invoiceDTO;
     private TableView<PaymentDTO> tableView;
+    BooleanProperty renew = new SimpleBooleanProperty(false);
 
     public InvoiceFooter(InvoiceView invoiceView) {
         this.invoiceView = invoiceView;
@@ -50,16 +54,40 @@ public class InvoiceFooter implements Builder<Region> {
 
     private Node controlBox() {
         VBox vBox = VBoxFx.vBoxOf(90.0, 10.0, new Insets(10,0,0,20));
-        vBox.getChildren().addAll(new CheckBox("Renew"),
-                ButtonFx.buttonOf("Commit", 70, () -> {
-                    invoiceDTO.setCommitted(true);
-                    invoiceDTO.showItems();
-                    invoiceView.getMembershipView().sendMessage().accept(MembershipMessage.UPDATE_INVOICE);
-                    invoiceView.successProperty().addListener(ListenerFx.createSingleUseEnumListener(() ->
-                            viewMessaging(invoiceView.successProperty().get())));
-                })
-        );
+        vBox.getChildren().addAll(addCommitButton(),addRenewCheckBox());
         return vBox;
+    }
+
+    private Control addRenewCheckBox() {
+        CheckBox checkBox = CheckBoxFx.CheckBoxOf("Renew", 70, renew);
+        if (!invoiceDTO.isSupplemental()) {
+            checkBox.setSelected(true);
+            // make sure ids are populated
+            TabPane tabpane = invoiceView.getMembershipView().getMembershipModel().getInfoTabPane();
+            CustomTools.selectTabByText("History", tabpane);
+            CustomTools.selectTabByText(String.valueOf(invoiceDTO.getYear()), tabpane);
+        }
+        return checkBox;
+    }
+
+    private MembershipIdDTO getMembershipID() {
+        return invoiceView.getMembershipView().getMembershipModel().getMembership().getMembershipIdDTOS()
+                .stream().filter(id -> id.getFiscalYear().equals(String.valueOf(invoiceDTO.getYear())))
+                .findFirst().orElse(null);
+    }
+
+    private Control addCommitButton() {
+        return ButtonFx.buttonOf("Commit", 70, () -> {
+            invoiceDTO.setCommitted(true);
+            invoiceView.getMembershipView().sendMessage().accept(MembershipMessage.UPDATE_INVOICE);
+            invoiceView.successProperty().addListener(ListenerFx.createSingleUseEnumListener(() ->
+                    viewMessaging(invoiceView.successProperty().get())));
+            // update membershipId record
+            MembershipIdDTO membershipIdDTO = getMembershipID();
+            membershipIdDTO.setIsRenew(renew.get());
+            invoiceView.getMembershipView().getMembershipModel().setSelectedMembershipId(membershipIdDTO);
+            invoiceView.getMembershipView().sendMessage().accept(MembershipMessage.UPDATE_MEMBERSHIP_ID);
+        });
     }
 
     private void viewMessaging(Success success) { // when database updates, this makes UI reflect.
@@ -196,5 +224,4 @@ public class InvoiceFooter implements Builder<Region> {
         invoiceView.getMembershipView().getMembershipModel().setSelectedPayment(paymentDTO);
         invoiceView.getMembershipView().sendMessage().accept(MembershipMessage.UPDATE_PAYMENT);
     }
-
 }

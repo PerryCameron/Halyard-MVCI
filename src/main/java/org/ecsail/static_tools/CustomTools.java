@@ -1,6 +1,7 @@
 package org.ecsail.static_tools;
 
 import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import org.ecsail.mvci_membership.InvoiceView;
 import org.ecsail.mvci_membership.MembershipMessage;
 import org.ecsail.mvci_membership.MembershipView;
@@ -19,5 +20,12 @@ public class CustomTools {
         membershipView.getMembershipModel().getInfoTabPane().getTabs().add(tab);
         membershipView.getMembershipModel().getInfoTabPane().getSelectionModel().select(tab);
         membershipView.sendMessage().accept(MembershipMessage.LOAD_INVOICE);
+    }
+
+    public static void selectTabByText(String text, TabPane tabPane) {
+        tabPane.getTabs().stream()
+                .filter(tab -> text.equals(tab.getText()))
+                .findFirst()
+                .ifPresent(tab -> tabPane.getSelectionModel().select(tab));
     }
 }

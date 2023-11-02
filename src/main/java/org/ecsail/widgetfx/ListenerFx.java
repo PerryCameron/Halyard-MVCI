@@ -3,6 +3,8 @@ package org.ecsail.widgetfx;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.scene.control.Tab;
 
 import java.util.ArrayList;
@@ -51,6 +53,28 @@ public class ListenerFx {
                 observable.removeListener(this);
             }
         };
+    }
+
+    public static <T> void createSingleUseListListener(ObservableList<T> list, Runnable action) {
+        if (list.isEmpty()) {
+            System.out.println("List is empty. Setting up listener.");
+            list.addListener(new ListChangeListener<T>() {
+                @Override
+                public void onChanged(Change<? extends T> change) {
+                    while (change.next()) {
+                        if (change.wasAdded()) {
+                            System.out.println("New items added to the list.");
+                            action.run();
+                            // Remove the listener after it has been triggered.
+                            list.removeListener(this);
+                        }
+                    }
+                }
+            });
+        } else {
+            System.out.println("List is not empty.");
+            action.run();
+        }
     }
 
 //    public static ChangeListener<String> createMultipleUseChangeListener(Runnable action) {
