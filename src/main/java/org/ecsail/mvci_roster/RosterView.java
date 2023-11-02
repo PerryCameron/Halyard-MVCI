@@ -14,6 +14,7 @@ import javafx.scene.text.Text;
 import javafx.util.Builder;
 import javafx.util.Duration;
 import org.ecsail.dto.DbRosterSettingsDTO;
+import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.dto.MembershipListRadioDTO;
 import org.ecsail.mvci_roster.export.SaveFileChooser;
 import org.ecsail.static_tools.HalyardPaths;
@@ -32,9 +33,9 @@ public class RosterView implements Builder<Region> {
     RosterModel rosterModel;
     Consumer<RosterMessage> action;
     private static final Logger logger = LoggerFactory.getLogger(RosterView.class);
-    public RosterView(RosterModel rm, Consumer<RosterMessage> a) {
-        rosterModel = rm;
-        action = a;
+    public RosterView(RosterModel rosterModel, Consumer<RosterMessage> action) {
+        this.rosterModel = rosterModel;
+        this.action = action;
     }
 
     @Override
@@ -51,7 +52,7 @@ public class RosterView implements Builder<Region> {
 
     private Node setUpTableView() {
         VBox vBox = VBoxFx.vBoxOf(new Insets(5,5,0,10));
-        TableView tableView = new RosterTableView(this).build();
+        TableView<MembershipListDTO> tableView = new RosterTableView(this).build();
         rosterModel.setRosterTableView(tableView);
         vBox.getChildren().add(tableView);
         return vBox;
@@ -108,9 +109,7 @@ public class RosterView implements Builder<Region> {
     }
     protected void setRadioListener() {
         // this is the one being called on launch of tab
-        rosterModel.selectedRadioBoxProperty().addListener(Observable -> {
-            action.accept(CHANGE_LIST_TYPE);
-        });
+        rosterModel.selectedRadioBoxProperty().addListener(Observable -> action.accept(CHANGE_LIST_TYPE));
     }
 
     private Node setUpFieldSelectedToSearchBox() {

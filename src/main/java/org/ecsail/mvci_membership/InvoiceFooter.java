@@ -121,7 +121,6 @@ public class InvoiceFooter implements Builder<Region> {
 
     private TableView<PaymentDTO> tableView() {
         this.tableView = TableViewFx.tableViewOf(PaymentDTO.class, 115);
-        System.out.println("PaymentDTOs size is=" + invoiceDTO.getPaymentDTOS().size());
         tableView.setItems(invoiceDTO.getPaymentDTOS());
         List<TableColumn<PaymentDTO, ?>> columns = new ArrayList<>();
         columns.add(column1());

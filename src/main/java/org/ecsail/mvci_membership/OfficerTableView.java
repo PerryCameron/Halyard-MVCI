@@ -15,6 +15,7 @@ import org.ecsail.enums.Officer;
 import org.ecsail.widgetfx.TableColumnFx;
 import org.ecsail.widgetfx.TableViewFx;
 
+import java.util.Arrays;
 import java.util.stream.Collectors;
 
 
@@ -34,7 +35,7 @@ public class OfficerTableView implements Builder<TableView<OfficerDTO>> {
     public TableView<OfficerDTO> build() {
         TableView<OfficerDTO> tableView = TableViewFx.tableViewOf(OfficerDTO.class, 146);
         tableView.setItems(person.getOfficers());
-        tableView.getColumns().addAll(createColumn1(), createColumn2(), createColumn3());
+        tableView.getColumns().addAll(Arrays.asList(createColumn1(), createColumn2(), createColumn3()));
         TableView.TableViewSelectionModel<OfficerDTO> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) membershipModel.setSelectedOfficer(newSelection);

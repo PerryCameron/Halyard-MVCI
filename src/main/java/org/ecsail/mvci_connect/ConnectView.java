@@ -17,7 +17,6 @@ import javafx.util.Builder;
 import javafx.util.Duration;
 import org.ecsail.BaseApplication;
 import org.ecsail.dto.LoginDTO;
-import org.ecsail.interfaces.LoginDTOListSupplier;
 import org.ecsail.interfaces.RunState;
 import org.ecsail.widgetfx.HBoxFx;
 import org.ecsail.widgetfx.TextFieldFx;

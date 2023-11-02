@@ -29,7 +29,6 @@ public class RosterModel {
     private final IntegerProperty selectedYear = new SimpleIntegerProperty(Year.now().getValue());
     private final BooleanProperty isActiveSearch = new SimpleBooleanProperty(false);
     private final BooleanProperty listsLoaded = new SimpleBooleanProperty(false);
-
     public RosterModel(MainModel mainModel) {
         this.mainModel = mainModel;
     }

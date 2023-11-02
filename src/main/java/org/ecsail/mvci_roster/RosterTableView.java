@@ -13,9 +13,11 @@ import javafx.util.Builder;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.widgetfx.TableViewFx;
 
+import java.util.Arrays;
+
 import static org.ecsail.mvci_roster.RosterMessage.LAUNCH_TAB;
 
-public class RosterTableView implements Builder<TableView> {
+public class RosterTableView implements Builder<TableView<MembershipListDTO>> {
     private final RosterModel rosterModel;
     private final RosterView rosterView;
 
@@ -25,9 +27,10 @@ public class RosterTableView implements Builder<TableView> {
     }
 
     @Override
-    public TableView build() {
+    public TableView<MembershipListDTO> build() {
         TableView<MembershipListDTO> tableView = TableViewFx.tableViewOf(MembershipListDTO.class);
-        tableView.getColumns().addAll(create1(),create2(),create3(),create4(),create5(),create6(),create7(),create8());
+        tableView.getColumns()
+                .addAll(Arrays.asList(create1(),create2(),create3(),create4(),create5(),create6(),create7(),create8()));
         tableView.setPlaceholder(new Label(""));
         // auto selector
         TableView.TableViewSelectionModel<MembershipListDTO> selectionModel = tableView.getSelectionModel();
