@@ -28,6 +28,7 @@ public class WelcomeModel {
     private final BooleanProperty dataBaseStatisticsRefreshed = new SimpleBooleanProperty(false);
     private final ObjectProperty<MembershipBarChart> membershipBarChart = new SimpleObjectProperty<>();
     private final ObjectProperty<MembershipStackedBarChart> membershipStackedBarChart = new SimpleObjectProperty<>();
+    private final BooleanProperty refreshCharts = new SimpleBooleanProperty(false);
     private final StringProperty tabName = new SimpleStringProperty();
     private final DoubleProperty progress = new SimpleDoubleProperty(0);
     private final IntegerProperty startYear = new SimpleIntegerProperty(1970);
@@ -178,5 +179,17 @@ public class WelcomeModel {
 
     public void setTabName(String tabName) {
         this.tabName.set(tabName);
+    }
+
+    public boolean isRefreshCharts() {
+        return refreshCharts.get();
+    }
+
+    public BooleanProperty refreshChartsProperty() {
+        return refreshCharts;
+    }
+
+    public void setRefreshCharts(boolean refreshCharts) {
+        this.refreshCharts.set(refreshCharts);
     }
 }

@@ -36,13 +36,16 @@ public class WelcomeInteractor {
     }
 
     protected void reloadStats() {
+        System.out.println("Reloading stats...");
         HandlingTools.queryForList(() -> {
             int endYear = welcomeModel.getDefaultStartYear() + welcomeModel.getYearSpan();
+            System.out.println("End year is now: " + endYear);
             if (endYear > welcomeModel.getSelectedYear()) endYear = welcomeModel.getSelectedYear();
             ArrayList<StatsDTO> statsDTOS = (ArrayList<StatsDTO>) statRepository.getStatistics(welcomeModel.getDefaultStartYear(), endYear);
             Platform.runLater(() -> {
                 welcomeModel.getStats().clear();
                 welcomeModel.getStats().addAll(statsDTOS);
+                welcomeModel.setRefreshCharts(!welcomeModel.isRefreshCharts());
             });
         }, welcomeModel.getMainModel(), logger);
     }

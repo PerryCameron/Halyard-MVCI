@@ -1,5 +1,6 @@
 package org.ecsail.mvci_welcome;
 
+import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -15,10 +16,7 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Builder;
 import org.ecsail.interfaces.ChartConstants;
-import org.ecsail.widgetfx.ButtonFx;
-import org.ecsail.widgetfx.EventFx;
-import org.ecsail.widgetfx.HBoxFx;
-import org.ecsail.widgetfx.VBoxFx;
+import org.ecsail.widgetfx.*;
 
 import java.time.Year;
 import java.util.Arrays;
@@ -29,15 +27,10 @@ import java.util.stream.IntStream;
 public class WelcomeView implements Builder<Region>, ChartConstants {
     WelcomeModel welcomeModel;
     private final Consumer<WelcomeMessage> action;
-//    Runnable updateStats;
-//    Consumer openTab;
 
-    public WelcomeView(WelcomeModel wm, Consumer<WelcomeMessage> a) {
-        this.welcomeModel = wm;
-        this.action = a;
-//        this.reloadStats = rs;
-//        this.updateStats = us;
-//        this.openTab = o;
+    public WelcomeView(WelcomeModel welcomeModel, Consumer<WelcomeMessage> action) {
+        this.welcomeModel = welcomeModel;
+        this.action = action;
     }
 
     @Override
@@ -97,7 +90,7 @@ public class WelcomeView implements Builder<Region>, ChartConstants {
     }
 
     private Node createYearSpanComboBox() {
-        var comboBox = new ComboBox<Integer>();
+        ComboBox<Integer> comboBox = new ComboBox<>();
         int maxSpan = Year.now().getValue() - 1970 + 1;  // +1 to include the current year in the span
         IntStream.rangeClosed(21, maxSpan)
                 .forEach(comboBox.getItems()::add);
@@ -105,16 +98,19 @@ public class WelcomeView implements Builder<Region>, ChartConstants {
 //                .forEach(comboBox.getItems()::add);
         comboBox.setValue(welcomeModel.getYearSpan());
         comboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
+            System.out.println("setting year span to: " + newValue);
             welcomeModel.setYearSpan(newValue);
+            ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(welcomeModel.refreshChartsProperty(), () -> {
+                refreshChart();
+            });
+            welcomeModel.refreshChartsProperty().addListener(dataLoadedListener);
             action.accept(WelcomeMessage.RELOAD_STATS);
-            welcomeModel.getMembershipBarChart().refreshChart();
-            welcomeModel.getMembershipStackedBarChart().refreshChart();
         });
         return  comboBox;
     }
 
     private Node createStartYearComboBox() {
-        var comboBox = new ComboBox<Integer>();
+        ComboBox<Integer> comboBox = new ComboBox<>();
         comboBox.setValue(welcomeModel.getDefaultStartYear());
         IntStream.rangeClosed(1969, Year.now().getValue() - 10)
                 .boxed()
@@ -122,9 +118,11 @@ public class WelcomeView implements Builder<Region>, ChartConstants {
                 .forEach(comboBox.getItems()::add);
         comboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             welcomeModel.setDefaultStartYear(newValue);
+            ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(welcomeModel.refreshChartsProperty(), () -> {
+                refreshChart();
+            });
+            welcomeModel.refreshChartsProperty().addListener(dataLoadedListener);
             action.accept(WelcomeMessage.RELOAD_STATS);
-            welcomeModel.getMembershipBarChart().refreshChart();
-            welcomeModel.getMembershipStackedBarChart().refreshChart();
         });
         return comboBox;
     }
@@ -152,5 +150,11 @@ public class WelcomeView implements Builder<Region>, ChartConstants {
             action.accept(WelcomeMessage.OPEN_TAB);
         });
         return button;
+    }
+
+    private void refreshChart() {
+        System.out.println("Calling refreshChart()");
+        welcomeModel.getMembershipBarChart().refreshChart();
+        welcomeModel.getMembershipStackedBarChart().refreshChart();
     }
 }

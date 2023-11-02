@@ -25,7 +25,6 @@ public class WelcomeController {
         };
     }
 
-
     private void getStatisticsOnLaunch() {
             Task<Void> task = new Task<>() {
                 @Override
@@ -37,7 +36,6 @@ public class WelcomeController {
             task.setOnSucceeded(e -> welcomeInteractor.setStatSucceeded());
             new Thread(task).start();
     }
-
 
     public void updateStats() {
         Task<Void> task = new Task<>() {
