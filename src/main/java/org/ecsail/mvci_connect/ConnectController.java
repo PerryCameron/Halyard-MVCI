@@ -48,7 +48,6 @@ public class ConnectController extends Controller<ConnectMessage> {
             }
         };
         connectTask.setOnSucceeded(event -> {
-            System.out.println("getting to setOnSucceeded");
                 connectInteractor.setRotateShipWheel(false);
                 mainController.createLoadingController();
                 mainController.setStatus("(Connected) " + connectInteractor.getHost());

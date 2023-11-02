@@ -14,8 +14,8 @@ public class RosterController extends Controller<RosterMessage> {
         mainController = mc;
         RosterModel rosterModel = new RosterModel(mainController.getMainModel());
         rosterInteractor = new RosterInteractor(rosterModel,mainController.getConnections());
+        action(RosterMessage.GET_DATA); // moved this last, we will see if it works
         rosterView = new RosterView(rosterModel, this::action);
-        getRosterData();
     }
     @Override
     public void action(RosterMessage action) {
@@ -24,6 +24,7 @@ public class RosterController extends Controller<RosterMessage> {
             case SEARCH -> search();
             case EXPORT_XPS -> exportRoster();
             case CHANGE_LIST_TYPE, UPDATE_YEAR -> updateRoster();
+            case GET_DATA -> getRosterData();
         }
     }
 
@@ -80,7 +81,7 @@ public class RosterController extends Controller<RosterMessage> {
         };
         task.setOnSucceeded(e -> {
             mainController.showLoadingSpinner(false);
-            rosterInteractor.setListsLoaded(true);
+            rosterInteractor.setListsLoaded();
             rosterInteractor.setRosterToTableview();
             rosterView.setRadioListener(); // set last, so it doesn't fire, when radios are created.
         });

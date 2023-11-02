@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 public class RosterModel {
     private final MainModel mainModel;
-    private ObservableList<MembershipListDTO> rosters = FXCollections.observableArrayList();
+    private final ObservableList<MembershipListDTO> rosters = FXCollections.observableArrayList();
     private final ObservableList<MembershipListDTO> searchedRosters = FXCollections.observableArrayList();
     private final ObservableList<MembershipListRadioDTO> radioChoices = FXCollections.observableArrayList();
     private ObservableList<DbRosterSettingsDTO> rosterSettings = FXCollections.observableArrayList();
@@ -116,6 +116,10 @@ public class RosterModel {
     }
     public ObservableList<MembershipListDTO> getRosters() {
         return rosters;
+    }
+
+    public boolean isListsLoaded() {
+        return listsLoaded.get();
     }
 
     public MainModel getMainModel() {

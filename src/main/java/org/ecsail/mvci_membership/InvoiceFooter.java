@@ -22,8 +22,8 @@ import org.ecsail.static_tools.CustomTools;
 import org.ecsail.widgetfx.*;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.math.RoundingMode;
+import java.util.Arrays;
 
 public class InvoiceFooter implements Builder<Region> {
     private final InvoiceView invoiceView;
@@ -122,12 +122,7 @@ public class InvoiceFooter implements Builder<Region> {
     private TableView<PaymentDTO> tableView() {
         this.tableView = TableViewFx.tableViewOf(PaymentDTO.class, 115);
         tableView.setItems(invoiceDTO.getPaymentDTOS());
-        List<TableColumn<PaymentDTO, ?>> columns = new ArrayList<>();
-        columns.add(column1());
-        columns.add(column2());
-        columns.add(column3());
-        columns.add(column4());
-        tableView.getColumns().addAll(columns);
+        tableView.getColumns().addAll(Arrays.asList(column1(),column2(),column3(),column4()));
         return tableView;
     }
 
@@ -137,9 +132,8 @@ public class InvoiceFooter implements Builder<Region> {
         col1.setMaxWidth(1f * Integer.MAX_VALUE * 20);
         col1.setOnEditCommit(
                 t -> {
-                    t.getTableView().getItems().get(
-                            t.getTablePosition().getRow()).setPaymentAmount(String.valueOf(new BigDecimal(t.getNewValue()).setScale(2)));
                     PaymentDTO paymentDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
+                    paymentDTO.setPaymentAmount(String.valueOf(new BigDecimal(t.getNewValue()).setScale(2, RoundingMode.HALF_UP)));
                     invoiceView.getMembershipView().getMembershipModel().setSelectedPayment(paymentDTO);
                     invoiceView.getMembershipView().sendMessage().accept(MembershipMessage.UPDATE_PAYMENT);
                     addPaymentsAndUpdateBalance();
@@ -183,7 +177,7 @@ public class InvoiceFooter implements Builder<Region> {
     private TableColumn<PaymentDTO,String> column3() {
         TableColumn<PaymentDTO, String> col3 = TableColumnFx.tableColumnOf(PaymentDTO::checkNumberProperty,"Check #");
         col3.setStyle("-fx-alignment: CENTER-LEFT;");
-        col3.setOnEditCommit(t -> updatePayment(t));
+        col3.setOnEditCommit(this::updatePayment);
         col3.setMaxWidth(1f * Integer.MAX_VALUE * 35);
         return col3;
     }
@@ -191,7 +185,7 @@ public class InvoiceFooter implements Builder<Region> {
     private TableColumn<PaymentDTO,String> column4() {
         TableColumn<PaymentDTO, String> col4 = TableColumnFx.tableColumnOf(PaymentDTO::paymentDateProperty,"Date");
         col4.setStyle("-fx-alignment: CENTER-LEFT;");
-        col4.setOnEditCommit(t -> updatePayment(t));
+        col4.setOnEditCommit(this::updatePayment);
         col4.setMaxWidth(1f * Integer.MAX_VALUE * 25);
         return col4;
     }

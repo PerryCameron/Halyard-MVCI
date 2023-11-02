@@ -5,5 +5,6 @@ public enum RosterMessage {
     SEARCH,
     EXPORT_XPS,
     UPDATE_YEAR,
-    LAUNCH_TAB
+    LAUNCH_TAB,
+    GET_DATA
 }

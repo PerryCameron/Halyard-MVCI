@@ -72,6 +72,7 @@ public class RosterInteractor {
     }
 
     protected void updateRoster() {
+        System.out.println("updateRoster()");
         // I believe problem with tableview not refreshing on first open is in here
         clearMainRoster();
             Method method;
@@ -100,15 +101,19 @@ public class RosterInteractor {
     }
 
     private void sortRoster() {
+        System.out.println("sortRoster()");
         Platform.runLater(() -> {
             rosterModel.getRosters().sort(Comparator.comparing(MembershipListDTO::getMembershipId));
-            rosterModel.getRosterTableView().refresh(); // this is a hack because sometimes it won't refresh
+            rosterModel.getRosterTableView().refresh(); // this is a hack because sometimes it won't refresh (doesn't work)
         });
     }
 
     private void updateRoster(ObservableList<MembershipListDTO> updatedRoster) {
-        logger.info("Adding roster to model");
-        Platform.runLater(() -> rosterModel.getRosters().setAll(setSlipsForRoster(updatedRoster)));
+        System.out.println("updateRoster(ObservableList<MembershipListDTO> updatedRoster)");
+        Platform.runLater(() -> {
+            logger.info("Adding roster to model");
+            rosterModel.getRosters().setAll(setSlipsForRoster(updatedRoster));
+        });
     }
 
     protected void getRadioChoices() {
@@ -134,12 +139,14 @@ public class RosterInteractor {
     }
 
     protected void fillTableView() {
+        System.out.println("fillTableView()");
             if (!rosterModel.getTextFieldString().equals("")) fillWithSearchResults();
             else fillWithResults(); // search box cleared
         changeState();
     }
 
     private void fillWithResults() {
+        System.out.println("fillWithResults()");
         Platform.runLater(() -> {
             logger.debug("TableView is set to display normal results");
             rosterModel.getRosterTableView().setItems(rosterModel.getRosters());
@@ -149,6 +156,7 @@ public class RosterInteractor {
     }
 
     private void fillWithSearchResults() {
+        System.out.println("fillWithSearchResults()");
         ObservableList<MembershipListDTO> list = searchString(rosterModel.getTextFieldString());
         Platform.runLater(() -> {
             rosterModel.getSearchedRosters().clear();
@@ -179,10 +187,8 @@ public class RosterInteractor {
                 .orElse(false);
     }
 
-
-
-    protected void setListsLoaded(boolean isLoaded) {
-        Platform.runLater(() -> rosterModel.setListsLoaded(isLoaded));
+    protected void setListsLoaded() {
+        Platform.runLater(() -> rosterModel.setListsLoaded(!rosterModel.isListsLoaded()));
     }
 
     public MembershipListDTO getMembership() {
