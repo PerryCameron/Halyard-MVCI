@@ -69,6 +69,7 @@ public class MembershipController extends Controller<MembershipMessage> {
                     case LOAD_IDS -> loadSmallTab(MembershipMessage.LOAD_IDS);
                     case LOAD_INVOICE -> loadSmallTab(MembershipMessage.LOAD_INVOICE);
                     case LOAD_FEES -> loadSmallTab(MembershipMessage.LOAD_FEES);
+                    case SAVE_INVOICE -> loadSmallTab(MembershipMessage.SAVE_INVOICE);
                 }
                 return null;
             }
@@ -89,6 +90,7 @@ public class MembershipController extends Controller<MembershipMessage> {
                     case LOAD_FEES -> membershipInteractor.getDataBaseService().loadFees();
                     case UPDATE_INVOICE -> membershipInteractor.getDataBaseService().updateInvoice();
                     case UPDATE_INVOICE_ONLY -> membershipInteractor.getDataBaseService().updateInvoiceOnly();
+                    case SAVE_INVOICE -> membershipInteractor.getDataBaseService().saveInvoice();
                 }
                 return null;
             }

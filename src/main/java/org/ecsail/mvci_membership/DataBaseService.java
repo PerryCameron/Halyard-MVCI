@@ -218,6 +218,12 @@ public class DataBaseService {
         else membershipModel.setInvoiceSaved(Success.NO);
     }
 
+    public void saveInvoice() {
+        HandlingTools.executeBatchQuery(() ->
+                invoiceRepo.updateBatch(membershipModel.getSelectedInvoice()), membershipModel.getMainModel(), logger
+        );
+    }
+
     public void updateInvoiceOnly() {
     HandlingTools.executeQuery(() ->
             invoiceRepo.update(membershipModel.getSelectedInvoice()), membershipModel.getMainModel(), logger);

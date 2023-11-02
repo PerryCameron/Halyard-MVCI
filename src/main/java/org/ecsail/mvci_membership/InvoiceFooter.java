@@ -54,8 +54,8 @@ public class InvoiceFooter implements Builder<Region> {
     }
 
     private Node controlBox() {
-        VBox vBox = VBoxFx.vBoxOf(90.0, 10.0, new Insets(10,0,0,20));
-        vBox.getChildren().add(addCommitButton());
+        VBox vBox = VBoxFx.vBoxOf(90.0, 5.0, new Insets(5.0,0,0,20));
+        vBox.getChildren().addAll(addSaveButton(), addCommitButton());
         if(!invoiceDTO.isSupplemental())
             vBox.getChildren().add(addRenewCheckBox());
         return vBox;
@@ -77,6 +77,12 @@ public class InvoiceFooter implements Builder<Region> {
         return invoiceView.getMembershipView().getMembershipModel().getMembership().getMembershipIdDTOS()
                 .stream().filter(id -> id.getFiscalYear().equals(String.valueOf(invoiceDTO.getYear())))
                 .findFirst().orElse(null);
+    }
+
+    private Control addSaveButton() {
+        return ButtonFx.buttonOf("Save", 70, () -> {
+            invoiceView.getMembershipView().sendMessage().accept(MembershipMessage.SAVE_INVOICE);
+        });
     }
 
     private Control addCommitButton() {
