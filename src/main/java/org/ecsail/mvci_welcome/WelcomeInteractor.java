@@ -36,10 +36,9 @@ public class WelcomeInteractor {
     }
 
     protected void reloadStats() {
-        System.out.println("Reloading stats...");
+        logger.info("Reloading stats...");
         HandlingTools.queryForList(() -> {
             int endYear = welcomeModel.getDefaultStartYear() + welcomeModel.getYearSpan();
-            System.out.println("End year is now: " + endYear);
             if (endYear > welcomeModel.getSelectedYear()) endYear = welcomeModel.getSelectedYear();
             ArrayList<StatsDTO> statsDTOS = (ArrayList<StatsDTO>) statRepository.getStatistics(welcomeModel.getDefaultStartYear(), endYear);
             Platform.runLater(() -> {

@@ -93,7 +93,7 @@ public class InvoiceView implements Builder<Tab> {
         return ButtonFx.buttonOf("Edit", 100, () -> {
             invoiceDTO.setCommitted(false);
             membershipView.sendMessage().accept(MembershipMessage.UPDATE_INVOICE);
-            successProperty().addListener(ListenerFx.createOneTimeEnumListener(() -> {
+            successProperty().addListener(ListenerFx.createSingleUseEnumListener(() -> {
                 switch (successProperty().get()) {
                     case YES -> Platform.runLater(() -> showEditView());
                     case NO -> System.out.println("We didn't succeed in updating invoice");

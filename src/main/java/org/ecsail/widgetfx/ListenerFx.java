@@ -41,7 +41,7 @@ public class ListenerFx {
         return (observable, oldValue, newValue) -> action.run();
     }
 
-    public static <T extends Enum<T>> ChangeListener<T> createOneTimeEnumListener(Runnable action) {
+    public static <T extends Enum<T>> ChangeListener<T> createSingleUseEnumListener(Runnable action) {
         return new ChangeListener<>() {
             @Override
             public void changed(ObservableValue<? extends T> observable, T oldValue, T newValue) {

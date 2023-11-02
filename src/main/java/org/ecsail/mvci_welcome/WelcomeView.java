@@ -78,7 +78,7 @@ public class WelcomeView implements Builder<Region>, ChartConstants {
     private Node createChartSelectionComboBox() {
         var comboBox = new ComboBox<String>();
         comboBox.getItems().addAll("Non-Renew","New","Return");
-        comboBox.setValue("Non-Renew");
+        comboBox.setValue("New");
         comboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             switch (newValue) {
                 case "Non-Renew" -> welcomeModel.getMembershipBarChart().changeData(NON_RENEW);
@@ -94,8 +94,6 @@ public class WelcomeView implements Builder<Region>, ChartConstants {
         int maxSpan = Year.now().getValue() - 1970 + 1;  // +1 to include the current year in the span
         IntStream.rangeClosed(21, maxSpan)
                 .forEach(comboBox.getItems()::add);
-//        IntStream.rangeClosed(10, Year.now().getValue() - 1)
-//                .forEach(comboBox.getItems()::add);
         comboBox.setValue(welcomeModel.getYearSpan());
         comboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             System.out.println("setting year span to: " + newValue);

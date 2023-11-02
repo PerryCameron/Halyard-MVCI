@@ -55,7 +55,7 @@ public class InvoiceFooter implements Builder<Region> {
                     invoiceDTO.setCommitted(true);
                     invoiceDTO.showItems();
                     invoiceView.getMembershipView().sendMessage().accept(MembershipMessage.UPDATE_INVOICE);
-                    invoiceView.successProperty().addListener(ListenerFx.createOneTimeEnumListener(() ->
+                    invoiceView.successProperty().addListener(ListenerFx.createSingleUseEnumListener(() ->
                             viewMessaging(invoiceView.successProperty().get())));
                 })
         );
