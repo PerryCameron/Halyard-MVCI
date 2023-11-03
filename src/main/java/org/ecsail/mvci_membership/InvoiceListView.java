@@ -11,17 +11,21 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
+import org.ecsail.dto.DbInvoiceDTO;
 import org.ecsail.dto.InvoiceDTO;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.static_tools.CustomTools;
 import org.ecsail.widgetfx.*;
 
 import java.time.Year;
+import java.util.ArrayList;
 
 public class InvoiceListView implements Builder<Tab> {
     private final MembershipView membershipView;
+    private final MembershipModel membershipModel;
     public InvoiceListView(MembershipView membershipView) {
         this.membershipView = membershipView;
+        this.membershipModel = membershipView.getMembershipModel();
     }
 
     @Override
@@ -57,12 +61,7 @@ public class InvoiceListView implements Builder<Tab> {
 
     private Control createAddButton() {
         return ButtonFx.buttonOf("Add", 60, () -> {
-            MembershipListDTO membership = membershipView.getMembershipModel().getMembership();
-            InvoiceDTO invoiceDTO = new InvoiceDTO(membership.getMsId(), membershipView.getMembershipModel().getSelectedInvoiceCreateYear());
-            membershipView.getMembershipModel().setSelectedInvoice(invoiceDTO);
-            membershipView.sendMessage().accept(MembershipMessage.INVOICE_EXISTS);
-
-//            membershipView.sendMessage().accept(MembershipMessage.INSERT_INVOICE);
+            membershipView.sendMessage().accept(MembershipMessage.INSERT_INVOICE);
         });
     }
 

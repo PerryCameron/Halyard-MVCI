@@ -70,7 +70,6 @@ public class MembershipController extends Controller<MembershipMessage> {
                     case LOAD_INVOICE -> loadSmallTab(MembershipMessage.LOAD_INVOICE);
                     case LOAD_FEES -> loadSmallTab(MembershipMessage.LOAD_FEES);
                     case SAVE_INVOICE -> loadSmallTab(MembershipMessage.SAVE_INVOICE);
-                    case INVOICE_EXISTS -> membershipInteractor.getDataBaseService().invoiceExists();
                 }
                 return null;
             }

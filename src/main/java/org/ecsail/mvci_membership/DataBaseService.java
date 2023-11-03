@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public class DataBaseService {
     private final MembershipModel membershipModel;
@@ -422,13 +423,7 @@ public class DataBaseService {
         } else System.out.println("Failed to add paymentDTO");
     }
 
-    public void insertInvoice() {
-        System.out.println("Inserting invoice for year " + membershipModel.getSelectedInvoiceCreateYear());
-    }
 
-    public void deleteInvoice() {
-        System.out.println("Deleting Invoice" + membershipModel.getSelectedInvoice().toString());
-    }
 
     public void loadInvoice() {
         HandlingTools.queryForList(() -> {
@@ -484,11 +479,53 @@ public class DataBaseService {
         }
     }
 
-    public void invoiceExists() {
-        int selectedYear = membershipModel.getSelectedInvoiceCreateYear();
-        boolean exists = HandlingTools.executeExistsQuery(() ->
-                invoiceRepo.exists(membershipModel.getMembership(),selectedYear), membershipModel.getMainModel(), logger);
-        System.out.println("A record for " + selectedYear + " exists: " + exists);
+    public void insertInvoice() {
+        MembershipListDTO membership = membershipModel.getMembership();
+        InvoiceDTO invoiceDTO = new InvoiceDTO(membership.getMsId(), membershipModel.getSelectedInvoiceCreateYear());
+        membershipModel.setSelectedInvoice(invoiceDTO);  // may not need
+        invoiceDTO.setSupplemental(invoiceExists());
+
+        System.out.println("Invoice for year " + membershipModel.getSelectedInvoiceCreateYear() + " isSupplemental=" +
+                invoiceDTO.isSupplemental());
     }
+
+    public void deleteInvoice() {
+        System.out.println("Deleting Invoice" + membershipModel.getSelectedInvoice().toString());
+    }
+
+    public boolean invoiceExists() {
+        int selectedYear = membershipModel.getSelectedInvoiceCreateYear();
+        return HandlingTools.executeExistsQuery(() ->
+                invoiceRepo.exists(membershipModel.getMembership(),selectedYear), membershipModel.getMainModel(), logger);
+    }
+
+//    public void load_db_invoices() {
+//        List<DbInvoiceDTO> dbInvoiceDTOS = invoiceRepo.getDbInvoiceByYear(membershipModel.getSelectedInvoiceCreateYear());
+//        for (DbInvoiceDTO dbInvoiceDTO : dbInvoiceDTOS) {
+//            if (dbInvoiceDTO.isItemized()) {
+//                createItemizedCategories(dbInvoiceDTO, invoiceId, msid, year);
+//            } else {
+//                createNonItemizedCategories(invoiceId, year, msid, dbInvoiceDTO);
+//            }
+//        }
+//    }
+
+//    private static void createNonItemizedCategories(int invoiceId, Integer year, int msid, DbInvoiceDTO dbInvoiceDTO) {
+//        InvoiceItemDTO item;
+//        item = new InvoiceItemDTO(0, invoiceId, msid, year, dbInvoiceDTO.getFieldName()
+//                , dbInvoiceDTO.isCredit(), "0.00", 0, false);
+//        SqlInsert.addInvoiceItemRecord(item);
+//    }
+
+    // creates itemized invoice items
+//    private static void createItemizedCategories(DbInvoiceDTO dbInvoiceDTO, int invoiceId, int msid, int year) {
+//        Set<FeeDTO> fees = SqlFee.getRelatedFeesAsInvoiceItems(dbInvoiceDTO);
+//        fees.forEach(feeDTO -> {
+//            InvoiceItemDTO item = new InvoiceItemDTO(0, invoiceId, msid, year, feeDTO.getDescription()
+//                    , dbInvoiceDTO.isCredit(), "0.00", 0);
+////			System.out.println(item);
+//            SqlInsert.addInvoiceItemRecord(item);
+//        });
+//    }
 }
 //        HandlingTools.executeQuery(() -> invoiceRepo.insert(paymentDTO), membershipModel.getMainModel(), logger))
