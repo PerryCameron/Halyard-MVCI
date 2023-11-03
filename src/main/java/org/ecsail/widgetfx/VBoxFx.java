@@ -134,7 +134,11 @@ public class VBoxFx {
 
     public static VBox customVBox(InvoiceDTO invoiceDTO) {
         VBox vBox = vBoxOf(new Insets(5,5,5,20));
-        Label date = new Label("Payment Date: " + invoiceDTO.getPaymentDTOS().get(0).getPaymentDate());
+        Label date = new Label("");
+        if(!invoiceDTO.getPaymentDTOS().isEmpty())
+            date.setText("Payment Date: " + invoiceDTO.getPaymentDTOS().get(0).getPaymentDate());
+        else
+            date.setText("Payment Date: none");
         date.getStyleClass().add("standard-black-label");
         Label deposit = new Label("Deposit Number: " + invoiceDTO.getBatch());
         deposit.getStyleClass().add("standard-black-label");

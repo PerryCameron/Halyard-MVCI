@@ -66,17 +66,24 @@ public class InvoiceFooter implements Builder<Region> {
         if (!invoiceDTO.isSupplemental()) {
             checkBox.setSelected(true);
             // make sure ids are populated
-            TabPane tabpane = invoiceView.getMembershipView().getMembershipModel().getInfoTabPane();
-            CustomTools.selectTabByText("History", tabpane);
-            CustomTools.selectTabByText(String.valueOf(invoiceDTO.getYear()), tabpane);
+            loadHistoryTab();
         }
         return checkBox;
     }
 
     private MembershipIdDTO getMembershipID() {
-        return invoiceView.getMembershipView().getMembershipModel().getMembership().getMembershipIdDTOS()
+        MembershipIdDTO membershipIdDTO = invoiceView.getMembershipView().getMembershipModel().getMembership().getMembershipIdDTOS()
                 .stream().filter(id -> id.getFiscalYear().equals(String.valueOf(invoiceDTO.getYear())))
                 .findFirst().orElse(null);
+        if(membershipIdDTO == null)
+            loadHistoryTab();
+        return membershipIdDTO;
+    }
+
+    private void loadHistoryTab() {  // prevents a null ID if tab was never opened
+        TabPane tabpane = invoiceView.getMembershipView().getMembershipModel().getInfoTabPane();
+        CustomTools.selectTabByText("History", tabpane);
+        CustomTools.selectTabByText(String.valueOf(invoiceDTO.getYear()), tabpane);
     }
 
     private Control addSaveButton() {
@@ -91,11 +98,12 @@ public class InvoiceFooter implements Builder<Region> {
             invoiceView.getMembershipView().sendMessage().accept(MembershipMessage.UPDATE_INVOICE);
             invoiceView.successProperty().addListener(ListenerFx.createSingleUseEnumListener(() ->
                     viewMessaging(invoiceView.successProperty().get())));
-            // update membershipId record
-            MembershipIdDTO membershipIdDTO = getMembershipID();
-            membershipIdDTO.setIsRenew(renew.get());
-            invoiceView.getMembershipView().getMembershipModel().setSelectedMembershipId(membershipIdDTO);
-            invoiceView.getMembershipView().sendMessage().accept(MembershipMessage.UPDATE_MEMBERSHIP_ID);
+            if(invoiceDTO.isSupplemental()) { // no need to update an ID record if invoice is a supplemental record
+                MembershipIdDTO membershipIdDTO = getMembershipID();
+                membershipIdDTO.setIsRenew(renew.get());
+                invoiceView.getMembershipView().getMembershipModel().setSelectedMembershipId(membershipIdDTO);
+                invoiceView.getMembershipView().sendMessage().accept(MembershipMessage.UPDATE_MEMBERSHIP_ID);
+            }
         });
     }
 
