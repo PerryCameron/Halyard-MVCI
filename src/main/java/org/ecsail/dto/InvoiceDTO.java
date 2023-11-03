@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.math.BigDecimal;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class InvoiceDTO {
     private final IntegerProperty id;
@@ -293,6 +294,42 @@ public class InvoiceDTO {
                 ", closed=" + closed +
                 ", supplemental=" + supplemental +
                 ", maxCredit=" + maxCredit +
+                ", listLoaded=" + listLoaded +
+                ", feesLoaded=" + feesLoaded +
+                ", dbInvoiceDTOS=" + dbInvoiceDTOS +
+                ", paymentDTOS=" + paymentDTOS +
+                ", feeDTOS=" + feeDTOS +
+                ", invoiceItemDTOS=" + invoiceItemDTOS +
                 '}';
+    }
+
+    public String toFullInvoiceString() {
+        StringBuilder sb = new StringBuilder();
+            sb.append("InvoiceDTO{");
+            sb.append("id=").append(id.get());
+            sb.append(", msId=").append(msId.get());
+            sb.append(", year=").append(year.get());
+            sb.append(", paid=").append(paid.get());
+            sb.append(", total=").append(total.get());
+            sb.append(", credit=").append(credit.get());
+            sb.append(", balance=").append(balance.get());
+            sb.append(", batch=").append(batch.get());
+            sb.append(", committed=").append(committed.get());
+            sb.append(", closed=").append(closed.get());
+            sb.append(", supplemental=").append(supplemental.get());
+            sb.append(", maxCredit=").append(maxCredit.get());
+            sb.append('}');
+            sb.append("\n");
+
+            AtomicInteger count = new AtomicInteger(1);
+            if (getInvoiceItemDTOS() != null) {
+                getInvoiceItemDTOS().forEach(each -> sb.append(String.format(
+                        "%2d) InvoiceItemDTO{id=%d, invoiceId=%d, msId=%d, year=%d, fieldName=%-25s, credit=%-6b, value=%-6s, qty=%d, category=%-8b, categoryItem=%-20s}%n",
+                        count.getAndIncrement(), each.idProperty().get(), each.invoiceIdProperty().get(), each.msIdProperty().get(), each.yearProperty().get(),
+                        each.fieldNameProperty().get(), each.creditProperty().get(), each.valueProperty().get(), each.qtyProperty().get(),
+                        each.categoryProperty().get(), each.categoryItemProperty().get()
+                )));
+            }
+        return sb.toString();
     }
 }

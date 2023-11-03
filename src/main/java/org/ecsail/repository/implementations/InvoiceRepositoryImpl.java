@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
@@ -82,6 +83,19 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
         return affectedRows;
     }
 
+    public int insert(InvoiceDTO invoiceDTO) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        String query = "INSERT INTO invoice ( " +
+                "MS_ID, FISCAL_YEAR, PAID, TOTAL, CREDIT, BALANCE, BATCH, COMMITTED, CLOSED, " +
+                "SUPPLEMENTAL, MAX_CREDIT)" +
+                "VALUES (:msId, :year, :paid, :total, :credit, :balance, :batch, :committed, :closed, " +
+                ":supplemental, :maxCredit)";
+        SqlParameterSource namedParameters = new BeanPropertySqlParameterSource(invoiceDTO);
+        int affectedRows = namedParameterJdbcTemplate.update(query, namedParameters, keyHolder);
+        invoiceDTO.setId(keyHolder.getKey().intValue());
+        return affectedRows;
+    }
+
     @Override
     public  int getBatchNumber(String year) {
         String query = "SELECT MAX(batch) FROM invoice WHERE committed=true AND fiscal_year=:year";
@@ -149,6 +163,34 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
     }
 
     @Override
+    public int[] insertBatch(InvoiceDTO invoiceDTO) {
+        List<InvoiceItemDTO> invoiceItems = invoiceDTO.getInvoiceItemDTOS();
+        String query = "INSERT INTO invoice_item " +
+                "(INVOICE_ID, MS_ID, FISCAL_YEAR, FIELD_NAME, IS_CREDIT, VALUE, QTY, CATEGORY, CATEGORY_ITEM) " +
+                "VALUES (:invoiceId, :msId, :year, :fieldName, :credit, :value, :qty, :category, :categoryItem)";
+
+        SqlParameterSource[] batch = SqlParameterSourceUtils.createBatch(invoiceItems.toArray());
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        int[] updateResults = new int[invoiceItems.size()];
+
+        for (int i = 0; i < batch.length; i++) {
+            namedParameterJdbcTemplate.update(query, batch[i], keyHolder);
+
+            // Retrieve the generated key for the current row
+            if (keyHolder.getKeys() != null) {
+                Number key = (Number) keyHolder.getKeys().get("ID"); // insert generated number into ID column
+                if (key != null) {
+                    invoiceItems.get(i).setId(key.intValue());
+                }
+            }
+            updateResults[i] = 1; // Assuming that each insert will affect one row
+        }
+        return updateResults;
+    }
+
+
+    @Override
     public int update(PaymentDTO paymentDTO) {
         String query = "UPDATE payment set " +
                 "INVOICE_ID = :invoiceId, " +
@@ -168,11 +210,16 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
         return template.update(query, paymentDTO.getPayId());
     }
 
-
-
     @Override
     public boolean exists(MembershipListDTO membershipListDTO, int year) {
         String query = "SELECT EXISTS(SELECT * FROM invoice WHERE ms_id=? AND fiscal_year=?)";
         return template.queryForObject(query, Boolean.class, membershipListDTO.getMsId(), year);
+    }
+
+    @Override
+    public Set<FeeDTO> getRelatedFeesAsInvoiceItems(DbInvoiceDTO dbInvoiceDTO) {
+        String query = "select * from fee where db_invoice_id=?";
+        List<FeeDTO> feeDTOS = template.query(query, new FeeRowMapper(), dbInvoiceDTO.getId());
+        return new HashSet<>(feeDTOS);
     }
 }

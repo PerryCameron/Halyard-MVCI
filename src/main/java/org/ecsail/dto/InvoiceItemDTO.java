@@ -162,16 +162,16 @@ public class InvoiceItemDTO {
     @Override
     public String toString() {
         return "InvoiceItemDTO{" +
-                "id=" + id +
-                ", invoiceId=" + invoiceId +
-                ", msId=" + msId +
-                ", year=" + year +
-                ", fieldName=" + fieldName +
-                ", credit=" + credit +
-                ", value=" + value +
-                ", qty=" + qty +
-                ", category=" + category +
-                ", categoryItem=" + categoryItem +
+                "id=" + id.get() +
+                ", invoiceId=" + invoiceId.get() +
+                ", msId=" + msId.get() +
+                ", year=" + year.get() +
+                ", fieldName=" + fieldName.get() +
+                ", credit=" + credit.get() +
+                ", value=" + value.get() +
+                ", qty=" + qty.get() +
+                ", category=" + category.get() +
+                ", categoryItem=" + categoryItem.get() +
                 '}';
     }
 }
