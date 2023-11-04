@@ -11,14 +11,11 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
-import org.ecsail.dto.DbInvoiceDTO;
 import org.ecsail.dto.InvoiceDTO;
-import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.static_tools.CustomTools;
 import org.ecsail.widgetfx.*;
 
 import java.time.Year;
-import java.util.ArrayList;
 
 public class InvoiceListView implements Builder<Tab> {
     private final MembershipView membershipView;
@@ -41,7 +38,7 @@ public class InvoiceListView implements Builder<Tab> {
         vBox.getChildren().add(borderPane);
         tab.setContent(vBox);
         // Create a listener for tab selection change
-        ListenerFx.createSingleUseTabListener(tab, () -> membershipView.sendMessage().accept(MembershipMessage.LOAD_INVOICES));
+        ListenerFx.createSingleUseTabListener(tab, () -> membershipView.sendMessage().accept(MembershipMessage.SELECT_INVOICES));
         return tab;
     }
 

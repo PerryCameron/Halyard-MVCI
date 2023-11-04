@@ -54,8 +54,8 @@ public enum MembershipMessage {
     SUBLEASE_SLIP,
     SET_WAIT_LIST,
     EMAIL_IS_PRIMARY_USE,
-    LOAD_INVOICES,
-    LOAD_INVOICE,
-    LOAD_FEES,
-    LOAD_IDS
+    SELECT_INVOICES,
+    SELECT_INVOICE,
+    SELECT_FEES,
+    SELECT_IDS
 }

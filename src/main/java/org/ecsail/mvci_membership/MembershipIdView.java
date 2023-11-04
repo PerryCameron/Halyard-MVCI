@@ -21,7 +21,6 @@ import org.ecsail.widgetfx.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Comparator;
 
 public class MembershipIdView implements Builder<Tab> {
     private final MembershipView membershipView;
@@ -39,7 +38,7 @@ public class MembershipIdView implements Builder<Tab> {
         VBox vBox = VBoxFx.vBoxOf(new Insets(2,2,2,2),"custom-tap-pane-frame",true); // makes outer border
         vBox.getChildren().add(innerVBox());
         tab.setContent(vBox);
-        ListenerFx.createSingleUseTabListener(tab, () -> membershipView.sendMessage().accept(MembershipMessage.LOAD_IDS) );
+        ListenerFx.createSingleUseTabListener(tab, () -> membershipView.sendMessage().accept(MembershipMessage.SELECT_IDS) );
         return tab;
     }
 

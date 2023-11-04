@@ -19,7 +19,7 @@ public class CustomTools {
         Tab tab = new InvoiceView(membershipView).build();
         membershipView.getMembershipModel().getInfoTabPane().getTabs().add(tab);
         membershipView.getMembershipModel().getInfoTabPane().getSelectionModel().select(tab);
-        membershipView.sendMessage().accept(MembershipMessage.LOAD_INVOICE);
+        membershipView.sendMessage().accept(MembershipMessage.SELECT_INVOICE);
     }
 
     public static void selectTabByText(String text, TabPane tabPane) {

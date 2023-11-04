@@ -26,6 +26,10 @@ public class MembershipController extends Controller<MembershipMessage> {
             @Override
             protected Void call() {
                 switch (type) {
+                    case SELECT_INVOICES -> loadSmallTab(MembershipMessage.SELECT_INVOICES);
+                    case SELECT_IDS -> loadSmallTab(MembershipMessage.SELECT_IDS);
+                    case SELECT_INVOICE -> loadSmallTab(MembershipMessage.SELECT_INVOICE);
+                    case SELECT_FEES -> loadSmallTab(MembershipMessage.SELECT_FEES);
                     case UPDATE_MEMBERSHIP_LIST -> membershipInteractor.getDataBaseService().updateMembershipList();
                     case UPDATE_MEMBERSHIP_ID -> membershipInteractor.getDataBaseService().updateMembershipId();
                     case UPDATE_AWARD -> membershipInteractor.getDataBaseService().updateAward();
@@ -47,7 +51,7 @@ public class MembershipController extends Controller<MembershipMessage> {
                     case INSERT_OFFICER -> membershipInteractor.getDataBaseService().insertOfficer();
                     case INSERT_PERSON -> membershipInteractor.getDataBaseService().insertPerson();
                     case INSERT_PHONE -> membershipInteractor.getDataBaseService().insertPhone();
-                    case INSERT_INVOICE -> membershipInteractor.getDataBaseService().insertInvoice();
+                    case INSERT_INVOICE -> loadSmallTab(MembershipMessage.INSERT_INVOICE);
                     case INSERT_PAYMENT -> membershipInteractor.getDataBaseService().insertPayment();
                     case DELETE_BOAT -> membershipInteractor.getDataBaseService().deleteBoat();
                     case DELETE_AWARD -> membershipInteractor.getDataBaseService().deleteAward();
@@ -65,10 +69,6 @@ public class MembershipController extends Controller<MembershipMessage> {
                     case DELETE_MEMBER_FROM_DATABASE -> membershipInteractor.getDataBaseService().deletePerson();
                     case MOVE_MEMBER_TO_MEMBERSHIP -> membershipInteractor.getDataBaseService().movePerson();
                     case UPLOAD_MEMBER_PHOTO -> membershipInteractor.uploadMemberPhoto();
-                    case LOAD_INVOICES -> loadSmallTab(MembershipMessage.LOAD_INVOICES);
-                    case LOAD_IDS -> loadSmallTab(MembershipMessage.LOAD_IDS);
-                    case LOAD_INVOICE -> loadSmallTab(MembershipMessage.LOAD_INVOICE);
-                    case LOAD_FEES -> loadSmallTab(MembershipMessage.LOAD_FEES);
                     case SAVE_INVOICE -> loadSmallTab(MembershipMessage.SAVE_INVOICE);
                 }
                 return null;
@@ -84,13 +84,14 @@ public class MembershipController extends Controller<MembershipMessage> {
             @Override
             protected Void call() {
                 switch (type) {
-                    case LOAD_INVOICES -> membershipInteractor.getDataBaseService().selectInvoices();
-                    case LOAD_IDS -> membershipInteractor.getDataBaseService().selectIds();
-                    case LOAD_INVOICE -> membershipInteractor.getDataBaseService().selectInvoice();
-                    case LOAD_FEES -> membershipInteractor.getDataBaseService().selectFees();
+                    case SELECT_INVOICES -> membershipInteractor.getDataBaseService().selectInvoices();
+                    case SELECT_IDS -> membershipInteractor.getDataBaseService().selectIds();
+                    case SELECT_INVOICE -> membershipInteractor.getDataBaseService().selectInvoice();
+                    case SELECT_FEES -> membershipInteractor.getDataBaseService().selectFees();
                     case UPDATE_INVOICE -> membershipInteractor.getDataBaseService().updateInvoice();
                     case UPDATE_INVOICE_ONLY -> membershipInteractor.getDataBaseService().updateInvoiceOnly();
                     case SAVE_INVOICE -> membershipInteractor.getDataBaseService().saveInvoice();
+                    case INSERT_INVOICE -> membershipInteractor.getDataBaseService().insertInvoice();
                 }
                 return null;
             }

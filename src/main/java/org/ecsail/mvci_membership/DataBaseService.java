@@ -470,8 +470,14 @@ public class DataBaseService {
         List<DbInvoiceDTO> dbInvoiceDTOS = invoiceRepo.getDbInvoiceByYear(membershipModel.getSelectedInvoiceCreateYear());
         List<FeeDTO> feeDTOS = invoiceRepo.getFeesFromYear(membershipModel.getSelectedInvoiceCreateYear());
         for (DbInvoiceDTO dbInvoiceDTO : dbInvoiceDTOS) {
-            InvoiceItemDTO item = new InvoiceItemDTO(0, invoiceDTO.getId(), invoiceDTO.getMsId(), invoiceDTO.getYear(), dbInvoiceDTO.getFieldName()
-                    , dbInvoiceDTO.isCredit(), "0.00", 0, false, "none");
+            InvoiceItemDTO item = new InvoiceItemDTO( 
+                    0,
+                    invoiceDTO.getId(),
+                    invoiceDTO.getMsId(),
+                    invoiceDTO.getYear(),
+                    dbInvoiceDTO.getFieldName(),
+                    dbInvoiceDTO.isCredit(),
+                    "0.00", 0, false, "none");
             if (dbInvoiceDTO.isItemized()) {
                 item.setCategory(dbInvoiceDTO.isItemized());
                 invoiceDTO.getInvoiceItemDTOS().add(item);
@@ -482,10 +488,10 @@ public class DataBaseService {
                                 , dbInvoiceDTO.isCredit(), "0.00", 0, false, dbInvoiceDTO.getFieldName())));
             } else invoiceDTO.getInvoiceItemDTOS().add(item);
         }
-        boolean successful = HandlingTools.executeBatchQuery(() ->
+        boolean successfulItemCreation = HandlingTools.executeBatchQuery(() ->
                 invoiceRepo.insertBatch(invoiceDTO), membershipModel.getMainModel(), logger
         );
-        if(successful) {
+        if(successfulItemCreation) {
             Platform.runLater(() -> {
                 membershipModel.setSelectedInvoice(invoiceDTO);
                 membershipModel.getMembership().getInvoiceDTOS().add(invoiceDTO);

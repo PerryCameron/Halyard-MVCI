@@ -43,7 +43,7 @@ public class InvoiceView implements Builder<Tab> {
                 invoiceDTO.feesLoadedProperty().addListener(
                         ListenerFx.createSingleUseListener(invoiceDTO.feesLoadedProperty(), () ->
                                 scrollPane.setContent(showEditableInvoice())));
-                membershipView.sendMessage().accept(MembershipMessage.LOAD_FEES);
+                membershipView.sendMessage().accept(MembershipMessage.SELECT_FEES);
             } else { // is not committed but data is already loaded (feeDTO and DbInvoiceDTO)
                 scrollPane.setContent(showEditableInvoice());
             }
