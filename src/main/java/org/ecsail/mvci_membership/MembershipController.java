@@ -84,10 +84,10 @@ public class MembershipController extends Controller<MembershipMessage> {
             @Override
             protected Void call() {
                 switch (type) {
-                    case LOAD_INVOICES -> membershipInteractor.getDataBaseService().getInvoices();
-                    case LOAD_IDS -> membershipInteractor.getDataBaseService().getIds();
-                    case LOAD_INVOICE -> membershipInteractor.getDataBaseService().loadInvoice();
-                    case LOAD_FEES -> membershipInteractor.getDataBaseService().loadFees();
+                    case LOAD_INVOICES -> membershipInteractor.getDataBaseService().selectInvoices();
+                    case LOAD_IDS -> membershipInteractor.getDataBaseService().selectIds();
+                    case LOAD_INVOICE -> membershipInteractor.getDataBaseService().selectInvoice();
+                    case LOAD_FEES -> membershipInteractor.getDataBaseService().selectFees();
                     case UPDATE_INVOICE -> membershipInteractor.getDataBaseService().updateInvoice();
                     case UPDATE_INVOICE_ONLY -> membershipInteractor.getDataBaseService().updateInvoiceOnly();
                     case SAVE_INVOICE -> membershipInteractor.getDataBaseService().saveInvoice();
@@ -107,10 +107,10 @@ public class MembershipController extends Controller<MembershipMessage> {
         Task<Void> task = new Task<>() {
             @Override
             protected Void call() {
-                membershipInteractor.getDataBaseService().getPersonLists();
-                membershipInteractor.getDataBaseService().getSlipInfo();
-                membershipInteractor.getDataBaseService().getBoats();
-                membershipInteractor.getDataBaseService().getNotes();
+                membershipInteractor.getDataBaseService().selectPersons();
+                membershipInteractor.getDataBaseService().selectSlipInfo();
+                membershipInteractor.getDataBaseService().selectBoats();
+                membershipInteractor.getDataBaseService().selectNotes();
                 return null;
             }
         };

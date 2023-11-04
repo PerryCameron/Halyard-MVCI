@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
 import javax.sql.DataSource;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class DataBaseService {
     private final MembershipModel membershipModel;
@@ -51,7 +50,11 @@ public class DataBaseService {
         invoiceRepo = new InvoiceRepositoryImpl(dataSource);
     }
 
-    public void getPersonLists() { // not on FX thread because lists added before UI is launched
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////  SELECT  ////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void selectPersons() { // not on FX thread because lists added before UI is launched
         HandlingTools.queryForList(() -> {
             List<PersonDTO> personDTOS = peopleRepo.getActivePeopleByMsId(membershipModel.getMembership().getMsId());
             for (PersonDTO person : personDTOS) {
@@ -64,7 +67,7 @@ public class DataBaseService {
         }, membershipModel.getMainModel(), logger);
     }
 
-    public void getIds() {
+    public void selectIds() {
         HandlingTools.queryForList(() -> {
             List<MembershipIdDTO> membershipIdDTOS = membershipIdRepo.getIds(membershipModel.getMembership().getMsId());
             Platform.runLater(() -> {
@@ -76,7 +79,7 @@ public class DataBaseService {
         }, membershipModel.getMainModel(), logger);
     }
 
-    public void getInvoices() {
+    public void selectInvoices() {
         HandlingTools.queryForList(() -> {
             List<InvoiceDTO> invoiceDTOS = invoiceRepo.getInvoicesByMsid(membershipModel.getMembership().getMsId());
             Platform.runLater(() -> {
@@ -87,7 +90,7 @@ public class DataBaseService {
         }, membershipModel.getMainModel(), logger);
     }
 
-    public void getBoats() {
+    public void selectBoats() {
         HandlingTools.queryForList(() -> {
             List<BoatDTO> boats = boatRepo.getBoatsByMsId(membershipModel.getMembership().getMsId());
             Platform.runLater(() -> {
@@ -97,7 +100,7 @@ public class DataBaseService {
         }, membershipModel.getMainModel(), logger);
     }
 
-    public void getNotes() {
+    public void selectNotes() {
         HandlingTools.queryForList(() -> {
             List<NotesDTO> notesDTOS = notesRepo.getMemosByMsId(membershipModel.getMembership().getMsId());
             Platform.runLater(() -> membershipModel.getMembership()
@@ -106,7 +109,7 @@ public class DataBaseService {
         }, membershipModel.getMainModel(), logger);
     }
 
-    public void getSlipInfo() {
+    public void selectSlipInfo() {
         HandlingTools.queryForList(() -> {
             Platform.runLater(() -> membershipModel.setSlip(slipRepo.getSlip(membershipModel.getMembership().getMsId())));
         }, membershipModel.getMainModel(), logger);
@@ -125,44 +128,31 @@ public class DataBaseService {
         });
     }
 
-    private void setSubLeaser() {
-        membershipModel.setSlipRelationStatus(SlipUser.slip.subLeaser);
-        // gets the current id of the slip owner
-        membershipModel.setMembershipId(String.valueOf(membershipIdRepo.getCurrentId(membershipModel.getSlip().getMs_id()).getMembershipId()));
+    public void selectInvoice() {
+        HandlingTools.queryForList(() -> {
+            List<InvoiceItemDTO> invoiceItemDTOS = invoiceRepo.getInvoiceItemsByInvoiceId(membershipModel.getSelectedInvoice().getId());
+            List<PaymentDTO> paymentDTOS = invoiceRepo.getPaymentByInvoiceId(membershipModel.getSelectedInvoice().getId());
+            Platform.runLater(() -> {
+                membershipModel.getSelectedInvoice().getInvoiceItemDTOS().clear();
+                membershipModel.getSelectedInvoice().getPaymentDTOS().clear();
+                membershipModel.getSelectedInvoice().setInvoiceItemDTOS(FXCollections.observableArrayList(invoiceItemDTOS));
+                membershipModel.getSelectedInvoice().setPaymentDTOS(FXCollections.observableArrayList(paymentDTOS));
+                // always choose the opposite of what the boolean is so the listener will trigger
+                membershipModel.getSelectedInvoice().setListLoaded(!membershipModel.getSelectedInvoice().isListLoaded());
+            });
+        }, membershipModel.getMainModel(), logger);
     }
 
-    private void setOwnAndSublease() { // already inside Platform.runLater
-        membershipModel.setSlipRelationStatus(SlipUser.slip.ownAndSublease);
-        // gets the id of the subLeaser for the current year
-        membershipModel.setMembershipId(String.valueOf(membershipIdRepo.getCurrentId(membershipModel.getSlip().getSubleased_to()).getMembershipId()));
-    }
-
-    protected void changeMemberType() {
-        System.out.println("changeMemberType");
-    }
-
-    protected void detachMemberFromMembership() { // DETACH_MEMBER_FROM_MEMBERSHIP
-        if(HandlingTools.executeQuery(() ->
-                peopleRepo.update(membershipModel.getSelectedPerson()), membershipModel.getMainModel(), logger))
-        Platform.runLater(() -> {
-            membershipModel.setReturnMessage(MembershipMessage.DELETE_MEMBER_FROM_DATABASE_SUCCEED);
-        });
-    }
-
-    public void detachPrimaryMemberFromMembership() { // DETACH_PRIMARY_MEMBER_FROM_MEMBERSHIP
-        if(HandlingTools.executeQuery(() ->
-                peopleRepo.update(membershipModel.getSelectedPerson()), membershipModel.getMainModel(), logger))
-        Platform.runLater(() -> {
-            membershipModel.setReturnMessage(MembershipMessage.DELETE_PRIMARY_MEMBER_FROM_DATABASE_SUCCEED);
-        });
-    }
-
-    protected void swapSecondaryToPrimary() { // MOVE_SECONDARY_TO_PRIMARY
-        if(HandlingTools.executeQuery(() ->
-                peopleRepo.update(membershipModel.getSelectedPerson()), membershipModel.getMainModel(), logger))
-        Platform.runLater(() -> {
-        membershipModel.setReturnMessage(MembershipMessage.MOVE_SECONDARY_TO_PRIMARY_SUCCEED);
-        });
+    public void selectFees() {
+        HandlingTools.queryForList(() -> {
+            List<FeeDTO> feeDTOS = invoiceRepo.getFeesFromYear(membershipModel.getSelectedInvoice().getYear());
+            List<DbInvoiceDTO> dbInvoiceDTOS = invoiceRepo.getDbInvoiceByYear(membershipModel.getSelectedInvoice().getYear());
+            Platform.runLater(() -> {
+                membershipModel.getSelectedInvoice().setFeeDTOS(FXCollections.observableArrayList(feeDTOS));
+                membershipModel.getSelectedInvoice().setDbInvoiceDTOS(FXCollections.observableArrayList(dbInvoiceDTOS));
+                membershipModel.getSelectedInvoice().feesLoadedProperty().set(!membershipModel.getSelectedInvoice().isFeesLoaded());
+            });
+        }, membershipModel.getMainModel(), logger);
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -251,10 +241,6 @@ public class DataBaseService {
             Platform.runLater(() -> {
                 membershipModel.setReturnMessage(MembershipMessage.DELETE_MEMBER_FROM_DATABASE_FAIL);
             });
-    }
-
-    protected void movePerson() {
-        System.out.println("Move Person");
     }
 
     protected void deletePhone() {
@@ -449,21 +435,6 @@ public class DataBaseService {
         } else System.out.println("Failed to add paymentDTO");
     }
 
-    public void loadInvoice() {
-        HandlingTools.queryForList(() -> {
-            List<InvoiceItemDTO> invoiceItemDTOS = invoiceRepo.getInvoiceItemsByInvoiceId(membershipModel.getSelectedInvoice().getId());
-            List<PaymentDTO> paymentDTOS = invoiceRepo.getPaymentByInvoiceId(membershipModel.getSelectedInvoice().getId());
-            Platform.runLater(() -> {
-                membershipModel.getSelectedInvoice().getInvoiceItemDTOS().clear();
-                membershipModel.getSelectedInvoice().getPaymentDTOS().clear();
-                membershipModel.getSelectedInvoice().setInvoiceItemDTOS(FXCollections.observableArrayList(invoiceItemDTOS));
-                membershipModel.getSelectedInvoice().setPaymentDTOS(FXCollections.observableArrayList(paymentDTOS));
-                // always choose the opposite of what the boolean is so the listener will trigger
-                membershipModel.getSelectedInvoice().setListLoaded(!membershipModel.getSelectedInvoice().isListLoaded());
-            });
-        }, membershipModel.getMainModel(), logger);
-    }
-
     public void insertInvoiceNote() {
         // create our DTO
         NotesDTO notesDTO = new NotesDTO("I", membershipModel.getMembership().getMsId());
@@ -523,7 +494,13 @@ public class DataBaseService {
 //        System.out.println(invoiceDTO.toFullInvoiceString());
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////   MISC   ////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    protected void movePerson() {
+        System.out.println("Move Person");
+    }
 
     public boolean invoiceExists() {
         int selectedYear = membershipModel.getSelectedInvoiceCreateYear();
@@ -531,15 +508,43 @@ public class DataBaseService {
                 invoiceRepo.exists(membershipModel.getMembership(),selectedYear), membershipModel.getMainModel(), logger);
     }
 
-    public void loadFees() {
-        HandlingTools.queryForList(() -> {
-            List<FeeDTO> feeDTOS = invoiceRepo.getFeesFromYear(membershipModel.getSelectedInvoice().getYear());
-            List<DbInvoiceDTO> dbInvoiceDTOS = invoiceRepo.getDbInvoiceByYear(membershipModel.getSelectedInvoice().getYear());
+    private void setSubLeaser() {
+        membershipModel.setSlipRelationStatus(SlipUser.slip.subLeaser);
+        // gets the current id of the slip owner
+        membershipModel.setMembershipId(String.valueOf(membershipIdRepo.getCurrentId(membershipModel.getSlip().getMs_id()).getMembershipId()));
+    }
+
+    private void setOwnAndSublease() { // already inside Platform.runLater
+        membershipModel.setSlipRelationStatus(SlipUser.slip.ownAndSublease);
+        // gets the id of the subLeaser for the current year
+        membershipModel.setMembershipId(String.valueOf(membershipIdRepo.getCurrentId(membershipModel.getSlip().getSubleased_to()).getMembershipId()));
+    }
+
+    protected void changeMemberType() {
+        System.out.println("changeMemberType");
+    }
+
+    protected void detachMemberFromMembership() { // DETACH_MEMBER_FROM_MEMBERSHIP
+        if(HandlingTools.executeQuery(() ->
+                peopleRepo.update(membershipModel.getSelectedPerson()), membershipModel.getMainModel(), logger))
             Platform.runLater(() -> {
-                membershipModel.getSelectedInvoice().setFeeDTOS(FXCollections.observableArrayList(feeDTOS));
-                membershipModel.getSelectedInvoice().setDbInvoiceDTOS(FXCollections.observableArrayList(dbInvoiceDTOS));
-                membershipModel.getSelectedInvoice().feesLoadedProperty().set(!membershipModel.getSelectedInvoice().isFeesLoaded());
+                membershipModel.setReturnMessage(MembershipMessage.DELETE_MEMBER_FROM_DATABASE_SUCCEED);
             });
-        }, membershipModel.getMainModel(), logger);
+    }
+
+    public void detachPrimaryMemberFromMembership() { // DETACH_PRIMARY_MEMBER_FROM_MEMBERSHIP
+        if(HandlingTools.executeQuery(() ->
+                peopleRepo.update(membershipModel.getSelectedPerson()), membershipModel.getMainModel(), logger))
+            Platform.runLater(() -> {
+                membershipModel.setReturnMessage(MembershipMessage.DELETE_PRIMARY_MEMBER_FROM_DATABASE_SUCCEED);
+            });
+    }
+
+    protected void swapSecondaryToPrimary() { // MOVE_SECONDARY_TO_PRIMARY
+        if(HandlingTools.executeQuery(() ->
+                peopleRepo.update(membershipModel.getSelectedPerson()), membershipModel.getMainModel(), logger))
+            Platform.runLater(() -> {
+                membershipModel.setReturnMessage(MembershipMessage.MOVE_SECONDARY_TO_PRIMARY_SUCCEED);
+            });
     }
 }
