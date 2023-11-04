@@ -222,4 +222,21 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
         List<FeeDTO> feeDTOS = template.query(query, new FeeRowMapper(), dbInvoiceDTO.getId());
         return new HashSet<>(feeDTOS);
     }
+
+    @Override
+    public int deletePaymentsByInvoiceID(InvoiceDTO invoiceDTO) {
+        String query = "DELETE FROM payment WHERE INVOICE_ID = ?";
+        return template.update(query, invoiceDTO.getId());
+    }
+
+    @Override
+    public int deleteItemsByInvoiceID(InvoiceDTO invoiceDTO) {
+        String query = "DELETE FROM invoice_item WHERE INVOICE_ID = ?";
+        return template.update(query, invoiceDTO.getId());
+    }
+    @Override
+    public int delete(InvoiceDTO invoiceDTO) {
+        String query = "DELETE FROM invoice WHERE ID = ?";
+        return template.update(query, invoiceDTO.getId());
+    }
 }

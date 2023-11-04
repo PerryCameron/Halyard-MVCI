@@ -19,11 +19,14 @@ public interface InvoiceRepository {
     List<DbInvoiceDTO> getDbInvoiceByYear(int year);
     int update(InvoiceDTO invoiceDTO);
     int[] updateBatch(InvoiceDTO invoiceDTO);
-
     int[] insertBatch(InvoiceDTO invoiceDTO);
-
     int update(PaymentDTO paymentDTO);
     int delete(PaymentDTO paymentDTO);
     boolean exists(MembershipListDTO membershipListDTO, int year);
     Set<FeeDTO> getRelatedFeesAsInvoiceItems(DbInvoiceDTO dbInvoiceDTO);
+
+    int deletePaymentsByInvoiceID(InvoiceDTO invoiceDTO);
+
+    int deleteItemsByInvoiceID(InvoiceDTO invoiceDTO);
+    int delete(InvoiceDTO invoiceDTO);
 }

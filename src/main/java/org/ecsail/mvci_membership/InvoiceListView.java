@@ -62,12 +62,14 @@ public class InvoiceListView implements Builder<Tab> {
     private Control createAddButton() {
         return ButtonFx.buttonOf("Add", 60, () -> {
             membershipView.sendMessage().accept(MembershipMessage.INSERT_INVOICE);
+            // TODO open tab
         });
     }
 
     private Node createDeleteButton() {
         return ButtonFx.buttonOf("Delete", 60, () -> {
             membershipView.sendMessage().accept(MembershipMessage.DELETE_INVOICE);
+            // TODO close tab if open somehow
         });
     }
 

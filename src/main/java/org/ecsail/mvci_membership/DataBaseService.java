@@ -165,6 +165,10 @@ public class DataBaseService {
         });
     }
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////  UPDATE  ////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
     protected void updateMembershipList() { // UPDATE_MEMBERSHIP_LIST
         HandlingTools.executeQuery(() ->
                 membershipRepo.updateJoinDate(membershipModel.getMembership()), membershipModel.getMainModel(), logger);
@@ -232,6 +236,10 @@ public class DataBaseService {
         HandlingTools.executeQuery(() ->
                 invoiceRepo.update(membershipModel.getSelectedPayment()), membershipModel.getMainModel(), logger);
     }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////  DELETE  ////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     protected void deletePerson() {
         if (HandlingTools.executeQuery(() -> peopleRepo.delete(membershipModel.getSelectedPerson()),
@@ -311,6 +319,26 @@ public class DataBaseService {
                 membershipModel.getMainModel(), logger))
             Platform.runLater(() -> membershipModel.getSelectedInvoice().getPaymentDTOS().remove(paymentDTO));
     }
+
+    public void deleteInvoice() {
+        if (HandlingTools.executeQuery(() -> invoiceRepo.deleteItemsByInvoiceID(membershipModel.getSelectedInvoice()),
+                membershipModel.getMainModel(), logger))  // delete items
+            if (HandlingTools.executeQuery(() -> invoiceRepo.deletePaymentsByInvoiceID(membershipModel.getSelectedInvoice()),
+                    membershipModel.getMainModel(), logger))  // delete payments
+                if (HandlingTools.executeQuery(() -> invoiceRepo.delete(membershipModel.getSelectedInvoice()),
+                        membershipModel.getMainModel(), logger))  // delete invoice
+                    membershipModel.getMembership().getInvoiceDTOS().remove(membershipModel.getSelectedInvoice());
+                else
+                    logger.error("Failed to delete invoice " + membershipModel.getSelectedInvoice().getId());
+            else
+                logger.error("Failed to delete payments for invoice " + membershipModel.getSelectedInvoice().getId());
+        else
+            logger.error("Failed to delete invoice " + membershipModel.getSelectedInvoice().getId());
+    }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //////////////////////////////////////////////////  INSERT  ////////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void insertPhone() {
         PhoneDTO phoneDTO = new PhoneDTO(membershipModel.getSelectedPerson().getpId());
@@ -436,18 +464,6 @@ public class DataBaseService {
         }, membershipModel.getMainModel(), logger);
     }
 
-    public void loadFees() {
-        HandlingTools.queryForList(() -> {
-            List<FeeDTO> feeDTOS = invoiceRepo.getFeesFromYear(membershipModel.getSelectedInvoice().getYear());
-            List<DbInvoiceDTO> dbInvoiceDTOS = invoiceRepo.getDbInvoiceByYear(membershipModel.getSelectedInvoice().getYear());
-            Platform.runLater(() -> {
-                membershipModel.getSelectedInvoice().setFeeDTOS(FXCollections.observableArrayList(feeDTOS));
-                membershipModel.getSelectedInvoice().setDbInvoiceDTOS(FXCollections.observableArrayList(dbInvoiceDTOS));
-                membershipModel.getSelectedInvoice().feesLoadedProperty().set(!membershipModel.getSelectedInvoice().isFeesLoaded());
-            });
-        }, membershipModel.getMainModel(), logger);
-    }
-
     public void insertInvoiceNote() {
         // create our DTO
         NotesDTO notesDTO = new NotesDTO("I", membershipModel.getMembership().getMsId());
@@ -504,16 +520,26 @@ public class DataBaseService {
                 membershipModel.getMembership().getInvoiceDTOS().add(invoiceDTO);
             });
         }
-        System.out.println(invoiceDTO.toFullInvoiceString());
+//        System.out.println(invoiceDTO.toFullInvoiceString());
     }
 
-    public void deleteInvoice() {
-        System.out.println("Deleting Invoice" + membershipModel.getSelectedInvoice().toString());
-    }
+
 
     public boolean invoiceExists() {
         int selectedYear = membershipModel.getSelectedInvoiceCreateYear();
         return HandlingTools.executeExistsQuery(() ->
                 invoiceRepo.exists(membershipModel.getMembership(),selectedYear), membershipModel.getMainModel(), logger);
+    }
+
+    public void loadFees() {
+        HandlingTools.queryForList(() -> {
+            List<FeeDTO> feeDTOS = invoiceRepo.getFeesFromYear(membershipModel.getSelectedInvoice().getYear());
+            List<DbInvoiceDTO> dbInvoiceDTOS = invoiceRepo.getDbInvoiceByYear(membershipModel.getSelectedInvoice().getYear());
+            Platform.runLater(() -> {
+                membershipModel.getSelectedInvoice().setFeeDTOS(FXCollections.observableArrayList(feeDTOS));
+                membershipModel.getSelectedInvoice().setDbInvoiceDTOS(FXCollections.observableArrayList(dbInvoiceDTOS));
+                membershipModel.getSelectedInvoice().feesLoadedProperty().set(!membershipModel.getSelectedInvoice().isFeesLoaded());
+            });
+        }, membershipModel.getMainModel(), logger);
     }
 }
