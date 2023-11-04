@@ -54,7 +54,6 @@ public class MembershipModel {
     private StringProperty selectedString = new SimpleStringProperty("");
     private SimpleIntegerProperty selectedInvoiceCreateYear = new SimpleIntegerProperty(0);
     private SimpleObjectProperty<Success> invoiceSaved = new SimpleObjectProperty(Success.NULL);
-    ObservableList<DbInvoiceDTO> categories = FXCollections.observableArrayList();
 
 
 
