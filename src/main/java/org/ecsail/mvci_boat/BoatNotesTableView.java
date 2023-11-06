@@ -24,7 +24,7 @@ public class BoatNotesTableView implements Builder<TableView<NotesDTO>> {
     public TableView<NotesDTO> build() {
         TableView<NotesDTO> tableView = TableViewFx.tableViewOf(NotesDTO.class);
         ChangeListener<Boolean> dataLoadedListener =
-                ListenerFx.createSingleUseListener(boatModel.dataLoadedProperty(),
+                ListenerFx.addSingleFireBooleanListener(boatModel.dataLoadedProperty(),
                         () -> tableView.setItems(boatModel.getNotesDTOS()));
         boatModel.dataLoadedProperty().addListener(dataLoadedListener);
         TableView.TableViewSelectionModel<NotesDTO> selectionModel = tableView.getSelectionModel();

@@ -52,7 +52,7 @@ public class MembershipView implements Builder<Region> {
     }
 
     private void setViewListener() {
-        ChangeListener<MembershipMessage> viewListener = ListenerFx.createEnumListener(() ->
+        ChangeListener<MembershipMessage> viewListener = ListenerFx.addSingleFireEnumListener(() ->
                 viewMessaging(membershipModel.returnMessageProperty().get()).run());
         membershipModel.returnMessageProperty().addListener(viewListener);
     }

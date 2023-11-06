@@ -1,6 +1,7 @@
 package org.ecsail.widgetfx;
 
 import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ListChangeListener;
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ListenerFx {
-    public static void createSingleUseTabListener(Tab tab, Runnable action) {
+    public static void addSingleFireTabListener(Tab tab, Runnable action) {
         // Create a listener for tab selection change
         ChangeListener<Boolean> tabSelectionListener = new ChangeListener<>() {
             @Override
@@ -27,7 +28,7 @@ public class ListenerFx {
         tab.selectedProperty().addListener(tabSelectionListener);
     }
 
-    public static ChangeListener<Boolean> createSingleUseListener(BooleanProperty booleanProperty, Runnable action) {
+    public static ChangeListener<Boolean> addSingleFireBooleanListener(BooleanProperty booleanProperty, Runnable action) {
         List<ChangeListener<Boolean>> listenerHolder = new ArrayList<>();
         ChangeListener<Boolean> singleUseListener = (observable, oldValue, newValue) -> {
             action.run();
@@ -39,7 +40,7 @@ public class ListenerFx {
     }
 
 
-    public static <T extends Enum<T>> ChangeListener<T> createEnumListener(Runnable action) {
+    public static <T extends Enum<T>> ChangeListener<T> addSingleFireEnumListener(Runnable action) {
         return (observable, oldValue, newValue) -> action.run();
     }
 
@@ -55,7 +56,7 @@ public class ListenerFx {
         };
     }
 
-    public static <T> void createSingleUseListListener(ObservableList<T> list, Runnable action) {
+    public static <T> void addSingleFireListListener(ObservableList<T> list, Runnable action) {
         if (list.isEmpty()) {
             System.out.println("List is empty. Setting up listener.");
             list.addListener(new ListChangeListener<T>() {
@@ -77,10 +78,18 @@ public class ListenerFx {
         }
     }
 
-//    public static ChangeListener<String> createMultipleUseChangeListener(Runnable action) {
-//        return (observable, oldValue, newValue) -> {
-//            // This code will run whenever the value changes
-//            action.run();
-//        };
-//    }
+    public static <T> void addSingleFireObjectListener(SimpleObjectProperty<T> property, Runnable runnable) {
+        // Create a change listener
+        ChangeListener<T> changeListener = new ChangeListener<>() {
+            @Override
+            public void changed(ObservableValue<? extends T> observable, T oldValue, T newValue) {
+                // Run the passed runnable
+                runnable.run();
+
+                // Remove this listener after being notified
+                property.removeListener(this);
+            }
+        };
+        property.addListener(changeListener);
+    }
 }

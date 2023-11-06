@@ -38,7 +38,7 @@ public class MembershipIdView implements Builder<Tab> {
         VBox vBox = VBoxFx.vBoxOf(new Insets(2,2,2,2),"custom-tap-pane-frame",true); // makes outer border
         vBox.getChildren().add(innerVBox());
         tab.setContent(vBox);
-        ListenerFx.createSingleUseTabListener(tab, () -> membershipView.sendMessage().accept(MembershipMessage.SELECT_IDS) );
+        ListenerFx.addSingleFireTabListener(tab, () -> membershipView.sendMessage().accept(MembershipMessage.SELECT_IDS) );
         return tab;
     }
 

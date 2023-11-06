@@ -37,11 +37,11 @@ public class InvoiceView implements Builder<Tab> {
         ScrollPane scrollPane = PaneFx.scrollPaneOf();
         scrollPane.getStyleClass().add("scroll-pane-border");
         ChangeListener<Boolean> dataLoadedListener =
-                ListenerFx.createSingleUseListener(invoiceDTO.listLoadedProperty(), () -> {  // data is loaded
+                ListenerFx.addSingleFireBooleanListener(invoiceDTO.listLoadedProperty(), () -> {  // data is loaded
             if (invoiceDTO.isCommitted()) tab.setContent(showCommittedInvoice()); // is committed no need to load more data
             else if (invoiceDTO.getFeeDTOS().isEmpty()) { // invoice is not committed and (feeDTO and DbInvoiceDTO) are not populated
                 invoiceDTO.feesLoadedProperty().addListener(
-                        ListenerFx.createSingleUseListener(invoiceDTO.feesLoadedProperty(), () ->
+                        ListenerFx.addSingleFireBooleanListener(invoiceDTO.feesLoadedProperty(), () ->
                                 scrollPane.setContent(showEditableInvoice())));
                 membershipView.sendMessage().accept(MembershipMessage.SELECT_FEES);
             } else { // is not committed but data is already loaded (feeDTO and DbInvoiceDTO)

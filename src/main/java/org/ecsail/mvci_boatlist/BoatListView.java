@@ -36,7 +36,7 @@ public class BoatListView implements Builder<Region> {
     @Override
     public Region build() {
         BorderPane borderPane = new BorderPane();
-        ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(boatListModel.listsLoadedProperty(), () -> {
+        ChangeListener<Boolean> dataLoadedListener = ListenerFx.addSingleFireBooleanListener(boatListModel.listsLoadedProperty(), () -> {
             borderPane.setRight(setUpRightPane());
             borderPane.setCenter(setUpTableView());
         });

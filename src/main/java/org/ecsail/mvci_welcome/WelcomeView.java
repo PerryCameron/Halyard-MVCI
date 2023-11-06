@@ -98,7 +98,7 @@ public class WelcomeView implements Builder<Region>, ChartConstants {
         comboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             System.out.println("setting year span to: " + newValue);
             welcomeModel.setYearSpan(newValue);
-            ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(welcomeModel.refreshChartsProperty(), () -> {
+            ChangeListener<Boolean> dataLoadedListener = ListenerFx.addSingleFireBooleanListener(welcomeModel.refreshChartsProperty(), () -> {
                 refreshCharts();
             });
             welcomeModel.refreshChartsProperty().addListener(dataLoadedListener);
@@ -116,7 +116,7 @@ public class WelcomeView implements Builder<Region>, ChartConstants {
                 .forEach(comboBox.getItems()::add);
         comboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             welcomeModel.setDefaultStartYear(newValue);
-            ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(welcomeModel.refreshChartsProperty(), () -> {
+            ChangeListener<Boolean> dataLoadedListener = ListenerFx.addSingleFireBooleanListener(welcomeModel.refreshChartsProperty(), () -> {
                 refreshCharts();
             });
             welcomeModel.refreshChartsProperty().addListener(dataLoadedListener);

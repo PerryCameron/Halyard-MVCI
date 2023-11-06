@@ -48,7 +48,7 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
     private Node setUpNotes() {
         HBox hBoxOuter = HBoxFx.hBoxOf(new Insets(10,10,5,10));
         hBoxOuter.setVisible(false);
-        ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(boatModel.dataLoadedProperty(), () -> hBoxOuter.setVisible(true));
+        ChangeListener<Boolean> dataLoadedListener = ListenerFx.addSingleFireBooleanListener(boatModel.dataLoadedProperty(), () -> hBoxOuter.setVisible(true));
         boatModel.dataLoadedProperty().addListener(dataLoadedListener);
         TitledPane titledPane = TitledPaneFx.titledPaneOf("Notes");
         HBox hBox = new HBox();
@@ -72,7 +72,7 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
     private Node setUpInfo() {
         VBox vBox = VBoxFx.vBoxOf(350.0,10.0, new Insets(10,0,0,10));
         vBox.setVisible(false);
-        ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(boatModel.dataLoadedProperty(), () -> vBox.setVisible(true));
+        ChangeListener<Boolean> dataLoadedListener = ListenerFx.addSingleFireBooleanListener(boatModel.dataLoadedProperty(), () -> vBox.setVisible(true));
         boatModel.dataLoadedProperty().addListener(dataLoadedListener);
         vBox.getChildren().addAll(boatInfoTitlePane(), ownerTitlePane());
         return vBox;
@@ -160,7 +160,7 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
         titledPane.setVisible(false);
         var vBox = new VBox();
         vBox.setId("box-grey");
-        ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(boatModel.dataLoadedProperty(), () -> {
+        ChangeListener<Boolean> dataLoadedListener = ListenerFx.addSingleFireBooleanListener(boatModel.dataLoadedProperty(), () -> {
             for (DbBoatSettingsDTO dbBoatSettingsDTO : boatModel.getBoatSettings())
                 vBox.getChildren().add(new Row(this, dbBoatSettingsDTO));
             titledPane.setVisible(true);
@@ -198,7 +198,7 @@ public class BoatView implements Builder<Region>, ConfigFilePaths {
         imageView.setPreserveRatio(true);
         imageView.setCache(true);
         boatModel.setImageView(imageView);
-        ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(boatModel.dataLoadedProperty(), () -> {
+        ChangeListener<Boolean> dataLoadedListener = ListenerFx.addSingleFireBooleanListener(boatModel.dataLoadedProperty(), () -> {
             BoatPhotosDTO boatPhotosDTO = getDefaultBoatPhotoDTO();
             boatModel.setSelectedImage(boatPhotosDTO);
             setImage();

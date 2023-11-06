@@ -33,8 +33,6 @@ public class PhoneDTO {
 		this.phone = new SimpleStringProperty("");
 		this.phoneType = new SimpleStringProperty("");
 	}
-	
-	//final ComboBox<String> combo_box
 
 
 	public ComboBox<String> getCombo_box() {

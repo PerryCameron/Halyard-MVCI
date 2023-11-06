@@ -98,7 +98,7 @@ public class InvoiceFooter implements Builder<Region> {
             invoiceView.getMembershipView().sendMessage().accept(MembershipMessage.UPDATE_INVOICE);
             invoiceView.successProperty().addListener(ListenerFx.createSingleUseEnumListener(() ->
                     viewMessaging(invoiceView.successProperty().get())));
-            if(invoiceDTO.isSupplemental()) { // no need to update an ID record if invoice is a supplemental record
+            if(!invoiceDTO.isSupplemental()) { // no need to update an ID record if invoice is a supplemental record
                 MembershipIdDTO membershipIdDTO = getMembershipID();
                 membershipIdDTO.setIsRenew(renew.get());
                 invoiceView.getMembershipView().getMembershipModel().setSelectedMembershipId(membershipIdDTO);

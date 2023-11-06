@@ -41,7 +41,7 @@ public class RosterView implements Builder<Region> {
     @Override
     public Region build() {
         BorderPane borderPane = new BorderPane();
-        ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(rosterModel.listsLoadedProperty(), () -> {
+        ChangeListener<Boolean> dataLoadedListener = ListenerFx.addSingleFireBooleanListener(rosterModel.listsLoadedProperty(), () -> {
             logger.debug("Data has been loaded...");
             borderPane.setLeft(setUpLeftPane());
             borderPane.setCenter(setUpTableView());

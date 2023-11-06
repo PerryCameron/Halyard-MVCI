@@ -66,7 +66,7 @@ public class MainView implements Builder<Region> {
 //    }
 
     private void setViewListener() {
-        ChangeListener<MainMessage> viewListener = ListenerFx.createEnumListener(() ->
+        ChangeListener<MainMessage> viewListener = ListenerFx.addSingleFireEnumListener(() ->
                 viewMessaging(mainModel.returnMessageProperty().get()).run());
         mainModel.returnMessageProperty().addListener(viewListener);
     }

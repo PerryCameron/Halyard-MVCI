@@ -16,6 +16,9 @@ import org.ecsail.static_tools.CustomTools;
 import org.ecsail.widgetfx.*;
 
 import java.time.Year;
+import java.util.Comparator;
+
+import static org.ecsail.widgetfx.ListenerFx.addSingleFireObjectListener;
 
 public class InvoiceListView implements Builder<Tab> {
     private final MembershipView membershipView;
@@ -38,7 +41,7 @@ public class InvoiceListView implements Builder<Tab> {
         vBox.getChildren().add(borderPane);
         tab.setContent(vBox);
         // Create a listener for tab selection change
-        ListenerFx.createSingleUseTabListener(tab, () -> membershipView.sendMessage().accept(MembershipMessage.SELECT_INVOICES));
+        ListenerFx.addSingleFireTabListener(tab, () -> membershipView.sendMessage().accept(MembershipMessage.SELECT_INVOICES));
         return tab;
     }
 
@@ -47,7 +50,6 @@ public class InvoiceListView implements Builder<Tab> {
         hBox.getChildren().addAll(createInvoiceAdder(), createDeleteButton());
         return hBox;
     }
-
 
     private Node createInvoiceAdder() {
         HBox hBox = HBoxFx.hBoxOf(5, Pos.CENTER_LEFT);
@@ -58,6 +60,10 @@ public class InvoiceListView implements Builder<Tab> {
 
     private Control createAddButton() {
         return ButtonFx.buttonOf("Add", 60, () -> {
+            addSingleFireObjectListener(membershipModel.selectedInvoiceProperty(), () -> {
+                CustomTools.removeExistingTabAndCreateNew(membershipView);
+                membershipModel.getMembership().getInvoiceDTOS().sort(Comparator.comparing(InvoiceDTO::getYear).reversed());
+            });
             membershipView.sendMessage().accept(MembershipMessage.INSERT_INVOICE);
             // TODO open tab
         });

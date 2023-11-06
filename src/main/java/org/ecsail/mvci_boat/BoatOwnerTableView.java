@@ -2,13 +2,10 @@ package org.ecsail.mvci_boat;
 
 import javafx.beans.value.ChangeListener;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseButton;
 import javafx.util.Builder;
 import org.ecsail.dto.MembershipListDTO;
-import org.ecsail.dto.NotesDTO;
 import org.ecsail.widgetfx.ListenerFx;
 import org.ecsail.widgetfx.TableViewFx;
 
@@ -24,7 +21,7 @@ public class BoatOwnerTableView implements Builder<TableView<MembershipListDTO>>
     @Override
     public TableView<MembershipListDTO> build() {
         TableView<MembershipListDTO> tableView = TableViewFx.tableViewOf(MembershipListDTO.class);
-        ChangeListener<Boolean> dataLoadedListener = ListenerFx.createSingleUseListener(boatModel.dataLoadedProperty(), () -> {
+        ChangeListener<Boolean> dataLoadedListener = ListenerFx.addSingleFireBooleanListener(boatModel.dataLoadedProperty(), () -> {
             tableView.setItems(boatModel.getBoatOwners());
         });
         TableView.TableViewSelectionModel<MembershipListDTO> selectionModel = tableView.getSelectionModel();
