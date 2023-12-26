@@ -6,7 +6,6 @@ import org.ecsail.connection.Connections;
 import org.ecsail.dto.StatsDTO;
 import org.ecsail.repository.implementations.StatRepositoryImpl;
 import org.ecsail.repository.interfaces.StatRepository;
-import org.ecsail.repository.temp.SqlStats;
 import org.ecsail.static_tools.HandlingTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +53,7 @@ public class WelcomeInteractor {
         final double numberOfYears = Year.now().getValue() - welcomeModel.getStartYear() + 1;
         final double increment = 100 / numberOfYears;
         for (int i = 0; i < numberOfYears; i++) {
-            StatsDTO statsDTO = SqlStats.createStatDTO(welcomeModel.getStartYear(), connections.getDataSource());
+            StatsDTO statsDTO = statRepository.createStatDTO(welcomeModel.getStartYear());
             statRepository.addStatRecord(statsDTO);
             welcomeModel.incrementStartYear();
             double currentProgress = welcomeModel.getProgress();
