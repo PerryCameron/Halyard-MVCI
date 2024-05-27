@@ -21,7 +21,6 @@ public class SlipRepositoryImpl implements SlipRepository {
         this.template = new JdbcTemplate(dataSource);
     }
 
-
     @Override
     public SlipDTO getSlip(int msId) {
         String sql = "select * from slip where MS_ID = ? or SUBLEASED_TO = ? LIMIT 1";
