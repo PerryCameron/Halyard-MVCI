@@ -18,6 +18,7 @@ import org.ecsail.mvci_connect.ConnectController;
 import org.ecsail.mvci_load.LoadingController;
 import org.ecsail.mvci_membership.MembershipController;
 import org.ecsail.mvci_roster.RosterController;
+import org.ecsail.mvci_slip.SlipController;
 import org.ecsail.mvci_welcome.WelcomeController;
 
 public class MainController extends Controller<MainMessage> implements Status {
@@ -71,7 +72,7 @@ public class MainController extends Controller<MainMessage> implements Status {
     public void openTab(String tabName) {
         switch (tabName) {
             case "People" -> System.out.println("Displaying people list");
-            case "Slips" -> System.out.println("Displaying slips list");
+            case "Slips" -> openSlipsTab(tabName);
             case "Board of Directors" -> System.out.println("Displaying board of directors list");
             case "Create New Membership" -> System.out.println("Creating new membership");
             case "Deposits" -> System.out.println("Displaying deposits");
@@ -82,6 +83,11 @@ public class MainController extends Controller<MainMessage> implements Status {
             default -> System.out.println("Invalid input");
         }
 
+    }
+
+    private void openSlipsTab(String tabName) {
+        if (mainInteractor.tabIsNotOpen(-3))
+            mainView.addNewTab(tabName, new SlipController(this).getView(), -3);
     }
 
     private void openBoatListTab(String tabName) {

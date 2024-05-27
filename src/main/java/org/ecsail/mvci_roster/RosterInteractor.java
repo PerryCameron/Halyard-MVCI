@@ -109,7 +109,6 @@ public class RosterInteractor {
     }
 
     private void updateRoster(ObservableList<MembershipListDTO> updatedRoster) {
-        System.out.println("updateRoster(ObservableList<MembershipListDTO> updatedRoster)");
         Platform.runLater(() -> {
             logger.info("Adding roster to model");
             rosterModel.getRosters().setAll(setSlipsForRoster(updatedRoster));

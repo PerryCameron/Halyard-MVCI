@@ -21,7 +21,7 @@ public class SlipController extends Controller<SlipMessage> {
 
     @Override
     public Region getView() {
-        return null;
+        return slipView.build();
     }
 
     @Override
