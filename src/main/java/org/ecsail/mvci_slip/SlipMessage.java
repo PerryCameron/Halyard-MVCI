@@ -1,0 +1,11 @@
+package org.ecsail.mvci_slip;
+
+public enum SlipMessage {
+    CLOSE_ALL_CONNECTIONS,
+    CLOSE_ALL_CONNECTIONS_AND_EXIT,
+    CREATE_CONNECT_CONTROLLER,
+    BACKUP_DATABASE,
+    PRIMARY_STAGE_COMPLETE,
+    SELECT_TAB,
+    NONE
+}

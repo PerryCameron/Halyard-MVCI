@@ -1,4 +1,6 @@
-#all changes below need to be made to database for Halyard-MVCI to work
+#all changes below need to be made to database for Halyard-MVCI to work, select all and run
+
+# this was added 5-27-2024
 create table slip_placement
 (
     sp_id      INTEGER               NOT NULL auto_increment primary key,
@@ -9,10 +11,10 @@ create table slip_placement
     y_app_ui     INTEGER NOT NULL
 );
 
-INSERT INTO ecsailor_ECSC_SQL.slip_placement (dock_name, x_web_ui, y_web_ui, x_app_ui, y_app_ui) VALUES ('A', 430, 40, 0, 0);
-INSERT INTO ecsailor_ECSC_SQL.slip_placement (dock_name, x_web_ui, y_web_ui, x_app_ui, y_app_ui) VALUES ('B', 720, 40, 0, 0);
-INSERT INTO ecsailor_ECSC_SQL.slip_placement (dock_name, x_web_ui, y_web_ui, x_app_ui, y_app_ui) VALUES ('C', 1010, 40, 0, 0);
-INSERT INTO ecsailor_ECSC_SQL.slip_placement (dock_name, x_web_ui, y_web_ui, x_app_ui, y_app_ui) VALUES ('D', 140, 40, 0, 0);
+INSERT INTO ecsailor_ECSC_SQL.slip_placement (dock_name, x_web_ui, y_web_ui, x_app_ui, y_app_ui) VALUES ('A', 140, 40, 0, 0);
+INSERT INTO ecsailor_ECSC_SQL.slip_placement (dock_name, x_web_ui, y_web_ui, x_app_ui, y_app_ui) VALUES ('B', 430, 40, 0, 0);
+INSERT INTO ecsailor_ECSC_SQL.slip_placement (dock_name, x_web_ui, y_web_ui, x_app_ui, y_app_ui) VALUES ('C', 720, 40, 0, 0);
+INSERT INTO ecsailor_ECSC_SQL.slip_placement (dock_name, x_web_ui, y_web_ui, x_app_ui, y_app_ui) VALUES ('D', 1010, 40, 0, 0);
 INSERT INTO ecsailor_ECSC_SQL.slip_placement (dock_name, x_web_ui, y_web_ui, x_app_ui, y_app_ui) VALUES ('F', 140, 610, 0, 0);
 
 
@@ -46,33 +48,31 @@ alter table invoice_item
 UPDATE invoice_item
 SET CATEGORY_ITEM = 'Kayak'
 WHERE FIELD_NAME IN ('Kayak Shed', 'Kayak Rack', 'Kayak Beach Rack') and FISCAL_YEAR=2023;
-# ECSC_SQL> UPDATE invoice_item
-#           SET CATEGORY_ITEM = 'kayak'
-#           WHERE FIELD_NAME IN ('Kayak Shed Key', 'Kayak Rack', 'Kayak Beach Rack') and FISCAL_YEAR=2023
-#               [2023-10-25 16:25:13] 1,008 rows affected in 223 ms
+
+UPDATE invoice_item
+SET CATEGORY_ITEM = 'Kayak'
+WHERE FIELD_NAME IN ('Kayak Shed', 'Kayak Rack', 'Kayak Beach Rack') and FISCAL_YEAR=2024;
+
 
 # updating key rows to match
 UPDATE invoice_item
 SET CATEGORY_ITEM = 'Keys'
 WHERE FIELD_NAME IN ('Gate Key', 'Sail Loft Key', 'Kayak Shed Key') and FISCAL_YEAR=2023;
-# ECSC_SQL> UPDATE invoice_item
-#           SET CATEGORY_ITEM = 'Keys'
-#           WHERE FIELD_NAME IN ('Gate Key', 'Sail Loft Key', 'Kayak Shed Key') and FISCAL_YEAR=2023
-#               [2023-10-25 16:30:56] 1,008 rows affected in 258 ms
+
+UPDATE invoice_item
+SET CATEGORY_ITEM = 'Keys'
+WHERE FIELD_NAME IN ('Gate Key', 'Sail Loft Key', 'Kayak Shed Key') and FISCAL_YEAR=2024;
 
 #updating summer storage rows to match
 UPDATE invoice_item
 SET CATEGORY_ITEM = 'Summer Storage'
 WHERE FIELD_NAME IN ('Beam Over 5 foot', 'Beam Under 5 foot') and FISCAL_YEAR=2023;
-# ECSC_SQL> UPDATE invoice_item
-#           SET CATEGORY_ITEM = 'Summer Storage'
-#           WHERE FIELD_NAME IN ('Beam Over 5 foot', 'Beam Under 5 foot') and FISCAL_YEAR=2023
-#               [2023-10-25 16:33:05] 672 rows affected in 250 ms
 
-# This is designed to update Kayak rows to match new format (this fucking works, lol) For 2023
--- Begin a transaction to ensure data consistency
+UPDATE invoice_item
+SET CATEGORY_ITEM = 'Summer Storage'
+WHERE FIELD_NAME IN ('Beam Over 5 foot', 'Beam Under 5 foot') and FISCAL_YEAR=2024;
+
 START TRANSACTION;
-
 -- Calculate SUM(QTY) and SUM(VALUE) for each MS_ID for the specified FIELD_NAMEs
 CREATE TEMPORARY TABLE TempSums AS
 SELECT
@@ -97,6 +97,32 @@ SET
     ii.VALUE = ts.total_value
 WHERE
         ii.FIELD_NAME = 'Kayak' AND ii.FISCAL_YEAR = 2023;
+
+-- Commit the transaction
+COMMIT;
+
+CREATE TEMPORARY TABLE TempSums2024 AS
+SELECT
+    MS_ID,
+    SUM(QTY) as total_qty,
+    SUM(VALUE) as total_value
+FROM
+    invoice_item
+WHERE
+        FIELD_NAME IN ('Kayak Rack', 'Kayak Beach Rack', 'Kayak Shed')
+  AND FISCAL_YEAR = 2024
+GROUP BY
+    MS_ID;
+
+-- Update the Kayak rows using the summed values for 2024
+UPDATE
+    invoice_item as ii
+        JOIN TempSums2024 ts ON ii.MS_ID = ts.MS_ID
+SET
+    ii.QTY = ts.total_qty,
+    ii.VALUE = ts.total_value
+WHERE
+        ii.FIELD_NAME = 'Kayak' AND ii.FISCAL_YEAR = 2024;
 
 -- Commit the transaction
 COMMIT;
