@@ -1,3 +1,22 @@
+#all changes below need to be made to database for Halyard-MVCI to work
+create table slip_placement
+(
+    sp_id      INTEGER               NOT NULL auto_increment primary key,
+    dock_name        varchar(4) unique        NULL,
+    x_web_ui     INTEGER NOT NULL,
+    y_web_ui     INTEGER NOT NULL,
+    x_app_ui     INTEGER NOT NULL,
+    y_app_ui     INTEGER NOT NULL
+);
+
+INSERT INTO ecsailor_ECSC_SQL.slip_placement (dock_name, x_web_ui, y_web_ui, x_app_ui, y_app_ui) VALUES ('A', 430, 40, 0, 0);
+INSERT INTO ecsailor_ECSC_SQL.slip_placement (dock_name, x_web_ui, y_web_ui, x_app_ui, y_app_ui) VALUES ('B', 720, 40, 0, 0);
+INSERT INTO ecsailor_ECSC_SQL.slip_placement (dock_name, x_web_ui, y_web_ui, x_app_ui, y_app_ui) VALUES ('C', 1010, 40, 0, 0);
+INSERT INTO ecsailor_ECSC_SQL.slip_placement (dock_name, x_web_ui, y_web_ui, x_app_ui, y_app_ui) VALUES ('D', 140, 40, 0, 0);
+INSERT INTO ecsailor_ECSC_SQL.slip_placement (dock_name, x_web_ui, y_web_ui, x_app_ui, y_app_ui) VALUES ('F', 140, 610, 0, 0);
+
+
+
 # 10/23/2023 added column to make displaying easier
 alter table invoice_item
     add CATEGORY TINYINT default FALSE not null;
