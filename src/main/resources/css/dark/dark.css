@@ -163,3 +163,7 @@
 .scroll-pane-border .thumb {
     -fx-background-color: #ececec;
 }
+
+#box-test {
+    -fx-background-color: blue;
+}
