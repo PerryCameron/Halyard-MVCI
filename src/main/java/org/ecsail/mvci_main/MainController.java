@@ -87,7 +87,7 @@ public class MainController extends Controller<MainMessage> implements Status {
 
     private void openSlipsTab(String tabName) {
         if (mainInteractor.tabIsNotOpen(-4))
-            mainView.addNewTab(tabName, new SlipController(this).getView(), -3);
+            mainView.addNewTab(tabName, new SlipController(this).getView(), -4);
     }
 
     private void openBoatListTab(String tabName) {
