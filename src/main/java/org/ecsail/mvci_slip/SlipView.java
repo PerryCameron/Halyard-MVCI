@@ -7,13 +7,16 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.Builder;
+import org.ecsail.dto.SlipInfoDTO;
 import org.ecsail.dto.SlipStructureDTO;
 import org.ecsail.widgetfx.VBoxFx;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -168,12 +171,69 @@ public class SlipView implements Builder<Region> {
     }
 
     private Node getName(String mem, boolean isLeftDock) {
+        Text text = new Text();
         if (mem.equals("none")) {
-            mem = "";
+            text.setText("");
         } else {
+            SlipInfoDTO slip = findSlipInfoByNumber(mem);
+            String lastName = getLastName(slip);
 
+            if(slipModel.getMainBox().getWidth() > 1644) {
+                String firstName = getFirstName(slip);
+                if (isLeftDock) {
+                    text.setText(firstName + " " + lastName + " " + slip.getSlipNumber());
+                } else {
+                    text.setText(slip.getSlipNumber() + " " + firstName + " " + lastName);
+                }
+            } else {
+                if (isLeftDock) {
+                    text.setText(lastName + " " + slip.getSlipNumber());
+                } else {
+                    text.setText(slip.getSlipNumber() + " " + lastName);
+                }
+            }
+            setMouseListener(text, slip.getOwnerMsid(), slip.getSubleaserMsid());
         }
-        return new Text(mem);
+        return text;
+    }
+
+    private void setMouseListener(Text text, int msid, int subleaserMsId) {
+        if (subleaserMsId != 0) {  // blue if it is a sublease
+            text.setFill(Color.CORNFLOWERBLUE);
+            text.setOnMouseExited(ex -> text.setFill(Color.CORNFLOWERBLUE));
+        } else {
+            text.setOnMouseExited(ex -> text.setFill(Color.BLACK));
+        }
+        text.setOnMouseEntered(en -> {
+            text.setFill(Color.RED);
+        });
+        text.setOnMouseClicked(e -> {
+            if (e.getClickCount() == 2) {
+                if (subleaserMsId != 0) {
+                    System.out.println("This is a sublease for " + subleaserMsId);
+                } else {
+                    System.out.println("This is a lease for " + msid);
+                }
+            }
+        });
+    }
+
+    private String getFirstName(SlipInfoDTO slip) {
+        String firstName = "";
+        if (slip.getAltText() == null) {
+            if(slip.getSubleaserFirstName() != null) firstName = slip.getSubleaserFirstName();
+            else firstName = slip.getOwnerFirstName();
+        }
+            return firstName;
+    }
+
+    private static String getLastName(SlipInfoDTO slip) {
+        String lastName = "";
+        if (slip.getAltText() != null) lastName = slip.getAltText();
+        else if (slip.getSubleaserLastName() != null) {
+            lastName = slip.getSubleaserLastName();
+        } else lastName = slip.getOwnerLastName();
+        return lastName;
     }
 
     public void filterAndSortDocks(String dockLetter) {
@@ -182,5 +242,12 @@ public class SlipView implements Builder<Region> {
                 .filter(dock -> dockLetter.equals(dock.getDock()))
                 .sorted(Comparator.comparingInt(SlipStructureDTO::getDockSection))
                 .collect(Collectors.toCollection(ArrayList::new)));
+    }
+
+    public SlipInfoDTO findSlipInfoByNumber(String slipNumber) {
+        Optional<SlipInfoDTO> slipInfo = slipModel.getSlipInfoDTOS().stream()
+                .filter(slip -> slipNumber.equals(slip.getSlipNumber()))
+                .findFirst();
+        return slipInfo.orElse(null);
     }
 }
