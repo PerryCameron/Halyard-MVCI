@@ -8,6 +8,7 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import org.ecsail.dto.DockPlacementDTO;
 import org.ecsail.dto.SlipInfoDTO;
 import org.ecsail.dto.SlipStructureDTO;
@@ -21,10 +22,12 @@ public class SlipModel {
     private ArrayList<DockPlacementDTO> dockPlacement = new ArrayList<>();
     private ObservableList<SlipInfoDTO> slipInfoDTOS = FXCollections.observableArrayList();
     private ObservableList<SlipStructureDTO> slipStructureDTOS = FXCollections.observableArrayList();
-    private ObjectProperty<BorderPane> slipPane = new SimpleObjectProperty<>();
-    private DoubleProperty dockLength = new SimpleDoubleProperty();
+    private ObjectProperty<HBox> mainBox = new SimpleObjectProperty<>();
+    private ObjectProperty<BorderPane> borderPane = new SimpleObjectProperty<>();
     private DoubleProperty dockWidth = new SimpleDoubleProperty();
-
+    private DoubleProperty dockHeight = new SimpleDoubleProperty();
+    private DoubleProperty dockPadding = new SimpleDoubleProperty();
+    private DoubleProperty dockSpacing = new SimpleDoubleProperty();
 
 
 
@@ -48,6 +51,54 @@ public class SlipModel {
         this.mainModel = mainModel;
     }
 
+    public double getDockSpacing() {
+        return dockSpacing.get();
+    }
+
+    public DoubleProperty dockSpacingProperty() {
+        return dockSpacing;
+    }
+
+    public void setDockSpacing(double dockSpacing) {
+        this.dockSpacing.set(dockSpacing);
+    }
+
+    public double getDockPadding() {
+        return dockPadding.get();
+    }
+
+    public DoubleProperty dockPaddingProperty() {
+        return dockPadding;
+    }
+
+    public void setDockPadding(double dockPadding) {
+        this.dockPadding.set(dockPadding);
+    }
+
+    public BorderPane getBorderPane() {
+        return borderPane.get();
+    }
+
+    public ObjectProperty<BorderPane> borderPaneProperty() {
+        return borderPane;
+    }
+
+    public void setBorderPane(BorderPane borderPane) {
+        this.borderPane.set(borderPane);
+    }
+
+    public double getDockHeight() {
+        return dockHeight.get();
+    }
+
+    public DoubleProperty dockHeightProperty() {
+        return dockHeight;
+    }
+
+    public void setDockHeight(double dockHeight) {
+        this.dockHeight.set(dockHeight);
+    }
+
     public double getDockWidth() {
         return dockWidth.get();
     }
@@ -60,28 +111,16 @@ public class SlipModel {
         this.dockWidth.set(dockWidth);
     }
 
-    public double getDockLength() {
-        return dockLength.get();
+    public HBox getMainBox() {
+        return mainBox.get();
     }
 
-    public DoubleProperty dockLengthProperty() {
-        return dockLength;
+    public ObjectProperty<HBox> mainBoxProperty() {
+        return mainBox;
     }
 
-    public void setDockLength(double dockLength) {
-        this.dockLength.set(dockLength);
-    }
-
-    public BorderPane getSlipPane() {
-        return slipPane.get();
-    }
-
-    public ObjectProperty<BorderPane> slipPaneProperty() {
-        return slipPane;
-    }
-
-    public void setSlipPane(BorderPane slipPane) {
-        this.slipPane.set(slipPane);
+    public void setMainBox(HBox mainBox) {
+        this.mainBox.set(mainBox);
     }
 
     public ArrayList<DockPlacementDTO> getDockPlacement() {
@@ -111,4 +150,6 @@ public class SlipModel {
     public void setSlipStructureDTOS(ObservableList<SlipStructureDTO> slipStructureDTOS) {
         this.slipStructureDTOS = slipStructureDTOS;
     }
+
+
 }

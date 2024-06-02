@@ -15,4 +15,11 @@ public class RegionFx {
         region.setPrefHeight(width);
         return region;
     }
+
+    public static Region regionOf(double width, double height) {
+        Region region = new Region();
+        region.setPrefHeight(width);
+        region.setPrefHeight(height);
+        return region;
+    }
 }
