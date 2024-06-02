@@ -1,4 +1,4 @@
-package org.ecsail.mvci_new_membership;
+package org.ecsail.mvci_bod;
 
 
 import javafx.concurrent.Task;
@@ -6,26 +6,26 @@ import javafx.scene.layout.Region;
 import org.ecsail.interfaces.Controller;
 import org.ecsail.mvci_main.MainController;
 
-public class NewMembershipController extends Controller<NewMembershipMessage> {
+public class BodController extends Controller<BodMessage> {
     private final MainController mainController;
-    private final NewMembershipInteractor newMembershipInteractor;
-    private final NewMembershipView newMembershipView;
+    private final BodInteractor BodInteractor;
+    private final BodView BodView;
 
-    public NewMembershipController(MainController mc) {
+    public BodController(MainController mc) {
         mainController = mc;
-        NewMembershipModel newMembershipModel = new NewMembershipModel(mainController.getMainModel());
-        newMembershipInteractor = new NewMembershipInteractor(newMembershipModel, mainController.getConnections());
-        action(NewMembershipMessage.GET_DATA); // moved this last, we will see if it works
-        newMembershipView = new NewMembershipView(newMembershipModel, this::action);
+        BodModel BodModel = new BodModel(mainController.getMainModel());
+        BodInteractor = new BodInteractor(BodModel, mainController.getConnections());
+        action(BodMessage.GET_DATA); // moved this last, we will see if it works
+        BodView = new BodView(BodModel, this::action);
     }
 
     @Override
     public Region getView() {
-        return newMembershipView.build();
+        return BodView.build();
     }
 
     @Override
-    public void action(NewMembershipMessage action) {
+    public void action(BodMessage action) {
         switch (action) {
             case GET_DATA -> getSlipData();
             case LAUNCH_TAB -> launchTab();
@@ -33,7 +33,7 @@ public class NewMembershipController extends Controller<NewMembershipMessage> {
     }
 
     private void launchTab() {
-        mainController.openMembershipMVCI(newMembershipInteractor.getMembershipList());
+        mainController.openMembershipMVCI(BodInteractor.getMembershipList());
     }
 
     private void getSlipData() {
