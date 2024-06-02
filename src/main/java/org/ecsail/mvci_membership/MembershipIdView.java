@@ -181,19 +181,20 @@ public class MembershipIdView implements Builder<Tab> {
         return col3;
     }
 
-    private TableColumn<MembershipIdDTO,String> col2() {
-        TableColumn<MembershipIdDTO, String> col2 = TableColumnFx.tableColumnOf(MembershipIdDTO::membershipIdProperty, "Mem ID");
+    private TableColumn<MembershipIdDTO, Integer> col2() {
+        TableColumn<MembershipIdDTO, Integer> col2 = TableColumnFx.tableColumnOfInteger(MembershipIdDTO::membershipIdProperty, "Mem ID");
         col2.setOnEditCommit(t -> {
             MembershipIdDTO membershipIdDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
             membershipIdDTO.setMembershipId(t.getNewValue());
             membershipModel.setSelectedMembershipId(membershipIdDTO);
-            membershipView.sendMessage().accept(MembershipMessage.UPDATE_MEMBERSHIP_ID);          });
+            membershipView.sendMessage().accept(MembershipMessage.UPDATE_MEMBERSHIP_ID);
+        });
         col2.setMaxWidth(1f * Integer.MAX_VALUE * 15);  // Mem Id
         return col2;
     }
 
-    private TableColumn<MembershipIdDTO,String> col1() {
-        TableColumn<MembershipIdDTO, String> col1 = TableColumnFx.tableColumnOf(MembershipIdDTO::fiscalYearProperty,"Year");
+    private TableColumn<MembershipIdDTO,Integer> col1() {
+        TableColumn<MembershipIdDTO, Integer> col1 = TableColumnFx.tableColumnOfInteger(MembershipIdDTO::fiscalYearProperty,"Year");
         col1.setOnEditCommit(t -> {
             MembershipIdDTO membershipIdDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
             membershipIdDTO.setFiscalYear(t.getNewValue());

@@ -1,8 +1,12 @@
 package org.ecsail.repository.implementations;
 
 import org.ecsail.dto.MembershipIdDTO;
+import org.ecsail.mvci_new_membership.NewMembershipInteractor;
 import org.ecsail.repository.interfaces.MembershipIdRepository;
 import org.ecsail.repository.rowmappers.MembershipIdRowMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -16,6 +20,7 @@ import java.util.List;
 public class MembershipIdRepositoryImpl implements MembershipIdRepository {
     private final JdbcTemplate template;
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private static final Logger logger = LoggerFactory.getLogger(MembershipIdRepositoryImpl.class);
 
     public MembershipIdRepositoryImpl(DataSource dataSource) {
         this.template = new JdbcTemplate(dataSource);
@@ -124,5 +129,18 @@ public class MembershipIdRepositoryImpl implements MembershipIdRepository {
         int affectedRows = namedParameterJdbcTemplate.update(query, namedParameters, keyHolder);
         membershipIdDTO.setmId(keyHolder.getKey().intValue());
         return affectedRows;
+    }
+
+    @Override
+    public int getMembershipIdForNewestMembership() {
+        String sql = "SELECT MAX(membership_id) FROM membership_id WHERE fiscal_year = YEAR(NOW()) AND membership_id < 500";
+        try {
+            Integer result = template.queryForObject(sql, Integer.class);
+            return (result != null) ? result : 0;
+        } catch (DataAccessException e) {
+            logger.error("Unable to retrieve highest membership ID: " + e.getMessage());
+            // Handle or rethrow the exception as per your application's requirements
+            return 0;
+        }
     }
 }

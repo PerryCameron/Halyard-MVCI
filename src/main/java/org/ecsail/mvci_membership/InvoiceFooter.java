@@ -73,7 +73,7 @@ public class InvoiceFooter implements Builder<Region> {
 
     private MembershipIdDTO getMembershipID() {
         MembershipIdDTO membershipIdDTO = invoiceView.getMembershipView().getMembershipModel().getMembership().getMembershipIdDTOS()
-                .stream().filter(id -> id.getFiscalYear().equals(String.valueOf(invoiceDTO.getYear())))
+                .stream().filter(id -> id.getFiscalYear() == invoiceDTO.getYear())
                 .findFirst().orElse(null);
         if(membershipIdDTO == null)
             loadHistoryTab();

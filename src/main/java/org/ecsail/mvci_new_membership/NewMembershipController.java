@@ -15,7 +15,7 @@ public class NewMembershipController extends Controller<NewMembershipMessage> {
         mainController = mc;
         NewMembershipModel newMembershipModel = new NewMembershipModel(mainController.getMainModel());
         newMembershipInteractor = new NewMembershipInteractor(newMembershipModel, mainController.getConnections());
-        action(NewMembershipMessage.GET_DATA); // moved this last, we will see if it works
+        action(NewMembershipMessage.CREATE_MEMBERSHIP); // moved this last, we will see if it works
         newMembershipView = new NewMembershipView(newMembershipModel, this::action);
     }
 
@@ -27,7 +27,7 @@ public class NewMembershipController extends Controller<NewMembershipMessage> {
     @Override
     public void action(NewMembershipMessage action) {
         switch (action) {
-            case GET_DATA -> getSlipData();
+            case CREATE_MEMBERSHIP -> createMembership();
             case LAUNCH_TAB -> launchTab();
         }
     }
@@ -36,13 +36,17 @@ public class NewMembershipController extends Controller<NewMembershipMessage> {
         mainController.openMembershipMVCI(newMembershipInteractor.getMembershipList());
     }
 
-    private void getSlipData() {
+    private void createMembership() {
         mainController.setSpinnerOffset(50,50);
         mainController.showLoadingSpinner(true);
         Task<Void> task = new Task<>() {
             @Override
             protected Void call() {
-//                slipInteractor.getSlipInfo();
+                newMembershipInteractor.getNextAvailableId();
+                newMembershipInteractor.createMembershipObject();
+                newMembershipInteractor.createPrimaryMember();
+                newMembershipInteractor.updateMembership();
+                newMembershipInteractor.createMembershipIdRow();
 //                slipInteractor.getSlipStructure();
                 return null;
             }

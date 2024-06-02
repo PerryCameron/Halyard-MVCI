@@ -21,4 +21,6 @@ public interface MembershipRepository {
     MembershipListDTO getMembershipByMembershipId(int membershipId);
 
     MembershipListDTO getMembershipByMsId(int membershipId);
+
+    MembershipListDTO insertMembership(MembershipListDTO nm);
 }

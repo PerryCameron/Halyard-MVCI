@@ -7,38 +7,39 @@ import javafx.beans.property.SimpleStringProperty;
 
 public class MembershipIdDTO {
 	private IntegerProperty mId;
-	private SimpleStringProperty fiscalYear;
+	private IntegerProperty fiscalYear;
 	private IntegerProperty msId;
-	private SimpleStringProperty membershipId;
+	private IntegerProperty membershipId;
 	private SimpleBooleanProperty renew;
 	private SimpleStringProperty memType;
 	private SimpleBooleanProperty selected;
 	private SimpleBooleanProperty lateRenew;
 	
-	public MembershipIdDTO(Integer mId, String fiscalYear, Integer msId, String membershipId,
+	public MembershipIdDTO(Integer mId, int fiscalYear, Integer msId, int membershipId,
 						   Boolean renew, String memType, Boolean selected, Boolean lateRenew) {
 		this.mId = new SimpleIntegerProperty(mId);
-		this.fiscalYear = new SimpleStringProperty(fiscalYear);
+		this.fiscalYear = new SimpleIntegerProperty(fiscalYear);
 		this.msId = new SimpleIntegerProperty(msId);
-		this.membershipId = new SimpleStringProperty(membershipId);
+		this.membershipId = new SimpleIntegerProperty(membershipId);
 		this.renew = new SimpleBooleanProperty(renew);
 		this.memType = new SimpleStringProperty(memType);
 		this.selected = new SimpleBooleanProperty(selected);
 		this.lateRenew = new SimpleBooleanProperty(lateRenew);
 	}
 
-	public MembershipIdDTO(String fiscalYear, Integer msId, String membershipId, String memType) {
+	public MembershipIdDTO(String fiscalYear, Integer msId, int membershipId, String memType) {
 		this.mId = new SimpleIntegerProperty(0);
-		this.fiscalYear = new SimpleStringProperty("0");
+		this.fiscalYear = new SimpleIntegerProperty(0);
 		this.msId = new SimpleIntegerProperty(msId);
-		this.membershipId = new SimpleStringProperty(membershipId);
+		this.membershipId = new SimpleIntegerProperty(membershipId);
 		this.renew = new SimpleBooleanProperty(false);
 		this.memType = new SimpleStringProperty(memType);
 		this.selected = new SimpleBooleanProperty(false);
 		this.lateRenew = new SimpleBooleanProperty(false);
 	}
 
-
+	public MembershipIdDTO() {
+	}
 
 	public final IntegerProperty mIdProperty() {
 		return this.mId;
@@ -53,22 +54,19 @@ public class MembershipIdDTO {
 	public final void setmId(final int mId) {
 		this.mIdProperty().set(mId);
 	}
-	
 
-	public final SimpleStringProperty fiscalYearProperty() {
-		return this.fiscalYear;
-	}
-	
 
-	public final String getFiscalYear() {
-		return this.fiscalYearProperty().get();
+	public int getFiscalYear() {
+		return fiscalYear.get();
 	}
-	
 
-	public final void setFiscalYear(final String fiscalYear) {
-		this.fiscalYearProperty().set(fiscalYear);
+	public IntegerProperty fiscalYearProperty() {
+		return fiscalYear;
 	}
-	
+
+	public void setFiscalYear(int fiscalYear) {
+		this.fiscalYear.set(fiscalYear);
+	}
 
 	public final IntegerProperty msIdProperty() {
 		return this.msId;
@@ -83,22 +81,19 @@ public class MembershipIdDTO {
 	public final void setMsId(final int msId) {
 		this.msIdProperty().set(msId);
 	}
-	
 
-	public final SimpleStringProperty membershipIdProperty() {
-		return this.membershipId;
-	}
-	
 
-	public final String getMembershipId() {
-		return this.membershipIdProperty().get();
+	public int getMembershipId() {
+		return membershipId.get();
 	}
-	
 
-	public final void setMembershipId(final String membershipId) {
-		this.membershipIdProperty().set(membershipId);
+	public IntegerProperty membershipIdProperty() {
+		return membershipId;
 	}
-	
+
+	public void setMembershipId(int membershipId) {
+		this.membershipId.set(membershipId);
+	}
 
 	public final SimpleBooleanProperty renewProperty() {
 		return this.renew;

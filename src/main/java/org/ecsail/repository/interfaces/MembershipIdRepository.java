@@ -26,4 +26,6 @@ public interface MembershipIdRepository {
     int delete(MembershipIdDTO membershipIdDTO);
 
     int insert(MembershipIdDTO membershipIdDTO);
+
+    int getMembershipIdForNewestMembership();
 }

@@ -12,9 +12,9 @@ public class MembershipIdRowMapper implements RowMapper<MembershipIdDTO> {
     public MembershipIdDTO mapRow(ResultSet rs, int rowNum) throws SQLException {
         return new MembershipIdDTO(
                 rs.getInt("MID"),
-                rs.getString("fiscal_year"),
+                rs.getInt("fiscal_year"),
                 rs.getInt("ms_id"),
-                rs.getString("membership_id"),
+                rs.getInt("membership_id"),
                 rs.getBoolean("renew"),
                 rs.getString("MEM_TYPE"),
                 rs.getBoolean("SELECTED"),

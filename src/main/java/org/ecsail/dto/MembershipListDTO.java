@@ -63,6 +63,17 @@ public class MembershipListDTO {
 		this.selectedYear = new SimpleIntegerProperty(0);
 	}
 
+	public MembershipListDTO(String joinDate, String memType, int selectedYear) {
+		this.joinDate = new SimpleStringProperty(joinDate);
+		this.memType = new SimpleStringProperty(memType);
+		this.lastName = new SimpleStringProperty("");
+		this.firstName = new SimpleStringProperty("");
+		this.slip = new SimpleStringProperty("");
+		this.subLeaser = new SimpleIntegerProperty(0);
+		this.membershipId = new SimpleIntegerProperty(0);
+		this.selectedYear = new SimpleIntegerProperty(selectedYear);
+	}
+
 	public ObservableList<MembershipIdDTO> getMembershipIdDTOS() {
 		return membershipIdDTOS;
 	}

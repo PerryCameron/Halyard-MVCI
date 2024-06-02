@@ -1,10 +1,10 @@
 package org.ecsail.mvci_new_membership;
 
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
+import javafx.scene.layout.*;
+import javafx.scene.text.Text;
 import javafx.util.Builder;
 
 import java.util.function.Consumer;
@@ -23,27 +23,23 @@ public class NewMembershipView implements Builder<Region> {
         BorderPane borderPane = new BorderPane();
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER);
+        hBox.setPadding(new Insets(10,10,10,10));
+        VBox vBox = new VBox();
+        vBox.setPadding(new Insets(10,0,0,10));
+        newMembershipModel.setWhiteVBox(vBox);
+        hBox.getChildren().add(vBox);
+        vBox.setStyle("-fx-background-color: white;");  //green
         borderPane.setCenter(hBox);
-//        slipModel.setMainBox(hBox);
-//        slipModel.setBorderPane(borderPane);
-//        setListsLoadedListener();
+        HBox.setHgrow(vBox, Priority.ALWAYS);
+        setMessageListener();
         return borderPane;
     }
 
-//    private void setListsLoadedListener() {
-//        slipModel.listsLoadedProperty().addListener((obs, wasLoaded, isNowLoaded) -> {
-//            if (isNowLoaded) {
-//                buildDocks();
-//                setSizeListener();
-//            }
-//        });
-//    }
-
-//    private void setSizeListener() {
-//        ChangeListener<Number> sizeListener = (obs, oldVal, newVal) -> Platform.runLater(this::buildDocks);
-//        slipModel.getBorderPane().widthProperty().addListener(sizeListener);
-//        slipModel.getBorderPane().heightProperty().addListener(sizeListener);
-//    }
-
-
+    public void setMessageListener() {
+        // Add listener to tabMessage property
+        newMembershipModel.tabMessageProperty().addListener((observable, oldValue, newValue) -> {
+            newMembershipModel.getWhiteVBox().getChildren().add(new Text(newValue));
+            // Add your custom action here
+        });
+    }
 }

@@ -16,4 +16,6 @@ public interface PersonRepository {
     int insert(PersonDTO personDTO);
 
     int delete(PersonDTO personDTO);
+
+    PersonDTO insertPerson(PersonDTO person);
 }

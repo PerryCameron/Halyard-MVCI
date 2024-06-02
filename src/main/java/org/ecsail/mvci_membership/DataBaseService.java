@@ -404,7 +404,7 @@ public class DataBaseService {
         MembershipIdDTO membershipIdDTO = new MembershipIdDTO(
                 String.valueOf(membershipModel.getMembership().getSelectedYear()),
                 membershipModel.getMembership().getMsId(),
-                String.valueOf(membershipModel.getMembership().getMembershipId()),
+                membershipModel.getMembership().getMembershipId(),
                 membershipModel.getMembership().getMemType());
         if (HandlingTools.executeQuery(() -> membershipIdRepo.insert(membershipIdDTO), membershipModel.getMainModel(), logger)) {
             Platform.runLater(() -> {

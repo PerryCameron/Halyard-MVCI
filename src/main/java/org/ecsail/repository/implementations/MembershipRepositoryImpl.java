@@ -4,17 +4,26 @@ import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.repository.interfaces.MembershipRepository;
 import org.ecsail.repository.rowmappers.MembershipListRowMapper;
 import org.ecsail.repository.rowmappers.MembershipListRowMapper1;
+import org.mariadb.jdbc.Statement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 
 import javax.sql.DataSource;
+import java.sql.PreparedStatement;
 import java.util.List;
 
 public class MembershipRepositoryImpl implements MembershipRepository {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private JdbcTemplate template;
+    private static final Logger logger = LoggerFactory.getLogger(MembershipIdRepositoryImpl.class);
+
 
     public MembershipRepositoryImpl(DataSource dataSource) {
         this.template = new JdbcTemplate(dataSource);
@@ -190,5 +199,36 @@ public class MembershipRepositoryImpl implements MembershipRepository {
                 WHERE m.MS_ID=?;
                 """;
         return template.queryForObject(query, new MembershipListRowMapper(), msId);
+    }
+
+    @Override
+    public MembershipListDTO insertMembership(MembershipListDTO nm) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+        String sql = """
+        INSERT INTO membership (p_id, join_date, mem_type, address, city, state, zip)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+        """;
+
+        try {
+            template.update(connection -> {
+                PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+                ps.setInt(1, nm.getPId());
+                ps.setDate(2, nm.getJoinDate() != null ? java.sql.Date.valueOf(nm.getJoinDate()) : null);
+                ps.setString(3, nm.getMemType());
+                ps.setString(4, nm.getAddress());
+                ps.setString(5, nm.getCity());
+                ps.setString(6, nm.getState());
+                ps.setString(7, nm.getZip());
+                return ps;
+            }, keyHolder);
+
+            Number key = keyHolder.getKey();
+            if (key != null) {
+                nm.setMsId(key.intValue()); // Update the DTO with the generated key
+            }
+        } catch (DataAccessException e) {
+            logger.error("Unable to insert into membership: " + e.getMessage());
+        }
+        return nm; // Return the updated DTO
     }
 }
