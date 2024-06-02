@@ -35,16 +35,15 @@ public class SlipInteractor implements ConfigFilePaths {
         this.slipRepo = new SlipRepositoryImpl(connections.getDataSource());
     }
 
-    protected void getPlacement() {
-        System.out.println("getPlacement()");
-        Platform.runLater(() -> {
-        slipModel.getDockPlacement().add(new DockPlacementDTO(1,"A", 140, 40));
-        slipModel.getDockPlacement().add(new DockPlacementDTO(2,"B", 140, 40));
-        slipModel.getDockPlacement().add(new DockPlacementDTO(3,"C", 140, 40));
-        slipModel.getDockPlacement().add(new DockPlacementDTO(4,"D", 140, 40));
-        slipModel.getDockPlacement().add(new DockPlacementDTO(5,"F", 140, 40));
-        });
-    }
+//    protected void getPlacement() {
+//        Platform.runLater(() -> {
+//        slipModel.getDockPlacement().add(new DockPlacementDTO(1,"A", 140, 40));
+//        slipModel.getDockPlacement().add(new DockPlacementDTO(2,"B", 140, 40));
+//        slipModel.getDockPlacement().add(new DockPlacementDTO(3,"C", 140, 40));
+//        slipModel.getDockPlacement().add(new DockPlacementDTO(4,"D", 140, 40));
+//        slipModel.getDockPlacement().add(new DockPlacementDTO(5,"F", 140, 40));
+//        });
+//    }
 
     public void getSlipInfo() {
         try {
@@ -85,5 +84,6 @@ public class SlipInteractor implements ConfigFilePaths {
     public void setListsLoaded() {
         System.out.println("slipStructure: " + slipModel.getSlipStructureDTOS().size());
         System.out.println("slipInfo: " + slipModel.getSlipInfoDTOS().size());
+        slipModel.setListsLoaded(true);
     }
 }

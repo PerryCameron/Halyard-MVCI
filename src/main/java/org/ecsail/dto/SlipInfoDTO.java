@@ -104,5 +104,21 @@ public class SlipInfoDTO {
     public void setSubleaserLastName(String subleaserLastName) {
         this.subleaserLastName = subleaserLastName;
     }
+
+    @Override
+    public String toString() {
+        return "SlipInfoDTO{" +
+                "ownerId=" + ownerId +
+                ", ownerFirstName='" + ownerFirstName + '\'' +
+                ", ownerLastName='" + ownerLastName + '\'' +
+                ", ownerMsid=" + ownerMsid +
+                ", slipNumber='" + slipNumber + '\'' +
+                ", altText='" + altText + '\'' +
+                ", subleaserId=" + subleaserId +
+                ", subleaserMsid=" + subleaserMsid +
+                ", subleaserFirstName='" + subleaserFirstName + '\'' +
+                ", subleaserLastName='" + subleaserLastName + '\'' +
+                '}';
+    }
 }
 

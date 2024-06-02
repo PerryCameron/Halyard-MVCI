@@ -1,10 +1,7 @@
 package org.ecsail.mvci_slip;
 
 
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.BorderPane;
@@ -20,6 +17,7 @@ public class SlipModel {
 
     private final MainModel mainModel;
     private ArrayList<DockPlacementDTO> dockPlacement = new ArrayList<>();
+    private ArrayList<SlipStructureDTO> tempList = new ArrayList<>();
     private ObservableList<SlipInfoDTO> slipInfoDTOS = FXCollections.observableArrayList();
     private ObservableList<SlipStructureDTO> slipStructureDTOS = FXCollections.observableArrayList();
     private ObjectProperty<HBox> mainBox = new SimpleObjectProperty<>();
@@ -28,6 +26,7 @@ public class SlipModel {
     private DoubleProperty dockHeight = new SimpleDoubleProperty();
     private DoubleProperty dockPadding = new SimpleDoubleProperty();
     private DoubleProperty dockSpacing = new SimpleDoubleProperty();
+    private BooleanProperty listsLoaded = new SimpleBooleanProperty(false);
 
 
 
@@ -49,6 +48,26 @@ public class SlipModel {
 
     public SlipModel(MainModel mainModel) {
         this.mainModel = mainModel;
+    }
+
+    public ArrayList<SlipStructureDTO> getTempList() {
+        return tempList;
+    }
+
+    public void setTempList(ArrayList<SlipStructureDTO> tempList) {
+        this.tempList = tempList;
+    }
+
+    public boolean isListsLoaded() {
+        return listsLoaded.get();
+    }
+
+    public BooleanProperty listsLoadedProperty() {
+        return listsLoaded;
+    }
+
+    public void setListsLoaded(boolean listsLoaded) {
+        this.listsLoaded.set(listsLoaded);
     }
 
     public double getDockSpacing() {

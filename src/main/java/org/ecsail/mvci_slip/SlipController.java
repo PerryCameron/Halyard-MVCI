@@ -15,7 +15,9 @@ public class SlipController extends Controller<SlipMessage> {
         mainController = mc;
         SlipModel slipModel = new SlipModel(mainController.getMainModel());
         slipInteractor = new SlipInteractor(slipModel, mainController.getConnections());
-//        action(SlipMessage.GET_DATA); // moved this last, we will see if it works
+        System.out.println("getting DATA");
+        action(SlipMessage.GET_DATA); // moved this last, we will see if it works
+        System.out.println("Getting slipView");
         slipView = new SlipView(slipModel, this::action);
     }
 
@@ -37,7 +39,6 @@ public class SlipController extends Controller<SlipMessage> {
         Task<Void> task = new Task<>() {
             @Override
             protected Void call() {
-                slipInteractor.getPlacement();
                 slipInteractor.getSlipInfo();
                 slipInteractor.getSlipStructure();
                 return null;
