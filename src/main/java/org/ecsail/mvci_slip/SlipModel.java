@@ -59,7 +59,7 @@ public class SlipModel {
         return dockSpacing;
     }
 
-    public void setDockSpacing(double dockSpacing) {
+    public void setDockTextSpacing(double dockSpacing) {
         this.dockSpacing.set(dockSpacing);
     }
 

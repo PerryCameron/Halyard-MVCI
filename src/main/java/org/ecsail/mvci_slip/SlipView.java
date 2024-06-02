@@ -7,12 +7,9 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Line;
 import javafx.scene.text.Text;
 import javafx.util.Builder;
 import org.ecsail.widgetfx.VBoxFx;
-
 
 import java.util.function.Consumer;
 
@@ -49,24 +46,37 @@ public class SlipView implements Builder<Region> {
 
     private void buildDocks() {
         slipModel.getMainBox().getChildren().clear();
+        System.out.println("MainBox width: " + slipModel.getMainBox().getWidth());
         // get space for outside of docks, between window edge and docks
-        double insets = (slipModel.getMainBox().getWidth() * .01) / 2;
-        slipModel.getMainBox().setPadding(new Insets(10,insets,0,insets));
+        double insets = (slipModel.getMainBox().getWidth() * .02) / 2;
+        slipModel.getMainBox().setPadding(new Insets(10, insets, 0, insets));
         // this is the width of each dock
         double dockWidth = (slipModel.getMainBox().getWidth() - (insets * 2)) / 4;
         // sets space between docks
-        slipModel.setDockPadding(dockWidth * 0.02);
+        slipModel.setDockPadding(dockWidth * 0.03); // changing this to .01 will fix the border issue
+//        System.out.println("dockWidth * 0.03: " + dockWidth * 0.03);
+//        System.out.println("dockWidth * 0.01: " + dockWidth * 0.01);
+//        dockWidth * 0.03: 7.5558000000000005
+//        dockWidth * 0.01: 2.5186
         slipModel.getMainBox().setSpacing(slipModel.getDockPadding());
         // dock width adjusted for padding
-        slipModel.setDockWidth(dockWidth - slipModel.getDockPadding());
-        // dock height
-        slipModel.setDockHeight((slipModel.getMainBox().getHeight() / 16) - 10);
+        slipModel.setDockWidth((dockWidth - slipModel.getDockPadding()) * 1.00773); // 1.00773 corrects for error
+        // dock height (-10 is for top inset)
+        slipModel.setDockHeight((slipModel.getMainBox().getHeight() / 18) - 10);
         // sets spacing between text on each dock
-        slipModel.setDockSpacing(slipModel.getDockHeight() * .1);
+        slipModel.setDockTextSpacing(slipModel.getDockHeight() * .1);
 
-        System.out.println("Section padding: " + slipModel.getDockPadding());
+        double first = insets * 2;
+        double second = slipModel.getDockPadding() * 3;
+        double third = ((dockWidth - slipModel.getDockPadding()) * 1.00773) * 4; // show fix
+        System.out.println("total insets: " + first);
+        System.out.println("individual padding: " + slipModel.getDockPadding());
+        System.out.println("total padding: " + second);
+        System.out.println("Dock Width: " + slipModel.getDockWidth() + " height: " + slipModel.getDockHeight());
+        System.out.println("total dockWidth: " + third);
+        System.out.println("total insets + total padding + total dockwidth: " + (first + second + third));
+        System.out.println();
 
-        System.out.println("Dock length: " + slipModel.getDockWidth() + " height: " + slipModel.getDockHeight());
         slipModel.getMainBox().getChildren().add(createDockColumnBox());
         slipModel.getMainBox().getChildren().add(createDockColumnBox());
         slipModel.getMainBox().getChildren().add(createDockColumnBox());
@@ -77,67 +87,99 @@ public class SlipView implements Builder<Region> {
         VBox vBox = new VBox();
         HBox.setHgrow(vBox, Priority.ALWAYS);
 //        vBox.setStyle("-fx-background-color: blue;");
-        vBox.getChildren().add(buildDockSection("Cameron P. C24","Dalton, C. C26","C23 Crawford P.","C25 Thompson L."));
-        vBox.getChildren().add(buildDockSpacer());
-        vBox.getChildren().add(buildDockSection("Cameron P. C24","Dalton, C. C26","C23 Crawford P.","C25 Thompson L."));
-        vBox.getChildren().add(buildDockSpacer());
-        vBox.getChildren().add(buildDockSection("Cameron P. C24","Dalton, C. C26","C23 Crawford P.","C25 Thompson L."));
-        vBox.getChildren().add(buildDockSpacer());
-        vBox.getChildren().add(buildDockSection("Cameron P. C24","Dalton, C. C26","C23 Crawford P.","C25 Thompson L."));
-        vBox.getChildren().add(buildDockSpacer());
+        vBox.getChildren().add(buildDockSpacer("top-cap"));
+        vBox.getChildren().add(buildDockSection(true, "Cameron P. C24", "Dalton, C. C26", "C23 Crawford P.", "C25 Thompson L."));
+        vBox.getChildren().add(buildDockSpacer("segment"));
+        vBox.getChildren().add(buildDockSection(true, "Cameron P. C24", "Dalton, C. C26", "C23 Crawford P.", "C25 Thompson L."));
+        vBox.getChildren().add(buildDockSpacer("segment"));
+        vBox.getChildren().add(buildDockSection(true, "Cameron P. C24", "Dalton, C. C26", "C23 Crawford P.", "C25 Thompson L."));
+        vBox.getChildren().add(buildDockSpacer("segment"));
+        vBox.getChildren().add(buildDockSection(true, "Cameron P. C24", "Dalton, C. C26", "C23 Crawford P.", "C25 Thompson L."));
+        vBox.getChildren().add(buildDockSpacer("segment"));
+        vBox.getChildren().add(buildDockSection(true, "Cameron P. C24", "Dalton, C. C26", "C23 Crawford P.", "C25 Thompson L."));
+        vBox.getChildren().add(buildDockSpacer("segment"));
+        vBox.getChildren().add(buildDockSection(true, "Cameron P. C24", "Dalton, C. C26", "C23 Crawford P.", "C25 Thompson L."));
+        vBox.getChildren().add(buildDockSpacer("segment"));
+        vBox.getChildren().add(buildDockSection(true, "Cameron P. C24", "Dalton, C. C26", "C23 Crawford P.", "C25 Thompson L."));
+        vBox.getChildren().add(buildDockSpacer("segment"));
+        vBox.getChildren().add(buildDockSection(true, "Cameron P. C24", "Dalton, C. C26", "C23 Crawford P.", "C25 Thompson L."));
+        vBox.getChildren().add(buildDockSpacer("segment"));
+        vBox.getChildren().add(buildDockSection(true, "Cameron P. C24", "Dalton, C. C26", "C23 Crawford P.", "C25 Thompson L."));
+        vBox.getChildren().add(buildDockSpacer("segment"));
+        vBox.getChildren().add(buildDockSection(false, "Cameron P. C24", "Dalton, C. C26", "C23 Crawford P.", "C25 Thompson L."));
+        vBox.getChildren().add(buildDockSpacer("bottom-cap"));
+        vBox.getChildren().add(buildDockSpacer("spacer"));
+
+        vBox.getChildren().add(buildDockSpacer("top-cap"));
+        vBox.getChildren().add(buildDockSection(false, "Cameron P. C24", "Dalton, C. C26", "C23 Crawford P.", "C25 Thompson L."));
+        vBox.getChildren().add(buildDockSpacer("segment"));
+        vBox.getChildren().add(buildDockSection(false, "Cameron P. C24", "Dalton, C. C26", "C23 Crawford P.", "C25 Thompson L."));
+        vBox.getChildren().add(buildDockSpacer("segment"));
+        vBox.getChildren().add(buildDockSection(false, "Cameron P. C24", "Dalton, C. C26", "C23 Crawford P.", "C25 Thompson L."));
+        vBox.getChildren().add(buildDockSpacer("segment"));
+        vBox.getChildren().add(buildDockSection(false, "Cameron P. C24", "Dalton, C. C26", "C23 Crawford P.", "C25 Thompson L."));
+        vBox.getChildren().add(buildDockSpacer("segment"));
+        vBox.getChildren().add(buildDockSection(false, "Cameron P. C24", "Dalton, C. C26", "C23 Crawford P.", "C25 Thompson L."));
+        vBox.getChildren().add(buildDockSpacer("segment"));
+        vBox.getChildren().add(buildDockSection(false, "Cameron P. C24", "Dalton, C. C26", "C23 Crawford P.", "C25 Thompson L."));
+        vBox.getChildren().add(buildDockSpacer("bottom-cap"));
+
         return vBox;
     }
 
-    private Node buildDockSection(String mem1, String mem2 ,String mem3, String mem4) {
+
+    private Node buildDockSection(boolean leftDockVisible, String mem1, String mem2, String mem3, String mem4) {
         HBox hBox = new HBox();
         double dockSection = slipModel.getDockWidth() * 0.45;
         hBox.setPrefHeight(slipModel.getDockHeight());
         hBox.setMaxHeight(slipModel.getDockHeight());
-        hBox.getChildren().add(buildDock(dockSection, true,mem1,mem2));
-        hBox.getChildren().add(buildWalkWay(slipModel.getDockWidth() * 0.1));
-        hBox.getChildren().add(buildDock(dockSection, false,mem3,mem4));
+        hBox.getChildren().add(buildDock(dockSection, true, leftDockVisible, mem1, mem2));
+        hBox.getChildren().add(buildWalkWay(leftDockVisible));
+        hBox.getChildren().add(buildDock(dockSection, false, leftDockVisible, mem3, mem4));
         return hBox;
     }
 
-    private Node buildDockSpacer() {
+    private Node buildDockSpacer(String type) {
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER);
-        Region vBox = VBoxFx.vBoxOf(slipModel.getDockWidth() * 0.1, slipModel.getDockHeight() * 0.3);
-        vBox.setStyle("-fx-background-color: white;");
-        // Create the left and right lines
-        Line leftLine = new Line(0, 0, 0, slipModel.getDockHeight() * 0.3);
-        leftLine.setStroke(Color.GREY);
-        leftLine.setStrokeWidth(1);
-
-        Line rightLine = new Line(0, 0, 0, slipModel.getDockHeight() * 0.3);
-        rightLine.setStroke(Color.GREY);
-        rightLine.setStrokeWidth(1);
-
-        // Add the lines and VBox to the HBox
-        hBox.getChildren().addAll(leftLine, vBox, rightLine);
+        VBox vBox = VBoxFx.vBoxOf(slipModel.getDockWidth() * 0.1, slipModel.getDockHeight() * 0.3);
+        switch(type) {
+            case "top-cap" -> vBox.setStyle("-fx-background-color: white; -fx-border-color: red; -fx-border-width: 1px 1px 0px 1px;");
+            case "segment" -> vBox.setStyle("-fx-background-color: white; -fx-border-color: red; -fx-border-width: 0px 1px 0px 1px;");
+            case "bottom-cap" -> vBox.setStyle("-fx-background-color: white; -fx-border-color: red; -fx-border-width: 0px 1px 1px 1px;");
+        }
+        hBox.getChildren().add(vBox);
         return hBox;
     }
 
+    private Node buildWalkWay(boolean leftDockVisible) {
+        VBox vBox = VBoxFx.vBoxOf(slipModel.getDockWidth() * 0.1, slipModel.getDockHeight());
+//        System.out.println("buildWalkWayWidth: " + slipModel.getDockWidth() * 0.1);
+        if (leftDockVisible)
+            vBox.setStyle("-fx-background-color: white;");
+        else
+            vBox.setStyle("-fx-background-color: white; -fx-border-color: red; -fx-border-width: 0px 0px 0px 1px;");
+        return vBox;
+    }
 
-    private Node buildDock(double dockWidth, boolean isLeftDock, String mem1, String mem2) {
+    private Node buildDock(double dockWidth, boolean isLeftDock, boolean isVisible, String mem1, String mem2) {
         VBox vBox = VBoxFx.vBoxOf(dockWidth, slipModel.getDockHeight());
-        vBox.setStyle("-fx-background-color: white; -fx-border-color: grey;");
-        vBox.getChildren().addAll(new Text(mem1), new Text(mem2));
-        if(isLeftDock) {
-            vBox.setAlignment(Pos.CENTER_RIGHT);
+        vBox.setSpacing(slipModel.getDockSpacing());
+        if (isLeftDock) {
+            if (isVisible) {
+                vBox.setAlignment(Pos.CENTER_RIGHT);
+                vBox.setStyle("-fx-background-color: white; -fx-border-color: red; -fx-border-width: 1px 0px 1px 1px;");
+                vBox.getChildren().addAll(new Text(mem1), new Text(mem2));
+            } // else vBox.setStyle("-fx-border-color: grey; -fx-border-width: 0px 1px 0px 0px;");
         } else {
             vBox.setAlignment(Pos.CENTER_LEFT);
+            vBox.setStyle("-fx-background-color: white; -fx-border-color: red; -fx-border-width: 1px 1px 1px 0px;");
+            vBox.getChildren().addAll(new Text(mem1), new Text(mem2));
         }
         return vBox;
     }
 
-    private Node buildWalkWay(double walkWayWidth) {
-        VBox vBox = VBoxFx.vBoxOf(walkWayWidth, slipModel.getDockHeight());
-        System.out.println("walkway " + walkWayWidth + " x " +slipModel.getDockHeight());
-        vBox.setStyle("-fx-background-color: white;");
-//        vBox.getChildren().add(new Text("x"));
-        return vBox;
-    }
+
 
 }
 //    private void createRightDock(double x, double y, Pane pane) {
@@ -156,8 +198,6 @@ public class SlipView implements Builder<Region> {
 //                drawLine(x + dl + ww, y + dw, x + ww, y + dw),
 //                topText,botText);
 //    }
-
-
 
 
 //    private void createLeftDock(double x, double y, Pane pane) {
