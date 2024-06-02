@@ -19,4 +19,6 @@ public interface MembershipRepository {
     int updateJoinDate(MembershipListDTO membershipListDTO);
 
     MembershipListDTO getMembershipByMembershipId(int membershipId);
+
+    MembershipListDTO getMembershipByMsId(int membershipId);
 }

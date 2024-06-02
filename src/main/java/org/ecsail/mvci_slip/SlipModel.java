@@ -7,6 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import org.ecsail.dto.DockPlacementDTO;
+import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.dto.SlipInfoDTO;
 import org.ecsail.dto.SlipStructureDTO;
 import org.ecsail.mvci_main.MainModel;
@@ -20,6 +21,7 @@ public class SlipModel {
     private ArrayList<SlipStructureDTO> tempList = new ArrayList<>();
     private ObservableList<SlipInfoDTO> slipInfoDTOS = FXCollections.observableArrayList();
     private ObservableList<SlipStructureDTO> slipStructureDTOS = FXCollections.observableArrayList();
+    private final SimpleObjectProperty<MembershipListDTO> selectedMembershipList = new SimpleObjectProperty<>();
     private ObjectProperty<HBox> mainBox = new SimpleObjectProperty<>();
     private ObjectProperty<BorderPane> borderPane = new SimpleObjectProperty<>();
     private DoubleProperty dockWidth = new SimpleDoubleProperty();
@@ -27,6 +29,7 @@ public class SlipModel {
     private DoubleProperty dockPadding = new SimpleDoubleProperty();
     private DoubleProperty dockSpacing = new SimpleDoubleProperty();
     private BooleanProperty listsLoaded = new SimpleBooleanProperty(false);
+    private IntegerProperty selectedMsId = new SimpleIntegerProperty(0);
 
 
 
@@ -48,6 +51,30 @@ public class SlipModel {
 
     public SlipModel(MainModel mainModel) {
         this.mainModel = mainModel;
+    }
+
+    public int getSelectedMsId() {
+        return selectedMsId.get();
+    }
+
+    public IntegerProperty selectedMsIdProperty() {
+        return selectedMsId;
+    }
+
+    public void setSelectedMsId(int selectedMsId) {
+        this.selectedMsId.set(selectedMsId);
+    }
+
+    public MembershipListDTO getSelectedMembershipList() {
+        return selectedMembershipList.get();
+    }
+
+    public SimpleObjectProperty<MembershipListDTO> selectedMembershipListProperty() {
+        return selectedMembershipList;
+    }
+
+    public void setSelectedMembershipList(MembershipListDTO selectedMembershipList) {
+        this.selectedMembershipList.set(selectedMembershipList);
     }
 
     public ArrayList<SlipStructureDTO> getTempList() {

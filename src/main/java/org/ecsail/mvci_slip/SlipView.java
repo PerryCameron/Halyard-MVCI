@@ -6,6 +6,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Tooltip;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -46,24 +47,18 @@ public class SlipView implements Builder<Region> {
             if (isNowLoaded) {
                 buildDocks();
                 setSizeListener();
-                slipModel.getSlipInfoDTOS().forEach(System.out::println);
             }
         });
     }
 
     private void setSizeListener() {
-        ChangeListener<Number> sizeListener = (obs, oldVal, newVal) -> {
-            Platform.runLater(() -> {
-                buildDocks();
-            });
-        };
+        ChangeListener<Number> sizeListener = (obs, oldVal, newVal) -> Platform.runLater(this::buildDocks);
         slipModel.getBorderPane().widthProperty().addListener(sizeListener);
         slipModel.getBorderPane().heightProperty().addListener(sizeListener);
     }
 
     private void buildDocks() {
         slipModel.getMainBox().getChildren().clear();
-        System.out.println("MainBox width: " + slipModel.getMainBox().getWidth());
         // get space for outside of docks, between window edge and docks
         double insets = (slipModel.getMainBox().getWidth() * .02) / 2;
         slipModel.getMainBox().setPadding(new Insets(10, insets, 0, insets));
@@ -192,30 +187,47 @@ public class SlipView implements Builder<Region> {
                     text.setText(slip.getSlipNumber() + " " + lastName);
                 }
             }
-            setMouseListener(text, slip.getOwnerMsid(), slip.getSubleaserMsid());
+            setMouseListener(text, slip);
         }
         return text;
     }
 
-    private void setMouseListener(Text text, int msid, int subleaserMsId) {
-        if (subleaserMsId != 0) {  // blue if it is a sublease
+    private void setMouseListener(Text text, SlipInfoDTO slip) {
+        Tooltip tooltip = new Tooltip(getTooltipText(slip));
+        tooltip.setShowDelay(javafx.util.Duration.millis(100));
+        tooltip.setHideDelay(javafx.util.Duration.millis(100));
+        tooltip.setShowDuration(javafx.util.Duration.seconds(10));
+        Tooltip.install(text, tooltip);
+
+        if (slip.getSubleaserMsid() != 0) {  // blue if it is a sublease
             text.setFill(Color.CORNFLOWERBLUE);
             text.setOnMouseExited(ex -> text.setFill(Color.CORNFLOWERBLUE));
         } else {
             text.setOnMouseExited(ex -> text.setFill(Color.BLACK));
         }
-        text.setOnMouseEntered(en -> {
-            text.setFill(Color.RED);
-        });
+
+        text.setOnMouseEntered(en -> text.setFill(Color.RED));
+
         text.setOnMouseClicked(e -> {
             if (e.getClickCount() == 2) {
-                if (subleaserMsId != 0) {
-                    System.out.println("This is a sublease for " + subleaserMsId);
+                if (slip.getSubleaserMsid() != 0) {
+                    slipModel.setSelectedMsId(slip.getSubleaserMsid());
                 } else {
-                    System.out.println("This is a lease for " + msid);
+                    slipModel.setSelectedMsId(slip.getOwnerMsid());
                 }
+                action.accept(SlipMessage.LAUNCH_TAB);
             }
         });
+    }
+
+    private String getTooltipText(SlipInfoDTO slip) {
+        StringBuilder tooltipText = new StringBuilder();
+        tooltipText.append("Owner: ").append(slip.getOwnerFirstName()).append(" ").append(slip.getOwnerLastName()).append("\n");
+        tooltipText.append("Slip Number: ").append(slip.getSlipNumber()).append("\n");
+        if (slip.getSubleaserMsid() != 0) {
+            tooltipText.append("Subleaser: ").append(slip.getSubleaserFirstName()).append(" ").append(slip.getSubleaserLastName());
+        }
+        return tooltipText.toString();
     }
 
     private String getFirstName(SlipInfoDTO slip) {
@@ -228,7 +240,7 @@ public class SlipView implements Builder<Region> {
     }
 
     private static String getLastName(SlipInfoDTO slip) {
-        String lastName = "";
+        String lastName;
         if (slip.getAltText() != null) lastName = slip.getAltText();
         else if (slip.getSubleaserLastName() != null) {
             lastName = slip.getSubleaserLastName();

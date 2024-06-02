@@ -3,36 +3,27 @@ package org.ecsail.mvci_slip;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.layout.Region;
 import org.ecsail.connection.Connections;
-import org.ecsail.dto.DockPlacementDTO;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.dto.SlipInfoDTO;
 import org.ecsail.dto.SlipStructureDTO;
-import org.ecsail.fileio.FileIO;
 import org.ecsail.interfaces.ConfigFilePaths;
-import org.ecsail.interfaces.Status;
-import org.ecsail.mvci_main.MainController;
-import org.ecsail.mvci_main.MainMessage;
-import org.ecsail.mvci_main.MainModel;
-import org.ecsail.repository.implementations.BoardPositionsRepositoryImpl;
+import org.ecsail.repository.implementations.MembershipRepositoryImpl;
 import org.ecsail.repository.implementations.SlipRepositoryImpl;
-import org.ecsail.repository.interfaces.BoardPositionsRepository;
-import org.ecsail.widgetfx.PaneFx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
 
 public class SlipInteractor implements ConfigFilePaths {
 
     private static final Logger logger = LoggerFactory.getLogger(SlipInteractor.class);
     private final SlipModel slipModel;
     private final SlipRepositoryImpl slipRepo;
+    private final MembershipRepositoryImpl memRepo;
 
     public SlipInteractor(SlipModel slipModel, Connections connections) {
         this.slipModel = slipModel;
         this.slipRepo = new SlipRepositoryImpl(connections.getDataSource());
+        this.memRepo = new MembershipRepositoryImpl(connections.getDataSource());
     }
 
 //    protected void getPlacement() {
@@ -85,5 +76,14 @@ public class SlipInteractor implements ConfigFilePaths {
         System.out.println("slipStructure: " + slipModel.getSlipStructureDTOS().size());
         System.out.println("slipInfo: " + slipModel.getSlipInfoDTOS().size());
         slipModel.setListsLoaded(true);
+    }
+
+    public void getMembershipList() {
+        System.out.println("getMembershipList() with ms_id of: " + slipModel.getSelectedMsId());
+        MembershipListDTO membershipListDTO = memRepo.getMembershipByMsId(slipModel.getSelectedMsId());
+        System.out.println(membershipListDTO);
+        Platform.runLater(() -> {
+            slipModel.setSelectedMembershipList(membershipListDTO);
+        });
     }
 }
