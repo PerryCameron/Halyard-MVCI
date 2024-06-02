@@ -179,13 +179,16 @@ public class MembershipRepositoryImpl implements MembershipRepository {
     }
 
     @Override
-    public MembershipListDTO getMembershipByMsId(int membershipId) {
+    public MembershipListDTO getMembershipByMsId(int msId) {
         String query = """
-                SELECT m.ms_id,m.p_id,id.membership_id,id.fiscal_year,m.join_date,
-                id.mem_type,p.l_name,p.f_name,m.address,m.city,m.state,m.zip FROM 
-                membership m LEFT JOIN person p ON m.p_id=p.p_id LEFT JOIN membership_id 
-                id ON m.ms_id=id.ms_id WHERE id.fiscal_year=YEAR(NOW()) AND m.MS_ID=?
+                SELECT m.ms_id,m.p_id,id.membership_id,id.fiscal_year,id.fiscal_year,m.join_date,id.mem_type,
+                s.SLIP_NUM,p.l_name,p.f_name,s.subleased_to,m.address,m.city,m.state,m.zip
+                FROM (select * from membership_id where FISCAL_YEAR=YEAR(NOW())) id
+                INNER JOIN membership m on m.MS_ID = id.MS_ID
+                LEFT JOIN (select * from person where MEMBER_TYPE=1) p on m.MS_ID= p.MS_ID
+                LEFT JOIN slip s on m.MS_ID = s.MS_ID
+                WHERE m.MS_ID=?;
                 """;
-        return template.queryForObject(query, new MembershipListRowMapper1(), membershipId);
+        return template.queryForObject(query, new MembershipListRowMapper(), msId);
     }
 }
