@@ -30,8 +30,12 @@ public class SlipController extends Controller<SlipMessage> {
     public void action(SlipMessage action) {
         switch (action) {
             case GET_DATA -> getSlipData();
-            case LAUNCH_TAB -> slipInteractor.getMembershipList();
+            case LAUNCH_TAB -> launchTab();
         }
+    }
+
+    private void launchTab() {
+        mainController.openMembershipMVCI(slipInteractor.getMembershipList());
     }
 
     private void getSlipData() {

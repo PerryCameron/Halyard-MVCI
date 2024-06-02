@@ -26,16 +26,6 @@ public class SlipInteractor implements ConfigFilePaths {
         this.memRepo = new MembershipRepositoryImpl(connections.getDataSource());
     }
 
-//    protected void getPlacement() {
-//        Platform.runLater(() -> {
-//        slipModel.getDockPlacement().add(new DockPlacementDTO(1,"A", 140, 40));
-//        slipModel.getDockPlacement().add(new DockPlacementDTO(2,"B", 140, 40));
-//        slipModel.getDockPlacement().add(new DockPlacementDTO(3,"C", 140, 40));
-//        slipModel.getDockPlacement().add(new DockPlacementDTO(4,"D", 140, 40));
-//        slipModel.getDockPlacement().add(new DockPlacementDTO(5,"F", 140, 40));
-//        });
-//    }
-
     public void getSlipInfo() {
         try {
             logger.info("Getting slip info from data base");
@@ -78,12 +68,7 @@ public class SlipInteractor implements ConfigFilePaths {
         slipModel.setListsLoaded(true);
     }
 
-    public void getMembershipList() {
-        System.out.println("getMembershipList() with ms_id of: " + slipModel.getSelectedMsId());
-        MembershipListDTO membershipListDTO = memRepo.getMembershipByMsId(slipModel.getSelectedMsId());
-        System.out.println(membershipListDTO);
-        Platform.runLater(() -> {
-            slipModel.setSelectedMembershipList(membershipListDTO);
-        });
+    public MembershipListDTO getMembershipList() {
+        return memRepo.getMembershipByMsId(slipModel.getSelectedMsId());
     }
 }
