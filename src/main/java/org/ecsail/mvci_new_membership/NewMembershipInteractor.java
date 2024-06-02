@@ -1,14 +1,8 @@
 package org.ecsail.mvci_new_membership;
 
-import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import org.ecsail.connection.Connections;
 import org.ecsail.dto.MembershipListDTO;
-import org.ecsail.dto.SlipInfoDTO;
-import org.ecsail.dto.SlipStructureDTO;
 import org.ecsail.interfaces.ConfigFilePaths;
-import org.ecsail.mvci_slip.SlipModel;
 import org.ecsail.repository.implementations.MembershipRepositoryImpl;
 import org.ecsail.repository.implementations.SlipRepositoryImpl;
 import org.slf4j.Logger;

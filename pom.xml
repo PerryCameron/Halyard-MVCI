@@ -59,13 +59,13 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.4.6</version>
+            <version>1.5.6</version>
         </dependency>
         <!-- logging implementation -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
-            <version>1.4.6</version>
+            <version>1.5.6</version>
         </dependency>
         <!-- these two added so apache.poi can use logback -->
         <dependency>
@@ -99,18 +99,18 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
-            <version>6.0.7</version>
+            <version>6.1.8</version>
         </dependency>
         <!-- these two to export to Excel files -->
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
-            <version>5.2.3</version>
+            <version>5.2.5</version>
         </dependency>
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
-            <version>5.2.3</version>
+            <version>5.2.5</version>
         </dependency>
 
 
