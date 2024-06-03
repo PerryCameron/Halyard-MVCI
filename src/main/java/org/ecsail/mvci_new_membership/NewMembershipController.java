@@ -54,7 +54,7 @@ public class NewMembershipController extends Controller<NewMembershipMessage> {
         task.setOnSucceeded(e -> {
             mainController.showLoadingSpinner(false);
             newMembershipInteractor.showSuccess();
-//            slipInteractor.setListsLoaded();
+            launchTab();
         });
         new Thread(task).start();
     }

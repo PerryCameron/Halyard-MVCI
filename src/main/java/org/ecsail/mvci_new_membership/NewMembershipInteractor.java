@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Year;
 import java.time.format.DateTimeFormatter;
 
@@ -39,7 +40,7 @@ public class NewMembershipInteractor implements ConfigFilePaths {
     }
 
     public MembershipListDTO getMembershipList() {
-        return null;
+        return newMembershipModel.getMembership();
     }
 
     public void getNextAvailableId() {
@@ -139,7 +140,9 @@ public class NewMembershipInteractor implements ConfigFilePaths {
         try {
             NotesDTO notesDTO = new NotesDTO("N", newMembershipModel.getMembership().getMsId());
             notesDTO.setMemoDate(LocalDate.now());
-            notesDTO.setMemo("Created new membership record");
+            notesDTO.setMemo("Created new membership record " + LocalDateTime.now());
+            int ok = notesRepo.insertNote(notesDTO);
+            if(ok == 1)
             Platform.runLater(() -> {
                 newMembershipModel.setTabMessage("Note to document membership creation created");
             });
