@@ -161,7 +161,7 @@ public class DataBaseService {
 
     protected void updateMembershipList() { // UPDATE_MEMBERSHIP_LIST
         HandlingTools.executeQuery(() ->
-                membershipRepo.updateJoinDate(membershipModel.getMembership()), membershipModel.getMainModel(), logger);
+                membershipRepo.update(membershipModel.getMembership()), membershipModel.getMainModel(), logger);
     }
 
     protected void updateBoat() {
