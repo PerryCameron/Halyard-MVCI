@@ -22,10 +22,17 @@ public class TableColumnFx {
         return col;
     }
 
+//    public static <T> TableColumn<T, Integer> tableColumnOfInteger(Function<T, IntegerProperty> property, String label) {
+////        TableColumn<T, Integer> col = new TableColumn<>(label);
+////        col.setCellValueFactory(cellData -> property.apply(cellData.getValue()).asObject());
+////        col.setCellFactory(tc -> new TextFieldTableCell<>(new IntegerStringConverter()));
+////        return col;
+////    }
+
     public static <T> TableColumn<T, Integer> tableColumnOfInteger(Function<T, IntegerProperty> property, String label) {
         TableColumn<T, Integer> col = new TableColumn<>(label);
         col.setCellValueFactory(cellData -> property.apply(cellData.getValue()).asObject());
-        col.setCellFactory(tc -> new TextFieldTableCell<>(new IntegerStringConverter()));
+        col.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
         return col;
     }
 }

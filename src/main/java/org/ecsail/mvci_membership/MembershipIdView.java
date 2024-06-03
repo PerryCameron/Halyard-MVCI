@@ -10,11 +10,14 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.ComboBoxTableCell;
+import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
+import javafx.util.converter.IntegerStringConverter;
 import org.ecsail.custom.CustomDatePicker;
+import org.ecsail.custom.CustomIntegerTableCell;
 import org.ecsail.dto.MembershipIdDTO;
 import org.ecsail.enums.MembershipType;
 import org.ecsail.widgetfx.*;
@@ -35,15 +38,15 @@ public class MembershipIdView implements Builder<Tab> {
     public Tab build() {
         Tab tab = new Tab();
         tab.setText("History");
-        VBox vBox = VBoxFx.vBoxOf(new Insets(2,2,2,2),"custom-tap-pane-frame",true); // makes outer border
+        VBox vBox = VBoxFx.vBoxOf(new Insets(2, 2, 2, 2), "custom-tap-pane-frame", true); // makes outer border
         vBox.getChildren().add(innerVBox());
         tab.setContent(vBox);
-        ListenerFx.addSingleFireTabListener(tab, () -> membershipView.sendMessage().accept(MembershipMessage.SELECT_IDS) );
+        ListenerFx.addSingleFireTabListener(tab, () -> membershipView.sendMessage().accept(MembershipMessage.SELECT_IDS));
         return tab;
     }
 
     private Node innerVBox() {
-        VBox vBox = VBoxFx.vBoxOf(new Insets(5,5,5,5),"box-background-light",true);
+        VBox vBox = VBoxFx.vBoxOf(new Insets(5, 5, 5, 5), "box-background-light", true);
         vBox.setSpacing(10);
         VBox.setVgrow(vBox, Priority.ALWAYS);
         vBox.getChildren().addAll(createTopControls(), addTable());
@@ -55,7 +58,7 @@ public class MembershipIdView implements Builder<Tab> {
         CustomDatePicker datePicker = new CustomDatePicker();
         datePicker.setValue(getDate());
         datePicker.focusedProperty().addListener((observable, wasFocused, isFocused) -> {
-            if (!isFocused){
+            if (!isFocused) {
                 datePicker.updateValue();
                 LocalDate date = datePicker.getValue();
                 membershipModel.getMembership().setJoinDate(date.toString());
@@ -63,13 +66,13 @@ public class MembershipIdView implements Builder<Tab> {
                         .accept(MembershipMessage.UPDATE_MEMBERSHIP_LIST);
             }
         });
-        hBox.getChildren().addAll(TextFx.textOf("Join Date","text-white"), datePicker, createButtonBox());
+        hBox.getChildren().addAll(TextFx.textOf("Join Date", "text-white"), datePicker, createButtonBox());
         return hBox;
     }
 
     private Node createButtonBox() {
-        HBox hBox = HBoxFx.hBoxOf(new Insets(0,0,0,50), 5.0);
-        hBox.getChildren().addAll(createButton("Add"),createButton("Delete"));
+        HBox hBox = HBoxFx.hBoxOf(new Insets(0, 0, 0, 50), 5.0);
+        hBox.getChildren().addAll(createButton("Add"), createButton("Delete"));
         return hBox;
     }
 
@@ -77,19 +80,20 @@ public class MembershipIdView implements Builder<Tab> {
         Button button = ButtonFx.buttonOf(text, 60);
         switch (text) {
             case "Delete" -> button.setOnAction(event -> deleteMembershipId());
-            case "Add" -> button.setOnAction(event -> membershipView.sendMessage().accept(MembershipMessage.INSERT_MEMBERSHIP_ID));
+            case "Add" ->
+                    button.setOnAction(event -> membershipView.sendMessage().accept(MembershipMessage.INSERT_MEMBERSHIP_ID));
         }
         return button;
     }
 
     private void deleteMembershipId() {
-            String[] strings = {
-                    "Delete Membership ID",
-                    "Are you sure you want to delete this ID number?",
-                    "Missing Selection",
-                    "You need to select an ID first"};
-            if (DialogueFx.verifyAction(strings, membershipModel.getSelectedMembershipId()))
-                membershipView.sendMessage().accept(MembershipMessage.DELETE_MEMBERSHIP_ID);
+        String[] strings = {
+                "Delete Membership ID",
+                "Are you sure you want to delete this ID number?",
+                "Missing Selection",
+                "You need to select an ID first"};
+        if (DialogueFx.verifyAction(strings, membershipModel.getSelectedMembershipId()))
+            membershipView.sendMessage().accept(MembershipMessage.DELETE_MEMBERSHIP_ID);
     }
 
     private LocalDate getDate() {
@@ -103,7 +107,7 @@ public class MembershipIdView implements Builder<Tab> {
 
     private Node addTable() {
         TableView<MembershipIdDTO> tableView = TableViewFx.tableViewOf(MembershipIdDTO.class);
-        tableView.getColumns().addAll(col1(),col2(),col3(),col4(),col5());
+        tableView.getColumns().addAll(col1(), col2(), col3(), col4(), col5());
         TableView.TableViewSelectionModel<MembershipIdDTO> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) membershipModel.setSelectedMembershipId(newSelection);
@@ -156,7 +160,7 @@ public class MembershipIdView implements Builder<Tab> {
         return col4;
     }
 
-    private TableColumn<MembershipIdDTO,MembershipType> col3() {
+    private TableColumn<MembershipIdDTO, MembershipType> col3() {
         ObservableList<MembershipType> MembershipTypeList = FXCollections.observableArrayList(MembershipType.values());
         TableColumn<MembershipIdDTO, MembershipType> col3 = new TableColumn<>("Mem Type");
         col3.setCellValueFactory(
@@ -183,6 +187,9 @@ public class MembershipIdView implements Builder<Tab> {
 
     private TableColumn<MembershipIdDTO, Integer> col2() {
         TableColumn<MembershipIdDTO, Integer> col2 = TableColumnFx.tableColumnOfInteger(MembershipIdDTO::membershipIdProperty, "Mem ID");
+        col2.setEditable(true);  // Ensure the TableColumn is editable
+
+        col2.setCellFactory(tc -> new CustomIntegerTableCell<>(new IntegerStringConverter()));
         col2.setOnEditCommit(t -> {
             MembershipIdDTO membershipIdDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
             membershipIdDTO.setMembershipId(t.getNewValue());
@@ -193,14 +200,19 @@ public class MembershipIdView implements Builder<Tab> {
         return col2;
     }
 
-    private TableColumn<MembershipIdDTO,Integer> col1() {
-        TableColumn<MembershipIdDTO, Integer> col1 = TableColumnFx.tableColumnOfInteger(MembershipIdDTO::fiscalYearProperty,"Year");
+    private TableColumn<MembershipIdDTO, Integer> col1() {
+        TableColumn<MembershipIdDTO, Integer> col1 = TableColumnFx.tableColumnOfInteger(MembershipIdDTO::fiscalYearProperty, "Year");
+        col1.setEditable(true);  // Ensure the TableColumn is editable
+
+        col1.setCellFactory(tc -> new CustomIntegerTableCell<>(new IntegerStringConverter()));
         col1.setOnEditCommit(t -> {
             MembershipIdDTO membershipIdDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
             membershipIdDTO.setFiscalYear(t.getNewValue());
             membershipModel.setSelectedMembershipId(membershipIdDTO);
-            membershipView.sendMessage().accept(MembershipMessage.UPDATE_MEMBERSHIP_ID);          });
-        col1.setMaxWidth(1f * Integer.MAX_VALUE * 25);   // Year
+            membershipView.sendMessage().accept(MembershipMessage.UPDATE_MEMBERSHIP_ID);
+        });
+
+        col1.setMaxWidth(1f * Integer.MAX_VALUE * 25);  // Year
         return col1;
     }
 }
