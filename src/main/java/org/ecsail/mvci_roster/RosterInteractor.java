@@ -38,81 +38,69 @@ public class RosterInteractor {
     }
 
     protected ObservableList<MembershipListDTO> setSlipsForRoster(ObservableList<MembershipListDTO> updatedRoster) {
-        for(MembershipListDTO m: updatedRoster) {
-            if(m.getSubLeaser() > 0) { // let's mark Sublease Owners
-                    m.setSlip("O" + m.getSlip()); // put a 0 in front of owner
-                    setSublease(m.getSlip(), m.getSubLeaser(), updatedRoster);
+        for (MembershipListDTO m : updatedRoster) {
+            if (m.getSubLeaser() > 0) { // let's mark Sublease Owners
+                m.setSlip("O" + m.getSlip()); // put a 0 in front of owner
+                setSublease(m.getSlip(), m.getSubLeaser(), updatedRoster);
             }
         }
         return updatedRoster;
     }
 
     private ObservableList<MembershipListDTO> setSublease(String slip, int subLeaser, ObservableList<MembershipListDTO> updatedRoster) {
-        for(MembershipListDTO m: updatedRoster)
-            if(m.getMsId() == subLeaser) m.setSlip("S" + slip);
+        for (MembershipListDTO m : updatedRoster)
+            if (m.getMsId() == subLeaser) m.setSlip("S" + slip);
         return updatedRoster;
     }
 
     protected void setRosterToTableview() {
-        Platform.runLater(() -> {
             logger.info("Setting memberships to roster on change.........");
             rosterModel.getRosterTableView().setItems(rosterModel.getRosters());
-        });
-        changeState();
     }
 
-    private void changeState() {
-        Platform.runLater(() -> {
+    protected void changeState() {
             logger.debug("Rosters is in search mode: " + rosterModel.isSearchMode());
             if (rosterModel.isSearchMode())
                 rosterModel.setNumberOfRecords(String.valueOf(rosterModel.getSearchedRosters().size()));
             else
                 rosterModel.setNumberOfRecords(String.valueOf(rosterModel.getRosters().size()));
-        });
     }
 
     protected void updateRoster() {
         System.out.println("updateRoster()");
         // I believe problem with tableview not refreshing on first open is in here
-        clearMainRoster();
-            Method method;
-            try {
-                method = membershipRepo.getClass().getMethod(rosterModel.getSelectedRadioBox().getMethod(), Integer.class);
-                logger.info("Getting roster from data base");
-                ObservableList<MembershipListDTO> updatedRoster
-                        = FXCollections.observableArrayList((List<MembershipListDTO>) method.invoke(membershipRepo, rosterModel.getSelectedYear()));
-                    updateRoster(updatedRoster);
-                fillTableView();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            changeState();
-            clearSearchBox();
-            sortRoster();
+        Method method;
+        try {
+            method = membershipRepo.getClass().getMethod(rosterModel.getSelectedRadioBox().getMethod(), Integer.class);
+            logger.info("Getting roster from data base");
+            ObservableList<MembershipListDTO> updatedRoster
+                    = FXCollections.observableArrayList((List<MembershipListDTO>) method.invoke(membershipRepo, rosterModel.getSelectedYear()));
+            setRosterToModel(updatedRoster); // make method return ObsservableList
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    private void clearSearchBox() {
-        if(!rosterModel.getTextFieldString().equals(""))
-            Platform.runLater(() -> rosterModel.setTextFieldString(""));
-    }
-
-    private void clearMainRoster() {
-        Platform.runLater(() -> rosterModel.getRosters().clear());
-    }
-
-    private void sortRoster() {
-        System.out.println("sortRoster()");
-        Platform.runLater(() -> {
-            rosterModel.getRosters().sort(Comparator.comparing(MembershipListDTO::getMembershipId));
-            rosterModel.getRosterTableView().refresh(); // this is a hack because sometimes it won't refresh (doesn't work)
-        });
-    }
-
-    private void updateRoster(ObservableList<MembershipListDTO> updatedRoster) {
+    private void setRosterToModel(ObservableList<MembershipListDTO> updatedRoster) {
         Platform.runLater(() -> {
             logger.info("Adding roster to model");
             rosterModel.getRosters().setAll(setSlipsForRoster(updatedRoster));
         });
+    }
+
+    protected void clearSearchBox() {
+        if (!rosterModel.getTextFieldString().equals(""))
+            rosterModel.setTextFieldString("");
+    }
+
+    protected void clearMainRoster() {
+        rosterModel.getRosters().clear();
+    }
+
+    protected void sortRoster() {
+        System.out.println("sortRoster()");
+        rosterModel.getRosters().sort(Comparator.comparing(MembershipListDTO::getMembershipId));
+        rosterModel.getRosterTableView().refresh(); // this is a hack because sometimes it won't refresh (doesn't work)
     }
 
     protected void getRadioChoices() {
@@ -139,12 +127,11 @@ public class RosterInteractor {
 
     protected void fillTableView() {
         System.out.println("fillTableView()");
-            if (!rosterModel.getTextFieldString().equals("")) fillWithSearchResults();
-            else fillWithResults(); // search box cleared
-        changeState();
+        if (!rosterModel.getTextFieldString().equals("")) fillWithSearchResults();
+        else fillWithResults(); // search box cleared
     }
 
-    private void fillWithResults() {
+    private void fillWithResults() { // this is where we stick
         System.out.println("fillWithResults()");
         Platform.runLater(() -> {
             logger.debug("TableView is set to display normal results");
