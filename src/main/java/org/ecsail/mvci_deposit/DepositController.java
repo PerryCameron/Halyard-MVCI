@@ -1,32 +1,33 @@
-package org.ecsail.mvci_bod;
+package org.ecsail.mvci_deposit;
 
 
 import javafx.concurrent.Task;
 import javafx.scene.layout.Region;
 import org.ecsail.interfaces.Controller;
+import org.ecsail.mvci_bod.BodMessage;
 import org.ecsail.mvci_main.MainController;
 
-
-public class BodController extends Controller<BodMessage> {
+public class DepositController extends Controller<DepositMessage> {
     private final MainController mainController;
-    private final BodInteractor bodInteractor;
-    private final BodView bodView;
 
-    public BodController(MainController mc) {
+    private final DepositInteractor depositInteractor;
+    private final DepositView depositView;
+
+    public DepositController(MainController mc) {
         mainController = mc;
-        BodModel BodModel = new BodModel(mainController.getMainModel());
-        bodInteractor = new BodInteractor(BodModel, mainController.getConnections());
-        action(BodMessage.GET_DATA); // moved this last, we will see if it works
-        bodView = new BodView(BodModel, this::action);
+        DepositModel depositModel = new DepositModel(mainController.getMainModel());
+        depositInteractor = new DepositInteractor(depositModel, mainController.getConnections());
+        action(DepositMessage.GET_DATA); // moved this last, we will see if it works
+        depositView = new DepositView(depositModel, this::action);
     }
 
     @Override
     public Region getView() {
-        return bodView.build();
+        return depositView.build();
     }
 
     @Override
-    public void action(BodMessage action) {
+    public void action(DepositMessage action) {
         switch (action) {
             case GET_DATA -> getSlipData();
             case LAUNCH_TAB -> launchTab();
@@ -34,7 +35,7 @@ public class BodController extends Controller<BodMessage> {
     }
 
     private void launchTab() {
-        mainController.openMembershipMVCI(bodInteractor.getMembershipList());
+        mainController.openMembershipMVCI(depositInteractor.getMembershipList());
     }
 
     private void getSlipData() {
