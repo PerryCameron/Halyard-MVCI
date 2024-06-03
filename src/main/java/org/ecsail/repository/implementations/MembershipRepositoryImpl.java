@@ -203,6 +203,7 @@ public class MembershipRepositoryImpl implements MembershipRepository {
 
     @Override
     public MembershipListDTO insertMembership(MembershipListDTO nm) {
+        System.out.println("trying to insert membership");
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = """
         INSERT INTO membership (p_id, join_date, mem_type, address, city, state, zip)

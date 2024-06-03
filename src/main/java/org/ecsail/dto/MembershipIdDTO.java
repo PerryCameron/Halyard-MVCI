@@ -27,9 +27,9 @@ public class MembershipIdDTO {
 		this.lateRenew = new SimpleBooleanProperty(lateRenew);
 	}
 
-	public MembershipIdDTO(String fiscalYear, Integer msId, int membershipId, String memType) {
+	public MembershipIdDTO(int fiscalYear, Integer msId, int membershipId, String memType) {
 		this.mId = new SimpleIntegerProperty(0);
-		this.fiscalYear = new SimpleIntegerProperty(0);
+		this.fiscalYear = new SimpleIntegerProperty(fiscalYear);
 		this.msId = new SimpleIntegerProperty(msId);
 		this.membershipId = new SimpleIntegerProperty(membershipId);
 		this.renew = new SimpleBooleanProperty(false);
@@ -39,6 +39,14 @@ public class MembershipIdDTO {
 	}
 
 	public MembershipIdDTO() {
+		this.mId = new SimpleIntegerProperty(0);
+		this.fiscalYear = new SimpleIntegerProperty(0);
+		this.msId = new SimpleIntegerProperty(0);
+		this.membershipId = new SimpleIntegerProperty(0);
+		this.renew = new SimpleBooleanProperty(false);
+		this.memType = new SimpleStringProperty("");
+		this.selected = new SimpleBooleanProperty(false);
+		this.lateRenew = new SimpleBooleanProperty(false);
 	}
 
 	public final IntegerProperty mIdProperty() {

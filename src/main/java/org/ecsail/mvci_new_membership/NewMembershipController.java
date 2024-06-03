@@ -47,12 +47,13 @@ public class NewMembershipController extends Controller<NewMembershipMessage> {
                 newMembershipInteractor.createPrimaryMember();
                 newMembershipInteractor.updateMembership();
                 newMembershipInteractor.createMembershipIdRow();
-//                slipInteractor.getSlipStructure();
+                newMembershipInteractor.createMemoToDocument();
                 return null;
             }
         };
         task.setOnSucceeded(e -> {
             mainController.showLoadingSpinner(false);
+            newMembershipInteractor.showSuccess();
 //            slipInteractor.setListsLoaded();
         });
         new Thread(task).start();

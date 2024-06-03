@@ -402,7 +402,7 @@ public class DataBaseService {
 
     public void insertMembershipId() {
         MembershipIdDTO membershipIdDTO = new MembershipIdDTO(
-                String.valueOf(membershipModel.getMembership().getSelectedYear()),
+                membershipModel.getMembership().getSelectedYear(),
                 membershipModel.getMembership().getMsId(),
                 membershipModel.getMembership().getMembershipId(),
                 membershipModel.getMembership().getMemType());

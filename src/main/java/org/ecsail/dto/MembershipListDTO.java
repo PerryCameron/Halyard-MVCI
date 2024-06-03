@@ -74,6 +74,23 @@ public class MembershipListDTO {
 		this.selectedYear = new SimpleIntegerProperty(selectedYear);
 	}
 
+	public MembershipListDTO() {
+		this.msId = new SimpleIntegerProperty(0);
+		this.pId = new SimpleIntegerProperty(0);
+		this.membershipId = new SimpleIntegerProperty(0);
+		this.joinDate = new SimpleStringProperty("");
+		this.memType = new SimpleStringProperty("");
+		this.address = new SimpleStringProperty("");
+		this.city = new SimpleStringProperty("");
+		this.state = new SimpleStringProperty("");
+		this.zip = new SimpleStringProperty("");
+		this.lastName = new SimpleStringProperty("");
+		this.firstName = new SimpleStringProperty("");
+		this.slip = new SimpleStringProperty("");
+		this.subLeaser = new SimpleIntegerProperty(0);
+		this.selectedYear = new SimpleIntegerProperty(0);
+	}
+
 	public ObservableList<MembershipIdDTO> getMembershipIdDTOS() {
 		return membershipIdDTOS;
 	}
@@ -96,10 +113,6 @@ public class MembershipListDTO {
 
 	public void setBoatDTOS(ObservableList<BoatDTO> boatDTOS) {
 		this.boatDTOS = boatDTOS;
-	}
-
-	public MembershipListDTO() {
-		super();
 	}
 
 	public int getMsId() {

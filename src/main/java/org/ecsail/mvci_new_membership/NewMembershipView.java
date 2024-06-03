@@ -6,6 +6,7 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.util.Builder;
+import org.apache.poi.ss.formula.functions.T;
 
 import java.util.function.Consumer;
 
@@ -38,7 +39,8 @@ public class NewMembershipView implements Builder<Region> {
     public void setMessageListener() {
         // Add listener to tabMessage property
         newMembershipModel.tabMessageProperty().addListener((observable, oldValue, newValue) -> {
-            newMembershipModel.getWhiteVBox().getChildren().add(new Text(newValue));
+            Text newMemLog = new Text(newValue);
+            newMembershipModel.getWhiteVBox().getChildren().add(newMemLog);
             // Add your custom action here
         });
     }
