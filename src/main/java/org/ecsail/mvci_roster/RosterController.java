@@ -93,8 +93,8 @@ public class RosterController extends Controller<RosterMessage> {
         };
         task.setOnSucceeded(e -> {
             mainController.showLoadingSpinner(false);
-            rosterInteractor.setListsLoaded();
             Platform.runLater(() -> {
+                rosterInteractor.setListsLoaded();
                 rosterInteractor.setRosterToTableview();// JFX Thread
                 rosterInteractor.changeState(); // JFX Thread
             });

@@ -75,17 +75,13 @@ public class RosterInteractor {
             logger.info("Getting roster from data base");
             ObservableList<MembershipListDTO> updatedRoster
                     = FXCollections.observableArrayList((List<MembershipListDTO>) method.invoke(membershipRepo, rosterModel.getSelectedYear()));
-            setRosterToModel(updatedRoster); // make method return ObsservableList
+            Platform.runLater(() -> {
+                logger.info("Adding roster to model");
+                rosterModel.getRosters().setAll(setSlipsForRoster(updatedRoster));
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    private void setRosterToModel(ObservableList<MembershipListDTO> updatedRoster) {
-        Platform.runLater(() -> {
-            logger.info("Adding roster to model");
-            rosterModel.getRosters().setAll(setSlipsForRoster(updatedRoster));
-        });
     }
 
     protected void clearSearchBox() {
@@ -98,7 +94,6 @@ public class RosterInteractor {
     }
 
     protected void sortRoster() {
-        System.out.println("sortRoster()");
         rosterModel.getRosters().sort(Comparator.comparing(MembershipListDTO::getMembershipId));
         rosterModel.getRosterTableView().refresh(); // this is a hack because sometimes it won't refresh (doesn't work)
     }
@@ -174,7 +169,7 @@ public class RosterInteractor {
     }
 
     protected void setListsLoaded() {
-        Platform.runLater(() -> rosterModel.setListsLoaded(!rosterModel.isListsLoaded()));
+        rosterModel.setListsLoaded(!rosterModel.isListsLoaded());
     }
 
     public MembershipListDTO getMembership() {
