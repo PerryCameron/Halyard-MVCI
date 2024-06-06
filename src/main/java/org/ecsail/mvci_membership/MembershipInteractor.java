@@ -3,8 +3,11 @@ package org.ecsail.mvci_membership;
 import javafx.application.Platform;
 import org.ecsail.connection.Connections;
 import org.ecsail.interfaces.SlipUser;
+import org.ecsail.pdf.PDF_Envelope;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 public class MembershipInteractor implements SlipUser {
     private final MembershipModel membershipModel;
@@ -32,5 +35,13 @@ public class MembershipInteractor implements SlipUser {
     }
 
     public void loadInvoices() {
+    }
+
+    public void printEnvelope() {
+            try {   /// probably should send membershipModel instead of membership ID
+                new PDF_Envelope(true, membershipModel, dataBaseService);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
     }
 }

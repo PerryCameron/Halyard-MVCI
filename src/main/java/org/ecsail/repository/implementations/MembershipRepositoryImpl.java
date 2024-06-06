@@ -1,9 +1,11 @@
 package org.ecsail.repository.implementations;
 
+import org.ecsail.dto.MembershipDTO;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.repository.interfaces.MembershipRepository;
 import org.ecsail.repository.rowmappers.MembershipListRowMapper;
 import org.ecsail.repository.rowmappers.MembershipListRowMapper1;
+import org.ecsail.repository.rowmappers.MembershipRowMapper;
 import org.mariadb.jdbc.Statement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -231,5 +233,29 @@ public class MembershipRepositoryImpl implements MembershipRepository {
             logger.error("Unable to insert into membership: " + e.getMessage());
         }
         return nm; // Return the updated DTO
+    }
+
+    @Override
+    public MembershipListDTO getMembershipListByIdAndYear(int membershipId, int year) {
+        String sql = "SELECT m.ms_id, m.p_id, mid.membership_id, mid.fiscal_year, m.join_date, " +
+                "mid.mem_type, s.SLIP_NUM, p.l_name, p.f_name, s.subleased_to, m.address, " +
+                "m.city, m.state, m.zip " +
+                "FROM membership m " +
+                "LEFT JOIN person p ON m.ms_id = p.ms_id AND p.member_type = 1 " +
+                "LEFT JOIN membership_id mid ON m.ms_id = mid.ms_id AND mid.fiscal_year = ? " +
+                "LEFT JOIN slip s ON m.ms_id = s.ms_id " +
+                "WHERE mid.fiscal_year = ? AND mid.membership_id = ? " +
+                "LIMIT 1";
+        return template.queryForObject(sql, new MembershipListRowMapper(), year, year, membershipId);
+    }
+
+    @Override
+    public MembershipDTO getCurrentMembershipChair() {
+        String sql = """
+                SELECT m.* FROM membership m 
+                JOIN app_settings a ON m.MS_ID = CAST(a.setting_value AS UNSIGNED) 
+                WHERE a.setting_key = 'current_membership_chair'
+                """;
+        return template.queryForObject(sql, new MembershipRowMapper());
     }
 }

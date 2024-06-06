@@ -58,5 +58,6 @@ public enum MembershipMessage {
     SELECT_INVOICE,
     SELECT_FEES,
     SELECT_IDS,
+    PRINT_ENVELOPE,
     GET_DATA
 }

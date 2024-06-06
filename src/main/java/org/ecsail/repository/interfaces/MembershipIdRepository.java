@@ -17,7 +17,8 @@ public interface MembershipIdRepository {
     MembershipIdDTO getMembershipIdObject(int mid);
     MembershipIdDTO getHighestMembershipId(String year);
     boolean isRenewedByMsidAndYear(int ms_id, String year);
-    List<MembershipIdDTO> getAllMembershipIdsByYear(String year);
+    List<MembershipIdDTO> getAllMembershipIdsByYear(int year);
+
     List<MembershipIdDTO> getActiveMembershipIdsByYear(String year);
     int getNonRenewNumber(int year);
     int getMsidFromYearAndMembershipId(int year, String membershipId);

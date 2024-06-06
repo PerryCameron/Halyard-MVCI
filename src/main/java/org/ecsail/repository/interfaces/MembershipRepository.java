@@ -1,6 +1,7 @@
 package org.ecsail.repository.interfaces;
 
 
+import org.ecsail.dto.MembershipDTO;
 import org.ecsail.dto.MembershipListDTO;
 
 import java.util.List;
@@ -23,4 +24,8 @@ public interface MembershipRepository {
     MembershipListDTO getMembershipByMsId(int membershipId);
 
     MembershipListDTO insertMembership(MembershipListDTO nm);
+
+    MembershipListDTO getMembershipListByIdAndYear(int membershipId, int year);
+
+    MembershipDTO getCurrentMembershipChair();
 }

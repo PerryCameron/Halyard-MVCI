@@ -38,7 +38,9 @@ public class MembershipDTO {
 	}
 
 
-
+	public final String getCityStateZip() {
+		return getCity() + ", " + getState() + " " + getZip();
+	}
 	public final IntegerProperty msIdProperty() {
 		return this.msId;
 	}

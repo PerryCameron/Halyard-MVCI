@@ -553,4 +553,17 @@ public class DataBaseService {
                 membershipModel.setReturnMessage(MembershipMessage.MOVE_SECONDARY_TO_PRIMARY_SUCCEED);
             });
     }
+
+    public MembershipListDTO getMembershipListByIdAndYear(int membershipId, int year) {
+        return membershipRepo.getMembershipListByIdAndYear(membershipId,year);
+    }
+
+    public List<MembershipIdDTO> getAllMembershipIdsByYear(int year) { {
+        return membershipIdRepo.getAllMembershipIdsByYear(year);
+    }}
+
+    public MembershipDTO getCurrentMembershipChair() {
+        return membershipRepo.getCurrentMembershipChair();
+    }
+
 }

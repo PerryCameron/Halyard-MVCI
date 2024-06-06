@@ -1,7 +1,5 @@
 package org.ecsail.mvci_membership;
 
-import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -21,7 +19,6 @@ import org.ecsail.widgetfx.VBoxFx;
 import java.io.IOException;
 import java.time.Year;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 public class PropertiesTabView implements Builder<Tab> {
@@ -61,11 +58,11 @@ public class PropertiesTabView implements Builder<Tab> {
     private Node createLeftVBox() {
         VBox leftVBox = new VBox();
         leftVBox.setSpacing(20);
-        leftVBox.getChildren().addAll(printEnvelope(), printCardLabels(), delMembership());
+        leftVBox.getChildren().addAll(createPrintEnvelope(), printCardLabels(), delMembership());
         return leftVBox;
     }
 
-    private Node printEnvelope() {
+    private Node createPrintEnvelope() {
         HBox hBox = new HBox();
         RadioButton r1 = new RadioButton("#10 Envelope");
         RadioButton r2 = new RadioButton("#1 Catalog");
@@ -78,11 +75,8 @@ public class PropertiesTabView implements Builder<Tab> {
         hBox.setAlignment(Pos.CENTER_LEFT);
         hBox.getChildren().addAll(new Label("Print Envelope"), button, r1, r2);
         button.setOnAction(e -> {
-            try {   /// probably should send membershipModel instead of membership ID
-                new PDF_Envelope(true, r2.isSelected(), membershipView.getMembershipModel());
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
+            membershipView.getMembershipModel().setEnvelopeIsCatalogue(r2.isSelected());
+            membershipView.sendMessage().accept(MembershipMessage.PRINT_ENVELOPE);
         });
         return hBox;
     }
@@ -167,60 +161,58 @@ public class PropertiesTabView implements Builder<Tab> {
     }
 
     private void deleteMembership(int msId) {
-        Dialogue_CustomErrorMessage dialogue = new Dialogue_CustomErrorMessage(true);
-        if (slipRepository.existsSlipWithMsId(msId)) {
-            dialogue.setTitle("Looks like we have a problem");
-            dialogue.setText("You must re-assign their slip before deleting this membership");
-            return;
-        } else {
-            dialogue.setTitle("Deleting Membership MSID:" + msId);
-        }
-        Task<Object> task = new Task<>() {
-            @Override
-            protected Object call() throws Exception {
-                setMessage("Deleting boats", dialogue);
-                boatRepository.deleteBoatOwner(msId);
-                setMessage("Deleting notes", dialogue);
-                memoRepository.deleteMemos(msId);
-                setMessage("Deleting Invoices and Payments", dialogue);
-                invoiceRepository.deleteAllPaymentsAndInvoicesByMsId(msId);
-                setMessage("Deleting wait_list entries", dialogue);
-                slipRepository.deleteWaitList(msId);
-                setMessage("Deleting membership hash", dialogue);
-                membershipRepository.deleteFormMsIdHash(msId);
-                setMessage("Deleting history",dialogue);
-                membershipIdRepository.deleteMembershipId(msId);
-                List<PersonDTO> people = personRepository.getPeople(msId);
-                setMessage("Deleting membership", dialogue);
-                membershipRepository.deleteMembership(msId);
-                setMessage("Deleting people", dialogue);
-                for (PersonDTO p : people) {
-                    phoneRepository.deletePhones(p.getpId());
-                    emailRepository.deleteEmail(p.getpId());
-                    officerRepository.delete(p.getpId());
-                    personRepository.deletePerson(p.getpId());
-                }
-
-                return null;
-            }
-        };
-        task.setOnSucceeded(succeed -> {
-                    Launcher.removeMembershipRow(msId);
-                    Launcher.closeActiveTab();
-                    BaseApplication.logger.info("Deleted membership msid: " + msId);
-                    dialogue.setText("Sucessfully deleted membership MSID: " + msId);
-                }
-        );
-        new Thread(task).start();
-
-
-
+//        Dialogue_CustomErrorMessage dialogue = new Dialogue_CustomErrorMessage(true);
+//        if (slipRepository.existsSlipWithMsId(msId)) {
+//            dialogue.setTitle("Looks like we have a problem");
+//            dialogue.setText("You must re-assign their slip before deleting this membership");
+//            return;
+//        } else {
+//            dialogue.setTitle("Deleting Membership MSID:" + msId);
+//        }
+//        Task<Object> task = new Task<>() {
+//            @Override
+//            protected Object call() throws Exception {
+//                setMessage("Deleting boats", dialogue);
+//                boatRepository.deleteBoatOwner(msId);
+//                setMessage("Deleting notes", dialogue);
+//                memoRepository.deleteMemos(msId);
+//                setMessage("Deleting Invoices and Payments", dialogue);
+//                invoiceRepository.deleteAllPaymentsAndInvoicesByMsId(msId);
+//                setMessage("Deleting wait_list entries", dialogue);
+//                slipRepository.deleteWaitList(msId);
+//                setMessage("Deleting membership hash", dialogue);
+//                membershipRepository.deleteFormMsIdHash(msId);
+//                setMessage("Deleting history",dialogue);
+//                membershipIdRepository.deleteMembershipId(msId);
+//                List<PersonDTO> people = personRepository.getPeople(msId);
+//                setMessage("Deleting membership", dialogue);
+//                membershipRepository.deleteMembership(msId);
+//                setMessage("Deleting people", dialogue);
+//                for (PersonDTO p : people) {
+//                    phoneRepository.deletePhones(p.getpId());
+//                    emailRepository.deleteEmail(p.getpId());
+//                    officerRepository.delete(p.getpId());
+//                    personRepository.deletePerson(p.getpId());
+//                }
+//
+//                return null;
+//            }
+//        };
+//        task.setOnSucceeded(succeed -> {
+//                    Launcher.removeMembershipRow(msId);
+//                    Launcher.closeActiveTab();
+//                    BaseApplication.logger.info("Deleted membership msid: " + msId);
+//                    dialogue.setText("Sucessfully deleted membership MSID: " + msId);
+//                }
+//        );
+//        new Thread(task).start();
+//
     }
-    private void setMessage(String message, Dialogue_CustomErrorMessage dialogue) {
-        Platform.runLater(() -> {
-            dialogue.setText(message);
-        });
-    }
+//    private void setMessage(String message, Dialogue_CustomErrorMessage dialogue) {
+//        Platform.runLater(() -> {
+//            dialogue.setText(message);
+//        });
+//    }
 
 
 }

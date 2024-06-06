@@ -71,6 +71,7 @@ public class MembershipController extends Controller<MembershipMessage> {
             case MOVE_MEMBER_TO_MEMBERSHIP -> runTask(MOVE_MEMBER_TO_MEMBERSHIP);
             case UPLOAD_MEMBER_PHOTO -> runTask(UPLOAD_MEMBER_PHOTO);
             case SAVE_INVOICE -> runSpinner(SAVE_INVOICE);
+            case PRINT_ENVELOPE -> runTask(PRINT_ENVELOPE);
         }
     }
 
@@ -115,6 +116,7 @@ public class MembershipController extends Controller<MembershipMessage> {
                     case DELETE_MEMBER_FROM_DATABASE -> db.deletePerson();
                     case MOVE_MEMBER_TO_MEMBERSHIP -> db.movePerson();
                     case UPLOAD_MEMBER_PHOTO -> membershipInteractor.uploadMemberPhoto();
+                    case PRINT_ENVELOPE -> membershipInteractor.printEnvelope();
                 }
                 return null;
             }

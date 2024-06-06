@@ -1,7 +1,6 @@
 package org.ecsail.repository.implementations;
 
 import org.ecsail.dto.MembershipIdDTO;
-import org.ecsail.mvci_new_membership.NewMembershipInteractor;
 import org.ecsail.repository.interfaces.MembershipIdRepository;
 import org.ecsail.repository.rowmappers.MembershipIdRowMapper;
 import org.slf4j.Logger;
@@ -15,6 +14,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MembershipIdRepositoryImpl implements MembershipIdRepository {
@@ -80,8 +80,16 @@ public class MembershipIdRepositoryImpl implements MembershipIdRepository {
     }
 
     @Override
-    public List<MembershipIdDTO> getAllMembershipIdsByYear(String year) {
-        return null;
+    public List<MembershipIdDTO> getAllMembershipIdsByYear(int year) {
+        List<MembershipIdDTO> theseIds = new ArrayList<>();
+        String sql = "SELECT * FROM membership_id WHERE fiscal_year = ? ORDER BY membership_id";
+        try {
+            List<MembershipIdDTO> results = template.query(sql, new MembershipIdRowMapper(), year);
+            theseIds.addAll(results);
+        } catch (DataAccessException e) {
+            logger.error(e.getMessage());
+        }
+        return theseIds;
     }
 
     @Override

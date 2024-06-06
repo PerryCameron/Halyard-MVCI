@@ -54,9 +54,20 @@ public class MembershipModel {
     private StringProperty selectedString = new SimpleStringProperty("");
     private SimpleIntegerProperty selectedInvoiceCreateYear = new SimpleIntegerProperty(0);
     private SimpleObjectProperty<Success> invoiceSaved = new SimpleObjectProperty(Success.NULL);
+    private SimpleBooleanProperty envelopeIsCatalogue = new SimpleBooleanProperty(false);
 
 
+    public boolean isEnvelopeIsCatalogue() {
+        return envelopeIsCatalogue.get();
+    }
 
+    public SimpleBooleanProperty envelopeIsCatalogueProperty() {
+        return envelopeIsCatalogue;
+    }
+
+    public void setEnvelopeIsCatalogue(boolean envelopeIsCatalogue) {
+        this.envelopeIsCatalogue.set(envelopeIsCatalogue);
+    }
 
     public PaymentDTO getSelectedPayment() {
         return selectedPayment.get();

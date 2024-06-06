@@ -13,8 +13,10 @@ public class HalyardPaths {
 	private static final Logger logger = LoggerFactory.getLogger(HalyardPaths.class);
 
 	public static final String ROSTERS = System.getProperty("user.home") + "/Documents/ECSC/Rosters";
+	public static final String ECSC_HOME = System.getProperty("user.home") + "/Documents/ECSC";
 
-	
+
+
 // 	private static boolean isDirEmpty(final Path directory) throws IOException {
 // 	    try(DirectoryStream<Path> dirStream = Files.newDirectoryStream(directory)) {
 // 	        return !dirStream.iterator().hasNext();
