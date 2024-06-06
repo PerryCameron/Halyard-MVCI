@@ -4,7 +4,6 @@ package org.ecsail.mvci_deposit;
 import javafx.concurrent.Task;
 import javafx.scene.layout.Region;
 import org.ecsail.interfaces.Controller;
-import org.ecsail.mvci_bod.BodMessage;
 import org.ecsail.mvci_main.MainController;
 
 public class DepositController extends Controller<DepositMessage> {

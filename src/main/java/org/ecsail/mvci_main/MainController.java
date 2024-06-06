@@ -14,7 +14,9 @@ import org.ecsail.interfaces.Controller;
 import org.ecsail.interfaces.Status;
 import org.ecsail.mvci_boat.BoatController;
 import org.ecsail.mvci_boatlist.BoatListController;
+import org.ecsail.mvci_bod.BodController;
 import org.ecsail.mvci_connect.ConnectController;
+import org.ecsail.mvci_deposit.DepositController;
 import org.ecsail.mvci_load.LoadingController;
 import org.ecsail.mvci_membership.MembershipController;
 import org.ecsail.mvci_new_membership.NewMembershipController;
@@ -74,9 +76,9 @@ public class MainController extends Controller<MainMessage> implements Status {
         switch (tabName) {
             case "People" -> System.out.println("Displaying people list");
             case "Slips" -> openSlipsTab(tabName);
-            case "Board of Directors" -> System.out.println("Displaying board of directors list");
+            case "Board of Directors" -> openBodTab(tabName);
             case "Create New Membership" -> openNewMembershipTab(tabName);
-            case "Deposits" -> System.out.println("Displaying deposits");
+            case "Deposits" -> openDepositsTab(tabName);
             case "Rosters" -> openRosterTab(tabName);
             case "Boats" -> openBoatListTab(tabName);
             case "Notes" -> System.out.println("Displaying notes");
@@ -84,6 +86,16 @@ public class MainController extends Controller<MainMessage> implements Status {
             default -> System.out.println("Invalid input");
         }
 
+    }
+
+    private void openBodTab(String tabName) {
+        if (mainInteractor.tabIsNotOpen(-7))
+            mainView.addNewTab(tabName, new BodController(this).getView(), -7);
+    }
+
+    private void openDepositsTab(String tabName) {
+        if (mainInteractor.tabIsNotOpen(-6))
+            mainView.addNewTab(tabName, new DepositController(this).getView(), -6);
     }
 
     private void openNewMembershipTab(String tabName) {

@@ -42,15 +42,6 @@ CREATE TABLE `boat` (
                         PRIMARY KEY (`BOAT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-# create table ECSC_SQL.boat_memo
-# (
-#     BOAT_MEMO_ID INTEGER NOT NULL auto_increment primary key,
-#     BOAT_ID      INTEGER NOT NULL,
-#     MEMO_DATE    date    NOT NULL,
-#     MEMO         varchar(2000),
-#     foreign key (BOAT_ID) references boat (BOAT_ID)
-# );
-
 CREATE TABLE ECSC_SQL.boat_picture
 (
     BOAT_PICTURE_ID   INTEGER NOT NULL auto_increment primary key,
