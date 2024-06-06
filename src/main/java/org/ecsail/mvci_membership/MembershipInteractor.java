@@ -38,10 +38,19 @@ public class MembershipInteractor implements SlipUser {
     }
 
     public void printEnvelope() {
-            try {   /// probably should send membershipModel instead of membership ID
-                new PDF_Envelope(true, membershipModel, dataBaseService);
-            } catch (IOException e1) {
-                e1.printStackTrace();
+        System.out.println("Printing envelope");
+        try {
+            if (membershipModel == null) {
+                System.out.println("membershipModel is null");
             }
+            if (dataBaseService == null) {
+                System.out.println("dataBaseService is null");
+            }
+            new PDF_Envelope(true, membershipModel, dataBaseService);
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        } catch (Exception e2) {
+            e2.printStackTrace();
+        }
     }
 }

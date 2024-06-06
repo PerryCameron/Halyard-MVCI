@@ -35,9 +35,9 @@ import java.util.*;
 
 public class PDF_Envelope {
 	public static Logger logger = LoggerFactory.getLogger(PDF_Envelope.class);
-	Image ecscLogo = new Image(ImageDataFactory.create(ByteTools.toByteArray(Objects.requireNonNull(getClass().getResourceAsStream("/EagleCreekLogoForPDF.png")))));
+	Image ecscLogo = new Image(ImageDataFactory.create(ByteTools.toByteArray(Objects.requireNonNull(getClass().getResourceAsStream("/images/EagleCreekLogoForPDF.png")))));
 	MembershipListDTO membershipListDTO;
-	MembershipDTO membershipChair;
+	private MembershipDTO membershipChair = new MembershipDTO();
 	private int year;
 	private int current_membership_id;
 	private List<MembershipIdDTO> membershipIdDTOS = new ArrayList<MembershipIdDTO>();
@@ -45,16 +45,21 @@ public class PDF_Envelope {
 	private boolean isOneMembership;
 	DataBaseService dataBaseService;
 	MembershipModel model;
-
-
-//	public PDF_Envelope(boolean iom, boolean isCatalog, String membershipId) throws IOException { }
 	public PDF_Envelope(boolean iom, MembershipModel model, DataBaseService dataBaseService) throws IOException {
+		System.out.println("Creating envelope");
+		if (model == null) {
+			System.out.println("MembershipModel is null");
+		}
+		if (dataBaseService == null) {
+			System.out.println("DataBaseService is null");
+		}
 		this.model = model;
 		this.dataBaseService = dataBaseService;
 		this.year= LocalDate.now().getYear();
 		HalyardPaths.checkPath(HalyardPaths.ECSC_HOME);
 		this.isOneMembership = iom;
 		this.membershipChair = dataBaseService.getCurrentMembershipChair();
+		this.current_membership_id = model.getMembership().getMembershipId();
 
 		if(System.getProperty("os.name").equals("Windows 10"))
 		FontProgramFactory.registerFont("c:/windows/fonts/times.ttf", "times");
@@ -99,6 +104,8 @@ public class PDF_Envelope {
 		doc.setTopMargin(0);
 		doc.setLeftMargin(0.25f);
 		if(isOneMembership) {
+			System.out.println("current_membership_id" + current_membership_id);
+			System.out.println("year" + year);
 			membershipListDTO = dataBaseService.getMembershipListByIdAndYear(current_membership_id, year);
 		doc.add(createReturnAddress());
 		doc.add(new Paragraph(new Text("\n\n\n\n\n")));

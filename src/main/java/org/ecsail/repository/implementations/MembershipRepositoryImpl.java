@@ -43,7 +43,7 @@ public class MembershipRepositoryImpl implements MembershipRepository {
                 LEFT JOIN slip s on m.MS_ID = s.MS_ID;
                 """;
         List<MembershipListDTO> membershipListDTOS
-                = template.query(query, new MembershipListRowMapper(), new Object[] {selectedYear.intValue()});
+                = template.query(query, new MembershipListRowMapper(), new Object[]{selectedYear.intValue()});
         return membershipListDTOS;
     }
 
@@ -87,7 +87,7 @@ public class MembershipRepositoryImpl implements MembershipRepository {
                 LEFT JOIN slip s on m.MS_ID = s.MS_ID
                                 """;
         List<MembershipListDTO> membershipListDTOS
-                = template.query(query, new MembershipListRowMapper(), new Object[]{selectedYear,selectedYear.intValue()});
+                = template.query(query, new MembershipListRowMapper(), new Object[]{selectedYear, selectedYear.intValue()});
         return membershipListDTOS;
     }
 
@@ -123,7 +123,7 @@ public class MembershipRepositoryImpl implements MembershipRepository {
                                 """;
         List<MembershipListDTO> membershipListDTOS
                 = template.query(query, new MembershipListRowMapper(), new Object[]{selectedYear.intValue(),
-                selectedYear.intValue(), selectedYear.intValue(),selectedYear.intValue(),selectedYear.intValue(),
+                selectedYear.intValue(), selectedYear.intValue(), selectedYear.intValue(), selectedYear.intValue(),
                 selectedYear.intValue()});
         return membershipListDTOS;
     }
@@ -186,7 +186,7 @@ public class MembershipRepositoryImpl implements MembershipRepository {
                 membership m LEFT JOIN person p ON m.p_id=p.p_id LEFT JOIN membership_id 
                 id ON m.ms_id=id.ms_id WHERE id.fiscal_year=YEAR(NOW()) AND membership_id=?
                 """;
-         return template.queryForObject(query, new MembershipListRowMapper1(), membershipId);
+        return template.queryForObject(query, new MembershipListRowMapper1(), membershipId);
     }
 
     @Override
@@ -208,9 +208,9 @@ public class MembershipRepositoryImpl implements MembershipRepository {
         System.out.println("trying to insert membership");
         KeyHolder keyHolder = new GeneratedKeyHolder();
         String sql = """
-        INSERT INTO membership (p_id, join_date, mem_type, address, city, state, zip)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-        """;
+                INSERT INTO membership (p_id, join_date, mem_type, address, city, state, zip)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+                """;
 
         try {
             template.update(connection -> {
@@ -237,15 +237,17 @@ public class MembershipRepositoryImpl implements MembershipRepository {
 
     @Override
     public MembershipListDTO getMembershipListByIdAndYear(int membershipId, int year) {
-        String sql = "SELECT m.ms_id, m.p_id, mid.membership_id, mid.fiscal_year, m.join_date, " +
-                "mid.mem_type, s.SLIP_NUM, p.l_name, p.f_name, s.subleased_to, m.address, " +
-                "m.city, m.state, m.zip " +
-                "FROM membership m " +
-                "LEFT JOIN person p ON m.ms_id = p.ms_id AND p.member_type = 1 " +
-                "LEFT JOIN membership_id mid ON m.ms_id = mid.ms_id AND mid.fiscal_year = ? " +
-                "LEFT JOIN slip s ON m.ms_id = s.ms_id " +
-                "WHERE mid.fiscal_year = ? AND mid.membership_id = ? " +
-                "LIMIT 1";
+        String sql = """
+                                SELECT m.ms_id, m.p_id, mid.membership_id, mid.fiscal_year, m.join_date, 
+                                mid.mem_type, s.SLIP_NUM, p.l_name, p.f_name, s.subleased_to, m.address, 
+                                m.city, m.state, m.zip 
+                                FROM membership m 
+                                LEFT JOIN person p ON m.ms_id = p.ms_id AND p.member_type = 1 
+                                LEFT JOIN membership_id mid ON m.ms_id = mid.ms_id AND mid.fiscal_year = ? 
+                                LEFT JOIN slip s ON m.ms_id = s.ms_id 
+                                WHERE mid.fiscal_year = ? AND mid.membership_id = ?  
+                                LIMIT 1;
+                """;
         return template.queryForObject(sql, new MembershipListRowMapper(), year, year, membershipId);
     }
 
