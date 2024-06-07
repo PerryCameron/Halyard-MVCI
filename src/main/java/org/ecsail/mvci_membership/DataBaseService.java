@@ -14,6 +14,7 @@ import org.ecsail.static_tools.HandlingTools;
 import org.ecsail.widgetfx.TableViewFx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 
 import javax.sql.DataSource;
 import java.time.LocalDate;
@@ -93,10 +94,8 @@ public class DataBaseService {
     public void selectBoats() {
         HandlingTools.queryForList(() -> {
             List<BoatDTO> boats = boatRepo.getBoatsByMsId(membershipModel.getMembership().getMsId());
-            Platform.runLater(() -> {
-                membershipModel.getMembership()
-                        .setBoatDTOS(FXCollections.observableArrayList(boats));
-            });
+            Platform.runLater(() -> membershipModel.getMembership()
+                    .setBoatDTOS(FXCollections.observableArrayList(boats)));
         }, membershipModel.getMainModel(), logger);
     }
 
@@ -110,9 +109,8 @@ public class DataBaseService {
     }
 
     public void selectSlipInfo() {
-        HandlingTools.queryForList(() -> {
-            Platform.runLater(() -> membershipModel.setSlip(slipRepo.getSlip(membershipModel.getMembership().getMsId())));
-        }, membershipModel.getMainModel(), logger);
+        HandlingTools.queryForList(() -> Platform.runLater(()
+                -> membershipModel.setSlip(slipRepo.getSlip(membershipModel.getMembership().getMsId()))), membershipModel.getMainModel(), logger);
         logger.info("Slip is loaded");
         Platform.runLater(() -> {
             // member does not own a slip
@@ -566,4 +564,56 @@ public class DataBaseService {
         return membershipRepo.getCurrentMembershipChair();
     }
 
+    public boolean existsSlipWithMsId() {
+        return slipRepo.existsSlipWithMsId(membershipModel.getMembership().getMsId());
+    }
+
+    public int deleteBoatOwner(int msId) {
+        return boatRepo.deleteBoatOwner(msId);
+    }
+
+
+    public int deleteNotes(int msId) {
+        return notesRepo.deleteNotes(msId);
+    }
+
+    public int[] deleteAllPaymentsAndInvoicesByMsId(int msId) {
+        return invoiceRepo.deleteAllPaymentsAndInvoicesByMsId(msId);
+    }
+
+    public int deleteWaitList(int msId) {
+        return slipRepo.deleteWaitList(msId);
+    }
+
+    public int deleteFormMsIdHash(int msId) {
+        return membershipRepo.deleteFormMsIdHash(msId);
+    }
+
+    public int deleteMembershipId(int msId) {
+        return membershipIdRepo.deleteMembershipId(msId);
+    }
+
+    public List<PersonDTO> getPeople(int msId) {
+        return peopleRepo.getPeople(msId);
+    }
+
+    public int deleteMembership(int msId) {
+        return membershipRepo.deleteMembership(msId);
+    }
+
+    public int deletePhones(int pId) {
+        return phoneRepo.deletePhones(pId);
+    }
+
+    public int deleteEmail(int pId) {
+        return emailRepo.deleteEmail(pId);
+    }
+
+    public int deleteOfficer(int pId) {
+        return officerRepo.deleteOfficer(pId);
+    }
+
+    public int deletePerson(int pId) {
+        return peopleRepo.deletePerson(pId);
+    }
 }

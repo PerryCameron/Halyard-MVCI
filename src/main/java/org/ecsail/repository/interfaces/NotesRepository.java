@@ -17,4 +17,6 @@ public interface NotesRepository {
     int insertNote(NotesDTO notesDTO);
     int update(NotesDTO notesDTO);
     int delete(NotesDTO notesDTO);
+
+    int deleteNotes(int msId);
 }

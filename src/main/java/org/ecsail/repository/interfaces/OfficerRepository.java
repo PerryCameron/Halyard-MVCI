@@ -7,6 +7,8 @@ import org.ecsail.dto.PersonDTO;
 import java.util.List;
 
 public interface OfficerRepository {
+    int deleteOfficer(int pId);
+
     List<OfficerDTO> getOfficers();
 //    List<PDF_Object_Officer> getOfficersByYear(String selectedYear);
     List<OfficerDTO> getOfficer(String field, int attribute);

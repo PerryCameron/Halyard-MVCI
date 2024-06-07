@@ -18,6 +18,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PersonRepositoryImpl implements PersonRepository {
@@ -117,6 +118,28 @@ public class PersonRepositoryImpl implements PersonRepository {
             // Handle or rethrow the exception as per your application's requirements
         }
         return person; // Return the updated DTO
+    }
+
+    @Override
+    public List<PersonDTO> getPeople(int ms_id) {
+        String sql = "SELECT * FROM person WHERE ms_id = ? AND IS_ACTIVE = true";
+        try {
+            return template.query(sql, new PersonRowMapper(), ms_id);
+        } catch (DataAccessException e) {
+            logger.error("Unable to retrieve information: " + e.getMessage());
+            return new ArrayList<>(); // Return an empty list in case of an exception
+        }
+    }
+
+    @Override
+    public int deletePerson(int p_id) {
+        String sql = "DELETE FROM person WHERE p_id = ?";
+        try {
+            return template.update(sql, p_id);
+        } catch (DataAccessException e) {
+            logger.error("Unable to DELETE person: " + e.getMessage());
+        }
+        return 0;
     }
 
 }

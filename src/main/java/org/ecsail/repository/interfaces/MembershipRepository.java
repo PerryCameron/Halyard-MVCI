@@ -28,4 +28,8 @@ public interface MembershipRepository {
     MembershipListDTO getMembershipListByIdAndYear(int membershipId, int year);
 
     MembershipDTO getCurrentMembershipChair();
+
+    int deleteFormMsIdHash(int ms_id);
+
+    int deleteMembership(int msId);
 }

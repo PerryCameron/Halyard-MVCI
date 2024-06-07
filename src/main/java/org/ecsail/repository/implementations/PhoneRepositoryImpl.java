@@ -4,6 +4,9 @@ import org.ecsail.dto.PersonDTO;
 import org.ecsail.dto.PhoneDTO;
 import org.ecsail.repository.interfaces.PhoneRepository;
 import org.ecsail.repository.rowmappers.PhoneRowMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -18,6 +21,8 @@ public class PhoneRepositoryImpl implements PhoneRepository {
 
     private final JdbcTemplate template;
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private static final Logger logger = LoggerFactory.getLogger(PhoneRepositoryImpl.class);
+
 
 
     public PhoneRepositoryImpl(DataSource dataSource) {
@@ -77,5 +82,16 @@ public class PhoneRepositoryImpl implements PhoneRepository {
         int affectedRows = namedParameterJdbcTemplate.update(query, namedParameters, keyHolder);
         phoneDTO.setPhoneId(keyHolder.getKey().intValue());
         return affectedRows;
+    }
+
+    @Override
+    public int deletePhones(int pId) {
+        String sql = "DELETE FROM phone WHERE p_id = ?";
+        try {
+            return template.update(sql, pId);
+        } catch (DataAccessException e) {
+            logger.error("Unable to DELETE phones: " + e.getMessage());
+        }
+        return 0;
     }
 }

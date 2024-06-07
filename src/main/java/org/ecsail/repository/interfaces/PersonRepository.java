@@ -18,4 +18,8 @@ public interface PersonRepository {
     int delete(PersonDTO personDTO);
 
     PersonDTO insertPerson(PersonDTO person);
+
+    List<PersonDTO> getPeople(int ms_id);
+
+    int deletePerson(int p_id);
 }

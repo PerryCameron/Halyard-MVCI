@@ -13,4 +13,6 @@ public interface EmailRepository {
     int update(EmailDTO o);
     int insert(EmailDTO emailDTO);
     int delete(EmailDTO o);
+
+    int deleteEmail(int pId);
 }

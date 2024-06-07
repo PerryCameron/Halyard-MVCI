@@ -4,6 +4,9 @@ package org.ecsail.repository.implementations;
 import org.ecsail.dto.*;
 import org.ecsail.repository.interfaces.InvoiceRepository;
 import org.ecsail.repository.rowmappers.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -18,6 +21,8 @@ import java.util.*;
 public class InvoiceRepositoryImpl implements InvoiceRepository {
     private final JdbcTemplate template;
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private static final Logger logger = LoggerFactory.getLogger(InvoiceRepositoryImpl.class);
+
 
     public InvoiceRepositoryImpl(DataSource dataSource) {
         this.template = new JdbcTemplate(dataSource);
@@ -238,5 +243,44 @@ public class InvoiceRepositoryImpl implements InvoiceRepository {
     public int delete(InvoiceDTO invoiceDTO) {
         String query = "DELETE FROM invoice WHERE ID = ?";
         return template.update(query, invoiceDTO.getId());
+    }
+
+    @Override
+    public int deletePaymentByInvoiceID(int invoiceId) {
+        String sql = "DELETE FROM payment WHERE invoice_id = ?";
+        executeDelete(sql, invoiceId);
+        return invoiceId;
+    }
+    @Override
+    public int deleteInvoiceItemByInvoiceID(int invoiceId) {
+        String sql = "DELETE FROM invoice_item WHERE invoice_id = ?";
+        executeDelete(sql, invoiceId);
+        return invoiceId;
+    }
+    @Override
+    public int deleteInvoiceByID(int invoiceId) {
+        String sql = "DELETE FROM invoice WHERE id = ?";
+        return executeDelete(sql, invoiceId);
+    }
+
+    @Override
+    public int[] deleteAllPaymentsAndInvoicesByMsId(int msId) {
+        int d[] = new int[3];
+        List<InvoiceDTO> invoices = getInvoicesByMsid(msId);
+        invoices.forEach(invoiceDTO -> {
+            d[0] = deletePaymentByInvoiceID(invoiceDTO.getId());
+            d[1] = deleteInvoiceItemByInvoiceID(invoiceDTO.getId());
+            d[2] = deleteInvoiceByID(invoiceDTO.getId());
+        });
+        return d;
+    }
+
+    private int executeDelete(String sql, int id) {
+        try {
+            return template.update(sql, id);
+        } catch (DataAccessException e) {
+            logger.error("Unable to DELETE: " + e.getMessage());
+        }
+        return 0;
     }
 }

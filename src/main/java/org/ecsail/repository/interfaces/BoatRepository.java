@@ -33,4 +33,6 @@ public interface BoatRepository {
     int setAllDefaultImagesToFalse(int boatId);
 
     int setDefaultImageTrue(int id);
+
+    int deleteBoatOwner(int msId);
 }

@@ -35,16 +35,15 @@ import java.util.*;
 
 public class PDF_Envelope {
 	public static Logger logger = LoggerFactory.getLogger(PDF_Envelope.class);
-	Image ecscLogo = new Image(ImageDataFactory.create(ByteTools.toByteArray(Objects.requireNonNull(getClass().getResourceAsStream("/images/EagleCreekLogoForPDF.png")))));
-	MembershipListDTO membershipListDTO;
-	private MembershipDTO membershipChair = new MembershipDTO();
-	private int year;
+	private final Image ecscLogo = new Image(ImageDataFactory.create(ByteTools.toByteArray(Objects.requireNonNull(getClass().getResourceAsStream("/images/EagleCreekLogoForPDF.png")))));
+	private MembershipListDTO membershipListDTO;
+	private final MembershipDTO membershipChair;
+	private final int year;
 	private int current_membership_id;
-	private List<MembershipIdDTO> membershipIdDTOS = new ArrayList<MembershipIdDTO>();
-	PdfFont font;
-	private boolean isOneMembership;
-	DataBaseService dataBaseService;
-	MembershipModel model;
+	private final PdfFont font;
+	private final boolean isOneMembership;
+	private final DataBaseService dataBaseService;
+
 	public PDF_Envelope(boolean iom, MembershipModel model, DataBaseService dataBaseService) throws IOException {
 		System.out.println("Creating envelope");
 		if (model == null) {
@@ -53,13 +52,12 @@ public class PDF_Envelope {
 		if (dataBaseService == null) {
 			System.out.println("DataBaseService is null");
 		}
-		this.model = model;
 		this.dataBaseService = dataBaseService;
 		this.year= LocalDate.now().getYear();
 		HalyardPaths.checkPath(HalyardPaths.ECSC_HOME);
 		this.isOneMembership = iom;
-		this.membershipChair = dataBaseService.getCurrentMembershipChair();
-		this.current_membership_id = model.getMembership().getMembershipId();
+		this.membershipChair = Objects.requireNonNull(dataBaseService).getCurrentMembershipChair();
+		this.current_membership_id = Objects.requireNonNull(model).getMembership().getMembershipId();
 
 		if(System.getProperty("os.name").equals("Windows 10"))
 		FontProgramFactory.registerFont("c:/windows/fonts/times.ttf", "times");
@@ -70,7 +68,7 @@ public class PDF_Envelope {
 		this.font = PdfFontFactory.createRegisteredFont("times");
 		// Initialize PDF writer
 
-		// Envelope sizeing https://www.paperpapers.com/envelope-size-chart.html
+		// Envelope sizing https://www.paperpapers.com/envelope-size-chart.html
 		// No. 6 1/4 (#6-1/4) Envelope inches: 3.5 x 6 (mm: 88.9 x 152.4)
 		// 6 inch x 72 points = 432 points (the width)
 		// 3.5 inch x 72 points = 252 points (the height)
@@ -104,8 +102,6 @@ public class PDF_Envelope {
 		doc.setTopMargin(0);
 		doc.setLeftMargin(0.25f);
 		if(isOneMembership) {
-			System.out.println("current_membership_id" + current_membership_id);
-			System.out.println("year" + year);
 			membershipListDTO = dataBaseService.getMembershipListByIdAndYear(current_membership_id, year);
 		doc.add(createReturnAddress());
 		doc.add(new Paragraph(new Text("\n\n\n\n\n")));
@@ -140,8 +136,8 @@ public class PDF_Envelope {
 	}
 
 	private void buildAddress(Document doc) {
-		membershipIdDTOS = dataBaseService.getAllMembershipIdsByYear(year);
-		Collections.sort(membershipIdDTOS, Comparator.comparing(MembershipIdDTO::getMembershipId));
+		List<MembershipIdDTO> membershipIdDTOS = dataBaseService.getAllMembershipIdsByYear(year);
+		membershipIdDTOS.sort(Comparator.comparing(MembershipIdDTO::getMembershipId));
 		for(MembershipIdDTO id: membershipIdDTOS) {
 			current_membership_id = id.getMembershipId();
 			membershipListDTO = dataBaseService.getMembershipListByIdAndYear(current_membership_id, year);

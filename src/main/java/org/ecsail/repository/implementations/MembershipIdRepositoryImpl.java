@@ -151,4 +151,15 @@ public class MembershipIdRepositoryImpl implements MembershipIdRepository {
             return 0;
         }
     }
+
+    @Override
+    public int deleteMembershipId(int msId) {
+        String sql = "DELETE FROM membership_id WHERE ms_id = ?";
+        try {
+            return template.update(sql, msId);
+        } catch (DataAccessException e) {
+            logger.error("Unable to DELETE membership_id: " + e.getMessage());
+        }
+        return 0;
+    }
 }

@@ -7,6 +7,9 @@ import org.ecsail.repository.rowmappers.BoatListRowMapper;
 import org.ecsail.repository.rowmappers.BoatOwnerRowMapper;
 import org.ecsail.repository.rowmappers.BoatPhotosRowMapper;
 import org.ecsail.repository.rowmappers.BoatRowMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -21,6 +24,8 @@ import java.util.Objects;
 public class BoatRepositoryImpl implements BoatRepository {
     private final JdbcTemplate template;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private static final Logger logger = LoggerFactory.getLogger(BoatRepositoryImpl.class);
+
 
     public BoatRepositoryImpl(DataSource dataSource) {
         this.template = new JdbcTemplate(dataSource);
@@ -287,5 +292,16 @@ public class BoatRepositoryImpl implements BoatRepository {
     public int setDefaultImageTrue(int id) {
         String query = "UPDATE boat_photos SET default_image = true WHERE ID = ?";
         return template.update(query, id);
+    }
+
+    @Override
+    public int deleteBoatOwner(int msId) {
+        String sql = "DELETE FROM boat_owner WHERE MS_ID = ?";
+        try {
+            template.update(sql, msId);
+        } catch (DataAccessException e) {
+            logger.error("Unable to DELETE boat owner: " + e.getMessage());
+        }
+        return msId;
     }
 }

@@ -10,16 +10,14 @@ import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import org.ecsail.dto.LabelDTO;
 import org.ecsail.dto.PersonDTO;
-import org.ecsail.pdf.PDF_Envelope;
 import org.ecsail.static_tools.LabelPrinter;
+import org.ecsail.widgetfx.DialogueFx;
 import org.ecsail.widgetfx.HBoxFx;
 import org.ecsail.widgetfx.TabFx;
 import org.ecsail.widgetfx.VBoxFx;
 
-import java.io.IOException;
 import java.time.Year;
 import java.util.ArrayList;
-import java.util.Optional;
 
 public class PropertiesTabView implements Builder<Tab> {
     private final MembershipView membershipView;
@@ -44,7 +42,7 @@ public class PropertiesTabView implements Builder<Tab> {
     private Node addHBox() {
         HBox hBox = new HBox();
         hBox.setPadding(new Insets(15, 5, 5, 10));
-        HBox.setHgrow(hBox, Priority.ALWAYS);
+        VBox.setVgrow(hBox, Priority.ALWAYS);
         hBox.setId("box-background-light");
         hBox.getChildren().addAll(createLeftVBox(), createRightVBox());
         return hBox;
@@ -100,17 +98,13 @@ public class PropertiesTabView implements Builder<Tab> {
     private Node removeMembershipButton() {
         Button button = new Button("Delete");
         button.setOnAction(e -> {
-            Alert conformation = new Alert(Alert.AlertType.CONFIRMATION);
-            conformation.setTitle("Delete Membership");
-            conformation.setHeaderText("Membership " + membershipView.getMembershipModel().getMembership().getMembershipId());
-            conformation.setContentText("Are sure you want to delete this membership?\n\n");
-            DialogPane dialogPane = conformation.getDialogPane();
-            dialogPane.getStylesheets().add("css/dark/dialogue.css");
-            dialogPane.getStyleClass().add("dialog");
-            Optional<ButtonType> result = conformation.showAndWait();
-            if (result.isPresent() && result.get() == ButtonType.OK) {
-                deleteMembership(membershipView.getMembershipModel().getMembership().getMsId());
-            }
+            String[] strings = {
+                    "Delete Membership",
+                    "Are you sure you want to delete membership" + membershipView.getMembershipModel().getMembership().getMembershipId() + "?",
+                    "",
+                    ""};
+            if (DialogueFx.verifyAction(strings, membershipView.getMembershipModel().getMembership()))
+                membershipView.sendMessage().accept(MembershipMessage.DELETE_MEMBERSHIP);
         });
         return button;
     }
@@ -160,54 +154,7 @@ public class PropertiesTabView implements Builder<Tab> {
         return String.valueOf(current + 1);
     }
 
-    private void deleteMembership(int msId) {
-//        Dialogue_CustomErrorMessage dialogue = new Dialogue_CustomErrorMessage(true);
-//        if (slipRepository.existsSlipWithMsId(msId)) {
-//            dialogue.setTitle("Looks like we have a problem");
-//            dialogue.setText("You must re-assign their slip before deleting this membership");
-//            return;
-//        } else {
-//            dialogue.setTitle("Deleting Membership MSID:" + msId);
-//        }
-//        Task<Object> task = new Task<>() {
-//            @Override
-//            protected Object call() throws Exception {
-//                setMessage("Deleting boats", dialogue);
-//                boatRepository.deleteBoatOwner(msId);
-//                setMessage("Deleting notes", dialogue);
-//                memoRepository.deleteMemos(msId);
-//                setMessage("Deleting Invoices and Payments", dialogue);
-//                invoiceRepository.deleteAllPaymentsAndInvoicesByMsId(msId);
-//                setMessage("Deleting wait_list entries", dialogue);
-//                slipRepository.deleteWaitList(msId);
-//                setMessage("Deleting membership hash", dialogue);
-//                membershipRepository.deleteFormMsIdHash(msId);
-//                setMessage("Deleting history",dialogue);
-//                membershipIdRepository.deleteMembershipId(msId);
-//                List<PersonDTO> people = personRepository.getPeople(msId);
-//                setMessage("Deleting membership", dialogue);
-//                membershipRepository.deleteMembership(msId);
-//                setMessage("Deleting people", dialogue);
-//                for (PersonDTO p : people) {
-//                    phoneRepository.deletePhones(p.getpId());
-//                    emailRepository.deleteEmail(p.getpId());
-//                    officerRepository.delete(p.getpId());
-//                    personRepository.deletePerson(p.getpId());
-//                }
-//
-//                return null;
-//            }
-//        };
-//        task.setOnSucceeded(succeed -> {
-//                    Launcher.removeMembershipRow(msId);
-//                    Launcher.closeActiveTab();
-//                    BaseApplication.logger.info("Deleted membership msid: " + msId);
-//                    dialogue.setText("Sucessfully deleted membership MSID: " + msId);
-//                }
-//        );
-//        new Thread(task).start();
-//
-    }
+
 //    private void setMessage(String message, Dialogue_CustomErrorMessage dialogue) {
 //        Platform.runLater(() -> {
 //            dialogue.setText(message);

@@ -5,6 +5,9 @@ import org.ecsail.dto.Email_InformationDTO;
 import org.ecsail.dto.PersonDTO;
 import org.ecsail.repository.interfaces.EmailRepository;
 import org.ecsail.repository.rowmappers.EmailRowMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -19,6 +22,8 @@ public class EmailRepositoryImpl implements EmailRepository {
 
     private final JdbcTemplate template;
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private static final Logger logger = LoggerFactory.getLogger(EmailRepositoryImpl.class);
+
 
     public EmailRepositoryImpl(DataSource dataSource) {
         this.template = new JdbcTemplate(dataSource);
@@ -70,5 +75,16 @@ public class EmailRepositoryImpl implements EmailRepository {
     public int delete(EmailDTO emailDTO) {
         String deleteSql = "DELETE FROM email WHERE EMAIL_ID = ?";
         return template.update(deleteSql, emailDTO.getEmail_id());
+    }
+
+    @Override
+    public int deleteEmail(int pId) {
+        String sql = "DELETE FROM email WHERE p_id = ?";
+        try {
+            return template.update(sql, pId);
+        } catch (DataAccessException e) {
+            logger.error("Unable to DELETE email: " + e.getMessage());
+        }
+        return 0;
     }
 }

@@ -22,6 +22,7 @@ public class DialogueFx {
     }
 
     public static Alert errorAlert(String header, String message) {
+        System.out.println("errorAlert");
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText(header);
         alert.setContentText(message);

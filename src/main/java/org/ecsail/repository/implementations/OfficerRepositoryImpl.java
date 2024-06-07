@@ -6,6 +6,9 @@ import org.ecsail.dto.PersonDTO;
 import org.ecsail.repository.interfaces.OfficerRepository;
 import org.ecsail.repository.rowmappers.OfficerRowMapper;
 import org.ecsail.repository.rowmappers.OfficerWithNamesRowMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -20,11 +23,22 @@ import java.util.List;
 public class OfficerRepositoryImpl implements OfficerRepository {
     private final JdbcTemplate template;
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-
+    private static final Logger logger = LoggerFactory.getLogger(OfficerRepositoryImpl.class);
 
     public OfficerRepositoryImpl(DataSource dataSource) {
         this.template = new JdbcTemplate(dataSource);
         this.namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(dataSource);
+    }
+
+    @Override
+    public int deleteOfficer(int pId) {
+        String sql = "DELETE FROM officer WHERE p_id = ?";
+        try {
+           return template.update(sql, pId);
+        } catch (DataAccessException e) {
+            logger.error("Unable to DELETE officer: " + e.getMessage());
+        }
+        return 0;
     }
 
     @Override

@@ -16,4 +16,6 @@ public interface PhoneRepository {
     int update(PhoneDTO o);
     int delete(PhoneDTO o);
     int insert(PhoneDTO o);
+
+    int deletePhones(int pId);
 }

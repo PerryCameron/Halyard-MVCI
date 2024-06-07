@@ -260,4 +260,26 @@ public class MembershipRepositoryImpl implements MembershipRepository {
                 """;
         return template.queryForObject(sql, new MembershipRowMapper());
     }
+
+    @Override
+    public int deleteFormMsIdHash(int msId) {
+        String sql = "DELETE FROM form_msid_hash WHERE ms_id = ?";
+        try {
+            return template.update(sql, msId);
+        } catch (DataAccessException e) {
+            logger.error("Unable to DELETE form_msid_hash row: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    @Override
+    public int deleteMembership(int msId) {
+        String sql = "DELETE FROM membership WHERE ms_id = ?";
+        try {
+            return template.update(sql, msId);
+        } catch (DataAccessException e) {
+            logger.error("Unable to DELETE membership: " + e.getMessage());
+        }
+        return 0;
+    }
 }

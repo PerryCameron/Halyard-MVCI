@@ -7,6 +7,9 @@ import org.ecsail.dto.NotesDTO;
 import org.ecsail.repository.interfaces.NotesRepository;
 import org.ecsail.repository.rowmappers.Memo2RowMapper;
 import org.ecsail.repository.rowmappers.MemoRowMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -20,6 +23,9 @@ import java.util.List;
 public class NotesRepositoryImpl implements NotesRepository {
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private final JdbcTemplate template;
+
+    private static final Logger logger = LoggerFactory.getLogger(NotesRepositoryImpl.class);
+
 
     public NotesRepositoryImpl(DataSource dataSource) {
         this.template = new JdbcTemplate(dataSource);
@@ -114,6 +120,17 @@ public class NotesRepositoryImpl implements NotesRepository {
             return template.update(sql, notesDTO.getMemoId());
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        return 0;
+    }
+
+    @Override
+    public int deleteNotes(int msId) {
+        String sql = "DELETE FROM memo WHERE ms_id = ?";
+        try {
+            return template.update(sql, msId);
+        } catch (DataAccessException e) {
+            logger.error("Unable to DELETE memos: " + e.getMessage());
         }
         return 0;
     }

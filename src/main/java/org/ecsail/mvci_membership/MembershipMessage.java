@@ -31,6 +31,7 @@ public enum MembershipMessage {
     DELETE_BOAT,
     DELETE_EMAIL,
     DELETE_MEMBERSHIP_ID,
+    DELETE_MEMBERSHIP,
     DELETE_NOTE,
     DELETE_OFFICER,
     DELETE_PHONE,

@@ -12,4 +12,8 @@ public interface SlipRepository {
     List<SlipInfoDTO> getSlipInfo();
 
     List<SlipStructureDTO> getSlipStructure();
+
+    boolean existsSlipWithMsId(int msId);
+
+    int deleteWaitList(int msId);
 }

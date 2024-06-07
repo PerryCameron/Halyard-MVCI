@@ -7,6 +7,9 @@ import org.ecsail.repository.interfaces.SlipRepository;
 import org.ecsail.repository.rowmappers.SlipInfoRowMapper;
 import org.ecsail.repository.rowmappers.SlipRowMapper;
 import org.ecsail.repository.rowmappers.SlipStructureRowMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
@@ -16,6 +19,7 @@ import java.util.List;
 public class SlipRepositoryImpl implements SlipRepository {
 
     private final JdbcTemplate template;
+    private static final Logger logger = LoggerFactory.getLogger(SlipRepositoryImpl.class);
 
     public SlipRepositoryImpl(DataSource dataSource) {
         this.template = new JdbcTemplate(dataSource);
@@ -59,5 +63,28 @@ public class SlipRepositoryImpl implements SlipRepository {
     public List<SlipStructureDTO> getSlipStructure() {
         String query = "SELECT * FROM slip_structure";
         return template.query(query, new SlipStructureRowMapper());
+    }
+    @Override
+    public boolean existsSlipWithMsId(int msId) {
+        System.out.println("msId " + msId);
+        String sql = "SELECT EXISTS (SELECT 1 FROM slip WHERE MS_ID = ?)";
+        try {
+            Integer count = template.queryForObject(sql, new Object[]{msId}, Integer.class);
+            return count != null && count > 0;
+        } catch (DataAccessException e) {
+            logger.error("Error while checking existence of slip with MS_ID: " + e.getMessage());
+            return false; // Or rethrow the exception as per your application's requirements
+        }
+    }
+
+    @Override
+    public int deleteWaitList(int msId) {
+        String sql = "DELETE FROM wait_list WHERE ms_id = ?";
+        try {
+            return template.update(sql, msId);
+        } catch (DataAccessException e) {
+            logger.error("Unable to DELETE wait list entry: " + e.getMessage());
+        }
+        return 0;
     }
 }

@@ -58,6 +58,7 @@ public class MembershipController extends Controller<MembershipMessage> {
             case DELETE_AWARD -> runTask(DELETE_AWARD);
             case DELETE_EMAIL -> runTask(DELETE_EMAIL);
             case DELETE_MEMBERSHIP_ID -> runTask(DELETE_MEMBERSHIP_ID);
+            case DELETE_MEMBERSHIP -> runTask(DELETE_MEMBERSHIP);
             case DELETE_NOTE -> runTask(DELETE_NOTE);
             case DELETE_OFFICER -> runTask(DELETE_OFFICER);
             case DELETE_PHONE -> runTask(DELETE_PHONE);
@@ -104,6 +105,7 @@ public class MembershipController extends Controller<MembershipMessage> {
                     case DELETE_AWARD -> db.deleteAward();
                     case DELETE_EMAIL -> db.deleteEmail();
                     case DELETE_MEMBERSHIP_ID -> db.deleteMembershipId();
+                    case DELETE_MEMBERSHIP -> membershipInteractor.deleteMembership();
                     case DELETE_NOTE -> db.deleteNote();
                     case DELETE_OFFICER -> db.deleteOfficer();
                     case DELETE_PHONE -> db.deletePhone();

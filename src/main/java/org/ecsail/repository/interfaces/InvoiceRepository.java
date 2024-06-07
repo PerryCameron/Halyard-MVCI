@@ -29,4 +29,12 @@ public interface InvoiceRepository {
 
     int deleteItemsByInvoiceID(InvoiceDTO invoiceDTO);
     int delete(InvoiceDTO invoiceDTO);
+
+    int deletePaymentByInvoiceID(int invoiceId);
+
+    int deleteInvoiceItemByInvoiceID(int invoiceId);
+
+    int deleteInvoiceByID(int invoiceId);
+
+    int[] deleteAllPaymentsAndInvoicesByMsId(int msId);
 }
