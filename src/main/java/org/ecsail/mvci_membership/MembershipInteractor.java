@@ -54,92 +54,40 @@ public class MembershipInteractor implements SlipUser {
 
 
     public void deleteMembership() {
-        int success[] = new int[20];
+        logger.info("Deleting Membership MSID: " + membershipModel.getMembership().getMsId());
+        int success[] = membershipModel.getSuccess();
         try {
             if (dataBaseService.existsSlipWithMsId()) {
                 Platform.runLater(() -> {
                     DialogueFx.errorAlert("Looks like we have a problem", "You must re-assign slip before deleting this membership");
                 });
+            } else {
                 success[0] = dataBaseService.deleteBoatOwner(membershipModel.getMembership().getMsId());
                 success[1] = dataBaseService.deleteNotes(membershipModel.getMembership().getMsId());
                 int addIns[] = dataBaseService.deleteAllPaymentsAndInvoicesByMsId(membershipModel.getMembership().getMsId()); // invoiceRepo
                 success[2] = addIns[0];
                 success[3] = addIns[1];
                 success[4] = addIns[2];
-//                setMessage("Deleting wait_list entries", dialogue);
                 success[5] = dataBaseService.deleteWaitList(membershipModel.getMembership().getMsId()); // slipRepo
-//                setMessage("Deleting membership hash", dialogue);
                 success[6] = dataBaseService.deleteFormMsIdHash(membershipModel.getMembership().getMsId()); // membershipRepo
-//                setMessage("Deleting history",dialogue);
                 success[7] = dataBaseService.deleteMembershipId(membershipModel.getMembership().getMsId()); // membershipIdRepo
                 List<PersonDTO> people = dataBaseService.getPeople(membershipModel.getMembership().getMsId()); // personRepo
                 success[8] = people.size();
-//                setMessage("Deleting membership", dialogue);
-                int dm = dataBaseService.deleteMembership(membershipModel.getMembership().getMsId());  //membershipRepo
-//                setMessage("Deleting people", dialogue);
                 for (PersonDTO p : people) {
-                    success[9] += dataBaseService.deletePhones(p.getpId()); // phoneRepo
-                    success[10] += dataBaseService.deleteEmail(p.getpId()); // emailRepo
-                    success[11] += dataBaseService.deleteOfficer(p.getpId()); // officerRepo
-                    success[12] += dataBaseService.deletePerson(p.getpId()); // personRepo
+                    success[10] += dataBaseService.deletePhones(p.getpId()); // phoneRepo
+                    success[11] += dataBaseService.deleteEmail(p.getpId()); // emailRepo
+                    success[12] += dataBaseService.deleteOfficer(p.getpId()); // officerRepo
+                    success[13] += dataBaseService.deletePerson(p.getpId()); // personRepo
                 }
-            }
-            System.out.println("Array elements: " + Arrays.toString(success));
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-//        else {
-//            dialogue.setTitle("Deleting Membership MSID:" + msId);
-//        }
+                success[9] = dataBaseService.deleteMembership(membershipModel.getMembership().getMsId());  //membershipRepo
 
+            }
+            Platform.runLater(() -> {
+                membershipModel.setReturnMessage(MembershipMessage.DELETE_MEMBERSHIP_FROM_DATABASE_SUCCEED);
+            });
+        } catch (Exception e) {
+            membershipModel.setReturnMessage(MembershipMessage.DELETE_MEMBERSHIP_FROM_DATABASE_FAIL);
+            logger.error(e.getMessage());
+        }
     }
 }
-
-//    private void deleteMembership() {
-//        Dialogue_CustomErrorMessage dialogue = new Dialogue_CustomErrorMessage(true);
-//        if (slipRepository.existsSlipWithMsId(msId)) {
-//            dialogue.setTitle("Looks like we have a problem");
-//            dialogue.setText("You must re-assign their slip before deleting this membership");
-//            return;
-//        } else {
-//            dialogue.setTitle("Deleting Membership MSID:" + msId);
-//        }
-//        Task<Object> task = new Task<>() {
-//            @Override
-//            protected Object call() throws Exception {
-//                setMessage("Deleting boats", dialogue);
-//                boatRepository.deleteBoatOwner(msId);
-//                setMessage("Deleting notes", dialogue);
-//                memoRepository.deleteMemos(msId);
-//                setMessage("Deleting Invoices and Payments", dialogue);
-//                invoiceRepository.deleteAllPaymentsAndInvoicesByMsId(msId);
-//                setMessage("Deleting wait_list entries", dialogue);
-//                slipRepository.deleteWaitList(msId);
-//                setMessage("Deleting membership hash", dialogue);
-//                membershipRepository.deleteFormMsIdHash(msId);
-//                setMessage("Deleting history",dialogue);
-//                membershipIdRepository.deleteMembershipId(msId);
-//                List<PersonDTO> people = personRepository.getPeople(msId);
-//                setMessage("Deleting membership", dialogue);
-//                membershipRepository.deleteMembership(msId);
-//                setMessage("Deleting people", dialogue);
-//                for (PersonDTO p : people) {
-//                    phoneRepository.deletePhones(p.getpId());
-//                    emailRepository.deleteEmail(p.getpId());
-//                    officerRepository.delete(p.getpId());
-//                    personRepository.deletePerson(p.getpId());
-//                }
-//
-//                return null;
-//            }
-//        };
-//        task.setOnSucceeded(succeed -> {
-//                    Launcher.removeMembershipRow(msId);
-//                    Launcher.closeActiveTab();
-//                    BaseApplication.logger.info("Deleted membership msid: " + msId);
-//                    dialogue.setText("Sucessfully deleted membership MSID: " + msId);
-//                }
-//        );
-//        new Thread(task).start();
-//
-//    }

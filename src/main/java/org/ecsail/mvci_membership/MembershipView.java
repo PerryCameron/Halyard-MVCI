@@ -65,8 +65,17 @@ public class MembershipView implements Builder<Region> {
                 case DELETE_PRIMARY_MEMBER_FROM_DATABASE_SUCCEED -> afterPrimaryMemberRemoved();
                 case MOVE_SECONDARY_TO_PRIMARY_SUCCEED -> changeTabName("Secondary", "Primary");
                 case INSERT_PERSON_SUCCEED -> addPerson();
+                case DELETE_MEMBERSHIP_FROM_DATABASE_SUCCEED -> displayDeleteTab();
+                case DELETE_MEMBERSHIP_FROM_DATABASE_FAIL -> displayDeleteTab();
             }
         };
+    }
+
+    private void displayDeleteTab() {
+        switch(membershipModel.getReturnMessage()) {
+            case DELETE_MEMBERSHIP_FROM_DATABASE_SUCCEED -> System.out.println("success");
+            case DELETE_MEMBERSHIP_FROM_DATABASE_FAIL -> System.out.println("failed");
+        }
     }
 
     private void addPerson() {
@@ -85,7 +94,6 @@ public class MembershipView implements Builder<Region> {
     }
 
     private void moveSecondaryToPrimary() {
-        System.out.print("moveSecondaryToPrimary() (PersonTabView):");
         membershipModel.setSelectedPerson(getSecondaryMember());
         logger.info("Moving Secondary to Primary: " + membershipModel.getSelectedPerson().getFullName());
         membershipModel.getSelectedPerson().setMemberType(MemberType.getCode(MemberType.PRIMARY));
