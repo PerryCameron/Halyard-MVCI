@@ -14,7 +14,6 @@ import org.ecsail.static_tools.LabelPrinter;
 import org.ecsail.widgetfx.DialogueFx;
 import org.ecsail.widgetfx.HBoxFx;
 import org.ecsail.widgetfx.TabFx;
-import org.ecsail.widgetfx.VBoxFx;
 
 import java.time.Year;
 import java.util.ArrayList;
@@ -59,7 +58,7 @@ public class PropertiesTabView implements Builder<Tab> {
     }
 
     private Node createPrintEnvelope() {
-        HBox hBox = new HBox();
+        HBox hBox = HBoxFx.hBoxOf(5, Pos.CENTER_LEFT);
         RadioButton r1 = new RadioButton("#10 Envelope");
         RadioButton r2 = new RadioButton("#1 Catalog");
         Button button = new Button("Create Envelope");
@@ -67,8 +66,6 @@ public class PropertiesTabView implements Builder<Tab> {
         r1.setToggleGroup(tg);
         r2.setToggleGroup(tg);
         r1.setSelected(true);
-        hBox.setSpacing(5);
-        hBox.setAlignment(Pos.CENTER_LEFT);
         hBox.getChildren().addAll(new Label("Print Envelope"), button, r1, r2);
         button.setOnAction(e -> {
             membershipView.getMembershipModel().setEnvelopeIsCatalogue(r2.isSelected());
@@ -78,17 +75,13 @@ public class PropertiesTabView implements Builder<Tab> {
     }
 
     private Node delMembership() {
-        HBox hBox = new HBox();
-        hBox.setSpacing(5);
-        hBox.setAlignment(Pos.CENTER_LEFT);
+        HBox hBox = HBoxFx.hBoxOf(5, Pos.CENTER_LEFT);
         hBox.getChildren().addAll(new Label("Delete Membership"), removeMembershipButton());
         return hBox;
     }
 
     private Node printCardLabels() {
-        HBox hBox = new HBox();
-        hBox.setSpacing(5);
-        hBox.setAlignment(Pos.CENTER_LEFT);
+        HBox hBox = HBoxFx.hBoxOf(5, Pos.CENTER_LEFT);
         hBox.getChildren().addAll(new Label("Print Membership Card Labels"), printLabelsButton1(), printLabelsButton2());
         return hBox;
     }

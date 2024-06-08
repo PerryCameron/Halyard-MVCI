@@ -215,7 +215,11 @@ public class SlipView implements Builder<Region> {
                 } else {
                     slipModel.setSelectedMsId(slip.getOwnerMsid());
                 }
-                action.accept(SlipMessage.LAUNCH_TAB);
+                Integer selectedMsId = slipModel.getSelectedMsId();
+                // prevents unnecessary exceptions when you click on a racing or 48-hour dock
+                if (selectedMsId != null && selectedMsId != 0) {
+                    action.accept(SlipMessage.LAUNCH_TAB);
+                }
             }
         });
     }
