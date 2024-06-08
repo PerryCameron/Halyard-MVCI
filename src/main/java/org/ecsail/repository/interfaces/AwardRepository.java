@@ -12,4 +12,6 @@ public interface AwardRepository {
     int insert(AwardDTO o);
 
     int delete(AwardDTO awardDTO);
+
+    int deleteAwards(int pId);
 }

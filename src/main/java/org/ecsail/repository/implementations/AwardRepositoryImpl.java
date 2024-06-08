@@ -4,6 +4,9 @@ import org.ecsail.dto.AwardDTO;
 import org.ecsail.dto.PersonDTO;
 import org.ecsail.repository.interfaces.AwardRepository;
 import org.ecsail.repository.rowmappers.AwardsRowMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.BeanPropertySqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -17,6 +20,8 @@ import java.util.List;
 public class AwardRepositoryImpl implements AwardRepository {
     private final JdbcTemplate template;
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    private static final Logger logger = LoggerFactory.getLogger(AwardRepositoryImpl.class);
+
 
     public AwardRepositoryImpl(DataSource dataSource) {
         this.template = new JdbcTemplate(dataSource);
@@ -60,5 +65,16 @@ public class AwardRepositoryImpl implements AwardRepository {
     public int delete(AwardDTO awardDTO) {
         String deleteSql = "DELETE FROM awards WHERE Award_ID = ?";
         return template.update(deleteSql, awardDTO.getAwardId());
+    }
+
+    @Override
+    public int deleteAwards(int pId) {
+        String sql = "DELETE FROM awards WHERE p_id = ?";
+        try {
+            return template.update(sql, pId);
+        } catch (DataAccessException e) {
+            logger.error("Unable to DELETE person: " + e.getMessage());
+        }
+        return 0;
     }
 }

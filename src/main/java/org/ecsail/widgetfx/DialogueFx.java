@@ -11,6 +11,7 @@ import java.util.Optional;
 public class DialogueFx {
 
     public static Alert customAlert(String header, String message, Alert.AlertType type) {
+        System.out.println("launching custom alert");
         Alert alert = new Alert(type);
         alert.setHeaderText(header);
         alert.setContentText(message);

@@ -132,10 +132,21 @@ public class PersonRepositoryImpl implements PersonRepository {
     }
 
     @Override
-    public int deletePerson(int p_id) {
+    public int deletePerson(int pId) {
         String sql = "DELETE FROM person WHERE p_id = ?";
         try {
-            return template.update(sql, p_id);
+            return template.update(sql, pId);
+        } catch (DataAccessException e) {
+            logger.error("Unable to DELETE person: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    @Override
+    public int deleteUserAuthRequest(int pId) {
+        String sql = "DELETE FROM user_auth_request WHERE pid = ?";
+        try {
+            return template.update(sql, pId);
         } catch (DataAccessException e) {
             logger.error("Unable to DELETE person: " + e.getMessage());
         }

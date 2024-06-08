@@ -616,4 +616,12 @@ public class DataBaseService {
     public int deletePerson(int pId) {
         return peopleRepo.deletePerson(pId);
     }
+
+    public int deleteUserAuthRequest(int pId) {
+        return peopleRepo.deleteUserAuthRequest(pId);
+    }
+
+    public int deleteAwards(int pId) {
+        return awardRepo.deleteAwards(pId);
+    }
 }

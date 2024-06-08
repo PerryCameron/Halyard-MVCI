@@ -7,6 +7,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.*;
@@ -18,6 +19,7 @@ import org.ecsail.widgetfx.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 public class MembershipView implements Builder<Region> {
@@ -33,7 +35,7 @@ public class MembershipView implements Builder<Region> {
 
     @Override
     public Region build() {
-        VBox vBox = VBoxFx.vBoxOf(new Insets(0,10,0,10));
+        VBox vBox = VBoxFx.vBoxOf(new Insets(0, 10, 0, 10));
         BorderPane borderPane = new BorderPane();
         borderPane.setTop(createHeader());
         borderPane.setLeft(createPeopleTabPane());
@@ -65,19 +67,46 @@ public class MembershipView implements Builder<Region> {
                 case DELETE_PRIMARY_MEMBER_FROM_DATABASE_SUCCEED -> afterPrimaryMemberRemoved();
                 case MOVE_SECONDARY_TO_PRIMARY_SUCCEED -> changeTabName("Secondary", "Primary");
                 case INSERT_PERSON_SUCCEED -> addPerson();
-                case DELETE_MEMBERSHIP_FROM_DATABASE_SUCCEED -> displayDeleteTab();
-                case DELETE_MEMBERSHIP_FROM_DATABASE_FAIL -> displayDeleteTab();
+                case DELETE_MEMBERSHIP_FROM_DATABASE_SUCCEED, DELETE_MEMBERSHIP_FROM_DATABASE_FAIL ->
+                        displayDeleteTab();
             }
         };
     }
 
     private void displayDeleteTab() {
-        switch(membershipModel.getReturnMessage()) {
-            case DELETE_MEMBERSHIP_FROM_DATABASE_SUCCEED -> System.out.println("success");
-            case DELETE_MEMBERSHIP_FROM_DATABASE_FAIL -> System.out.println("failed");
+        switch (membershipModel.getReturnMessage()) {
+            case DELETE_MEMBERSHIP_FROM_DATABASE_SUCCEED -> {
+                System.out.println("Successfully deleted membership");
+                int success[] = membershipModel.getSuccess();
+                String message =
+                        "Boat Owner entries removed: " + success[0] + "\n" +
+                        "Membership Notes removed: " + success[1] + "\n" +
+                        "Payments Removed: " + success[2] + "\n" +
+                        "Invoice Items Removed: " + success[3] + "\n" +
+                        "Invoices Removed: " + success[4] + "\n" + "Invoices Removed: " + success[4] + "\n" +
+                        "Wait List Removed: " + success[5] + "\n" +
+                        "FormMsIDHash entry removed: " + success[6] + "\n" +
+                        "Membership ID's removed: " + success[7] + "\n" +
+                        "Persons in membership: " + success[8] + "\n" +
+                        "Phones deleted: " + success[10] + "\n" +
+                        "Email deleted: " + success[11] + "\n" +
+                        "Officer Records deleted: " + success[12] + "\n" +
+                        "User Auth Requests deleted: " + success[13] + "\n" +
+                        "People in membership deleted: " + success[14] + "\n" +
+                        "Memberships Deleted: " + success[9] + "\n";
+                System.out.println(message);
+                try {
+                    DialogueFx.customAlert("Membership Successfully Deleted", message, Alert.AlertType.INFORMATION);
+                } catch (Exception e) {
+                    System.out.println(e);
+                }
+            }
+
+            case DELETE_MEMBERSHIP_FROM_DATABASE_FAIL -> {
+                DialogueFx.errorAlert("Unable to delete membership", "");
+            }
         }
     }
-
     private void addPerson() {
         membershipModel.getPeople().add(membershipModel.getSelectedPerson());
         Tab newTab = new PersonTabView(this, new PersonDTO(membershipModel.getSelectedPerson())).build();
@@ -115,42 +144,42 @@ public class MembershipView implements Builder<Region> {
     }
 
     private void launchDataDependentUI() {
-            membershipModel.getPeople().forEach(personDTO -> membershipModel.getPeopleTabPane().getTabs()
-                    .add(new PersonTabView(this, personDTO).build()));
-            membershipModel.getPeopleTabPane().getTabs().add(new AddPersonTabView(this).build());
-            // right tabPane
-            membershipModel.getInfoTabPane().getTabs().add(new SlipTabView(this).build());
-            membershipModel.getInfoTabPane().getTabs().add(new MembershipIdView(this).build());
-            membershipModel.getInfoTabPane().getTabs().add(new InvoiceListView(this).build());
-            // bottom tabPane
-            membershipModel.getExtraTabPane().getTabs().add(new BoatTabView(this).build());
-            membershipModel.getExtraTabPane().getTabs().add(new NotesTabView(this).build());
-            membershipModel.getExtraTabPane().getTabs().add(new PropertiesTabView(this).build());
-            membershipModel.getExtraTabPane().getTabs().add(new AttachmentsTabView(this).build());
-            membershipModel.getExtraTabPane().getTabs().add(new AddressTabView(this).build());
+        membershipModel.getPeople().forEach(personDTO -> membershipModel.getPeopleTabPane().getTabs()
+                .add(new PersonTabView(this, personDTO).build()));
+        membershipModel.getPeopleTabPane().getTabs().add(new AddPersonTabView(this).build());
+        // right tabPane
+        membershipModel.getInfoTabPane().getTabs().add(new SlipTabView(this).build());
+        membershipModel.getInfoTabPane().getTabs().add(new MembershipIdView(this).build());
+        membershipModel.getInfoTabPane().getTabs().add(new InvoiceListView(this).build());
+        // bottom tabPane
+        membershipModel.getExtraTabPane().getTabs().add(new BoatTabView(this).build());
+        membershipModel.getExtraTabPane().getTabs().add(new NotesTabView(this).build());
+        membershipModel.getExtraTabPane().getTabs().add(new PropertiesTabView(this).build());
+        membershipModel.getExtraTabPane().getTabs().add(new AttachmentsTabView(this).build());
+        membershipModel.getExtraTabPane().getTabs().add(new AddressTabView(this).build());
     }
 
     private Node createExtrasTabPane() {
-        HBox hBox = HBoxFx.hBoxOf(new Insets(10,0,0,0)); // provides space between
-        TabPane tabPane = PaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE,"custom-tab-pane");
-        HBox.setHgrow(tabPane,Priority.ALWAYS);
+        HBox hBox = HBoxFx.hBoxOf(new Insets(10, 0, 0, 0)); // provides space between
+        TabPane tabPane = PaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE, "custom-tab-pane");
+        HBox.setHgrow(tabPane, Priority.ALWAYS);
         membershipModel.setExtraTabPane(tabPane);
         hBox.getChildren().add(tabPane);
         return hBox;
     }
 
     private Node createInfoTabPane() {
-        TabPane tabPane = PaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE, 498,"custom-tab-pane");
-        VBox.setVgrow(tabPane,Priority.ALWAYS);  // this works in combo with Vgrow in SlapTabView
+        TabPane tabPane = PaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE, 498, "custom-tab-pane");
+        VBox.setVgrow(tabPane, Priority.ALWAYS);  // this works in combo with Vgrow in SlapTabView
         membershipModel.setInfoTabPane(tabPane);
         return tabPane;
     }
 
     private Node createPeopleTabPane() {
-        TabPane tabPane = PaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE, 498,"custom-tab-pane");
+        TabPane tabPane = PaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE, 498, "custom-tab-pane");
         membershipModel.setPeopleTabPane(tabPane);
         membershipModel.getPeopleTabPane().getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
-            if(newTab.getText().equals("Add")) {
+            if (newTab.getText().equals("Add")) {
                 AddPersonTabView addPersonTabView = (AddPersonTabView) newTab.getUserData();
                 membershipModel.setSelectedPerson(addPersonTabView.getPersonDTO());
                 logger.debug("Showing Add tab: " + membershipModel.getSelectedPerson());
@@ -164,7 +193,7 @@ public class MembershipView implements Builder<Region> {
     }
 
     private Node createHeader() {
-        HBox hBox = HBoxFx.hBoxOf(new Insets(15,15,10,15), Pos.TOP_CENTER, 100);
+        HBox hBox = HBoxFx.hBoxOf(new Insets(15, 15, 10, 15), Pos.TOP_CENTER, 100);
         hBox.getChildren().add(newBox("Record Year: ", membershipModel.getMembership().selectedYearProperty()));
         hBox.getChildren().add(newBox("Membership ID: ", membershipModel.getMembership().membershipIdProperty()));
         hBox.getChildren().add(newBox("Membership Type: ", membershipModel.getMembership().memTypeProperty()));
@@ -174,11 +203,11 @@ public class MembershipView implements Builder<Region> {
 
     private Node newBox(String s, Property<?> property) {
         HBox hBox = HBoxFx.hBoxOf(5.0, Pos.CENTER_LEFT);
-        Text labelText = TextFx.textOf(s,"invoice-text-label");
+        Text labelText = TextFx.textOf(s, "invoice-text-label");
         StringBinding valueBinding = Bindings.createStringBinding(() -> String.valueOf(property.getValue()), property);
         Text valueText = TextFx.textOf("", "invoice-text-number");
         valueText.textProperty().bind(valueBinding);
-        hBox.getChildren().addAll(labelText,valueText);
+        hBox.getChildren().addAll(labelText, valueText);
         return hBox;
     }
 

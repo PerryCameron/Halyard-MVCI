@@ -55,7 +55,7 @@ public class MembershipModel {
     private SimpleIntegerProperty selectedInvoiceCreateYear = new SimpleIntegerProperty(0);
     private SimpleObjectProperty<Success> invoiceSaved = new SimpleObjectProperty(Success.NULL);
     private SimpleBooleanProperty envelopeIsCatalogue = new SimpleBooleanProperty(false);
-    private int[] success = new int[14];
+    private int[] success = new int[15];
 
 
 

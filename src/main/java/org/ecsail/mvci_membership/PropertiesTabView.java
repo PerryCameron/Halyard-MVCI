@@ -32,11 +32,9 @@ public class PropertiesTabView implements Builder<Tab> {
     }
 
     private Node addControls() {
-        VBox vBox = VBoxFx.vBoxOf(new Insets(2,2,2,2), "custom-tap-pane-frame", true); // makes outer border
         HBox hBox = HBoxFx.hBoxOf(new Insets(5,5,5,5),"box-background-light",true);
-        vBox.getChildren().add(hBox);
         hBox.getChildren().add(addHBox());
-        return vBox;
+        return hBox;
     }
 
     private Node addHBox() {
@@ -100,7 +98,7 @@ public class PropertiesTabView implements Builder<Tab> {
         button.setOnAction(e -> {
             String[] strings = {
                     "Delete Membership",
-                    "Are you sure you want to delete membership" + membershipView.getMembershipModel().getMembership().getMembershipId() + "?",
+                    "Are you sure you want to delete membership " + membershipView.getMembershipModel().getMembership().getMembershipId() + "?",
                     "",
                     ""};
             if (DialogueFx.verifyAction(strings, membershipView.getMembershipModel().getMembership()))
@@ -153,13 +151,4 @@ public class PropertiesTabView implements Builder<Tab> {
         int current = Integer.parseInt(String.valueOf(Year.now().getValue()));
         return String.valueOf(current + 1);
     }
-
-
-//    private void setMessage(String message, Dialogue_CustomErrorMessage dialogue) {
-//        Platform.runLater(() -> {
-//            dialogue.setText(message);
-//        });
-//    }
-
-
 }

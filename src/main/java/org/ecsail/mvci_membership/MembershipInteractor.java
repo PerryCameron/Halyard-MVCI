@@ -42,7 +42,6 @@ public class MembershipInteractor implements SlipUser {
     }
 
     public void printEnvelope() {
-        System.out.println("Printing envelope");
         try {
             new PDF_Envelope(true, membershipModel, dataBaseService);
         } catch (IOException e1) {
@@ -77,7 +76,9 @@ public class MembershipInteractor implements SlipUser {
                     success[10] += dataBaseService.deletePhones(p.getpId()); // phoneRepo
                     success[11] += dataBaseService.deleteEmail(p.getpId()); // emailRepo
                     success[12] += dataBaseService.deleteOfficer(p.getpId()); // officerRepo
-                    success[13] += dataBaseService.deletePerson(p.getpId()); // personRepo
+                    success[13] += dataBaseService.deleteUserAuthRequest(p.getpId());
+                    success[14] += dataBaseService.deleteAwards(p.getpId());
+                    success[15] += dataBaseService.deletePerson(p.getpId()); // personRepo
                 }
                 success[9] = dataBaseService.deleteMembership(membershipModel.getMembership().getMsId());  //membershipRepo
 

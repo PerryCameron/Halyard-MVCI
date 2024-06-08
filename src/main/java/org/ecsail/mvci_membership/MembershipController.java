@@ -27,12 +27,12 @@ public class MembershipController extends Controller<MembershipMessage> {
     public void action(MembershipMessage type) {
         switch (type) {
             case GET_DATA -> getData();
-            case SELECT_INVOICES -> runSpinner(SELECT_INVOICES);
-            case SELECT_IDS -> runSpinner(SELECT_IDS);
-            case SELECT_INVOICE -> runSpinner(SELECT_INVOICE);
-            case SELECT_FEES -> runSpinner(SELECT_FEES);
-            case UPDATE_INVOICE -> runSpinner(UPDATE_INVOICE);
-            case UPDATE_INVOICE_ONLY -> runSpinner(UPDATE_INVOICE_ONLY);
+            case SELECT_INVOICES -> runSpinner(SELECT_INVOICES,-430, 150);
+            case SELECT_IDS -> runSpinner(SELECT_IDS,-430, 150);
+            case SELECT_INVOICE -> runSpinner(SELECT_INVOICE,-430, 150);
+            case SELECT_FEES -> runSpinner(SELECT_FEES,-430, 150);
+            case UPDATE_INVOICE -> runSpinner(UPDATE_INVOICE,-430, 150);
+            case UPDATE_INVOICE_ONLY -> runSpinner(UPDATE_INVOICE_ONLY,-430, 150);
             case UPDATE_MEMBERSHIP_LIST -> runTask(UPDATE_MEMBERSHIP_LIST);
             case UPDATE_MEMBERSHIP_ID -> runTask(UPDATE_MEMBERSHIP_ID);
             case UPDATE_AWARD -> runTask(UPDATE_AWARD);
@@ -52,13 +52,13 @@ public class MembershipController extends Controller<MembershipMessage> {
             case INSERT_OFFICER -> runTask(INSERT_OFFICER);
             case INSERT_PERSON -> runTask(INSERT_PERSON);
             case INSERT_PHONE -> runTask(INSERT_PHONE);
-            case INSERT_INVOICE -> runSpinner(INSERT_INVOICE);
+            case INSERT_INVOICE -> runSpinner(INSERT_INVOICE,-430, 150);
             case INSERT_PAYMENT -> runTask(INSERT_PAYMENT);
             case DELETE_BOAT -> runTask(DELETE_BOAT);
             case DELETE_AWARD -> runTask(DELETE_AWARD);
             case DELETE_EMAIL -> runTask(DELETE_EMAIL);
             case DELETE_MEMBERSHIP_ID -> runTask(DELETE_MEMBERSHIP_ID);
-            case DELETE_MEMBERSHIP -> runTask(DELETE_MEMBERSHIP);
+            case DELETE_MEMBERSHIP -> runSpinner(DELETE_MEMBERSHIP,50, 50);
             case DELETE_NOTE -> runTask(DELETE_NOTE);
             case DELETE_OFFICER -> runTask(DELETE_OFFICER);
             case DELETE_PHONE -> runTask(DELETE_PHONE);
@@ -71,7 +71,7 @@ public class MembershipController extends Controller<MembershipMessage> {
             case DELETE_MEMBER_FROM_DATABASE -> runTask(DELETE_MEMBER_FROM_DATABASE);
             case MOVE_MEMBER_TO_MEMBERSHIP -> runTask(MOVE_MEMBER_TO_MEMBERSHIP);
             case UPLOAD_MEMBER_PHOTO -> runTask(UPLOAD_MEMBER_PHOTO);
-            case SAVE_INVOICE -> runSpinner(SAVE_INVOICE);
+            case SAVE_INVOICE -> runSpinner(SAVE_INVOICE,-430, 150);
             case PRINT_ENVELOPE -> runTask(PRINT_ENVELOPE);
         }
     }
@@ -105,7 +105,6 @@ public class MembershipController extends Controller<MembershipMessage> {
                     case DELETE_AWARD -> db.deleteAward();
                     case DELETE_EMAIL -> db.deleteEmail();
                     case DELETE_MEMBERSHIP_ID -> db.deleteMembershipId();
-                    case DELETE_MEMBERSHIP -> membershipInteractor.deleteMembership();
                     case DELETE_NOTE -> db.deleteNote();
                     case DELETE_OFFICER -> db.deleteOfficer();
                     case DELETE_PHONE -> db.deletePhone();
@@ -126,8 +125,8 @@ public class MembershipController extends Controller<MembershipMessage> {
         new Thread(task).start();
     }
 
-    private void runSpinner(MembershipMessage type) {
-        mainController.setSpinnerOffset(-430, 150);
+    private void runSpinner(MembershipMessage type, double x, double y) {
+        mainController.setSpinnerOffset(x, y);
         mainController.showLoadingSpinner(true);
         Task<Void> task = new Task<>() {
             @Override
@@ -141,6 +140,7 @@ public class MembershipController extends Controller<MembershipMessage> {
                     case UPDATE_INVOICE_ONLY -> db.updateInvoiceOnly();
                     case SAVE_INVOICE -> db.saveInvoice();
                     case INSERT_INVOICE -> db.insertInvoice();
+                    case DELETE_MEMBERSHIP -> membershipInteractor.deleteMembership();
                 }
                 return null;
             }

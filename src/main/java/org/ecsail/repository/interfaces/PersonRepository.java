@@ -22,4 +22,6 @@ public interface PersonRepository {
     List<PersonDTO> getPeople(int ms_id);
 
     int deletePerson(int p_id);
+
+    int deleteUserAuthRequest(int pId);
 }
