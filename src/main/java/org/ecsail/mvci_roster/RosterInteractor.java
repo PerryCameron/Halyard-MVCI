@@ -121,13 +121,11 @@ public class RosterInteractor {
     }
 
     protected void fillTableView() {
-        System.out.println("fillTableView()");
         if (!rosterModel.getTextFieldString().equals("")) fillWithSearchResults();
         else fillWithResults(); // search box cleared
     }
 
     private void fillWithResults() { // this is where we stick
-        System.out.println("fillWithResults()");
         Platform.runLater(() -> {
             logger.debug("TableView is set to display normal results");
             rosterModel.getRosterTableView().setItems(rosterModel.getRosters());
@@ -137,7 +135,6 @@ public class RosterInteractor {
     }
 
     private void fillWithSearchResults() {
-        System.out.println("fillWithSearchResults()");
         ObservableList<MembershipListDTO> list = searchString(rosterModel.getTextFieldString());
         Platform.runLater(() -> {
             rosterModel.getSearchedRosters().clear();

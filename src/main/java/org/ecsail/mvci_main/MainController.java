@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
+import org.ecsail.BaseApplication;
 import org.ecsail.connection.Connections;
 import org.ecsail.dto.BoatListDTO;
 import org.ecsail.dto.MembershipListDTO;
@@ -23,6 +24,11 @@ import org.ecsail.mvci_new_membership.NewMembershipController;
 import org.ecsail.mvci_roster.RosterController;
 import org.ecsail.mvci_slip.SlipController;
 import org.ecsail.mvci_welcome.WelcomeController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.awt.*;
+import java.io.IOException;
 
 public class MainController extends Controller<MainMessage> implements Status {
 
@@ -30,6 +36,8 @@ public class MainController extends Controller<MainMessage> implements Status {
     private final MainView mainView;
     private ConnectController connectController;
     private LoadingController loadingController;
+    private static final Logger logger = LoggerFactory.getLogger(MainController.class);
+
 
     public MainController() {
         MainModel mainModel = new MainModel();
@@ -44,11 +52,22 @@ public class MainController extends Controller<MainMessage> implements Status {
             case CLOSE_ALL_CONNECTIONS -> closeAllConnections();
             case CREATE_CONNECT_CONTROLLER -> createConnectController();
             case BACKUP_DATABASE -> backUpDatabase();
+            case SHOW_LOG -> showDebugLog();
         }
     }
 
     public void backUpDatabase() {
 //        Database.BackUp(getConnections().getDataSource());
+    }
+
+    private void showDebugLog() {
+        Desktop desktop = Desktop.getDesktop(); // Gui_Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()
+        // Open the document
+        try {
+            desktop.open(BaseApplication.outputFile);
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
     }
 
     public void createConnectController() {

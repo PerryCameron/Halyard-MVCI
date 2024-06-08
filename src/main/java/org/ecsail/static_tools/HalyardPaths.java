@@ -14,7 +14,7 @@ public class HalyardPaths {
 
 	public static final String ROSTERS = System.getProperty("user.home") + "/Documents/ECSC/Rosters";
 	public static final String ECSC_HOME = System.getProperty("user.home") + "/Documents/ECSC";
-
+	public static final String LOGFILEDIR = System.getProperty("user.home") + "/.ecsc/logs";
 
 
 // 	private static boolean isDirEmpty(final Path directory) throws IOException {

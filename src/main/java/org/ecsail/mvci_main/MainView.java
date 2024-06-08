@@ -147,7 +147,7 @@ public class MainView implements Builder<Region> {
     private Node setUpMenuBar() {
         MenuBar menuBar = new MenuBar();
         if(isMac()) menuBar.setUseSystemMenuBar(true);
-        menuBar.getMenus().addAll(createFileMenu(),createEditMenu());
+        menuBar.getMenus().addAll(createFileMenu(),createEditMenu(),createDebugMenu());
         return menuBar;
     }
     private Menu createEditMenu() {
@@ -167,6 +167,16 @@ public class MainView implements Builder<Region> {
         MenuItem backUp = MenuFx.menuItemOf("Backup DataBase", x -> action.accept(MainMessage.BACKUP_DATABASE), null);
         MenuItem close = MenuFx.menuItemOf("Close Connection", x -> action.accept(MainMessage.CLOSE_ALL_CONNECTIONS), null);
         menu.getItems().addAll(close,backUp);
+        return menu;
+    }
+
+    private Menu createDebugMenu() {
+        Menu menu = new Menu("Debug");
+//        MenuItem findDebugLog = new MenuItem("Find Debug Log folder");
+//        findDebugLog.setOnAction(e -> showDebugLogFolder());
+        MenuItem showDebugLog = MenuFx.menuItemOf("Show Log", x -> action.accept(MainMessage.SHOW_LOG), null);
+//        showDebugLog.setOnAction(event -> showDebugLog());
+        menu.getItems().add(showDebugLog);
         return menu;
     }
 
@@ -197,17 +207,4 @@ public class MainView implements Builder<Region> {
             case RX_RED -> mainModel.getLightAnimationMap().get("receiveError").playFromStart();
         }
     }
-
-//    private static void startFileLogger() {
-//        try {
-//            outputFile = File.createTempFile("debug", ".log", new File(LOGFILEDIR));
-//            PrintStream output = new PrintStream(new BufferedOutputStream(new FileOutputStream(outputFile)), true);
-//            System.setOut(output);
-//            System.setErr(output);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
-
 }

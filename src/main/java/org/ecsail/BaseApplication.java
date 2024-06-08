@@ -7,16 +7,17 @@ import org.ecsail.mvci_main.MainController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Properties;
+
+import static org.ecsail.static_tools.HalyardPaths.LOGFILEDIR;
 
 
 public class BaseApplication extends Application {
 
     public static Stage primaryStage;
+    public static File outputFile;
     private static final Logger logger = LoggerFactory.getLogger(BaseApplication.class);
-
     public static void main(String[] args) {
         launch(args);
     }
@@ -30,16 +31,28 @@ public class BaseApplication extends Application {
             }
             properties.load(input);
             String appVersion = properties.getProperty("app.version");
-            logger.info("Halyard Application version: " + appVersion);
+            logger.info("Starting Halyard Application version: " + appVersion);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
         return properties.getProperty("app.version");
     }
 
+    private static void startFileLogger() {
+        try {
+            outputFile = File.createTempFile("debug", ".log", new File(LOGFILEDIR));
+            PrintStream output = new PrintStream(new BufferedOutputStream(new FileOutputStream(outputFile)), true);
+            System.setOut(output);
+            System.setErr(output);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void start(Stage stage) {
         logAppVersion();
+        startFileLogger();
         primaryStage = stage;
         primaryStage.setScene(new Scene(new MainController().getView()));
         primaryStage.getScene().getStylesheets().addAll(
