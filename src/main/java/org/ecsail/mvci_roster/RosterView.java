@@ -171,5 +171,9 @@ public class RosterView implements Builder<Region> {
         return rosterModel;
     }
 
+    public void setColumnFourName(String newName) {
+        rosterModel.getSlipColumn().setText(newName);
+    }
+
 
 }

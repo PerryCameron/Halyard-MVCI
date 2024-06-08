@@ -21,7 +21,11 @@ public class RosterRadioHBox extends HBox {
     private void setRadioButtonListener() {
         radioButton.selectedProperty().addListener((obs, wasPreviouslySelected, isNowSelected) -> {
             if (isNowSelected) {
-             rosterModel.setSelectedRadioBox(this);
+                rosterModel.setSelectedRadioBox(this);
+                if (rosterModel.getSlipColumn() != null) {
+                    if (membershipListRadioDTO.getLabel().equals("Slip Waitlist")) setColumnFourName("Sublease");
+                    else setColumnFourName("Slip");
+                }
             }
         });
     }
@@ -34,5 +38,11 @@ public class RosterRadioHBox extends HBox {
         return membershipListRadioDTO.getMethodName();
     }
 
-    public String getRadioLabel() { return membershipListRadioDTO.getLabel(); }
+    public String getRadioLabel() {
+        return membershipListRadioDTO.getLabel();
+    }
+
+    public void setColumnFourName(String newName) {
+        rosterModel.getSlipColumn().setText(newName);
+    }
 }

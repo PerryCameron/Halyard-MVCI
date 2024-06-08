@@ -80,6 +80,7 @@ public class RosterTableView implements Builder<TableView<MembershipListDTO>> {
 
     private TableColumn<MembershipListDTO,Text> create4() {
         TableColumn<MembershipListDTO, Text> col = new TableColumn<>("Slip");
+        rosterModel.setSlipColumn(col); // allows us to change column name
         col.setCellValueFactory(new PropertyValueFactory<>("slip"));
         col.setStyle("-fx-alignment: top-center");
         // erasing code below will change nothing

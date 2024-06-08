@@ -3,7 +3,9 @@ package org.ecsail.mvci_roster;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.text.Text;
 import org.ecsail.dto.DbRosterSettingsDTO;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.dto.MembershipListRadioDTO;
@@ -23,6 +25,7 @@ public class RosterModel {
     private final SimpleObjectProperty<TableView<MembershipListDTO>> rosterTableView = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<RosterRadioHBox> selectedRadioBox = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<File> fileToSave = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<TableColumn<MembershipListDTO, Text>> slipColumn = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<MembershipListDTO> selectedMembershipList = new SimpleObjectProperty<>();
     private final StringProperty numberOfRecords = new SimpleStringProperty("0");
     private final StringProperty textFieldString = new SimpleStringProperty();
@@ -33,6 +36,20 @@ public class RosterModel {
         this.mainModel = mainModel;
     }
 
+
+
+
+    public TableColumn<MembershipListDTO, Text> getSlipColumn() {
+        return slipColumn.get();
+    }
+
+    public SimpleObjectProperty<TableColumn<MembershipListDTO, Text>> slipColumnProperty() {
+        return slipColumn;
+    }
+
+    public void setSlipColumn(TableColumn<MembershipListDTO, Text> slipColumn) {
+        this.slipColumn.set(slipColumn);
+    }
 
     public MembershipListDTO getSelectedMembershipList() {
         return selectedMembershipList.get();
