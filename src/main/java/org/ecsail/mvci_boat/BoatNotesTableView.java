@@ -48,7 +48,7 @@ public class BoatNotesTableView implements Builder<TableView<NotesDTO>> {
     }
 
     private TableColumn<NotesDTO,String> createColumn2() {
-        TableColumn<NotesDTO, String> col2 = TableColumnFx.tableColumnOf(NotesDTO::memoProperty, "Note");
+        TableColumn<NotesDTO, String> col2 = TableColumnFx.editableStringTableColumn(NotesDTO::memoProperty, "Note");
         col2.setOnEditCommit(
                 t -> {
                     NotesDTO note = t.getTableView().getItems().get(t.getTablePosition().getRow());

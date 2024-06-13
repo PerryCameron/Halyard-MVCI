@@ -10,7 +10,6 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.ComboBoxTableCell;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
@@ -186,7 +185,7 @@ public class MembershipIdView implements Builder<Tab> {
     }
 
     private TableColumn<MembershipIdDTO, Integer> col2() {
-        TableColumn<MembershipIdDTO, Integer> col2 = TableColumnFx.tableColumnOfInteger(MembershipIdDTO::membershipIdProperty, "Mem ID");
+        TableColumn<MembershipIdDTO, Integer> col2 = TableColumnFx.editableIntegerTableColumn(MembershipIdDTO::membershipIdProperty, "Mem ID");
         col2.setEditable(true);  // Ensure the TableColumn is editable
 
         col2.setCellFactory(tc -> new CustomIntegerTableCell<>(new IntegerStringConverter()));
@@ -201,7 +200,7 @@ public class MembershipIdView implements Builder<Tab> {
     }
 
     private TableColumn<MembershipIdDTO, Integer> col1() {
-        TableColumn<MembershipIdDTO, Integer> col1 = TableColumnFx.tableColumnOfInteger(MembershipIdDTO::fiscalYearProperty, "Year");
+        TableColumn<MembershipIdDTO, Integer> col1 = TableColumnFx.editableIntegerTableColumn(MembershipIdDTO::fiscalYearProperty, "Year");
         col1.setEditable(true);  // Ensure the TableColumn is editable
 
         col1.setCellFactory(tc -> new CustomIntegerTableCell<>(new IntegerStringConverter()));

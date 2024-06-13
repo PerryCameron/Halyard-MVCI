@@ -11,6 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.Builder;
 import org.ecsail.dto.MembershipListDTO;
+import org.ecsail.widgetfx.TableColumnFx;
 import org.ecsail.widgetfx.TableViewFx;
 
 import java.util.Arrays;
@@ -29,6 +30,7 @@ public class RosterTableView implements Builder<TableView<MembershipListDTO>> {
     @Override
     public TableView<MembershipListDTO> build() {
         TableView<MembershipListDTO> tableView = TableViewFx.tableViewOf(MembershipListDTO.class);
+        rosterModel.setRosterTableView(tableView);
         tableView.getColumns()
                 .addAll(Arrays.asList(create1(),create2(),create3(),create4(),create5(),create6(),create7(),create8()));
         tableView.setPlaceholder(new Label(""));
@@ -49,32 +51,31 @@ public class RosterTableView implements Builder<TableView<MembershipListDTO>> {
         return tableView;
     }
 
-    private TableColumn<MembershipListDTO,String> create8() {
-        TableColumn<MembershipListDTO, String> col = new TableColumn<>("MSID");
-        col.setCellValueFactory(new PropertyValueFactory<>("msId"));
-        col.setMaxWidth(1f * Integer.MAX_VALUE * 10); // MSID
+    private TableColumn<MembershipListDTO,Integer> create8() {
+        TableColumn<MembershipListDTO, Integer> col = TableColumnFx.integerTableColumn(MembershipListDTO::msIdProperty,"MSID");
+        col.setStyle("-fx-alignment: center");
+        col.prefWidthProperty().bind(rosterModel.getRosterTableView().widthProperty().multiply(0.10));
         return col;
     }
 
-    private TableColumn<MembershipListDTO,String> create7() {
-        TableColumn<MembershipListDTO, String> col = new TableColumn<>("City");
-        col.setCellValueFactory(new PropertyValueFactory<>("city"));
-        col.setStyle("-fx-alignment: top-center");
-        col.setMaxWidth(1f * Integer.MAX_VALUE * 15);  // State
+    private TableColumn<MembershipListDTO, String> create7() {
+        TableColumn<MembershipListDTO, String> col = TableColumnFx.stringTableColumn(MembershipListDTO::cityProperty,"City");
+        col.setStyle("-fx-alignment: center");
+        col.prefWidthProperty().bind(rosterModel.getRosterTableView().widthProperty().multiply(0.15));
         return col;
     }
 
     private TableColumn<MembershipListDTO,String> create6() {
-        TableColumn<MembershipListDTO, String> col = new TableColumn<>("Last Name");
-        col.setCellValueFactory(new PropertyValueFactory<>("lastName"));
-        col.setMaxWidth(1f * Integer.MAX_VALUE * 15);  // Last Name
+        TableColumn<MembershipListDTO, String> col = TableColumnFx.stringTableColumn(MembershipListDTO::lastNameProperty,"Last Name");
+        col.setStyle("-fx-alignment: center-left");
+        col.prefWidthProperty().bind(rosterModel.getRosterTableView().widthProperty().multiply(0.15));
         return col;
     }
 
     private TableColumn<MembershipListDTO,String> create5() {
-        TableColumn<MembershipListDTO, String> col = new TableColumn<>("First Name");
-        col.setCellValueFactory(new PropertyValueFactory<>("firstName"));
-        col.setMaxWidth(1f * Integer.MAX_VALUE * 15);   // First Name
+        TableColumn<MembershipListDTO, String> col = TableColumnFx.stringTableColumn(MembershipListDTO::firstNameProperty,"First Name");
+        col.setStyle("-fx-alignment: center-left");
+        col.prefWidthProperty().bind(rosterModel.getRosterTableView().widthProperty().multiply(0.15));
         return col;
     }
 
@@ -82,7 +83,7 @@ public class RosterTableView implements Builder<TableView<MembershipListDTO>> {
         TableColumn<MembershipListDTO, Text> col = new TableColumn<>("Slip");
         rosterModel.setSlipColumn(col); // allows us to change column name
         col.setCellValueFactory(new PropertyValueFactory<>("slip"));
-        col.setStyle("-fx-alignment: top-center");
+        col.setStyle("-fx-alignment: center");
         // erasing code below will change nothing
         col.setCellValueFactory(param -> {  // don't need this now but will use for subleases
             MembershipListDTO m = param.getValue();
@@ -93,7 +94,7 @@ public class RosterTableView implements Builder<TableView<MembershipListDTO>> {
             Text text = new Text(valueDisplayed);
             return new SimpleObjectProperty<>(setTextColor(text));
         });
-        col.setMaxWidth(1f * Integer.MAX_VALUE * 10);   // Slip
+        col.prefWidthProperty().bind(rosterModel.getRosterTableView().widthProperty().multiply(0.10));
         return col;
     }
 
@@ -111,7 +112,7 @@ public class RosterTableView implements Builder<TableView<MembershipListDTO>> {
     private TableColumn<MembershipListDTO,Text> create3() {
         TableColumn<MembershipListDTO, Text> col = new TableColumn<>("Type");
         col.setCellValueFactory(new PropertyValueFactory<>("memType"));
-        col.setStyle("-fx-alignment: top-center");
+        col.setStyle("-fx-alignment: center");
         col.setCellValueFactory(param -> {  // don't need this now but will use for subleases
             MembershipListDTO m = param.getValue();
             Text text = new Text();
@@ -124,25 +125,24 @@ public class RosterTableView implements Builder<TableView<MembershipListDTO>> {
                 case "FM" -> text.setFill(Color.BLUE);
                 case "RM" -> text.setFill(Color.RED);
             }
-//			else if(valueDisplayed.equals("LA")) text.setFill(Color.KHAKI);
             text.setText(valueDisplayed);
             return new SimpleObjectProperty<>(text);
         });
-        col.setMaxWidth(1f * Integer.MAX_VALUE * 10);   // Type
+        col.prefWidthProperty().bind(rosterModel.getRosterTableView().widthProperty().multiply(0.10));
         return col;
     }
 
     private TableColumn<MembershipListDTO,String> create2() {
-        TableColumn<MembershipListDTO, String> col = new TableColumn<>("Join Date");
-        col.setCellValueFactory(new PropertyValueFactory<>("joinDate"));
-        col.setMaxWidth(1f * Integer.MAX_VALUE * 15);  // Join Date 15%
+        TableColumn<MembershipListDTO, String> col = TableColumnFx.stringTableColumn(MembershipListDTO::joinDateProperty,"Join Date");
+        col.prefWidthProperty().bind(rosterModel.getRosterTableView().widthProperty().multiply(0.15));
+        col.setStyle("-fx-alignment: center");
         return col;
     }
 
     private TableColumn<MembershipListDTO,Integer> create1() {
-        TableColumn<MembershipListDTO, Integer> col = new TableColumn<>("ID");
-        col.setCellValueFactory(new PropertyValueFactory<>("membershipId"));
-        col.setMaxWidth(1f * Integer.MAX_VALUE * 5);   // Mem 5%
+        TableColumn<MembershipListDTO, Integer> col = TableColumnFx.integerTableColumn(MembershipListDTO::membershipIdProperty,"ID");
+        col.prefWidthProperty().bind(rosterModel.getRosterTableView().widthProperty().multiply(0.05));
+        col.setStyle("-fx-alignment: center");
         return col;
     }
 }

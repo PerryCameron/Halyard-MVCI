@@ -4,12 +4,10 @@ import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TablePosition;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.util.Builder;
 import org.ecsail.dto.AwardDTO;
-import org.ecsail.dto.NotesDTO;
 import org.ecsail.dto.PersonDTO;
 import org.ecsail.enums.Awards;
 import org.ecsail.widgetfx.TableColumnFx;
@@ -39,7 +37,7 @@ public class AwardTableView implements Builder<TableView<AwardDTO>> {
     }
 
     private TableColumn<AwardDTO, String> createColumn1() {
-        TableColumn<AwardDTO, String> col1 = TableColumnFx.tableColumnOf(AwardDTO::awardYearProperty, "Year");
+        TableColumn<AwardDTO, String> col1 = TableColumnFx.editableStringTableColumn(AwardDTO::awardYearProperty, "Year");
         col1.setSortType(TableColumn.SortType.DESCENDING);
         col1.setOnEditCommit(
                 t -> {

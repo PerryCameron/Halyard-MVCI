@@ -178,7 +178,7 @@ public class InvoiceFooter implements Builder<Region> {
     }
 
     private TableColumn<PaymentDTO,String> column1() {
-        TableColumn<PaymentDTO, String> col1 = TableColumnFx.tableColumnOf(PaymentDTO::PaymentAmountProperty,"Amount");
+        TableColumn<PaymentDTO, String> col1 = TableColumnFx.editableStringTableColumn(PaymentDTO::PaymentAmountProperty,"Amount");
         col1.setStyle("-fx-alignment: CENTER-RIGHT;");
         col1.setMaxWidth(1f * Integer.MAX_VALUE * 20);
         col1.setOnEditCommit(
@@ -226,7 +226,7 @@ public class InvoiceFooter implements Builder<Region> {
     }
 
     private TableColumn<PaymentDTO,String> column3() {
-        TableColumn<PaymentDTO, String> col3 = TableColumnFx.tableColumnOf(PaymentDTO::checkNumberProperty,"Check #");
+        TableColumn<PaymentDTO, String> col3 = TableColumnFx.editableStringTableColumn(PaymentDTO::checkNumberProperty,"Check #");
         col3.setStyle("-fx-alignment: CENTER-LEFT;");
         col3.setOnEditCommit(this::updatePayment);
         col3.setMaxWidth(1f * Integer.MAX_VALUE * 35);
@@ -234,7 +234,7 @@ public class InvoiceFooter implements Builder<Region> {
     }
 
     private TableColumn<PaymentDTO,String> column4() {
-        TableColumn<PaymentDTO, String> col4 = TableColumnFx.tableColumnOf(PaymentDTO::paymentDateProperty,"Date");
+        TableColumn<PaymentDTO, String> col4 = TableColumnFx.editableStringTableColumn(PaymentDTO::paymentDateProperty,"Date");
         col4.setStyle("-fx-alignment: CENTER-LEFT;");
         col4.setOnEditCommit(this::updatePayment);
         col4.setMaxWidth(1f * Integer.MAX_VALUE * 25);

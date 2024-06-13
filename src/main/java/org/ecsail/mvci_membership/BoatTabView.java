@@ -10,10 +10,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import org.ecsail.dto.BoatDTO;
-import org.ecsail.dto.NotesDTO;
 import org.ecsail.widgetfx.*;
-
-import java.util.Comparator;
 
 public class BoatTabView implements Builder<Tab> {
     private final MembershipView membershipView;
@@ -75,63 +72,63 @@ public class BoatTabView implements Builder<Tab> {
     }
 
     private TableColumn<BoatDTO,String> col10() {
-        TableColumn<BoatDTO, String> col10 = TableColumnFx.tableColumnOf(BoatDTO::displacementProperty,"Displacement");
+        TableColumn<BoatDTO, String> col10 = TableColumnFx.editableStringTableColumn(BoatDTO::displacementProperty,"Displacement");
         col10.setOnEditCommit(t -> editAndUpdateCell(t,"setDisplacement"));
         col10.setMaxWidth(1f * Integer.MAX_VALUE * 10);  // Trailer
         return col10;
     }
 
     private TableColumn<BoatDTO,String> col9() {
-        TableColumn<BoatDTO, String> col9 = TableColumnFx.tableColumnOf(BoatDTO::draftProperty,"Draft");
+        TableColumn<BoatDTO, String> col9 = TableColumnFx.editableStringTableColumn(BoatDTO::draftProperty,"Draft");
         col9.setOnEditCommit(t -> editAndUpdateCell(t,"setDraft"));
         col9.setMaxWidth(1f * Integer.MAX_VALUE * 10);   // Weight
         return col9;
     }
 
     private TableColumn<BoatDTO,String> col8() {
-        TableColumn<BoatDTO, String> col8 = TableColumnFx.tableColumnOf(BoatDTO::loaProperty,"LOA");
+        TableColumn<BoatDTO, String> col8 = TableColumnFx.editableStringTableColumn(BoatDTO::loaProperty,"LOA");
         col8.setOnEditCommit(t -> editAndUpdateCell(t,"setLoa"));
         col8.setMaxWidth(1f * Integer.MAX_VALUE * 10);   // Length
         return col8;
     }
 
     private TableColumn<BoatDTO,String> col7() {
-        final TableColumn<BoatDTO, String> col7 = TableColumnFx.tableColumnOf(BoatDTO::lwlProperty,"LWL");
+        final TableColumn<BoatDTO, String> col7 = TableColumnFx.editableStringTableColumn(BoatDTO::lwlProperty,"LWL");
         col7.setOnEditCommit(t -> editAndUpdateCell(t,"setLwl"));
         col7.setMaxWidth(1f * Integer.MAX_VALUE * 5);   // PHRF
         return col7;
     }
 
     private TableColumn<BoatDTO, String> col5() {
-        TableColumn<BoatDTO, String> col5 = TableColumnFx.tableColumnOf(BoatDTO::registrationNumProperty, "Registration");
+        TableColumn<BoatDTO, String> col5 = TableColumnFx.editableStringTableColumn(BoatDTO::registrationNumProperty, "Registration");
         col5.setOnEditCommit(t -> editAndUpdateCell(t,"setRegistrationNum"));
         col5.setMaxWidth(1f * Integer.MAX_VALUE * 10);  // Registration
         return col5;
     }
 
     private TableColumn<BoatDTO, String> col4() {
-        final TableColumn<BoatDTO, String> col4 = TableColumnFx.tableColumnOf(BoatDTO::modelProperty, "Model");
+        final TableColumn<BoatDTO, String> col4 = TableColumnFx.editableStringTableColumn(BoatDTO::modelProperty, "Model");
         col4.setOnEditCommit(t -> editAndUpdateCell(t,"setModel"));
         col4.setMaxWidth(1f * Integer.MAX_VALUE * 20);  // Model
         return col4;
     }
 
     private TableColumn<BoatDTO, String> col3() {
-        TableColumn<BoatDTO, String> col3 = TableColumnFx.tableColumnOf(BoatDTO::manufactureYearProperty, "Year");
+        TableColumn<BoatDTO, String> col3 = TableColumnFx.editableStringTableColumn(BoatDTO::manufactureYearProperty, "Year");
         col3.setOnEditCommit(t -> editAndUpdateCell(t,"setManufactureYear"));
         col3.setMaxWidth(1f * Integer.MAX_VALUE * 5);   // Year
         return col3;
     }
 
     private TableColumn<BoatDTO, String> col2() {
-        TableColumn<BoatDTO, String> col2 = TableColumnFx.tableColumnOf(BoatDTO::manufacturerProperty, "Manufacturer");
+        TableColumn<BoatDTO, String> col2 = TableColumnFx.editableStringTableColumn(BoatDTO::manufacturerProperty, "Manufacturer");
         col2.setOnEditCommit(t -> editAndUpdateCell(t,"setManufacturer"));
         col2.setMaxWidth(1f * Integer.MAX_VALUE * 15);  // Manufacturer
         return col2;
     }
 
     private TableColumn<BoatDTO, String> col1() {
-        TableColumn<BoatDTO, String> col1 = TableColumnFx.tableColumnOf(BoatDTO::boatNameProperty, "Boat Name");
+        TableColumn<BoatDTO, String> col1 = TableColumnFx.editableStringTableColumn(BoatDTO::boatNameProperty, "Boat Name");
         column1 = col1;
         col1.setOnEditCommit(t -> editAndUpdateCell(t,"setBoatName"));
         col1.setMaxWidth(1f * Integer.MAX_VALUE * 15);  // Boat Name

@@ -2,7 +2,6 @@ package org.ecsail.mvci_membership;
 
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -14,7 +13,6 @@ import org.ecsail.dto.NotesDTO;
 import org.ecsail.widgetfx.*;
 
 import java.time.LocalDate;
-import java.util.Comparator;
 
 public class NotesTabView implements Builder<Tab> {
     private final MembershipView membershipView;
@@ -71,7 +69,7 @@ public class NotesTabView implements Builder<Tab> {
     }
 
     private TableColumn<NotesDTO, String> col3() {
-        TableColumn<NotesDTO, String> col3 = TableColumnFx.tableColumnOf(NotesDTO::memoProperty, "Note");
+        TableColumn<NotesDTO, String> col3 = TableColumnFx.editableStringTableColumn(NotesDTO::memoProperty, "Note");
         col3.setPrefWidth(740);
         col3.setOnEditCommit(t -> {
             NotesDTO notesDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());

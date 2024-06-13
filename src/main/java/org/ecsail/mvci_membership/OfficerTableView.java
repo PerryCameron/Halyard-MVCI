@@ -44,7 +44,7 @@ public class OfficerTableView implements Builder<TableView<OfficerDTO>> {
     }
 
     private TableColumn<OfficerDTO, String> createColumn1() {
-        TableColumn<OfficerDTO, String> col1 = TableColumnFx.tableColumnOf(OfficerDTO::fiscalYearProperty, "Year");
+        TableColumn<OfficerDTO, String> col1 = TableColumnFx.editableStringTableColumn(OfficerDTO::fiscalYearProperty, "Year");
         col1.setSortType(TableColumn.SortType.DESCENDING);
         col1.setOnEditCommit(
                 t -> {
@@ -83,7 +83,7 @@ public class OfficerTableView implements Builder<TableView<OfficerDTO>> {
     }
 
     private TableColumn<OfficerDTO, String> createColumn3() {
-        TableColumn<OfficerDTO, String> col1 = TableColumnFx.tableColumnOf(OfficerDTO::boardYearProperty, "Exp");
+        TableColumn<OfficerDTO, String> col1 = TableColumnFx.editableStringTableColumn(OfficerDTO::boardYearProperty, "Exp");
         col1.setOnEditCommit(
                 t -> {
                     OfficerDTO officerDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());

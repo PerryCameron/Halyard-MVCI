@@ -12,7 +12,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.util.Builder;
-import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.dto.PersonDTO;
 import org.ecsail.dto.PhoneDTO;
 import org.ecsail.enums.PhoneType;
@@ -52,7 +51,7 @@ public class PhoneTableView implements Builder<TableView<PhoneDTO>> {
     }
 
     private TableColumn<PhoneDTO,String> createColumn1() {
-        TableColumn<PhoneDTO, String> col1 = TableColumnFx.tableColumnOf(PhoneDTO::phoneProperty,"Phone");
+        TableColumn<PhoneDTO, String> col1 = TableColumnFx.editableStringTableColumn(PhoneDTO::phoneProperty,"Phone");
         col1.setOnEditCommit(
                 new EventHandler<>() {
                     @Override

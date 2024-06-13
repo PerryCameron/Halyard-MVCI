@@ -11,7 +11,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Builder;
 import org.ecsail.custom.RadioButtonCell;
 import org.ecsail.dto.EmailDTO;
-import org.ecsail.dto.NotesDTO;
 import org.ecsail.dto.PersonDTO;
 import org.ecsail.static_tools.StringTools;
 import org.ecsail.widgetfx.TableColumnFx;
@@ -46,7 +45,7 @@ public class EmailTableView implements Builder<TableView<EmailDTO>> {
     }
 
     private TableColumn<EmailDTO,String> createColumn1() { //
-        TableColumn<EmailDTO, String> col1 = TableColumnFx.tableColumnOf(EmailDTO::emailProperty,"Email");
+        TableColumn<EmailDTO, String> col1 = TableColumnFx.editableStringTableColumn(EmailDTO::emailProperty,"Email");
         col1.setOnEditCommit(t -> {
             int email_id = t.getTableView().getItems().get(t.getTablePosition().getRow()).getEmail_id();
             if(StringTools.isValidEmail(t.getNewValue())) {
