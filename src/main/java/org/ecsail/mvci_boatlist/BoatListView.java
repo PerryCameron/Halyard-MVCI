@@ -160,4 +160,8 @@ public class BoatListView implements Builder<Region> {
     public void setAction(Consumer<BoatListMessage> action) {
         this.action = action;
     }
+
+    public BoatListModel getBoatListModel() {
+        return boatListModel;
+    }
 }

@@ -4,7 +4,9 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableView;
-import org.ecsail.dto.*;
+import org.ecsail.dto.BoatListDTO;
+import org.ecsail.dto.BoatListRadioDTO;
+import org.ecsail.dto.DbBoatSettingsDTO;
 import org.ecsail.mvci_main.MainModel;
 
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ public class BoatListModel {
     private final StringProperty textFieldString = new SimpleStringProperty();
     private final SimpleObjectProperty<BoatListDTO> selectedBoatList = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<BoatListRadioHBox> selectedRadioBox = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<TableView<BoatListDTO>> table = new SimpleObjectProperty<>();
     private final BooleanProperty listsLoaded = new SimpleBooleanProperty(false);
     private final ArrayList<BoatListSettingsCheckBox> checkBoxes = new ArrayList<>();
     private final SimpleObjectProperty<TableView<BoatListDTO>> boatListTableView = new SimpleObjectProperty<>();
@@ -29,6 +32,18 @@ public class BoatListModel {
         this.mainModel = mainModel;
     }
 
+
+    public TableView<BoatListDTO> getTable() {
+        return table.get();
+    }
+
+    public SimpleObjectProperty<TableView<BoatListDTO>> tableProperty() {
+        return table;
+    }
+
+    public void setTable(TableView<BoatListDTO> table) {
+        this.table.set(table);
+    }
 
     public MainModel getMainModel() {
         return mainModel;
