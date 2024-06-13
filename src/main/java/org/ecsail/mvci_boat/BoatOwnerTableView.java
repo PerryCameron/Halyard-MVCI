@@ -7,6 +7,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Builder;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.widgetfx.ListenerFx;
+import org.ecsail.widgetfx.TableColumnFx;
 import org.ecsail.widgetfx.TableViewFx;
 
 import java.util.Arrays;
@@ -23,6 +24,7 @@ public class BoatOwnerTableView implements Builder<TableView<MembershipListDTO>>
     @Override
     public TableView<MembershipListDTO> build() {
         TableView<MembershipListDTO> tableView = TableViewFx.tableViewOf(MembershipListDTO.class);
+        boatModel.setBoatOwnerTableView(tableView);
         ChangeListener<Boolean> dataLoadedListener = ListenerFx.addSingleFireBooleanListener(boatModel.dataLoadedProperty(), () -> {
             tableView.setItems(boatModel.getBoatOwners());
         });
@@ -35,24 +37,15 @@ public class BoatOwnerTableView implements Builder<TableView<MembershipListDTO>>
         return tableView;
     }
 
-//    private TableColumn<MembershipListDTO,Integer> createColumn3() {
-//        var col1 = new TableColumn<MembershipListDTO, Integer>("MEM");
-//        col1.setCellValueFactory(new PropertyValueFactory<>("membershipId"));
-//        col1.setMaxWidth(1f * Integer.MAX_VALUE * 20); // Mem 5%
-//        return col1;
-//    }
-
     private TableColumn<MembershipListDTO,String> createColumn2() {
-        var col2 = new TableColumn<MembershipListDTO, String>("Last Name");
-        col2.setCellValueFactory(new PropertyValueFactory<>("lastName"));
-        col2.setMaxWidth(1f * Integer.MAX_VALUE * 50); // Join Date 15%
-        return col2;
+        TableColumn<MembershipListDTO, String> col = TableColumnFx.stringTableColumn(MembershipListDTO::lastNameProperty,"Last Name");
+        col.prefWidthProperty().bind(boatModel.getBoatOwnerTableView().widthProperty().multiply(0.50));
+        return col;
     }
 
     private TableColumn<MembershipListDTO,String> createColumn1() {
-        var col3 = new TableColumn<MembershipListDTO, String>("First Name");
-        col3.setCellValueFactory(new PropertyValueFactory<>("firstName"));
-        col3.setMaxWidth(1f * Integer.MAX_VALUE * 50); // Type
-        return col3;
+        TableColumn<MembershipListDTO, String> col = TableColumnFx.stringTableColumn(MembershipListDTO::firstNameProperty,"First Name");
+        col.prefWidthProperty().bind(boatModel.getBoatOwnerTableView().widthProperty().multiply(0.50));
+        return col;
     }
 }

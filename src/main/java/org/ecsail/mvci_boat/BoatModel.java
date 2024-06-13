@@ -3,6 +3,7 @@ package org.ecsail.mvci_boat;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.TableView;
 import javafx.scene.image.ImageView;
 import org.ecsail.dto.*;
 import org.ecsail.mvci_main.MainModel;
@@ -20,6 +21,7 @@ public class BoatModel {
     protected SimpleObjectProperty<BoatPhotosDTO> selectedImage = new SimpleObjectProperty<>();
     protected SimpleObjectProperty<NotesDTO> selectedNote = new SimpleObjectProperty<>();
     protected SimpleObjectProperty<ImageView> imageView = new SimpleObjectProperty<>();
+    private SimpleObjectProperty<TableView<MembershipListDTO>> boatOwnerTableView = new SimpleObjectProperty<>();
     private ObservableList<NotesDTO> notesDTOS = FXCollections.observableArrayList();
     protected SimpleObjectProperty<MembershipListDTO> selectedOwner = new SimpleObjectProperty<>();
     private BooleanProperty confirmed = new SimpleBooleanProperty(false);
@@ -27,6 +29,21 @@ public class BoatModel {
     private StringProperty selectedPath = new SimpleStringProperty();
 
 
+
+
+
+
+    public TableView<MembershipListDTO> getBoatOwnerTableView() {
+        return boatOwnerTableView.get();
+    }
+
+    public SimpleObjectProperty<TableView<MembershipListDTO>> boatOwnerTableViewProperty() {
+        return boatOwnerTableView;
+    }
+
+    public void setBoatOwnerTableView(TableView<MembershipListDTO> boatOwnerTableView) {
+        this.boatOwnerTableView.set(boatOwnerTableView);
+    }
 
     public String getSelectedPath() {
         return selectedPath.get();
