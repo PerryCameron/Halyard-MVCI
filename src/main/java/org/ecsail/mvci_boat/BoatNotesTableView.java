@@ -11,6 +11,7 @@ import org.ecsail.widgetfx.TableColumnFx;
 import org.ecsail.widgetfx.TableViewFx;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 
 public class BoatNotesTableView implements Builder<TableView<NotesDTO>> {
     private final BoatModel boatModel;
@@ -32,7 +33,7 @@ public class BoatNotesTableView implements Builder<TableView<NotesDTO>> {
             if (newSelection != null) boatModel.setSelectedNote(newSelection);
         });
         tableView.setPrefHeight(100);
-        tableView.getColumns().addAll(createColumn1(), createColumn2());
+        tableView.getColumns().addAll(Arrays.asList(createColumn1(), createColumn2()));
         return tableView;
     }
 

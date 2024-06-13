@@ -9,6 +9,8 @@ import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.widgetfx.ListenerFx;
 import org.ecsail.widgetfx.TableViewFx;
 
+import java.util.Arrays;
+
 public class BoatOwnerTableView implements Builder<TableView<MembershipListDTO>> {
     private final BoatModel boatModel;
     private final BoatView boatView;
@@ -29,7 +31,7 @@ public class BoatOwnerTableView implements Builder<TableView<MembershipListDTO>>
             if (newSelection != null) boatModel.setSelectedOwner(newSelection);
         });
         boatModel.dataLoadedProperty().addListener(dataLoadedListener);
-        tableView.getColumns().addAll(createColumn1(), createColumn2());
+        tableView.getColumns().addAll(Arrays.asList(createColumn1(), createColumn2()));
         return tableView;
     }
 
