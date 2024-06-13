@@ -22,6 +22,8 @@ public class BoatModel {
     protected SimpleObjectProperty<NotesDTO> selectedNote = new SimpleObjectProperty<>();
     protected SimpleObjectProperty<ImageView> imageView = new SimpleObjectProperty<>();
     private SimpleObjectProperty<TableView<MembershipListDTO>> boatOwnerTableView = new SimpleObjectProperty<>();
+    private SimpleObjectProperty<TableView<NotesDTO>> notesTableView = new SimpleObjectProperty<>();
+
     private ObservableList<NotesDTO> notesDTOS = FXCollections.observableArrayList();
     protected SimpleObjectProperty<MembershipListDTO> selectedOwner = new SimpleObjectProperty<>();
     private BooleanProperty confirmed = new SimpleBooleanProperty(false);
@@ -29,9 +31,17 @@ public class BoatModel {
     private StringProperty selectedPath = new SimpleStringProperty();
 
 
+    public TableView<NotesDTO> getNotesTableView() {
+        return notesTableView.get();
+    }
 
+    public SimpleObjectProperty<TableView<NotesDTO>> notesTableViewProperty() {
+        return notesTableView;
+    }
 
-
+    public void setNotesTableView(TableView<NotesDTO> notesTableView) {
+        this.notesTableView.set(notesTableView);
+    }
 
     public TableView<MembershipListDTO> getBoatOwnerTableView() {
         return boatOwnerTableView.get();

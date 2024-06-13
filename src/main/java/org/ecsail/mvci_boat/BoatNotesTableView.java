@@ -24,6 +24,7 @@ public class BoatNotesTableView implements Builder<TableView<NotesDTO>> {
     @Override
     public TableView<NotesDTO> build() {
         TableView<NotesDTO> tableView = TableViewFx.tableViewOf(NotesDTO.class);
+        boatModel.setNotesTableView(tableView);
         ChangeListener<Boolean> dataLoadedListener =
                 ListenerFx.addSingleFireBooleanListener(boatModel.dataLoadedProperty(),
                         () -> tableView.setItems(boatModel.getNotesDTOS()));
@@ -38,19 +39,19 @@ public class BoatNotesTableView implements Builder<TableView<NotesDTO>> {
     }
 
     private TableColumn<NotesDTO, LocalDate> createColumn1() {
-        TableColumn<NotesDTO, LocalDate> col1 = new TableColumn<>("Date");
-        col1.setCellValueFactory(cellData -> cellData.getValue().memoDateProperty());
-        col1.setCellFactory(CallBackFX.createDatePickerCellFactory(notesDTO -> {
+        TableColumn<NotesDTO, LocalDate> col = new TableColumn<>("Date");
+        col.setCellValueFactory(cellData -> cellData.getValue().memoDateProperty());
+        col.setCellFactory(CallBackFX.createDatePickerCellFactory(notesDTO -> {
             boatModel.setSelectedNote(notesDTO);
             boatView.sendMessage().accept(BoatMessage.UPDATE_NOTE);
         }));
-        col1.setMaxWidth(1f * Integer.MAX_VALUE * 15);   // Date
-        return col1;
+        col.prefWidthProperty().bind(boatModel.getNotesTableView().widthProperty().multiply(0.15));
+        return col;
     }
 
     private TableColumn<NotesDTO,String> createColumn2() {
-        TableColumn<NotesDTO, String> col2 = TableColumnFx.editableStringTableColumn(NotesDTO::memoProperty, "Note");
-        col2.setOnEditCommit(
+        TableColumn<NotesDTO, String> col = TableColumnFx.editableStringTableColumn(NotesDTO::memoProperty, "Note");
+        col.setOnEditCommit(
                 t -> {
                     NotesDTO note = t.getTableView().getItems().get(t.getTablePosition().getRow());
                     note.setMemo(t.getNewValue());
@@ -58,7 +59,7 @@ public class BoatNotesTableView implements Builder<TableView<NotesDTO>> {
                     boatView.sendMessage().accept(BoatMessage.UPDATE_NOTE);
                 }
         );
-        col2.setMaxWidth( 1f * Integer.MAX_VALUE * 85 );   // Note
-        return col2;
+        col.prefWidthProperty().bind(boatModel.getNotesTableView().widthProperty().multiply(0.85));
+        return col;
     }
 }
