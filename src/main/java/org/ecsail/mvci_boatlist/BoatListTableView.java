@@ -133,6 +133,4 @@ public class BoatListTableView implements Builder<TableView<BoatListDTO>> {
         col.prefWidthProperty().bind(boatListView.getBoatListModel().getTable().widthProperty().multiply(0.05));
         return col;
     }
-
-
 }
