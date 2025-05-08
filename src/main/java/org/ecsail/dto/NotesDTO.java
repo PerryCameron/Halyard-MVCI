@@ -6,20 +6,20 @@ import java.time.LocalDate;
 
 public class NotesDTO {
 
-    private IntegerProperty memoId;
-    private IntegerProperty msId;
-    private ObjectProperty<LocalDate> memoDate;
-    private StringProperty memo;
-    private IntegerProperty invoiceId;
-    private StringProperty category;
-    private IntegerProperty boatId;
+    private final IntegerProperty memoId;
+    private final IntegerProperty msId;
+    private final ObjectProperty<LocalDate> memoDate;
+    private final StringProperty memo;
+    private final IntegerProperty invoiceId;
+    private final StringProperty category;
+    private final IntegerProperty boatId;
 
     public NotesDTO(Integer memoId, Integer msId, LocalDate memoDate,
                     String memo, Integer invoiceId, String category, int boatId) {
         super();
         this.memoId = new SimpleIntegerProperty(memoId);
         this.msId = new SimpleIntegerProperty(msId);
-        this.memoDate = new SimpleObjectProperty(memoDate);
+        this.memoDate = new SimpleObjectProperty<>(memoDate);
         this.memo = new SimpleStringProperty(memo);
         this.invoiceId = new SimpleIntegerProperty(invoiceId);
         this.category = new SimpleStringProperty(category);
@@ -30,7 +30,7 @@ public class NotesDTO {
         super();
         this.memoId = new SimpleIntegerProperty(0);
         this.msId = new SimpleIntegerProperty(0);
-        this.memoDate = new SimpleObjectProperty(LocalDate.now());
+        this.memoDate = new SimpleObjectProperty<>(LocalDate.now());
         this.memo = new SimpleStringProperty("");
         this.invoiceId = new SimpleIntegerProperty(0);
         this.category = new SimpleStringProperty(type);
@@ -41,7 +41,7 @@ public class NotesDTO {
         super();
         this.memoId = new SimpleIntegerProperty(0);
         this.msId = new SimpleIntegerProperty(msId);
-        this.memoDate = new SimpleObjectProperty(LocalDate.now());
+        this.memoDate = new SimpleObjectProperty<>(LocalDate.now());
         this.memo = new SimpleStringProperty("");
         this.invoiceId = new SimpleIntegerProperty(0);
         this.category = new SimpleStringProperty(type);

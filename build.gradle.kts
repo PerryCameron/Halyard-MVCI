@@ -86,6 +86,20 @@ dependencies {
     // Jackson for JSON processing
     implementation("com.fasterxml.jackson.core:jackson-databind:2.14.2")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.2")
+
+//    <dependency>
+//    <groupId>org.junit.jupiter</groupId>
+//    <artifactId>junit-jupiter-engine</artifactId>
+//    <version>5.12.2</version>
+//    <scope>test</scope>
+//    </dependency>
+
+    // testing
+    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.12.2")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.12.2")
+    testImplementation("org.mockito:mockito-core:5.17.0")
+    testImplementation("org.mockito:mockito-junit-jupiter:5.17.0")
+
 }
 
 tasks.withType<JavaCompile> {
@@ -113,11 +127,15 @@ tasks.register<Exec>("generateRuntime") {
 
     commandLine(
         "/Users/parrishcameron/.sdkman/candidates/java/17.0.11.fx-librca/bin/jlink",
-        "--module-path", "/Users/parrishcameron/.sdkman/candidates/java/17.0.11.fx-librca/jmods:/Users/parrishcameron/.m2/repository/org/openjfx/javafx-controls/17/javafx-controls-17.jar:/Users/parrishcameron/.m2/repository/org/openjfx/javafx-fxml/17/javafx-fxml-17.jar:/Users/parrishcameron/.m2/repository/org/openjfx/javafx-media/17/javafx-media-17.jar",
-        "--add-modules", "java.base,java.desktop,java.prefs,java.sql.rowset,javafx.controls,javafx.fxml,javafx.media,java.net.http,jdk.crypto.ec,jdk.crypto.cryptoki",
-        "--output", "build/runtime",
+        "--module-path",
+        "/Users/parrishcameron/.sdkman/candidates/java/17.0.11.fx-librca/jmods:/Users/parrishcameron/.m2/repository/org/openjfx/javafx-controls/17/javafx-controls-17.jar:/Users/parrishcameron/.m2/repository/org/openjfx/javafx-fxml/17/javafx-fxml-17.jar:/Users/parrishcameron/.m2/repository/org/openjfx/javafx-media/17/javafx-media-17.jar",
+        "--add-modules",
+        "java.base,java.desktop,java.prefs,java.sql.rowset,javafx.controls,javafx.fxml,javafx.media,java.net.http,jdk.crypto.ec,jdk.crypto.cryptoki",
+        "--output",
+        "build/runtime",
         "--strip-debug",
-        "--compress", "2",
+        "--compress",
+        "2",
         "--no-header-files",
         "--no-man-pages"
     )

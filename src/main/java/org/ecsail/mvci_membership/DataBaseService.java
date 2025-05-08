@@ -313,11 +313,11 @@ public class DataBaseService {
                         membershipModel.getMainModel(), logger))  // delete invoice
                     membershipModel.getMembership().getInvoiceDTOS().remove(membershipModel.getSelectedInvoice());
                 else
-                    logger.error("Failed to delete invoice " + membershipModel.getSelectedInvoice().getId());
+                    logger.error("Failed to delete invoice {}", membershipModel.getSelectedInvoice().getId());
             else
-                logger.error("Failed to delete payments for invoice " + membershipModel.getSelectedInvoice().getId());
+                logger.error("Failed to delete payments for invoice {}", membershipModel.getSelectedInvoice().getId());
         else
-            logger.error("Failed to delete invoice " + membershipModel.getSelectedInvoice().getId());
+            logger.error("Failed to delete invoice {}", membershipModel.getSelectedInvoice().getId());
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -449,16 +449,27 @@ public class DataBaseService {
                         .ifPresent(tab -> membershipModel.getExtraTabPane().getSelectionModel().select(tab));
                 // let us open it for editing
                 membershipModel.getNotesTableView().getSelectionModel().select(0);
-                Optional<TableColumn<NotesDTO, String>> noteColumn = membershipModel
+                Optional<TableColumn<NotesDTO, ?>> noteColumnOptional = membershipModel
                         .getNotesTableView().getColumns().stream()
                         .filter(column -> "Note".equals(column.getText()))
-                        .map(column -> (TableColumn<NotesDTO, String>) column)
                         .findFirst();
-                membershipModel.getNotesTableView().requestFocus();
-                membershipModel.getNotesTableView().edit(0, noteColumn.get());
+                if (noteColumnOptional.isPresent()) {
+                    TableColumn<NotesDTO, ?> noteColumn = noteColumnOptional.get();
+                    membershipModel.getNotesTableView().requestFocus();
+                    membershipModel.getNotesTableView().edit(0, noteColumn);
+                }
             });
         }
     }
+
+//    warning: [unchecked] unchecked cast
+//                        .map(column -> (TableColumn<NotesDTO, String>) column)
+//            ^
+//    required: TableColumn<NotesDTO,String>
+//    found:    TableColumn<NotesDTO,CAP#1>
+//    where CAP#1 is a fresh type-variable:
+//    CAP#1 extends Object from capture of ?
+
 
     public void insertInvoice() {
         MembershipListDTO membership = membershipModel.getMembership();

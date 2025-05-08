@@ -15,9 +15,9 @@ public class MainModel {
 
     private ObservableList<BoardPositionDTO> boardPositionDTOS = FXCollections.observableArrayList();
     private final StringProperty statusLabel = new SimpleStringProperty(""); // keeper here
-    private final ObjectProperty<TabPane> mainTabPane = new SimpleObjectProperty();
-    private ObservableMap<String, Timeline> LightAnimationMap = FXCollections.observableHashMap();
-    private SimpleObjectProperty<Status.light> lightStatusProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<TabPane> mainTabPane = new SimpleObjectProperty<>();
+    private final ObservableMap<String, Timeline> LightAnimationMap = FXCollections.observableHashMap();
+    private final SimpleObjectProperty<Status.light> lightStatusProperty = new SimpleObjectProperty<>();
     private final ObjectProperty<MainMessage> returnMessage = new SimpleObjectProperty<>();
     private Integer msId;
 

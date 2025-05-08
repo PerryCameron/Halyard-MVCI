@@ -57,7 +57,7 @@ public class NotesTabView implements Builder<Tab> {
     }
 
     private Node addTable() {
-        TableView tableView = TableViewFx.tableViewOf(NotesDTO.class, 200);
+        TableView<NotesDTO> tableView = TableViewFx.tableViewOf(NotesDTO.class, 200);
         tableView.setItems(membershipView.getMembershipModel().getMembership().getNotesDTOS());
         tableView.getColumns().addAll(col1(), col2(), col3());
         TableView.TableViewSelectionModel<NotesDTO> selectionModel = tableView.getSelectionModel();
@@ -67,6 +67,13 @@ public class NotesTabView implements Builder<Tab> {
         membershipView.getMembershipModel().setNotesTableView(tableView);
         return tableView;
     }
+
+//    warning: [unchecked] unchecked call to setItems(ObservableList<S>) as a member of the raw type TableView
+//        tableView.setItems(membershipView.getMembershipModel().getMembership().getNotesDTOS());
+//                          ^
+//    where S is a type-variable:
+//    S extends Object declared in class TableView
+
 
     private TableColumn<NotesDTO, String> col3() {
         TableColumn<NotesDTO, String> col3 = TableColumnFx.editableStringTableColumn(NotesDTO::memoProperty, "Note");

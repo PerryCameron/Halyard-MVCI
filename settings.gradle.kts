@@ -1,4 +1,2 @@
-kotlin
-
 rootProject.name = "Halyard"
 

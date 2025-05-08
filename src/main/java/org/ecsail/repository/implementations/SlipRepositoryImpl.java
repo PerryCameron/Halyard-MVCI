@@ -64,15 +64,16 @@ public class SlipRepositoryImpl implements SlipRepository {
         String query = "SELECT * FROM slip_structure";
         return template.query(query, new SlipStructureRowMapper());
     }
+
     @Override
     public boolean existsSlipWithMsId(int msId) {
         System.out.println("msId " + msId);
         String sql = "SELECT EXISTS (SELECT 1 FROM slip WHERE MS_ID = ?)";
         try {
-            Integer count = template.queryForObject(sql, new Object[]{msId}, Integer.class);
-            return count != null && count > 0;
+            Boolean exists = template.queryForObject(sql, Boolean.class, msId);
+            return exists != null && exists;
         } catch (DataAccessException e) {
-            logger.error("Error while checking existence of slip with MS_ID: " + e.getMessage());
+            logger.error("Error while checking existence of slip with MS_ID: {}", e.getMessage());
             return false; // Or rethrow the exception as per your application's requirements
         }
     }
@@ -83,7 +84,7 @@ public class SlipRepositoryImpl implements SlipRepository {
         try {
             return template.update(sql, msId);
         } catch (DataAccessException e) {
-            logger.error("Unable to DELETE wait list entry: " + e.getMessage());
+            logger.error("Unable to DELETE wait list entry: {}", e.getMessage());
         }
         return 0;
     }

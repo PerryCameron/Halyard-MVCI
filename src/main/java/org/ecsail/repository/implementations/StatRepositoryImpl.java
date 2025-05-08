@@ -15,7 +15,7 @@ import java.util.List;
 
 public class StatRepositoryImpl implements StatRepository {
 
-    public static Logger logger = LoggerFactory.getLogger(StatRepository.class);
+    public static Logger logger = LoggerFactory.getLogger(StatRepositoryImpl.class);
 
 
     private final JdbcTemplate template;
@@ -40,42 +40,43 @@ public class StatRepositoryImpl implements StatRepository {
     @Override
     public StatsDTO createStatDTO(int year) {
         final String sql = """
-                SELECT id.FISCAL_YEAR AS 'YEAR',
-                    COUNT(DISTINCT CASE WHEN id.MEM_TYPE = 'RM' AND id.RENEW = true THEN id.MEMBERSHIP_ID ELSE NULL END) AS 'REGULAR',
-                    COUNT(DISTINCT CASE WHEN id.MEM_TYPE = 'FM' AND id.RENEW = true THEN id.MEMBERSHIP_ID ELSE NULL END) AS 'FAMILY',
-                    COUNT(DISTINCT CASE WHEN id.MEM_TYPE = 'SO' AND id.RENEW = true THEN id.MEMBERSHIP_ID ELSE NULL END) AS 'SOCIAL',
-                    COUNT(DISTINCT CASE WHEN id.MEM_TYPE = 'LA' AND id.RENEW = true THEN id.MEMBERSHIP_ID ELSE NULL END) AS 'LAKE_ASSOCIATES',
-                    COUNT(DISTINCT CASE WHEN id.MEM_TYPE = 'LM' AND id.RENEW = true THEN id.MEMBERSHIP_ID ELSE NULL END) AS 'LIFE_MEMBERS',
-                    COUNT(DISTINCT CASE WHEN id.MEM_TYPE = 'SM' AND id.RENEW = true THEN id.MEMBERSHIP_ID ELSE NULL END) AS 'STUDENT',
-                    COUNT(DISTINCT CASE WHEN id.MEM_TYPE = 'RF' AND id.RENEW = true THEN id.MEMBERSHIP_ID ELSE NULL END) AS 'RACE_FELLOWS',
-                    COUNT(DISTINCT CASE WHEN YEAR(m.JOIN_DATE) = ? THEN id.MEMBERSHIP_ID ELSE NULL END) AS 'NEW_MEMBERS',
-                    COUNT(DISTINCT CASE
-                WHEN id.MEMBERSHIP_ID < 500 AND YEAR(m.JOIN_DATE) != ?
-                AND NOT EXISTS (
-                    SELECT 1 FROM membership_id mi
-                    WHERE mi.FISCAL_YEAR = (? - 1) AND mi.RENEW = 1 AND mi.MS_ID = id.MS_ID
-                    )
-                    AND id.MEMBERSHIP_ID > (
-                    SELECT MAX(mi.MEMBERSHIP_ID)
-                    FROM membership_id mi
-                    WHERE mi.FISCAL_YEAR = (? - 1) AND mi.MEMBERSHIP_ID < 500 AND mi.RENEW = 1
-                    )
-                    THEN id.MEMBERSHIP_ID ELSE NULL END
-                    ) AS 'RETURN_MEMBERS',
-                    SUM(NOT id.RENEW) as 'NON_RENEW',
-                    SUM(id.RENEW) as 'ACTIVE_MEMBERSHIPS'
-                    FROM membership_id id
-                    LEFT JOIN membership m ON id.MS_ID = m.MS_ID
-                    WHERE id.FISCAL_YEAR = ?
-                    GROUP BY id.FISCAL_YEAR
-                        """;
+            SELECT id.FISCAL_YEAR AS 'YEAR',
+                COUNT(DISTINCT CASE WHEN id.MEM_TYPE = 'RM' AND id.RENEW = true THEN id.MEMBERSHIP_ID END) AS 'REGULAR',
+                COUNT(DISTINCT CASE WHEN id.MEM_TYPE = 'FM' AND id.RENEW = true THEN id.MEMBERSHIP_ID END) AS 'FAMILY',
+                COUNT(DISTINCT CASE WHEN id.MEM_TYPE = 'SO' AND id.RENEW = true THEN id.MEMBERSHIP_ID END) AS 'SOCIAL',
+                COUNT(DISTINCT CASE WHEN id.MEM_TYPE = 'LA' AND id.RENEW = true THEN id.MEMBERSHIP_ID END) AS 'LAKE_ASSOCIATES',
+                COUNT(DISTINCT CASE WHEN id.MEM_TYPE = 'LM' AND id.RENEW = true THEN id.MEMBERSHIP_ID END) AS 'LIFE_MEMBERS',
+                COUNT(DISTINCT CASE WHEN id.MEM_TYPE = 'SM' AND id.RENEW = true THEN id.MEMBERSHIP_ID END) AS 'STUDENT',
+                COUNT(DISTINCT CASE WHEN id.MEM_TYPE = 'RF' AND id.RENEW = true THEN id.MEMBERSHIP_ID END) AS 'RACE_FELLOWS',
+                COUNT(DISTINCT CASE WHEN YEAR(m.JOIN_DATE) = ? THEN id.MEMBERSHIP_ID END) AS 'NEW_MEMBERS',
+                COUNT(DISTINCT CASE
+            WHEN id.MEMBERSHIP_ID < 500 AND YEAR(m.JOIN_DATE) != ?
+            AND NOT EXISTS (
+                SELECT 1 FROM membership_id mi
+                WHERE mi.FISCAL_YEAR = (? - 1) AND mi.RENEW = 1 AND mi.MS_ID = id.MS_ID
+                )
+                AND id.MEMBERSHIP_ID > (
+                SELECT MAX(mi.MEMBERSHIP_ID)
+                FROM membership_id mi
+                WHERE mi.FISCAL_YEAR = (? - 1) AND mi.MEMBERSHIP_ID < 500 AND mi.RENEW = 1
+                )
+                THEN id.MEMBERSHIP_ID END
+                ) AS 'RETURN_MEMBERS',
+                SUM(NOT id.RENEW) as 'NON_RENEW',
+                SUM(id.RENEW) as 'ACTIVE_MEMBERSHIPS'
+                FROM membership_id id
+                LEFT JOIN membership m ON id.MS_ID = m.MS_ID
+                WHERE id.FISCAL_YEAR = ?
+                GROUP BY id.FISCAL_YEAR
+            """;
         try {
-            return template.queryForObject(sql, new Object[]{year, year, year, year, year}, new StatsSpecialRowMapper());
+            return template.queryForObject(sql, new StatsSpecialRowMapper(), year, year, year, year, year);
         } catch (DataAccessException e) {
-            logger.error("Error creating stats for year " + year + ": " + e.getMessage());
+            logger.error("Error creating stats for year {}: {}", year, e.getMessage());
             return null;
         }
     }
+
 
 
     @Override

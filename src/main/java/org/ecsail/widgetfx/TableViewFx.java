@@ -5,7 +5,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import org.ecsail.dto.OfficerDTO;
 
 public class TableViewFx {
 
@@ -29,8 +28,8 @@ public class TableViewFx {
         return tableView;
     }
 
-    public static void requestFocusOnTable(TableView<?> tableView) {
-        TableColumn firstColumn = tableView.getColumns().get(0);
+    public static <T> void requestFocusOnTable(TableView<T> tableView) {
+        TableColumn<T, ?> firstColumn = tableView.getColumns().get(0);
         tableView.layout();
         tableView.requestFocus();
         tableView.getSelectionModel().select(0);

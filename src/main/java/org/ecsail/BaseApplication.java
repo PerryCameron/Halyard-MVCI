@@ -18,7 +18,8 @@ public class BaseApplication extends Application {
 
     public static Stage primaryStage;
     public static File outputFile;
-    private static final Logger logger = LoggerFactory.getLogger(BaseApplication.class);
+    public static Logger logger = LoggerFactory.getLogger(BaseApplication.class);
+
     public static boolean testMode = false;
 
     public static void main(String[] args) {
@@ -33,7 +34,7 @@ public class BaseApplication extends Application {
         try (InputStream input = BaseApplication.class.getClassLoader().getResourceAsStream("app.properties")) {
             if (input == null) {
                 logger.error("Sorry, unable to find app.properties");
-                return "unknown" ;
+                return "unknown";
             }
             properties.load(input);
             String appVersion = properties.getProperty("app.version");
@@ -58,7 +59,7 @@ public class BaseApplication extends Application {
     @Override
     public void init() {
 //        logger.info("Starting Halyard: Version {}", VersionUtil.getVersion());
-        if(!testMode)
+        if (!testMode)
             startFileLogger();
         else
             logger.info("Halyard: Running test mode");
