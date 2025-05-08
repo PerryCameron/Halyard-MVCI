@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.ecsail.mvci_main.MainController;
+import org.ecsail.static_tools.VersionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +19,12 @@ public class BaseApplication extends Application {
     public static Stage primaryStage;
     public static File outputFile;
     private static final Logger logger = LoggerFactory.getLogger(BaseApplication.class);
+    public static boolean testMode = false;
+
     public static void main(String[] args) {
+        if (args.length > 0 && args[0].equals("test")) {
+            testMode = true;
+        }
         launch(args);
     }
 
@@ -31,7 +37,7 @@ public class BaseApplication extends Application {
             }
             properties.load(input);
             String appVersion = properties.getProperty("app.version");
-            logger.info("Starting Halyard Application version: " + appVersion);
+            logger.info("Starting Halyard Application version: {}", appVersion);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
@@ -50,9 +56,17 @@ public class BaseApplication extends Application {
     }
 
     @Override
-    public void start(Stage stage) {
-        startFileLogger();
+    public void init() {
+//        logger.info("Starting Halyard: Version {}", VersionUtil.getVersion());
+        if(!testMode)
+            startFileLogger();
+        else
+            logger.info("Halyard: Running test mode");
         logAppVersion();
+    }
+
+    @Override
+    public void start(Stage stage) {
         primaryStage = stage;
         primaryStage.setScene(new Scene(new MainController().getView()));
         primaryStage.getScene().getStylesheets().addAll(

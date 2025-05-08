@@ -180,7 +180,7 @@ public class PDF_Envelope {
 	public Table createAddress() {
 		Table mainTable = new Table(2);
 		mainTable.setWidth(590);
-		ecscLogo.scale(0.25f, 0.25f);
+//		ecscLogo.scale(0.25f, 0.25f);
 
 		Cell cell = new Cell(3,1);
 		cell.setWidth(260);
