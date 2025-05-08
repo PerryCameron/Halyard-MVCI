@@ -1,4 +1,0 @@
-Manifest-Version: 1.0
-Implementation-Version: c234468.dirty
-Main-Class: org.ecsail.BaseApplication
-
