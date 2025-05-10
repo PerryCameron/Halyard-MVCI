@@ -17,6 +17,7 @@ import org.ecsail.static_tools.StringTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -36,17 +37,42 @@ public class BoatListInteractor {
         boatRepo = new BoatRepositoryImpl(connections.getDataSource());
     }
 
+//    protected void changeListType() {
+//        clearMainBoatList();
+//        Method method;
+//        try {
+//            method = boatRepo.getClass().getMethod(boatListModel.getSelectedRadioBox().getMethod());
+//            ObservableList<BoatListDTO> updatedBoatList
+//                    = FXCollections.observableArrayList((List<BoatListDTO>) method.invoke(boatRepo));
+//            updateBoatList(updatedBoatList);
+//            fillTableView();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        changeState();
+//        clearSearchBox();
+//        sortRoster();
+//    }
+
+    // new version of method without unchecked cast warning
     protected void changeListType() {
         clearMainBoatList();
-        Method method;
         try {
-            method = boatRepo.getClass().getMethod(boatListModel.getSelectedRadioBox().getMethod());
-            ObservableList<BoatListDTO> updatedBoatList
-                    = FXCollections.observableArrayList((List<BoatListDTO>) method.invoke(boatRepo));
-            updateBoatList(updatedBoatList);
-            fillTableView();
-        } catch (Exception e) {
-            e.printStackTrace();
+            Method method = boatRepo.getClass().getMethod(boatListModel.getSelectedRadioBox().getMethod());
+            Object result = method.invoke(boatRepo);
+            if (result instanceof List<?> rawList) {
+                List<BoatListDTO> boatList = rawList.stream()
+                        .filter(BoatListDTO.class::isInstance)
+                        .map(BoatListDTO.class::cast)
+                        .toList();
+                ObservableList<BoatListDTO> updatedBoatList = FXCollections.observableArrayList(boatList);
+                updateBoatList(updatedBoatList);
+                fillTableView();
+            } else {
+                throw new IllegalStateException("Expected a List from method invocation, got: " + result);
+            }
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            logger.error(e.getMessage(), e);
         }
         changeState();
         clearSearchBox();
@@ -63,12 +89,12 @@ public class BoatListInteractor {
     }
 
     private void clearSearchBox() {
-        if(!boatListModel.getTextFieldString().equals(""))
+        if (!boatListModel.getTextFieldString().isEmpty())
             Platform.runLater(() -> boatListModel.setTextFieldString(""));
     }
 
     protected void fillTableView() {
-        if (!boatListModel.getTextFieldString().equals("")) fillWithSearchResults();
+        if (!boatListModel.getTextFieldString().isEmpty()) fillWithSearchResults();
         else fillWithResults(); // search box cleared
         changeState();
     }
@@ -97,12 +123,11 @@ public class BoatListInteractor {
     }
 
     private boolean fieldIsSearchable(String fieldName) {
-        boolean isSearchable = boatListModel.getCheckBoxes().stream()
+        return boatListModel.getCheckBoxes().stream()
                 .filter(dto -> dto.getDb().getPojoName().equals(fieldName))
                 .findFirst()
                 .map(BoatListSettingsCheckBox::isSearchable)
                 .orElse(false);
-        return isSearchable;
     }
 
     private void fillWithResults() {
@@ -153,18 +178,18 @@ public class BoatListInteractor {
 
     public void updateBoat() {
         HandlingTools.executeQuery(() ->
-                boatRepo.updateAux(boatListModel.getSelectedBoatList().isAux(), boatListModel.getSelectedBoatList().getBoatId()),
+                        boatRepo.updateAux(boatListModel.getSelectedBoatList().isAux(), boatListModel.getSelectedBoatList().getBoatId()),
                 boatListModel.getMainModel(),
                 logger);
     }
 
     protected void savedToIndicator(boolean returnOk) { // updates status lights
-        if(returnOk) boatListModel.getMainModel().getLightAnimationMap().get("receiveSuccess").playFromStart();
+        if (returnOk) boatListModel.getMainModel().getLightAnimationMap().get("receiveSuccess").playFromStart();
         else boatListModel.getMainModel().getLightAnimationMap().get("receiveError").playFromStart();
     }
 
     protected void retrievedFromIndicator(boolean returnOk) { // updates status lights
-        if(returnOk) boatListModel.getMainModel().getLightAnimationMap().get("transmitSuccess").playFromStart();
+        if (returnOk) boatListModel.getMainModel().getLightAnimationMap().get("transmitSuccess").playFromStart();
         else boatListModel.getMainModel().getLightAnimationMap().get("transmitError").playFromStart();
     }
 

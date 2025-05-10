@@ -103,11 +103,11 @@ public class AddressTabView implements Builder<Tab> {
         });
     }
 
-    private void setState(ComboBox comboBox) {
+    private void setState(ComboBox<String> comboBox) {
         comboBox.setPrefWidth(80);
         comboBox.setValue(membershipView.getMembershipModel().getMembership().getState());
-        comboBox.getSelectionModel().selectedItemProperty().addListener( (options, oldValue, newValue) -> {
-            membershipView.getMembershipModel().getMembership().setState(newValue.toString());
+        comboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
+            membershipView.getMembershipModel().getMembership().setState(newValue);
             membershipView.sendMessage().accept(MembershipMessage.UPDATE_MEMBERSHIP_LIST);
         });
     }

@@ -13,6 +13,8 @@ import org.ecsail.enums.Awards;
 import org.ecsail.widgetfx.TableColumnFx;
 import org.ecsail.widgetfx.TableViewFx;
 
+import java.util.Arrays;
+
 public class AwardTableView implements Builder<TableView<AwardDTO>> {
     private final PersonDTO person;
     private final MembershipView membershipView;
@@ -28,7 +30,7 @@ public class AwardTableView implements Builder<TableView<AwardDTO>> {
     public TableView<AwardDTO> build() {
         TableView<AwardDTO> tableView = TableViewFx.tableViewOf(AwardDTO.class, 146);
         tableView.setItems(person.getAwards());
-        tableView.getColumns().addAll(createColumn1(), createColumn2());
+        tableView.getColumns().addAll(Arrays.asList(createColumn1(), createColumn2()));
         TableView.TableViewSelectionModel<AwardDTO> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) membershipModel.setSelectedAward(newSelection);

@@ -16,6 +16,7 @@ import org.ecsail.static_tools.CustomTools;
 import org.ecsail.widgetfx.*;
 
 import java.time.Year;
+import java.util.Arrays;
 import java.util.Comparator;
 
 import static org.ecsail.widgetfx.ListenerFx.addSingleFireObjectListener;
@@ -84,16 +85,14 @@ public class InvoiceListView implements Builder<Tab> {
         int selectedYear = membershipView.getMembershipModel().getMembership().getSelectedYear();
         comboBox.setValue(selectedYear); // sets year for combo box to record year
         membershipView.getMembershipModel().setSelectedInvoiceCreateYear(selectedYear); // sets initial for combo-box
-        comboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            membershipView.getMembershipModel().setSelectedInvoiceCreateYear(newValue);
-        });
+        comboBox.valueProperty().addListener((observable, oldValue, newValue) -> membershipView.getMembershipModel().setSelectedInvoiceCreateYear(newValue));
         return comboBox;
     }
 
     private Node addTable() {
         HBox hBox = HBoxFx.hBoxOf(new Insets(5,5,5,5));
         TableView<InvoiceDTO> tableView = TableViewFx.tableViewOf(InvoiceDTO.class);
-        tableView.getColumns().addAll(col1(),col2(),col3(),col4(),col5());
+        tableView.getColumns().addAll(Arrays.asList(col1(),col2(),col3(),col4(),col5()));
         TableView.TableViewSelectionModel<InvoiceDTO> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) membershipView.getMembershipModel().setSelectedInvoice(newSelection);
@@ -109,14 +108,14 @@ public class InvoiceListView implements Builder<Tab> {
     }
 
     private TableColumn<InvoiceDTO,Integer> col1() { //
-        TableColumn col = new TableColumn<InvoiceDTO, Integer>("Year");
+        TableColumn<InvoiceDTO,Integer> col = new TableColumn<>("Year");
         col.setCellValueFactory(new PropertyValueFactory<>("year"));
         col.setMaxWidth( 1f * Integer.MAX_VALUE * 20 );
         return col;
     }
 
     private TableColumn<InvoiceDTO,Integer> col2() { //
-        TableColumn col = new TableColumn<InvoiceDTO, Integer>("Fees");
+        TableColumn<InvoiceDTO,Integer> col = new TableColumn<>("Fees");
         col.setCellValueFactory(new PropertyValueFactory<>("total"));
         col.setMaxWidth( 1f * Integer.MAX_VALUE * 20 );
         col.setStyle( "-fx-alignment: CENTER-RIGHT;");
@@ -124,7 +123,7 @@ public class InvoiceListView implements Builder<Tab> {
     }
 
     private TableColumn<InvoiceDTO,Integer> col3() { //
-        TableColumn col = new TableColumn<InvoiceDTO, Integer>("Credit");
+        TableColumn<InvoiceDTO,Integer> col = new TableColumn<>("Credit");
         col.setCellValueFactory(new PropertyValueFactory<>("credit"));
         col.setMaxWidth( 1f * Integer.MAX_VALUE * 20 );
         col.setStyle( "-fx-alignment: CENTER-RIGHT;");
@@ -132,7 +131,7 @@ public class InvoiceListView implements Builder<Tab> {
     }
 
     private TableColumn<InvoiceDTO,Integer> col4() { //
-        TableColumn col = new TableColumn<InvoiceDTO, Integer>("Paid");
+        TableColumn<InvoiceDTO,Integer> col = new TableColumn<>("Paid");
         col.setCellValueFactory(new PropertyValueFactory<>("paid"));
         col.setMaxWidth( 1f * Integer.MAX_VALUE * 20 );
         col.setStyle( "-fx-alignment: CENTER-RIGHT;");
@@ -140,7 +139,7 @@ public class InvoiceListView implements Builder<Tab> {
     }
 
     private TableColumn<InvoiceDTO,Integer> col5() { //
-        TableColumn col = new TableColumn<InvoiceDTO, Integer>("Balance");
+        TableColumn<InvoiceDTO,Integer> col = new TableColumn<>("Balance");
         col.setCellValueFactory(new PropertyValueFactory<>("balance"));
         col.setMaxWidth( 1f * Integer.MAX_VALUE * 20 );
         col.setStyle( "-fx-alignment: CENTER-RIGHT;");

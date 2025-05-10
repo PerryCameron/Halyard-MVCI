@@ -17,6 +17,7 @@ import org.ecsail.static_tools.StringTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -59,33 +60,62 @@ public class RosterInteractor {
     }
 
     protected void changeState() {
-            logger.debug("Rosters is in search mode: " + rosterModel.isSearchMode());
+        logger.debug("Rosters is in search mode: {}", rosterModel.isSearchMode());
             if (rosterModel.isSearchMode())
                 rosterModel.setNumberOfRecords(String.valueOf(rosterModel.getSearchedRosters().size()));
             else
                 rosterModel.setNumberOfRecords(String.valueOf(rosterModel.getRosters().size()));
     }
 
+//    protected void updateRoster() {
+//        System.out.println("updateRoster()");
+//        // I believe problem with tableview not refreshing on first open is in here
+//        Method method;
+//        try {
+//            method = membershipRepo.getClass().getMethod(rosterModel.getSelectedRadioBox().getMethod(), Integer.class);
+//            logger.info("Getting roster from data base");
+//            ObservableList<MembershipListDTO> updatedRoster
+//                    = FXCollections.observableArrayList((List<MembershipListDTO>) method.invoke(membershipRepo, rosterModel.getSelectedYear()));
+//            Platform.runLater(() -> {
+//                logger.info("Adding roster to model");
+//                rosterModel.getRosters().setAll(setSlipsForRoster(updatedRoster));
+//            });
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+
+    // new version of method without unchecked cast
     protected void updateRoster() {
-        System.out.println("updateRoster()");
-        // I believe problem with tableview not refreshing on first open is in here
         Method method;
         try {
             method = membershipRepo.getClass().getMethod(rosterModel.getSelectedRadioBox().getMethod(), Integer.class);
-            logger.info("Getting roster from data base");
-            ObservableList<MembershipListDTO> updatedRoster
-                    = FXCollections.observableArrayList((List<MembershipListDTO>) method.invoke(membershipRepo, rosterModel.getSelectedYear()));
-            Platform.runLater(() -> {
-                logger.info("Adding roster to model");
-                rosterModel.getRosters().setAll(setSlipsForRoster(updatedRoster));
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
+            logger.info("Getting roster from database");
+            Object result = method.invoke(membershipRepo, rosterModel.getSelectedYear());
+            if (result instanceof List<?> rawList) {
+                List<MembershipListDTO> rosterList = rawList.stream()
+                        .filter(MembershipListDTO.class::isInstance)
+                        .map(MembershipListDTO.class::cast)
+                        .toList();
+                ObservableList<MembershipListDTO> updatedRoster = FXCollections.observableArrayList(rosterList);
+                Platform.runLater(() -> {
+                    logger.info("Adding roster to model");
+                    rosterModel.getRosters().setAll(setSlipsForRoster(updatedRoster));
+                    // Force table view refresh
+                    rosterModel.getRosters().add(null); // Trigger change
+                    rosterModel.getRosters().remove(null); // Remove dummy entry
+                });
+            } else {
+                throw new IllegalStateException("Expected a List from method invocation, got: " + result);
+            }
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+            logger.error(e.getMessage());
         }
     }
 
+
     protected void clearSearchBox() {
-        if (!rosterModel.getTextFieldString().equals(""))
+        if (!rosterModel.getTextFieldString().isEmpty())
             rosterModel.setTextFieldString("");
     }
 
@@ -116,12 +146,12 @@ public class RosterInteractor {
         try {
             new Xls_roster(rosterModel);
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
     }
 
     protected void fillTableView() {
-        if (!rosterModel.getTextFieldString().equals("")) fillWithSearchResults();
+        if (!rosterModel.getTextFieldString().isEmpty()) fillWithSearchResults();
         else fillWithResults(); // search box cleared
     }
 

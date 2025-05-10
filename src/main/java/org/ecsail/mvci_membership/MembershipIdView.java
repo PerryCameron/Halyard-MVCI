@@ -23,6 +23,7 @@ import org.ecsail.widgetfx.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 
 public class MembershipIdView implements Builder<Tab> {
     private final MembershipView membershipView;
@@ -106,7 +107,7 @@ public class MembershipIdView implements Builder<Tab> {
 
     private Node addTable() {
         TableView<MembershipIdDTO> tableView = TableViewFx.tableViewOf(MembershipIdDTO.class);
-        tableView.getColumns().addAll(col1(), col2(), col3(), col4(), col5());
+        tableView.getColumns().addAll(Arrays.asList(col1(), col2(), col3(), col4(), col5()));
         TableView.TableViewSelectionModel<MembershipIdDTO> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) membershipModel.setSelectedMembershipId(newSelection);

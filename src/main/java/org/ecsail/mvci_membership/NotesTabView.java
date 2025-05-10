@@ -13,6 +13,7 @@ import org.ecsail.dto.NotesDTO;
 import org.ecsail.widgetfx.*;
 
 import java.time.LocalDate;
+import java.util.Arrays;
 
 public class NotesTabView implements Builder<Tab> {
     private final MembershipView membershipView;
@@ -37,8 +38,8 @@ public class NotesTabView implements Builder<Tab> {
     private Node getButtonControls() {
         VBox vBox = VBoxFx.vBoxOf(5.0, new Insets(10, 5, 5, 10));
         vBox.getChildren().addAll(
-                ButtonFx.buttonOf("Add", 60, () -> insertNote()),
-                ButtonFx.buttonOf("Delete", 60, () -> deleteNote()));
+                ButtonFx.buttonOf("Add", 60, this::insertNote),
+                ButtonFx.buttonOf("Delete", 60, this::deleteNote));
         return vBox;
     }
 
@@ -59,7 +60,7 @@ public class NotesTabView implements Builder<Tab> {
     private Node addTable() {
         TableView<NotesDTO> tableView = TableViewFx.tableViewOf(NotesDTO.class, 200);
         tableView.setItems(membershipView.getMembershipModel().getMembership().getNotesDTOS());
-        tableView.getColumns().addAll(col1(), col2(), col3());
+        tableView.getColumns().addAll(Arrays.asList(col1(), col2(), col3()));
         TableView.TableViewSelectionModel<NotesDTO> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) membershipModel.setSelectedNote(newSelection);
@@ -67,13 +68,6 @@ public class NotesTabView implements Builder<Tab> {
         membershipView.getMembershipModel().setNotesTableView(tableView);
         return tableView;
     }
-
-//    warning: [unchecked] unchecked call to setItems(ObservableList<S>) as a member of the raw type TableView
-//        tableView.setItems(membershipView.getMembershipModel().getMembership().getNotesDTOS());
-//                          ^
-//    where S is a type-variable:
-//    S extends Object declared in class TableView
-
 
     private TableColumn<NotesDTO, String> col3() {
         TableColumn<NotesDTO, String> col3 = TableColumnFx.editableStringTableColumn(NotesDTO::memoProperty, "Note");
@@ -90,7 +84,7 @@ public class NotesTabView implements Builder<Tab> {
     }
 
     private TableColumn<NotesDTO, String> col2() {
-        TableColumn<NotesDTO, String> col2 = new TableColumn<NotesDTO, String>("Type");
+        TableColumn<NotesDTO, String> col2 = new TableColumn<>("Type");
         col2.setCellValueFactory(new PropertyValueFactory<>("category"));
         col2.setMaxWidth(1f * Integer.MAX_VALUE * 5);    // Type
         return col2;
