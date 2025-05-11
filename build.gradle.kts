@@ -17,10 +17,8 @@ group = "org.ecsail"
 //val gitVersion: groovy.lang.Closure<String> by extra
 //version = gitVersion()
 
-val versionDetails: groovy.lang.Closure<VersionDetails> by extra
-val gitVersion: String = versionDetails().version
-println("Git Version: $gitVersion")
-version = gitVersion
+val gitVersion: groovy.lang.Closure<String> by extra
+version = gitVersion()
 
 application {
     // Main class for the application
@@ -35,13 +33,15 @@ tasks.jar {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
+        languageVersion.set(JavaLanguageVersion.of(21))
     }
 }
 
 repositories {
     mavenCentral()
 }
+
+val appVersion: String by project
 
 dependencies {
     // SLF4J and Logback for logging
