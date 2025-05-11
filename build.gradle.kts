@@ -1,5 +1,4 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import com.palantir.gradle.gitversion.VersionDetails
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -115,6 +114,15 @@ tasks.withType<ShadowJar> {
     }
 }
 
+tasks.jar {
+    manifest {
+        archiveBaseName.set("Halyard")
+        archiveVersion.set("")
+        archiveClassifier.set("")
+        attributes["Main-Class"] = "org.ecsail.BaseApplication"
+    }
+}
+
 // Create the runtime using `jlink`
 tasks.register<Exec>("generateRuntime") {
     group = "build"
@@ -125,9 +133,8 @@ tasks.register<Exec>("generateRuntime") {
     }
 
     commandLine(
-        "/Users/parrishcameron/.sdkman/candidates/java/17.0.11.fx-librca/bin/jlink",
-        "--module-path",
-        "/Users/parrishcameron/.sdkman/candidates/java/17.0.11.fx-librca/jmods:/Users/parrishcameron/.m2/repository/org/openjfx/javafx-controls/17/javafx-controls-17.jar:/Users/parrishcameron/.m2/repository/org/openjfx/javafx-fxml/17/javafx-fxml-17.jar:/Users/parrishcameron/.m2/repository/org/openjfx/javafx-media/17/javafx-media-17.jar",
+        "C:/Users/sesa91827/.jdks/jdk-21.0.6-full/bin/jlink.exe",  // Updated path
+        "--module-path", "C:/Users/sesa91827/.jdks/jdk-21.0.6-full/jmods",
         "--add-modules",
         "java.base,java.desktop,java.prefs,java.sql.rowset,javafx.controls,javafx.fxml,javafx.media,java.net.http,jdk.crypto.ec,jdk.crypto.cryptoki",
         "--output",
@@ -137,6 +144,36 @@ tasks.register<Exec>("generateRuntime") {
         "2",
         "--no-header-files",
         "--no-man-pages"
+    )
+}
+
+tasks.register<Exec>("packageApp") {
+    group = "build"
+    description = "Packages the application with a bundled JRE using jpackage"
+
+    doFirst {
+        delete(file("build/jpackage/TSENotes"))
+    }
+
+    // Directly point to the jpackage tool in your Java 21 SDK
+    commandLine(
+        "C:/Users/sesa91827/.jdks/jdk-21.0.6-full/bin/jpackage",  // Path to your jpackage
+        "--input",
+        "build/libs",  // Path to the JAR file directory
+        "--main-jar",
+        "Halyard-all.jar",  // Replace with your actual JAR name
+        "--main-class",
+        "org.ecsail.BaseApplication",  // Replace with your actual main class
+        "--name",
+        "Halyard",  // Name of the app
+        "--type",
+        "app-image",  // You can also use pkg, dmg, exe, etc.
+        "--runtime-image",
+        "C:/Users/sesa91827/.jdks/jdk-21.0.6-full",  // Path to Java 21 runtime image
+        "--dest",
+        "build/jpackage",  // Output destination
+        "--icon",
+        "src/main/resources/images/app-icon.ico"  // Optional: Path to your app's icon
     )
 }
 
