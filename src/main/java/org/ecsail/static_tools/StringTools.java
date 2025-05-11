@@ -25,6 +25,7 @@ public class StringTools {
 			return false;
 		return pat.matcher(email).matches();
 	}
+
 	public static String changeEmptyStringToZero(String input) {
 		if(input != null) {
 			if(input.equals("")) input= "0";
