@@ -3,12 +3,45 @@ package org.ecsail.widgetfx;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.DialogPane;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.Objects;
 import java.util.Optional;
 
 public class DialogueFx {
+
+    private static final Logger logger = LoggerFactory.getLogger(DialogueFx.class);
+
+    public static Alert aboutDialogue(String header, String message, Alert.AlertType type) {
+        Alert alert = new Alert(type);
+        alert.setHeaderText(header); // I would like the header to be a larger font
+        alert.setContentText(message);
+
+        alert.setTitle("");
+
+        Image image = new Image(Objects.requireNonNull(DialogueFx.class.getResourceAsStream("/images/halyard-64.png")));
+        ImageView imageView = new ImageView(image);
+        imageView.setFitHeight(64); // Adjust the height as needed
+        imageView.setFitWidth(64);  // Adjust the width as needed
+        alert.setGraphic(imageView);
+
+        // Modify the header text programmatically
+        DialogPane dialogPane = alert.getDialogPane();
+        getTitleIcon(dialogPane);
+        Label headerLabel = (Label) dialogPane.lookup(".dialog-pane .header-panel .label");
+        if (headerLabel != null) {
+            headerLabel.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
+        }
+        tieAlertToStage(alert);
+        dialogPane.getStylesheets().add("css/light.css");
+        return alert;
+    }
 
     public static Alert customAlert(String header, String message, Alert.AlertType type) {
         System.out.println("launching custom alert");
@@ -62,5 +95,18 @@ public class DialogueFx {
             alert.showAndWait();
         }
         return false;
+    }
+
+    private static void getTitleIcon(DialogPane dialogPane) {
+        // Set custom icon for the title bar
+        Stage alertStage = (Stage) dialogPane.getScene().getWindow();
+        try {
+            // Load icon from resources (adjust path as needed)
+            Image icon = new Image(Objects.requireNonNull(
+                    DialogueFx.class.getResourceAsStream("/images/halyard-16.png")));
+            alertStage.getIcons().add(icon);
+        } catch (Exception e) {
+            logger.error("Failed to load icon: {}", e.getMessage());
+        }
     }
 }

@@ -16,7 +16,6 @@ public class VersionUtil {
             version = version.substring(1);
         }
 
-
         // Remove commit hash (-gxxxxxxx)
         int commitHashIndex = version.indexOf("-g");
         if (commitHashIndex != -1) {

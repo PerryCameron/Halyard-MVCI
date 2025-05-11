@@ -22,6 +22,7 @@ import javafx.util.Builder;
 import javafx.util.Duration;
 import org.ecsail.BaseApplication;
 import org.ecsail.interfaces.Status;
+import org.ecsail.static_tools.VersionUtil;
 import org.ecsail.widgetfx.*;
 
 
@@ -147,7 +148,7 @@ public class MainView implements Builder<Region> {
     private Node setUpMenuBar() {
         MenuBar menuBar = new MenuBar();
         if(isMac()) menuBar.setUseSystemMenuBar(true);
-        menuBar.getMenus().addAll(createFileMenu(),createEditMenu(),createDebugMenu());
+        menuBar.getMenus().addAll(createFileMenu(),createEditMenu(),createDebugMenu(), createHelpMenu());
         return menuBar;
     }
     private Menu createEditMenu() {
@@ -159,6 +160,19 @@ public class MainView implements Builder<Region> {
         MenuItem copy = MenuFx.menuItemOf("Copy", x -> System.out.println("Copy"), KeyCode.C);
         MenuItem paste = MenuFx.menuItemOf("Paste", x -> System.out.println("Paste"), KeyCode.V);
         menu.getItems().addAll(undo, redo, editSeparator, cut, copy, paste);
+        return menu;
+    }
+
+    private Menu createHelpMenu() {
+        Menu menu = new Menu("Help");
+        String message = "Version: " + VersionUtil.getVersion()
+                + "\nBuilt: " + VersionUtil.getBuildTimestamp()
+                + "\nBundled JDK: " + VersionUtil.getJavaVersion();
+        MenuItem showAboutDialogue = MenuFx.menuItemOf("About", x -> {
+            Alert alert = DialogueFx.aboutDialogue("Halyard II", message, Alert.AlertType.INFORMATION);
+            alert.showAndWait();
+        }, null);
+        menu.getItems().add(showAboutDialogue);
         return menu;
     }
 
