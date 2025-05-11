@@ -4,6 +4,7 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.ecsail.mvci_main.MainController;
+import org.ecsail.static_tools.VersionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,22 +29,6 @@ public class BaseApplication extends Application {
         launch(args);
     }
 
-    private static String logAppVersion() {
-        Properties properties = new Properties();
-        try (InputStream input = BaseApplication.class.getClassLoader().getResourceAsStream("app.properties")) {
-            if (input == null) {
-                logger.error("Sorry, unable to find app.properties");
-                return "unknown";
-            }
-            properties.load(input);
-            String appVersion = properties.getProperty("app.version");
-            logger.info("Starting Halyard Application version: {}", appVersion);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-        }
-        return properties.getProperty("app.version");
-    }
-
     private static void startFileLogger() {
         try {
             outputFile = File.createTempFile("debug", ".log", new File(LOGFILEDIR));
@@ -62,7 +47,7 @@ public class BaseApplication extends Application {
             startFileLogger();
         else
             logger.info("Halyard: Running test mode");
-        logAppVersion();
+        VersionUtil.logAppVersion();
     }
 
     @Override
