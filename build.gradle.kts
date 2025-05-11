@@ -87,18 +87,17 @@ dependencies {
     implementation("com.fasterxml.jackson.core:jackson-databind:2.14.2")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.2")
 
-//    <dependency>
-//    <groupId>org.junit.jupiter</groupId>
-//    <artifactId>junit-jupiter-engine</artifactId>
-//    <version>5.12.2</version>
-//    <scope>test</scope>
-//    </dependency>
-
     // testing
-    testImplementation("org.junit.jupiter:junit-jupiter-engine:5.12.2")
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.12.2")
+    // Use junit-jupiter to ensure aligned versions
+    testImplementation(platform("org.junit:junit-bom:5.10.0")) // Use the latest stable JUnit BOM
+    testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation("org.mockito:mockito-core:5.17.0")
     testImplementation("org.mockito:mockito-junit-jupiter:5.17.0")
+    // For JavaFX tests
+    testImplementation("org.testfx:testfx-junit5:4.0.18")
+    testImplementation("org.testfx:testfx-core:4.0.18")
+    testImplementation("org.openjfx:javafx-controls:17")
+    testImplementation("org.openjfx:javafx-graphics:17")
 
 }
 
@@ -245,6 +244,14 @@ tasks.processResources {
 
 tasks.test {
     useJUnitPlatform()
+    testLogging {
+        events("passed", "skipped", "failed")
+        showStandardStreams = true
+        showExceptions = true
+        showStackTraces = true
+    }
+    jvmArgs("--add-modules", "javafx.controls,javafx.graphics")
+    systemProperty("javafx.headless", "true")
 }
 
 // Ensure runtime is generated before packaging
