@@ -1,17 +1,10 @@
 package org.ecsail.mvci_connect;
 
-import com.jcraft.jsch.JSchException;
 import javafx.concurrent.Task;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
-import org.ecsail.BaseApplication;
-import org.ecsail.connection.PortForwardingL;
-import org.ecsail.dto.LoginDTO;
 import org.ecsail.interfaces.Controller;
 import org.ecsail.mvci_main.MainController;
-
-import java.sql.SQLException;
-import java.util.ArrayList;
 
 public class ConnectController extends Controller<ConnectMessage> {
     MainController mainController;
@@ -44,7 +37,8 @@ public class ConnectController extends Controller<ConnectMessage> {
             @Override
             protected Boolean call() {
                 // Perform database connection here
-                return connectInteractor.getConnections().connect();
+//                return connectInteractor.getConnections().connect();
+                return null;
             }
         };
         connectTask.setOnSucceeded(event -> {
@@ -53,7 +47,7 @@ public class ConnectController extends Controller<ConnectMessage> {
                 mainController.setStatus("(Connected) " + connectInteractor.getHost());
                 connectInteractor.closeLoginStage();
                 mainController.openWelcomeMVCI();
-                mainController.loadCommonLists();
+//                mainController.loadCommonLists();
         });
         connectTask.setOnFailed(event -> connectInteractor.logError(connectTask.getException().getMessage()));
         Thread thread = new Thread(connectTask);
@@ -61,24 +55,20 @@ public class ConnectController extends Controller<ConnectMessage> {
     }
 
     public void closeConnection() {
-            try {
-                connectInteractor.getConnections().getSqlConnection().close();
-                connectInteractor.logInfo("SQL: Connection closed");
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            PortForwardingL sshConnection = connectInteractor.getConnections().getSshConnection();
+        //                connectInteractor.getConnections().getSqlConnection().close();
+        connectInteractor.logInfo("SQL: Connection closed");
+        //            PortForwardingL sshConnection = connectInteractor.getConnections().getSshConnection();
             // if ssh is connected then disconnect
-            if (sshConnection != null && sshConnection.getSession().isConnected()) {
-                connectInteractor.logInfo("ssh connection is active: " + sshConnection.getSession().isConnected());
-                try {
-                    sshConnection.getSession().delPortForwardingL(3306);
-                    sshConnection.getSession().disconnect();
-                    connectInteractor.logInfo("SSH: port forwarding closed");
-                } catch (JSchException e) {
-                    e.printStackTrace();
-                }
-            }
+//            if (sshConnection != null && sshConnection.getSession().isConnected()) {
+//                connectInteractor.logInfo("ssh connection is active: " + sshConnection.getSession().isConnected());
+//                try {
+//                    sshConnection.getSession().delPortForwardingL(3306);
+//                    sshConnection.getSession().disconnect();
+//                    connectInteractor.logInfo("SSH: port forwarding closed");
+//                } catch (JSchException e) {
+//                    e.printStackTrace();
+//                }
+//            }
     }
 
     public Stage getStage() {

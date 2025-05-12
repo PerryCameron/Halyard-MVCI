@@ -17,8 +17,10 @@ public class MembershipController extends Controller<MembershipMessage> {
     public MembershipController(MainController mc, MembershipListDTO ml) {
         this.mainController = mc;
         MembershipModel membershipModel = new MembershipModel(ml , mainController.getMainModel());
-        this.membershipInteractor = new MembershipInteractor(membershipModel,mainController.getConnections());
-        this.db = membershipInteractor.getDataBaseService();
+//        this.membershipInteractor = new MembershipInteractor(membershipModel,mainController.getConnections());
+        this.membershipInteractor = new MembershipInteractor(membershipModel);
+
+//        this.db = membershipInteractor.getDataBaseService();
         action(GET_DATA);
         membershipView = new MembershipView(membershipModel, this::action);
     }
@@ -81,41 +83,41 @@ public class MembershipController extends Controller<MembershipMessage> {
             @Override
             protected Void call() {
                 switch (type) {
-                    case UPDATE_MEMBERSHIP_LIST -> db.updateMembershipList();
-                    case UPDATE_MEMBERSHIP_ID -> db.updateMembershipId();
-                    case UPDATE_AWARD -> db.updateAward();
-                    case UPDATE_EMAIL -> db.updateEmail();
-                    case UPDATE_BOAT -> db.updateBoat();
-                    case UPDATE_NOTE -> db.updateNote();
-                    case UPDATE_PHONE -> db.updatePhone();
-                    case UPDATE_OFFICER -> db.updateOfficer();
-                    case UPDATE_PERSON -> db.updatePerson();
-                    case UPDATE_PAYMENT -> db.updatePayment();
-                    case INSERT_BOAT -> db.insertBoat();
-                    case INSERT_AWARD -> db.insertAward();
-                    case INSERT_EMAIL -> db.insertEmail();
-                    case INSERT_MEMBERSHIP_ID -> db.insertMembershipId();
-                    case INSERT_NOTE -> db.insertNote("");
-                    case INSERT_INVOICE_NOTE -> db.insertInvoiceNote();
-                    case INSERT_OFFICER -> db.insertOfficer();
-                    case INSERT_PERSON -> db.insertPerson();
-                    case INSERT_PHONE -> db.insertPhone();
-                    case INSERT_PAYMENT -> db.insertPayment();
-                    case DELETE_BOAT -> db.deleteBoat();
-                    case DELETE_AWARD -> db.deleteAward();
-                    case DELETE_EMAIL -> db.deleteEmail();
-                    case DELETE_MEMBERSHIP_ID -> db.deleteMembershipId();
-                    case DELETE_NOTE -> db.deleteNote();
-                    case DELETE_OFFICER -> db.deleteOfficer();
-                    case DELETE_PHONE -> db.deletePhone();
-                    case DELETE_INVOICE -> db.deleteInvoice();
-                    case DELETE_PAYMENT -> db.deletePayment();
-                    case CHANGE_MEMBER_TYPE -> db.changeMemberType();
-                    case DETACH_MEMBER_FROM_MEMBERSHIP -> db.detachMemberFromMembership();
-                    case DETACH_PRIMARY_MEMBER_FROM_MEMBERSHIP -> db.detachPrimaryMemberFromMembership();
-                    case MOVE_SECONDARY_TO_PRIMARY -> db.swapSecondaryToPrimary();
-                    case DELETE_MEMBER_FROM_DATABASE -> db.deletePerson();
-                    case MOVE_MEMBER_TO_MEMBERSHIP -> db.movePerson();
+//                    case UPDATE_MEMBERSHIP_LIST -> db.updateMembershipList();
+//                    case UPDATE_MEMBERSHIP_ID -> db.updateMembershipId();
+//                    case UPDATE_AWARD -> db.updateAward();
+//                    case UPDATE_EMAIL -> db.updateEmail();
+//                    case UPDATE_BOAT -> db.updateBoat();
+//                    case UPDATE_NOTE -> db.updateNote();
+//                    case UPDATE_PHONE -> db.updatePhone();
+//                    case UPDATE_OFFICER -> db.updateOfficer();
+//                    case UPDATE_PERSON -> db.updatePerson();
+//                    case UPDATE_PAYMENT -> db.updatePayment();
+//                    case INSERT_BOAT -> db.insertBoat();
+//                    case INSERT_AWARD -> db.insertAward();
+//                    case INSERT_EMAIL -> db.insertEmail();
+//                    case INSERT_MEMBERSHIP_ID -> db.insertMembershipId();
+//                    case INSERT_NOTE -> db.insertNote("");
+//                    case INSERT_INVOICE_NOTE -> db.insertInvoiceNote();
+//                    case INSERT_OFFICER -> db.insertOfficer();
+//                    case INSERT_PERSON -> db.insertPerson();
+//                    case INSERT_PHONE -> db.insertPhone();
+//                    case INSERT_PAYMENT -> db.insertPayment();
+//                    case DELETE_BOAT -> db.deleteBoat();
+//                    case DELETE_AWARD -> db.deleteAward();
+//                    case DELETE_EMAIL -> db.deleteEmail();
+//                    case DELETE_MEMBERSHIP_ID -> db.deleteMembershipId();
+//                    case DELETE_NOTE -> db.deleteNote();
+//                    case DELETE_OFFICER -> db.deleteOfficer();
+//                    case DELETE_PHONE -> db.deletePhone();
+//                    case DELETE_INVOICE -> db.deleteInvoice();
+//                    case DELETE_PAYMENT -> db.deletePayment();
+//                    case CHANGE_MEMBER_TYPE -> db.changeMemberType();
+//                    case DETACH_MEMBER_FROM_MEMBERSHIP -> db.detachMemberFromMembership();
+//                    case DETACH_PRIMARY_MEMBER_FROM_MEMBERSHIP -> db.detachPrimaryMemberFromMembership();
+//                    case MOVE_SECONDARY_TO_PRIMARY -> db.swapSecondaryToPrimary();
+//                    case DELETE_MEMBER_FROM_DATABASE -> db.deletePerson();
+//                    case MOVE_MEMBER_TO_MEMBERSHIP -> db.movePerson();
                     case UPLOAD_MEMBER_PHOTO -> membershipInteractor.uploadMemberPhoto();
                     case PRINT_ENVELOPE -> membershipInteractor.printEnvelope();
                 }
@@ -132,14 +134,14 @@ public class MembershipController extends Controller<MembershipMessage> {
             @Override
             protected Void call() {
                 switch (type) {
-                    case SELECT_INVOICES -> db.selectInvoices();
-                    case SELECT_IDS -> db.selectIds();
-                    case SELECT_INVOICE -> db.selectInvoice();
-                    case SELECT_FEES -> db.selectFees();
-                    case UPDATE_INVOICE -> db.updateInvoice();
-                    case UPDATE_INVOICE_ONLY -> db.updateInvoiceOnly();
-                    case SAVE_INVOICE -> db.saveInvoice();
-                    case INSERT_INVOICE -> db.insertInvoice();
+//                    case SELECT_INVOICES -> db.selectInvoices();
+//                    case SELECT_IDS -> db.selectIds();
+//                    case SELECT_INVOICE -> db.selectInvoice();
+//                    case SELECT_FEES -> db.selectFees();
+//                    case UPDATE_INVOICE -> db.updateInvoice();
+//                    case UPDATE_INVOICE_ONLY -> db.updateInvoiceOnly();
+//                    case SAVE_INVOICE -> db.saveInvoice();
+//                    case INSERT_INVOICE -> db.insertInvoice();
                     case DELETE_MEMBERSHIP -> membershipInteractor.deleteMembership();
                 }
                 return null;
@@ -155,10 +157,10 @@ public class MembershipController extends Controller<MembershipMessage> {
         Task<Void> task = new Task<>() {
             @Override
             protected Void call() {
-                db.selectPersons();
-                db.selectSlipInfo();
-                db.selectBoats();
-                db.selectNotes();
+//                db.selectPersons();
+//                db.selectSlipInfo();
+//                db.selectBoats();
+//                db.selectNotes();
                 return null;
             }
         };

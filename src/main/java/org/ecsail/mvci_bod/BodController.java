@@ -15,7 +15,8 @@ public class BodController extends Controller<BodMessage> {
     public BodController(MainController mc) {
         mainController = mc;
         BodModel BodModel = new BodModel(mainController.getMainModel());
-        bodInteractor = new BodInteractor(BodModel, mainController.getConnections());
+//        bodInteractor = new BodInteractor(BodModel, mainController.getConnections());
+        bodInteractor = new BodInteractor(BodModel);
         action(BodMessage.GET_DATA); // moved this last, we will see if it works
         bodView = new BodView(BodModel, this::action);
     }

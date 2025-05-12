@@ -1,19 +1,11 @@
 package org.ecsail.mvci_new_membership;
 
 import javafx.application.Platform;
-import org.ecsail.connection.Connections;
 import org.ecsail.dto.MembershipIdDTO;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.dto.NotesDTO;
 import org.ecsail.dto.PersonDTO;
 import org.ecsail.interfaces.ConfigFilePaths;
-import org.ecsail.repository.implementations.MembershipIdRepositoryImpl;
-import org.ecsail.repository.implementations.MembershipRepositoryImpl;
-import org.ecsail.repository.implementations.NotesRepositoryImpl;
-import org.ecsail.repository.implementations.PersonRepositoryImpl;
-import org.ecsail.repository.interfaces.MembershipIdRepository;
-import org.ecsail.repository.interfaces.MembershipRepository;
-import org.ecsail.repository.interfaces.PersonRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,17 +18,21 @@ public class NewMembershipInteractor implements ConfigFilePaths {
 
     private static final Logger logger = LoggerFactory.getLogger(NewMembershipInteractor.class);
     private final NewMembershipModel newMembershipModel;
-    private final MembershipRepository memRepo;
-    private final PersonRepository personRepo;
-    private final MembershipIdRepository memberIdRepo;
-    private final NotesRepositoryImpl notesRepo;
+//    private final MembershipRepository memRepo;
+//    private final PersonRepository personRepo;
+//    private final MembershipIdRepository memberIdRepo;
+//    private final NotesRepositoryImpl notesRepo;
 
-    public NewMembershipInteractor(NewMembershipModel newMembershipModel, Connections connections) {
+//    public NewMembershipInteractor(NewMembershipModel newMembershipModel, Connections connections) {
+//        this.newMembershipModel = newMembershipModel;
+//        this.memRepo = new MembershipRepositoryImpl(connections.getDataSource());
+//        this.personRepo = new PersonRepositoryImpl(connections.getDataSource());
+//        this.memberIdRepo = new MembershipIdRepositoryImpl(connections.getDataSource());
+//        this.notesRepo = new NotesRepositoryImpl(connections.getDataSource());
+//    }
+
+    public NewMembershipInteractor(NewMembershipModel newMembershipModel) {
         this.newMembershipModel = newMembershipModel;
-        this.memRepo = new MembershipRepositoryImpl(connections.getDataSource());
-        this.personRepo = new PersonRepositoryImpl(connections.getDataSource());
-        this.memberIdRepo = new MembershipIdRepositoryImpl(connections.getDataSource());
-        this.notesRepo = new NotesRepositoryImpl(connections.getDataSource());
     }
 
     public MembershipListDTO getMembershipList() {
@@ -45,11 +41,11 @@ public class NewMembershipInteractor implements ConfigFilePaths {
 
     public void getNextAvailableId() {
         try {
-            int nextNumber = memberIdRepo.getMembershipIdForNewestMembership() + 1;
+//            int nextNumber = memberIdRepo.getMembershipIdForNewestMembership() + 1;
             Platform.runLater(() -> {
-                newMembershipModel.setMembershipId(nextNumber);
+//                newMembershipModel.setMembershipId(nextNumber);
                 newMembershipModel.setTabMessage("Creating new membership");
-                newMembershipModel.setTabMessage("Setting new membership number to: " + nextNumber);
+//                newMembershipModel.setTabMessage("Setting new membership number to: " + nextNumber);
             });
         } catch (Exception e) {
             logger.error(e.getMessage());
@@ -66,17 +62,17 @@ public class NewMembershipInteractor implements ConfigFilePaths {
             membershipListDTO.setMemType("FM");
             membershipListDTO.setPId(0);
             membershipListDTO.setMembershipId(newMembershipModel.getMembershipId());
-            MembershipListDTO membership = memRepo.insertMembership(membershipListDTO);
-            if(membership.getMsId() != 0) {
-                Platform.runLater(() -> {
-                    newMembershipModel.setTabMessage("Creating Membership MSID: " + membership.getMsId());
-                    newMembershipModel.setMembership(membership);
-                });
-            } else {
-                Platform.runLater(() -> {
-                    newMembershipModel.setTabMessage("Failed to assign MSID: " + membership.getMsId());
-                });
-            }
+//            MembershipListDTO membership = memRepo.insertMembership(membershipListDTO);
+//            if(membership.getMsId() != 0) {
+//                Platform.runLater(() -> {
+//                    newMembershipModel.setTabMessage("Creating Membership MSID: " + membership.getMsId());
+//                    newMembershipModel.setMembership(membership);
+//                });
+//            } else {
+//                Platform.runLater(() -> {
+//                    newMembershipModel.setTabMessage("Failed to assign MSID: " + membership.getMsId());
+//                });
+//            }
         } catch (Exception e) {
             logger.error(e.getMessage());
             newMembershipModel.setTabMessage(e.getMessage());
@@ -87,17 +83,17 @@ public class NewMembershipInteractor implements ConfigFilePaths {
         try {
             PersonDTO personDTO = new PersonDTO(newMembershipModel.getMembership().getMsId(), 1, true);
             personDTO.setBirthday(LocalDate.of(1900, 1, 1));
-            PersonDTO person = personRepo.insertPerson(personDTO);
-            if(person.getpId() != 0) {
-                Platform.runLater(() -> {
-                    newMembershipModel.setTabMessage("Creating Primary Member for membership PID: " + person.getpId());
-                    newMembershipModel.getMembership().setPId(person.getpId());
-                });
-            } else {
-                Platform.runLater(() -> {
-                    newMembershipModel.setTabMessage("Failed to assign person an ID: " + person.getpId());
-                });
-            }
+//            PersonDTO person = personRepo.insertPerson(personDTO);
+//            if(person.getpId() != 0) {
+//                Platform.runLater(() -> {
+//                    newMembershipModel.setTabMessage("Creating Primary Member for membership PID: " + person.getpId());
+//                    newMembershipModel.getMembership().setPId(person.getpId());
+//                });
+//            } else {
+//                Platform.runLater(() -> {
+//                    newMembershipModel.setTabMessage("Failed to assign person an ID: " + person.getpId());
+//                });
+//            }
         } catch (Exception e) {
             logger.error(e.getMessage());
             newMembershipModel.setTabMessage(e.getMessage());
@@ -106,11 +102,11 @@ public class NewMembershipInteractor implements ConfigFilePaths {
 
     public void updateMembership() {
         try {
-        int ok = memRepo.update(newMembershipModel.getMembership());
-        if(ok == 1)
-            Platform.runLater(() -> {
-                newMembershipModel.setTabMessage("Updated Membership with primary member");
-            });
+//        int ok = memRepo.update(newMembershipModel.getMembership());
+//        if(ok == 1)
+//            Platform.runLater(() -> {
+//                newMembershipModel.setTabMessage("Updated Membership with primary member");
+//            });
         } catch (Exception e) {
             logger.error(e.getMessage());
             newMembershipModel.setTabMessage(e.getMessage());
@@ -125,11 +121,11 @@ public class NewMembershipInteractor implements ConfigFilePaths {
             membershipIdDTO.setMemType(newMembershipModel.getMembership().getMemType());
             membershipIdDTO.setMembershipId(newMembershipModel.getMembershipId());
             membershipIdDTO.setIsRenew(true);
-        int ok = memberIdRepo.insert(membershipIdDTO);
-        if(ok == 1)
-            Platform.runLater(() -> {
-                newMembershipModel.setTabMessage("Created Membership ID Object, MID: " + membershipIdDTO.getmId());
-            });
+//        int ok = memberIdRepo.insert(membershipIdDTO);
+//        if(ok == 1)
+//            Platform.runLater(() -> {
+//                newMembershipModel.setTabMessage("Created Membership ID Object, MID: " + membershipIdDTO.getmId());
+//            });
         } catch (Exception e) {
             logger.error(e.getMessage());
             newMembershipModel.setTabMessage(e.getMessage());
@@ -141,11 +137,11 @@ public class NewMembershipInteractor implements ConfigFilePaths {
             NotesDTO notesDTO = new NotesDTO("N", newMembershipModel.getMembership().getMsId());
             notesDTO.setMemoDate(LocalDate.now());
             notesDTO.setMemo("Created new membership record " + LocalDateTime.now());
-            int ok = notesRepo.insertNote(notesDTO);
-            if(ok == 1)
-            Platform.runLater(() -> {
-                newMembershipModel.setTabMessage("Note to document membership creation created");
-            });
+//            int ok = notesRepo.insertNote(notesDTO);
+//            if(ok == 1)
+//            Platform.runLater(() -> {
+//                newMembershipModel.setTabMessage("Note to document membership creation created");
+//            });
         } catch (Exception e) {
             logger.error(e.getMessage());
             newMembershipModel.setTabMessage(e.getMessage());

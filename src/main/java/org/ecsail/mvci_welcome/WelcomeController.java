@@ -13,7 +13,9 @@ public class WelcomeController extends Controller<WelcomeMessage> {
     public WelcomeController(MainController mainController) {
         WelcomeModel welcomeModel = new WelcomeModel(mainController.getMainModel());
         this.mainController = mainController;
-        welcomeInteractor = new WelcomeInteractor(welcomeModel, mainController.getConnections());
+//        welcomeInteractor = new WelcomeInteractor(welcomeModel, mainController.getConnections());
+        welcomeInteractor = new WelcomeInteractor(welcomeModel);
+
         getStatisticsOnLaunch();
         this.welcomeView = new WelcomeView(welcomeModel, this::action);
     }
@@ -22,7 +24,7 @@ public class WelcomeController extends Controller<WelcomeMessage> {
     public void action(WelcomeMessage message) {
         switch (message) {
             case OPEN_TAB -> mainController.openTab(welcomeInteractor.getTab());
-            case RELOAD_STATS -> welcomeInteractor.reloadStats();
+//            case RELOAD_STATS -> welcomeInteractor.reloadStats();
             case UPDATE_STATS -> updateStats();
         };
     }
@@ -31,7 +33,7 @@ public class WelcomeController extends Controller<WelcomeMessage> {
             Task<Void> task = new Task<>() {
                 @Override
                 protected Void call() {
-                    welcomeInteractor.setStatistics();
+//                    welcomeInteractor.setStatistics();
                     return null;
                 }
             };
@@ -43,11 +45,11 @@ public class WelcomeController extends Controller<WelcomeMessage> {
         Task<Void> task = new Task<>() {
             @Override
             protected Void call() {
-                welcomeInteractor.updateProgressBar();
+//                welcomeInteractor.updateProgressBar();
                 return null;
             }
         };
-        task.setOnSucceeded(e -> welcomeInteractor.setStatUpdateSucceeded());
+//        task.setOnSucceeded(e -> welcomeInteractor.setStatUpdateSucceeded());
         task.setOnFailed(e -> welcomeInteractor.taskOnFailed(e));
         new Thread(task).start();
     }

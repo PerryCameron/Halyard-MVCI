@@ -15,7 +15,8 @@ public class DepositController extends Controller<DepositMessage> {
     public DepositController(MainController mc) {
         mainController = mc;
         DepositModel depositModel = new DepositModel(mainController.getMainModel());
-        depositInteractor = new DepositInteractor(depositModel, mainController.getConnections());
+//        depositInteractor = new DepositInteractor(depositModel, mainController.getConnections());
+        depositInteractor = new DepositInteractor(depositModel);
         action(DepositMessage.GET_DATA); // moved this last, we will see if it works
         depositView = new DepositView(depositModel, this::action);
     }

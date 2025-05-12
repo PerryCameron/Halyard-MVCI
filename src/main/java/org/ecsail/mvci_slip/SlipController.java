@@ -14,7 +14,8 @@ public class SlipController extends Controller<SlipMessage> {
     public SlipController(MainController mc) {
         mainController = mc;
         SlipModel slipModel = new SlipModel(mainController.getMainModel());
-        slipInteractor = new SlipInteractor(slipModel, mainController.getConnections());
+        slipInteractor = new SlipInteractor(slipModel);
+//        slipInteractor = new SlipInteractor(slipModel, mainController.getConnections());
         System.out.println("getting DATA");
         action(SlipMessage.GET_DATA); // moved this last, we will see if it works
         System.out.println("Getting slipView");
@@ -30,13 +31,13 @@ public class SlipController extends Controller<SlipMessage> {
     public void action(SlipMessage action) {
         switch (action) {
             case GET_DATA -> getSlipData();
-            case LAUNCH_TAB -> launchTab();
+//            case LAUNCH_TAB -> launchTab();
         }
     }
 
-    private void launchTab() {
-        mainController.openMembershipMVCI(slipInteractor.getMembershipList());
-    }
+//    private void launchTab() {
+//        mainController.openMembershipMVCI(slipInteractor.getMembershipList());
+//    }
 
     private void getSlipData() {
         mainController.setSpinnerOffset(50,50);
@@ -44,8 +45,8 @@ public class SlipController extends Controller<SlipMessage> {
         Task<Void> task = new Task<>() {
             @Override
             protected Void call() {
-                slipInteractor.getSlipInfo();
-                slipInteractor.getSlipStructure();
+//                slipInteractor.getSlipInfo();
+//                slipInteractor.getSlipStructure();
                 return null;
             }
         };

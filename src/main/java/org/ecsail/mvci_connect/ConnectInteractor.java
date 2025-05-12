@@ -1,7 +1,7 @@
 package org.ecsail.mvci_connect;
 
 import javafx.stage.Stage;
-import org.ecsail.connection.Connections;
+//import org.ecsail.connection.Connections;
 import org.ecsail.dto.LoginDTO;
 import org.ecsail.fileio.FileIO;
 import org.ecsail.interfaces.ConfigFilePaths;
@@ -17,10 +17,10 @@ public class ConnectInteractor implements ConfigFilePaths {
 
     private static final Logger logger = LoggerFactory.getLogger(ConnectInteractor.class);
     private final ConnectModel connectModel;
-    private final Connections connections;
+//    private final Connections connections;
     public ConnectInteractor(ConnectModel connectModel) {
         this.connectModel = connectModel;
-        this.connections = new Connections(connectModel);
+//        this.connections = new Connections(connectModel);
     }
 
     public void supplyLogins() {
@@ -66,9 +66,9 @@ public class ConnectInteractor implements ConfigFilePaths {
         logger.info(LOGIN_FILE + " saved");
     }
 
-    public Connections getConnections() {
-        return connections;
-    }
+//    public Connections getConnections() {
+//        return connections;
+//    }
 
     public void logError(String message) {
         logger.error(message);

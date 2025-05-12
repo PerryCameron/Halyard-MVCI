@@ -14,7 +14,8 @@ public class NewMembershipController extends Controller<NewMembershipMessage> {
     public NewMembershipController(MainController mc) {
         mainController = mc;
         NewMembershipModel newMembershipModel = new NewMembershipModel(mainController.getMainModel());
-        newMembershipInteractor = new NewMembershipInteractor(newMembershipModel, mainController.getConnections());
+//        newMembershipInteractor = new NewMembershipInteractor(newMembershipModel, mainController.getConnections());
+        newMembershipInteractor = new NewMembershipInteractor(newMembershipModel);
         action(NewMembershipMessage.CREATE_MEMBERSHIP); // moved this last, we will see if it works
         newMembershipView = new NewMembershipView(newMembershipModel, this::action);
     }

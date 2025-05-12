@@ -13,7 +13,9 @@ public class BoatListController extends Controller<BoatListMessage> {
     public BoatListController(MainController mc) {
         mainController = mc;
         BoatListModel boatListModel = new BoatListModel(mainController.getMainModel());
-        boatListInteractor = new BoatListInteractor(boatListModel, mainController.getConnections());
+//        boatListInteractor = new BoatListInteractor(boatListModel, mainController.getConnections());
+        boatListInteractor = new BoatListInteractor(boatListModel);
+
         boatListView = new BoatListView(boatListModel, this::action);
         getBoatListData();
     }

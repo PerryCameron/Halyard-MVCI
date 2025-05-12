@@ -2,7 +2,6 @@ package org.ecsail.static_tools;
 
 import org.ecsail.mvci_main.MainModel;
 import org.slf4j.Logger;
-import org.springframework.dao.DataAccessException;
 
 import java.util.Arrays;
 import java.util.function.Supplier;
@@ -12,10 +11,10 @@ public class HandlingTools {
         try {
             task.run();
             retrievedFromIndicator(true, model);
-        } catch (DataAccessException dae) {
-            dae.printStackTrace();
-            retrievedFromIndicator(false, model);
-            logger.error("DataAccessException: " + dae);
+//        } catch (DataAccessException dae) {
+//            dae.printStackTrace();
+//            retrievedFromIndicator(false, model);
+//            logger.error("DataAccessException: " + dae);
         } catch (NullPointerException npe) {
             npe.printStackTrace();
             retrievedFromIndicator(false, model);
@@ -32,10 +31,10 @@ public class HandlingTools {
             int rowsUpdated = operation.get();
             savedToIndicator(rowsUpdated == 1, model);
             return true;
-        } catch (DataAccessException dae) {
-            dae.printStackTrace();
-            savedToIndicator(false, model);
-            logger.error("An exception occurred", dae);
+//        } catch (DataAccessException dae) {
+//            dae.printStackTrace();
+//            savedToIndicator(false, model);
+//            logger.error("An exception occurred", dae);
         } catch (NullPointerException npe) {
             npe.printStackTrace();
             savedToIndicator(false, model);
@@ -53,10 +52,10 @@ public class HandlingTools {
             boolean operationSuccess = operation.get();
             savedToIndicator(operationSuccess, model);
             return operationSuccess;
-        } catch (DataAccessException dae) {
-            dae.printStackTrace();
-            savedToIndicator(false, model);
-            logger.error("An exception occurred", dae);
+//        } catch (DataAccessException dae) {
+//            dae.printStackTrace();
+//            savedToIndicator(false, model);
+//            logger.error("An exception occurred", dae);
         } catch (NullPointerException npe) {
             npe.printStackTrace();
             savedToIndicator(false, model);
@@ -75,10 +74,10 @@ public class HandlingTools {
             savedToIndicator(Arrays.stream(rowsUpdated).allMatch(value -> value == 1), model);
             logger.info("Successfully updated " + rowsUpdated.length + " rows");
             return true;
-        } catch (DataAccessException e) {
-            e.printStackTrace();
-            savedToIndicator(false, model);
-            logger.error("An exception occurred", e);
+//        } catch (DataAccessException e) {
+//            e.printStackTrace();
+//            savedToIndicator(false, model);
+//            logger.error("An exception occurred", e);
         } catch (NullPointerException e) {
             e.printStackTrace();
             savedToIndicator(false, model);

@@ -44,9 +44,9 @@ val appVersion: String by project
 
 dependencies {
     // SLF4J and Logback for logging
-    implementation("org.slf4j:slf4j-api:2.0.5")
-    implementation("ch.qos.logback:logback-classic:1.4.12")
-    implementation("ch.qos.logback:logback-core:1.4.14")
+    implementation("org.slf4j:slf4j-api:2.0.16")
+    implementation("ch.qos.logback:logback-classic:1.5.11")
+    implementation("ch.qos.logback:logback-core:1.5.11")
 
     // Apache POI dependencies for Excel handling
     implementation("org.apache.poi:poi:5.2.5")
@@ -56,35 +56,35 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-to-slf4j:2.20.0")
     implementation("org.slf4j:jcl-over-slf4j:2.0.5")
 
-    // MariaDB JDBC Driver
-    implementation("org.mariadb.jdbc:mariadb-java-client:3.2.0")
+//    // MariaDB JDBC Driver
+//    implementation("org.mariadb.jdbc:mariadb-java-client:3.2.0")
 
-    // Spring JDBC
-    implementation("org.springframework:spring-jdbc:6.1.7")
+//    // Spring JDBC
+//    implementation("org.springframework:spring-jdbc:6.1.7")
 
-    // JSON library
-    implementation("org.json:json:20240303")
+//    // JSON library
+//    implementation("org.json:json:20240303")
 
-    // Apache HTTP Client
-    implementation("org.apache.httpcomponents:httpcore:4.4.15")
-    implementation("org.apache.httpcomponents:httpclient:4.5.14")
+//    // Apache HTTP Client
+//    implementation("org.apache.httpcomponents:httpcore:4.4.15")
+//    implementation("org.apache.httpcomponents:httpclient:4.5.14")
 
-    // JSch for SSH connections
-    implementation("com.github.mwiede:jsch:0.2.7")
+//    // JSch for SSH connections
+//    implementation("com.github.mwiede:jsch:0.2.7")
 
     // iText PDF
     implementation("com.itextpdf:itext7-core:7.2.6")
     implementation("com.itextpdf:layout:7.2.6")
 
     // OkHttp for HTTP requests
-    implementation("com.squareup.okhttp3:okhttp:5.0.0-alpha.14")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
     // JavaMail API
     implementation("javax.mail:mail:1.4.7")
 
     // Jackson for JSON processing
-    implementation("com.fasterxml.jackson.core:jackson-databind:2.14.2")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.14.2")
+    implementation("com.fasterxml.jackson.core:jackson-databind:2.17.1")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.17.1")
 
     // testing
     // Use junit-jupiter to ensure aligned versions

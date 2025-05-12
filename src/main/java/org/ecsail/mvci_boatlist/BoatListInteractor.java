@@ -3,15 +3,10 @@ package org.ecsail.mvci_boatlist;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.ecsail.connection.Connections;
 import org.ecsail.dto.BoatListDTO;
 import org.ecsail.dto.BoatListRadioDTO;
 import org.ecsail.dto.DbBoatSettingsDTO;
 import org.ecsail.mvci_main.MainController;
-import org.ecsail.repository.implementations.BoatRepositoryImpl;
-import org.ecsail.repository.implementations.SettingsRepositoryImpl;
-import org.ecsail.repository.interfaces.BoatRepository;
-import org.ecsail.repository.interfaces.SettingsRepository;
 import org.ecsail.static_tools.HandlingTools;
 import org.ecsail.static_tools.StringTools;
 import org.slf4j.Logger;
@@ -28,13 +23,18 @@ public class BoatListInteractor {
 
     private static final Logger logger = LoggerFactory.getLogger(BoatListInteractor.class);
     private final BoatListModel boatListModel;
-    private final SettingsRepository settingsRepo;
-    private final BoatRepository boatRepo;
+//    private final SettingsRepository settingsRepo;
+//    private final BoatRepository boatRepo;
 
-    public BoatListInteractor(BoatListModel boatListModel, Connections connections) {
+//    public BoatListInteractor(BoatListModel boatListModel, Connections connections) {
+//        this.boatListModel = boatListModel;
+//        settingsRepo = new SettingsRepositoryImpl(connections.getDataSource());
+//        boatRepo = new BoatRepositoryImpl(connections.getDataSource());
+//    }
+
+    public BoatListInteractor(BoatListModel boatListModel) {
         this.boatListModel = boatListModel;
-        settingsRepo = new SettingsRepositoryImpl(connections.getDataSource());
-        boatRepo = new BoatRepositoryImpl(connections.getDataSource());
+
     }
 
 //    protected void changeListType() {
@@ -57,23 +57,23 @@ public class BoatListInteractor {
     // new version of method without unchecked cast warning
     protected void changeListType() {
         clearMainBoatList();
-        try {
-            Method method = boatRepo.getClass().getMethod(boatListModel.getSelectedRadioBox().getMethod());
-            Object result = method.invoke(boatRepo);
-            if (result instanceof List<?> rawList) {
-                List<BoatListDTO> boatList = rawList.stream()
-                        .filter(BoatListDTO.class::isInstance)
-                        .map(BoatListDTO.class::cast)
-                        .toList();
-                ObservableList<BoatListDTO> updatedBoatList = FXCollections.observableArrayList(boatList);
-                updateBoatList(updatedBoatList);
-                fillTableView();
-            } else {
-                throw new IllegalStateException("Expected a List from method invocation, got: " + result);
-            }
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            logger.error(e.getMessage(), e);
-        }
+//        try {
+//            Method method = boatRepo.getClass().getMethod(boatListModel.getSelectedRadioBox().getMethod());
+//            Object result = method.invoke(boatRepo);
+//            if (result instanceof List<?> rawList) {
+//                List<BoatListDTO> boatList = rawList.stream()
+//                        .filter(BoatListDTO.class::isInstance)
+//                        .map(BoatListDTO.class::cast)
+//                        .toList();
+//                ObservableList<BoatListDTO> updatedBoatList = FXCollections.observableArrayList(boatList);
+//                updateBoatList(updatedBoatList);
+//                fillTableView();
+//            } else {
+//                throw new IllegalStateException("Expected a List from method invocation, got: " + result);
+//            }
+//        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+//            logger.error(e.getMessage(), e);
+//        }
         changeState();
         clearSearchBox();
         sortRoster();
@@ -144,10 +144,10 @@ public class BoatListInteractor {
     }
 
     public void getRadioChoices() {
-        HandlingTools.queryForList(() -> {
-            ObservableList<BoatListRadioDTO> list = FXCollections.observableArrayList(settingsRepo.getBoatRadioChoices());
-            Platform.runLater(() -> boatListModel.getRadioChoices().addAll(list));
-        }, boatListModel.getMainModel(), logger);
+//        HandlingTools.queryForList(() -> {
+//            ObservableList<BoatListRadioDTO> list = FXCollections.observableArrayList(settingsRepo.getBoatRadioChoices());
+//            Platform.runLater(() -> boatListModel.getRadioChoices().addAll(list));
+//        }, boatListModel.getMainModel(), logger);
     }
 
     protected void setListsLoaded(boolean isLoaded) {
@@ -155,10 +155,10 @@ public class BoatListInteractor {
     }
 
     public void getBoatListSettings() {
-        HandlingTools.queryForList(() -> {
-            ObservableList<DbBoatSettingsDTO> list = FXCollections.observableArrayList(settingsRepo.getBoatSettings());
-            Platform.runLater(() -> boatListModel.setBoatListSettings(list));
-        }, boatListModel.getMainModel(), logger);
+//        HandlingTools.queryForList(() -> {
+//            ObservableList<DbBoatSettingsDTO> list = FXCollections.observableArrayList(settingsRepo.getBoatSettings());
+//            Platform.runLater(() -> boatListModel.setBoatListSettings(list));
+//        }, boatListModel.getMainModel(), logger);
     }
 
     protected void setBoatListToTableview() {
@@ -177,10 +177,10 @@ public class BoatListInteractor {
     }
 
     public void updateBoat() {
-        HandlingTools.executeQuery(() ->
-                        boatRepo.updateAux(boatListModel.getSelectedBoatList().isAux(), boatListModel.getSelectedBoatList().getBoatId()),
-                boatListModel.getMainModel(),
-                logger);
+//        HandlingTools.executeQuery(() ->
+//                        boatRepo.updateAux(boatListModel.getSelectedBoatList().isAux(), boatListModel.getSelectedBoatList().getBoatId()),
+//                boatListModel.getMainModel(),
+//                logger);
     }
 
     protected void savedToIndicator(boolean returnOk) { // updates status lights

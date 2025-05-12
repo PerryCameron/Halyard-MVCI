@@ -14,7 +14,8 @@ public class RosterController extends Controller<RosterMessage> {
     public RosterController(MainController mc) {
         mainController = mc;
         RosterModel rosterModel = new RosterModel(mainController.getMainModel());
-        rosterInteractor = new RosterInteractor(rosterModel, mainController.getConnections());
+        rosterInteractor = new RosterInteractor(rosterModel);
+//        rosterInteractor = new RosterInteractor(rosterModel, mainController.getConnections());
         action(RosterMessage.GET_DATA); // moved this last, we will see if it works
         rosterView = new RosterView(rosterModel, this::action);
     }
@@ -66,7 +67,7 @@ public class RosterController extends Controller<RosterMessage> {
         Task<Void> task = new Task<>() {
             @Override
             protected Void call() {
-                rosterInteractor.updateRoster(); // not FX
+//                rosterInteractor.updateRoster(); // not FX
                 rosterInteractor.fillTableView(); // not FX
                 Platform.runLater(() -> {
                     rosterInteractor.changeState(); // JFX Thread
@@ -86,8 +87,8 @@ public class RosterController extends Controller<RosterMessage> {
         Task<Void> task = new Task<>() {
             @Override
             protected Void call() {
-                rosterInteractor.getRadioChoices();
-                rosterInteractor.getRosterSettings();
+//                rosterInteractor.getRadioChoices();
+//                rosterInteractor.getRosterSettings();
                 return null;
             }
         };

@@ -3,40 +3,33 @@ package org.ecsail.mvci_roster;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.ecsail.connection.Connections;
-import org.ecsail.dto.DbRosterSettingsDTO;
 import org.ecsail.dto.MembershipListDTO;
-import org.ecsail.dto.MembershipListRadioDTO;
 import org.ecsail.mvci_roster.export.Xls_roster;
-import org.ecsail.repository.implementations.MembershipRepositoryImpl;
-import org.ecsail.repository.implementations.SettingsRepositoryImpl;
-import org.ecsail.repository.interfaces.MembershipRepository;
-import org.ecsail.repository.interfaces.SettingsRepository;
-import org.ecsail.static_tools.HandlingTools;
 import org.ecsail.static_tools.StringTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class RosterInteractor {
 
     private static final Logger logger = LoggerFactory.getLogger(RosterInteractor.class);
     private final RosterModel rosterModel;
-    private final MembershipRepository membershipRepo;
-    private final SettingsRepository settingsRepo;
+//    private final MembershipRepository membershipRepo;
+//    private final SettingsRepository settingsRepo;
 
 
-    public RosterInteractor(RosterModel rm, Connections connections) {
-        rosterModel = rm;
-        membershipRepo = new MembershipRepositoryImpl(connections.getDataSource());
-        settingsRepo = new SettingsRepositoryImpl(connections.getDataSource());
-    }
+//    public RosterInteractor(RosterModel rm, Connections connections) {
+//        rosterModel = rm;
+//        membershipRepo = new MembershipRepositoryImpl(connections.getDataSource());
+//        settingsRepo = new SettingsRepositoryImpl(connections.getDataSource());
+//    }
+public RosterInteractor(RosterModel rm) {
+    rosterModel = rm;
+
+}
 
     protected ObservableList<MembershipListDTO> setSlipsForRoster(ObservableList<MembershipListDTO> updatedRoster) {
         for (MembershipListDTO m : updatedRoster) {
@@ -86,32 +79,32 @@ public class RosterInteractor {
 //    }
 
     // new version of method without unchecked cast
-    protected void updateRoster() {
-        Method method;
-        try {
-            method = membershipRepo.getClass().getMethod(rosterModel.getSelectedRadioBox().getMethod(), Integer.class);
-            logger.info("Getting roster from database");
-            Object result = method.invoke(membershipRepo, rosterModel.getSelectedYear());
-            if (result instanceof List<?> rawList) {
-                List<MembershipListDTO> rosterList = rawList.stream()
-                        .filter(MembershipListDTO.class::isInstance)
-                        .map(MembershipListDTO.class::cast)
-                        .toList();
-                ObservableList<MembershipListDTO> updatedRoster = FXCollections.observableArrayList(rosterList);
-                Platform.runLater(() -> {
-                    logger.info("Adding roster to model");
-                    rosterModel.getRosters().setAll(setSlipsForRoster(updatedRoster));
-                    // Force table view refresh
-                    rosterModel.getRosters().add(null); // Trigger change
-                    rosterModel.getRosters().remove(null); // Remove dummy entry
-                });
-            } else {
-                throw new IllegalStateException("Expected a List from method invocation, got: " + result);
-            }
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            logger.error(e.getMessage());
-        }
-    }
+//    protected void updateRoster() {
+//        Method method;
+//        try {
+//            method = membershipRepo.getClass().getMethod(rosterModel.getSelectedRadioBox().getMethod(), Integer.class);
+//            logger.info("Getting roster from database");
+//            Object result = method.invoke(membershipRepo, rosterModel.getSelectedYear());
+//            if (result instanceof List<?> rawList) {
+//                List<MembershipListDTO> rosterList = rawList.stream()
+//                        .filter(MembershipListDTO.class::isInstance)
+//                        .map(MembershipListDTO.class::cast)
+//                        .toList();
+//                ObservableList<MembershipListDTO> updatedRoster = FXCollections.observableArrayList(rosterList);
+//                Platform.runLater(() -> {
+//                    logger.info("Adding roster to model");
+//                    rosterModel.getRosters().setAll(setSlipsForRoster(updatedRoster));
+//                    // Force table view refresh
+//                    rosterModel.getRosters().add(null); // Trigger change
+//                    rosterModel.getRosters().remove(null); // Remove dummy entry
+//                });
+//            } else {
+//                throw new IllegalStateException("Expected a List from method invocation, got: " + result);
+//            }
+//        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+//            logger.error(e.getMessage());
+//        }
+//    }
 
 
     protected void clearSearchBox() {
@@ -128,19 +121,19 @@ public class RosterInteractor {
         rosterModel.getRosterTableView().refresh(); // this is a hack because sometimes it won't refresh (doesn't work)
     }
 
-    protected void getRadioChoices() {
-        HandlingTools.queryForList(() -> {
-            ObservableList<MembershipListRadioDTO> list = FXCollections.observableArrayList(settingsRepo.getRadioChoices());
-            Platform.runLater(() -> rosterModel.getRadioChoices().addAll(list));
-        }, rosterModel.getMainModel(), logger);
-    }
-
-    protected void getRosterSettings() {
-        HandlingTools.queryForList(() -> {
-            ObservableList<DbRosterSettingsDTO> list = FXCollections.observableArrayList(settingsRepo.getSearchableListItems());
-            Platform.runLater(() -> rosterModel.setRosterSettings(list));
-        }, rosterModel.getMainModel(), logger);
-    }
+//    protected void getRadioChoices() {
+//        HandlingTools.queryForList(() -> {
+//            ObservableList<MembershipListRadioDTO> list = FXCollections.observableArrayList(settingsRepo.getRadioChoices());
+//            Platform.runLater(() -> rosterModel.getRadioChoices().addAll(list));
+//        }, rosterModel.getMainModel(), logger);
+//    }
+//
+//    protected void getRosterSettings() {
+//        HandlingTools.queryForList(() -> {
+//            ObservableList<DbRosterSettingsDTO> list = FXCollections.observableArrayList(settingsRepo.getSearchableListItems());
+//            Platform.runLater(() -> rosterModel.setRosterSettings(list));
+//        }, rosterModel.getMainModel(), logger);
+//    }
 
     protected void exportRoster() {
         try {

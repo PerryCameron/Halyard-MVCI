@@ -37,7 +37,7 @@ public class PDF_Envelope {
 	public static Logger logger = LoggerFactory.getLogger(PDF_Envelope.class);
 	private final Image ecscLogo = new Image(ImageDataFactory.create(ByteTools.toByteArray(Objects.requireNonNull(getClass().getResourceAsStream("/images/EagleCreekLogoForPDF.png")))));
 	private MembershipListDTO membershipListDTO;
-	private final MembershipDTO membershipChair;
+//	private final MembershipDTO membershipChair;
 	private final int year;
 	private int current_membership_id;
 	private final PdfFont font;
@@ -56,7 +56,7 @@ public class PDF_Envelope {
 		this.year= LocalDate.now().getYear();
 		HalyardPaths.checkPath(HalyardPaths.ECSC_HOME);
 		this.isOneMembership = iom;
-		this.membershipChair = Objects.requireNonNull(dataBaseService).getCurrentMembershipChair();
+//		this.membershipChair = Objects.requireNonNull(dataBaseService).getCurrentMembershipChair();
 		this.current_membership_id = Objects.requireNonNull(model).getMembership().getMembershipId();
 
 		if(System.getProperty("os.name").equals("Windows 10"))
@@ -102,7 +102,7 @@ public class PDF_Envelope {
 		doc.setTopMargin(0);
 		doc.setLeftMargin(0.25f);
 		if(isOneMembership) {
-			membershipListDTO = dataBaseService.getMembershipListByIdAndYear(current_membership_id, year);
+//			membershipListDTO = dataBaseService.getMembershipListByIdAndYear(current_membership_id, year);
 		doc.add(createReturnAddress());
 		doc.add(new Paragraph(new Text("\n\n\n\n\n")));
 		doc.add(createAddress());
@@ -125,7 +125,7 @@ public class PDF_Envelope {
 		doc.setTopMargin(0);
 		doc.setLeftMargin(0.25f);
 		if(isOneMembership) {
-			membershipListDTO = dataBaseService.getMembershipListByIdAndYear(current_membership_id, year);
+//			membershipListDTO = dataBaseService.getMembershipListByIdAndYear(current_membership_id, year);
 		doc.add(createReturnAddress());
 		doc.add(new Paragraph(new Text("\n\n\n\n\n\n\n\n\n")));
 		doc.add(createAddress());
@@ -136,16 +136,16 @@ public class PDF_Envelope {
 	}
 
 	private void buildAddress(Document doc) {
-		List<MembershipIdDTO> membershipIdDTOS = dataBaseService.getAllMembershipIdsByYear(year);
-		membershipIdDTOS.sort(Comparator.comparing(MembershipIdDTO::getMembershipId));
-		for(MembershipIdDTO id: membershipIdDTOS) {
-			current_membership_id = id.getMembershipId();
-			membershipListDTO = dataBaseService.getMembershipListByIdAndYear(current_membership_id, year);
-			doc.add(createReturnAddress());
-			doc.add(new Paragraph(new Text("\n\n\n\n\n")));
-			doc.add(createAddress());
-			doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-		}
+////		List<MembershipIdDTO> membershipIdDTOS = dataBaseService.getAllMembershipIdsByYear(year);
+//		membershipIdDTOS.sort(Comparator.comparing(MembershipIdDTO::getMembershipId));
+//		for(MembershipIdDTO id: membershipIdDTOS) {
+//			current_membership_id = id.getMembershipId();
+////			membershipListDTO = dataBaseService.getMembershipListByIdAndYear(current_membership_id, year);
+//			doc.add(createReturnAddress());
+//			doc.add(new Paragraph(new Text("\n\n\n\n\n")));
+//			doc.add(createAddress());
+//			doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+//		}
 	}
 
 	public Table createReturnAddress() {
@@ -160,8 +160,8 @@ public class PDF_Envelope {
 		cell.add(ecscLogo);
 		mainTable.addCell(cell);
 		mainTable.addCell(newAddressCell(10,10,"ECSC Membership"));
-		mainTable.addCell(newAddressCell(10,10,membershipChair.getAddress()));
-		mainTable.addCell(newAddressCell(10,10,membershipChair.getCityStateZip()));
+//		mainTable.addCell(newAddressCell(10,10,membershipChair.getAddress()));
+//		mainTable.addCell(newAddressCell(10,10,membershipChair.getCityStateZip()));
 		return mainTable;
 	}
 
