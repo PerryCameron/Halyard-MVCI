@@ -30,7 +30,7 @@ public class CustomOwnerDialogue implements Builder<Alert> {
         this.alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Add Owner");
         alert.setHeaderText("Please enter membership ID of new owner!");
-        DialogueFx.tieAlertToStage(alert);
+        DialogueFx.tieAlertToStage(alert, 600, 400);
         // Add style sheets
         DialogPane dialogPane = alert.getDialogPane();
         dialogPane.getStylesheets().add("css/dark/dialogue.css");

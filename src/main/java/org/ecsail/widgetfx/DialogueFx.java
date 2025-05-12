@@ -1,5 +1,6 @@
 package org.ecsail.widgetfx;
 
+import javafx.event.EventHandler;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.DialogPane;
@@ -8,6 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import org.ecsail.BaseApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,8 +40,9 @@ public class DialogueFx {
         if (headerLabel != null) {
             headerLabel.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
         }
-        tieAlertToStage(alert);
-        dialogPane.getStylesheets().add("css/light.css");
+        tieAlertToStage(alert, 400, 200);
+        dialogPane.getStylesheets().add("css/dark/dialogue.css");
+        dialogPane.getStyleClass().add("myDialog");
         return alert;
     }
 
@@ -48,7 +51,7 @@ public class DialogueFx {
         Alert alert = new Alert(type);
         alert.setHeaderText(header);
         alert.setContentText(message);
-        tieAlertToStage(alert);
+        tieAlertToStage(alert, 600, 400);
         DialogPane dialogPane = alert.getDialogPane();
         dialogPane.getStylesheets().add("css/dark/dialogue.css");
         dialogPane.getStyleClass().add("myDialog");
@@ -60,7 +63,7 @@ public class DialogueFx {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText(header);
         alert.setContentText(message);
-        tieAlertToStage(alert);
+        tieAlertToStage(alert, 600, 400);
         DialogPane dialogPane = alert.getDialogPane();
         dialogPane.getStylesheets().add("css/dark/dialogue.css");
         dialogPane.getStyleClass().add("myDialog");
@@ -72,17 +75,40 @@ public class DialogueFx {
         Alert alert = new Alert(type);
         alert.setHeaderText(header);
         alert.setContentText(message);
-        tieAlertToStage(alert);
+        tieAlertToStage(alert, 600, 400);
         DialogPane dialogPane = alert.getDialogPane();
         dialogPane.getStylesheets().add("css/dark/dialogue.css");
         dialogPane.getStyleClass().add("myDialog");
         alert.showAndWait();
     }
 
-    public static void tieAlertToStage(Alert alert) {
+    public static void tieAlertToStage(Alert alert, double stageWidth, double stageHeight) {
         Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
-        // Add a window showing listener to set the position of the dialog
-        alertStage.addEventHandler(WindowEvent.WINDOW_SHOWN, EventFx.setStageLocation(alertStage));
+        // Flag to ensure positioning runs only once
+        final boolean[] hasPositioned = {false};
+        System.out.println("tieAlertwidth: " + stageWidth);
+        // Position the dialog only once when about to show
+        EventHandler<WindowEvent> positionHandler = e -> {
+            if (!hasPositioned[0]) {
+                if (BaseApplication.primaryStage == null) {
+                    System.out.println("Warning: primaryStage is null");
+                    return;
+                }
+                hasPositioned[0] = true;
+                double primaryX = BaseApplication.primaryStage.getX();
+                double primaryY = BaseApplication.primaryStage.getY();
+                double primaryWidth = BaseApplication.primaryStage.getWidth();
+                double primaryHeight = BaseApplication.primaryStage.getHeight();
+
+
+                alertStage.setX(primaryX + (primaryWidth / 2) - (stageWidth / 2));
+                alertStage.setY(primaryY + (primaryHeight / 2) - (stageHeight / 2));
+            }
+        };
+
+        // Add handler and remove it after first show to prevent re-triggering
+        alertStage.setOnShowing(positionHandler);
+        alertStage.setOnShown(e -> alertStage.removeEventHandler(WindowEvent.WINDOW_SHOWING, positionHandler));
     }
 
     public static boolean verifyAction(String[] string, Object o) {

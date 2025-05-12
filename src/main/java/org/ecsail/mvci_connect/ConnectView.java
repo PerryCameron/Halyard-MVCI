@@ -13,19 +13,20 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import javafx.util.Builder;
 import javafx.util.Duration;
 import org.ecsail.BaseApplication;
 import org.ecsail.interfaces.RunState;
-import org.ecsail.widgetfx.HBoxFx;
-import org.ecsail.widgetfx.TextFieldFx;
-import org.ecsail.widgetfx.TextFx;
-import org.ecsail.widgetfx.VBoxFx;
+import org.ecsail.widgetfx.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Objects;
 import java.util.function.Consumer;
 
 public class ConnectView implements Builder<Region> {
+    private static final Logger logger = LoggerFactory.getLogger(ConnectView.class);
     private final ConnectModel connectModel;
     private final RunState runState;
     Consumer<ConnectMessage> action;
@@ -226,6 +227,20 @@ public class ConnectView implements Builder<Region> {
         connectModel.getConnectStage().setResizable(false);
         connectModel.getConnectStage().setX(BaseApplication.primaryStage.getX() + 260);
         connectModel.getConnectStage().setY(BaseApplication.primaryStage.getY() + 300);
+        getTitleIcon(connectModel.getConnectStage());
         connectModel.getConnectStage().show();
     }
+
+    private static void getTitleIcon(Stage stage) {
+        // Set custom icon for the title bar
+        try {
+            // Load icon from resources (adjust path as needed)
+            Image icon = new Image(Objects.requireNonNull(
+                    DialogueFx.class.getResourceAsStream("/images/halyard-16.png")));
+            stage.getIcons().add(icon);
+        } catch (Exception e) {
+            logger.error("Failed to load icon: {}", e.getMessage());
+        }
+    }
+
 }
