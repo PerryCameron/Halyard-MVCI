@@ -1,6 +1,7 @@
 package org.ecsail.interfaces;
 
 import javafx.beans.property.ObjectProperty;
+import org.ecsail.mvci_connect.ConnectView;
 
 public interface RunState {
     enum Mode {
@@ -9,7 +10,7 @@ public interface RunState {
         NORMAL
     }
 
-    void setMode(Mode mode);
+    void setMode(Mode mode, ConnectView connectView);
     ObjectProperty<Mode> ModeProperty();
     Mode getMode();
 }

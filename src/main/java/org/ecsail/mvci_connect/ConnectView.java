@@ -16,7 +16,6 @@ import javafx.scene.text.Text;
 import javafx.util.Builder;
 import javafx.util.Duration;
 import org.ecsail.BaseApplication;
-import org.ecsail.dto.LoginDTO;
 import org.ecsail.interfaces.RunState;
 import org.ecsail.widgetfx.HBoxFx;
 import org.ecsail.widgetfx.TextFieldFx;
@@ -112,8 +111,9 @@ public class ConnectView implements Builder<Region> {
         hBox.getChildren().add(comboBox);
         comboBox.valueProperty().addListener((Observable, oldValue, newValue) -> {
             if(newValue != null) {
+                System.out.println("---------------------------------------------------------");
+                System.out.println("New Value Selected ----->" + newValue);
                 action.accept(ConnectMessage.SET_CURRENT_LOGIN_AS_DEFAULT);
-                action.accept(ConnectMessage.UPDATE_CURRENT_LOGIN);
                 action.accept(ConnectMessage.PRINT_LOGIN_OBJECTS);
             }
             else connectModel.getComboBox().getSelectionModel().select(connectModel.getComboBox().getItems().size() - 1);
@@ -130,8 +130,9 @@ public class ConnectView implements Builder<Region> {
         HBox TextBox = HBoxFx.hBoxOf(Pos.CENTER_LEFT,15, 15);
         Text newConnectText = TextFx.linkTextOf("New");
         Text editConnectText = TextFx.linkTextOf("Edit");
-        editConnectText.setOnMouseClicked(event -> runState.setMode(RunState.Mode.EDIT));
-        newConnectText.setOnMouseClicked(event -> runState.setMode(RunState.Mode.NEW));
+        editConnectText.setOnMouseClicked(event -> runState.setMode(RunState.Mode.EDIT, this));
+
+        newConnectText.setOnMouseClicked(event -> runState.setMode(RunState.Mode.NEW, this));
         Button loginButton = new Button("Login");
         loginButton.setOnAction((event) -> {
             connectModel.setRotateShipWheel(true);
@@ -194,20 +195,25 @@ public class ConnectView implements Builder<Region> {
         Button buttonSave = new Button("Save");
         buttonSave.setOnAction(event -> {
 //            updateSelectedLogin();
+            // copies current loginDTO(bound to textFields) , to the correct loginDTO in the list
             action.accept(ConnectMessage.COPY_CURRENT_TO_MATCHING); // copies values in textfield to matching loginDTO in list
+            // prints our current state
             action.accept(ConnectMessage.PRINT_LOGIN_OBJECTS);
-            runState.setMode(RunState.Mode.NORMAL);
+            // back to normal mode
+            runState.setMode(RunState.Mode.NORMAL, this);
+            // saves the changes
             action.accept(ConnectMessage.SAVE_LOGINS);
-            action.accept(ConnectMessage.UPDATE_CURRENT_LOGIN);
+            // makes sure the combo box is refreshed, if it was changed
+            action.accept(ConnectMessage.UPDATE_COMBO_BOX);
         });
         Button buttonDelete = new Button("Delete");
         buttonDelete.setOnAction(event -> {
             connectModel.getComboBox().getItems().remove(connectModel.getComboBox().getValue());
             action.accept(ConnectMessage.SAVE_LOGINS);
-            runState.setMode(RunState.Mode.NORMAL);
+            runState.setMode(RunState.Mode.NORMAL, this);
         });
         Button buttonCancel = new Button("Cancel");
-        buttonCancel.setOnAction(event -> runState.setMode(RunState.Mode.NORMAL));
+        buttonCancel.setOnAction(event -> runState.setMode(RunState.Mode.NORMAL, this));
         hBox.getChildren().addAll(buttonSave,buttonDelete,buttonCancel);
         return hBox;
     }

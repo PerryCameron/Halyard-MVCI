@@ -2,9 +2,7 @@ package org.ecsail.mvci_connect;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import org.ecsail.dto.LoginDTO;
 import org.ecsail.interfaces.RunState;
-import org.ecsail.widgetfx.ObjectFx;
 
 public class RunStateImpl implements RunState {
 
@@ -17,11 +15,10 @@ public class RunStateImpl implements RunState {
     }
 
     @Override
-    public void setMode(Mode mode) {
+    public void setMode(Mode mode, ConnectView connectView) {
         switch (mode) {
             case NEW -> {
-            connectModel.getComboBox().getItems().add("");
-            connectModel.getComboBox().getSelectionModel().select(connectModel.getComboBox().getItems().size() - 1);
+            connectView.action.accept(ConnectMessage.CREATE_NEW_LOGIN);
             switchToEditMode();
             }
             case EDIT -> switchToEditMode();
@@ -29,6 +26,9 @@ public class RunStateImpl implements RunState {
         }
         setModeProperty(mode);
     }
+
+
+
     @Override
     public Mode getMode() {
         return modeProperty.get();

@@ -23,8 +23,17 @@ public class LoginDTOProperty {
 	public LoginDTOProperty() {
 	}
 
+	public void setAsNew(int id) {
+		this.id.set(id);
+		this.port.set("");
+		this.host.set("");
+		this.user.set("");
+		this.passwd.set("");
+		this.isDefault.set(false);
+	}
+
 	public void copyLogin(LoginDTO loginDTO) {
-		System.out.println("Copied from LoginDTO");
+		System.out.println("LoginDTOProperty: Fields Copied from LoginDTO");
 		this.id.set(loginDTO.getId());
 		this.port.set(String.valueOf(loginDTO.getPort()));
 		this.host.set(loginDTO.getHost());

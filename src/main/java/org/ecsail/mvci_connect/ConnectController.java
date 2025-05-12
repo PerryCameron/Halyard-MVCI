@@ -31,6 +31,8 @@ public class ConnectController extends Controller<ConnectMessage> {
             case PRINT_LOGIN_OBJECTS -> connectInteractor.printLoginObjects();
             case SET_CURRENT_LOGIN_AS_DEFAULT -> connectInteractor.setCurrentLoginAsDefault();
             case UPDATE_CURRENT_LOGIN -> connectInteractor.updateCurrentLogin();
+            case UPDATE_COMBO_BOX -> connectInteractor.updateComboBox();
+            case CREATE_NEW_LOGIN -> connectInteractor.createNewLogin();
         }
     }
 

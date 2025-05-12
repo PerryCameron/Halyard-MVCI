@@ -3,6 +3,7 @@ package org.ecsail.mvci_connect;
 import javafx.stage.Stage;
 //import org.ecsail.connection.Connections;
 import org.ecsail.dto.LoginDTO;
+import org.ecsail.dto.LoginDTOProperty;
 import org.ecsail.fileio.FileIO;
 import org.ecsail.interfaces.ConfigFilePaths;
 import org.slf4j.Logger;
@@ -40,17 +41,17 @@ public class ConnectInteractor implements ConfigFilePaths {
         if (connectModel.getLoginDTOS().size() == 1) {
             connectModel.currentLoginProperty().get().copyLogin(connectModel.getLoginDTOS().get(0));
         } else {
-            Optional<LoginDTO> defaultLoginOpt = connectModel.getLoginDTOS().stream()
+            connectModel.getLoginDTOS().stream()
                     .filter(LoginDTO::isDefault)
-                    .findFirst();
-            if (defaultLoginOpt.isPresent()) {
-                connectModel.currentLoginProperty().get().copyLogin(defaultLoginOpt.get());
-            } else {
-                logger.warn("No default login found to copy to current login.");
-            }
+                    .findFirst()
+                    .ifPresentOrElse(
+                            defaultLogin -> connectModel.currentLoginProperty().get().copyLogin(defaultLogin),
+                            () -> logger.warn("No default login found to copy to current login.")
+                    );
         }
     }
 
+    // copies current loginDTO(bound to textFields) , to the correct loginDTO in the list
     public void copyCurrentLoginToMatchingLoginInList() {
         if (connectModel.getLoginDTOS().size() > 0) {
             Optional<LoginDTO> matchingLoginDTO = connectModel.getLoginDTOS().stream().filter(loginDTO -> loginDTO.getId() == connectModel.currentLoginProperty().get().getId()).findFirst();
@@ -62,34 +63,65 @@ public class ConnectInteractor implements ConfigFilePaths {
         }
     }
 
+
     public void setCurrentLoginAsDefault() {
-        connectModel.getLoginDTOS().forEach(loginDTO -> {
-            loginDTO.setDefault(false);
-        });
-        connectModel.currentLoginProperty().get().isDefaultProperty().set(true);
-        System.out.println("----->" + connectModel.currentLoginProperty().get());
-        copyCurrentLoginToMatchingLoginInList();
+        // Clear all defaults
+        connectModel.getLoginDTOS().forEach(loginDTO -> loginDTO.setDefault(false));
+
+        // Find the selected login
+        Optional<LoginDTO> selectedLogin = connectModel.getLoginDTOS().stream()
+                .filter(loginDTO -> loginDTO.getHost().equals(connectModel.getComboBox().getValue()))
+                .findFirst();
+
+        // Set it as default and copy to current login
+        if (selectedLogin.isPresent()) {
+            selectedLogin.get().setDefault(true); // ✅ This was missing
+            connectModel.currentLoginProperty().get().copyLogin(selectedLogin.get());
+        } else {
+            logger.warn("No login found to set as default.");
+        }
+
         saveLoginObjects();
     }
 
+    protected void createNewLogin() {
+        connectModel.getComboBox().getItems().add("");
+        int index = findNextIndex();
+        connectModel.getLoginDTOS().add(new LoginDTO(index,8080,"","","",false));
+        connectModel.currentLoginProperty().get().setAsNew(index);
+        updateComboBox();
+    }
+    // gets the value in the comboBox, finds the correct LoginDTO in the list and copies it to our LoginDTO property
     protected void updateCurrentLogin() {
         String newValue = connectModel.getComboBox().getValue();
-        Optional<LoginDTO> loginDTO = connectModel.getLoginDTOS().stream().filter(login -> login.getHost().equals(newValue)).findFirst();
-        if (loginDTO.isPresent()) {
-            connectModel.currentLoginProperty().get().copyLogin(loginDTO.get());
-        } else {
-            logger.warn("No login found to copy to current login.");
-        }
+        connectModel.getLoginDTOS().stream()
+                .filter(login -> login.getHost().equals(newValue))
+                .findFirst()
+                .ifPresentOrElse(
+                        loginDTO -> connectModel.currentLoginProperty().get().copyLogin(loginDTO),
+                        () -> logger.warn("No login found to copy to current login.")
+                );
     }
 
+
+    // makes the comboBox reflect the hostnames in the list of LoginDTOs
     protected void updateComboBox() {
+        // Clear both the ComboBox and the backing list
         connectModel.getComboBox().getItems().clear();
-        for(LoginDTO loginDTO: connectModel.getLoginDTOS()) {
+        connectModel.getComboValues().clear();
+
+        // Populate comboValues with host names
+        for (LoginDTO loginDTO : connectModel.getLoginDTOS()) {
             connectModel.getComboValues().add(loginDTO.getHost());
         }
+
+        // Update ComboBox items
         connectModel.getComboBox().getItems().addAll(connectModel.getComboValues());
+
+        // Set the selected value to the current login's host
         connectModel.getComboBox().setValue(connectModel.currentLoginProperty().get().hostProperty().getValue());
     }
+
 
     public static void openLoginObjects(List<LoginDTO> logins) {
         File g = new File(LOGIN_FILE);
@@ -134,6 +166,12 @@ public class ConnectInteractor implements ConfigFilePaths {
         System.out.println("");
     }
 
+    private int findNextIndex() {
+        return connectModel.getLoginDTOS().stream()
+                .mapToInt(LoginDTO::getId)
+                .max()
+                .orElse(0) + 1;
+    }
 
     public void logError(String message) {
         logger.error(message);
