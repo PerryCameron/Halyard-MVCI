@@ -8,55 +8,40 @@ public class LoginDTO implements Serializable {
 	@Serial
 	private static final long serialVersionUID = 7434038316336853182L;
 
-	private int localSqlPort;
-	private int remoteSqlPort;
-	private int sshPort;
+	private int id;
+	private int port;
 	private String host;
-	private String sqlUser;
-	private String sqlPasswd;
-	private String sshUser;
-	private String sshPass;
-	private String database;
-	private String knownHostsFile;
-	private String privateKeyFile;
+	private String user;
+	private String passwd;
 	private boolean isDefault;
-	private boolean sshForward;
 
-
-	public LoginDTO(int localSqlPort, int remoteSqlPort, int sshPort, String host, String sqlUser, String sqlPasswd, String sshUser, String sshPass, String database, String knownHostsFile, String privateKeyFile, boolean isDefault, boolean sshForward) {
-		this.localSqlPort = localSqlPort;
-		this.remoteSqlPort = remoteSqlPort;
-		this.sshPort = sshPort;
+	public LoginDTO(int id, int port, String host, String user, String passwd, boolean isDefault) {
+		this.id = id;
+		this.port = port;
 		this.host = host;
-		this.sqlUser = sqlUser;
-		this.sqlPasswd = sqlPasswd;
-		this.sshUser = sshUser;
-		this.sshPass = sshPass;
-		this.database = database;
-		this.knownHostsFile = knownHostsFile;
-		this.privateKeyFile = privateKeyFile;
+		this.user = user;
+		this.passwd = passwd;
 		this.isDefault = isDefault;
-		this.sshForward = sshForward;
 	}
 
-	public int getLocalSqlPort() {
-		return localSqlPort;
+	public int getId() {
+		return id;
 	}
 
-	public void setLocalSqlPort(int localSqlPort) {
-		this.localSqlPort = localSqlPort;
+	public void setId(int id) {
+		this.id = id;
 	}
 
-	public int getRemoteSqlPort() {
-		return remoteSqlPort;
+	public String getPortAsString() {
+		return String.valueOf(port);
 	}
 
-	public int getSshPort() {
-		return sshPort;
+	public int getPort() {
+		return port;
 	}
 
-	public void setSshPort(int sshPort) {
-		this.sshPort = sshPort;
+	public void setPort(int port) {
+		this.port = port;
 	}
 
 	public String getHost() {
@@ -67,52 +52,20 @@ public class LoginDTO implements Serializable {
 		this.host = host;
 	}
 
-	public String getSqlUser() {
-		return sqlUser;
+	public String getUser() {
+		return user;
 	}
 
-	public void setSqlUser(String sqlUser) {
-		this.sqlUser = sqlUser;
+	public void setUser(String user) {
+		this.user = user;
 	}
 
-	public String getSqlPasswd() {
-		return sqlPasswd;
+	public String getPasswd() {
+		return passwd;
 	}
 
-	public void setSqlPasswd(String sqlPasswd) {
-		this.sqlPasswd = sqlPasswd;
-	}
-
-	public String getSshUser() {
-		return sshUser;
-	}
-
-	public void setSshUser(String sshUser) {
-		this.sshUser = sshUser;
-	}
-	
-	public String getDatabase() {
-		return database;
-	}
-
-	public void setDatabase(String database) {
-		this.database = database;
-	}
-
-	public String getKnownHostsFile() {
-		return knownHostsFile;
-	}
-
-	public void setKnownHostsFile(String knownHostsFile) {
-		this.knownHostsFile = knownHostsFile;
-	}
-
-	public String getPrivateKeyFile() {
-		return privateKeyFile;
-	}
-
-	public void setPrivateKeyFile(String privateKeyFile) {
-		this.privateKeyFile = privateKeyFile;
+	public void setPasswd(String passwd) {
+		this.passwd = passwd;
 	}
 
 	public boolean isDefault() {
@@ -123,30 +76,14 @@ public class LoginDTO implements Serializable {
 		isDefault = aDefault;
 	}
 
-	public boolean isSshForward() {
-		return sshForward;
-	}
-
-	public void setSshForward(boolean sshForward) {
-		this.sshForward = sshForward;
-	}
-
 	@Override
 	public String toString() {
 		return "LoginDTO{" +
-				"localSqlPort=" + localSqlPort +
-				", remoteSqlPort=" + remoteSqlPort +
-				", sshPort=" + sshPort +
+				"port=" + port +
 				", host='" + host + '\'' +
-				", sqlUser='" + sqlUser + '\'' +
-				", sqlPasswd='" + sqlPasswd + '\'' +
-				", sshUser='" + sshUser + '\'' +
-				", sshPass='" + sshPass + '\'' +
-				", database='" + database + '\'' +
-				", knownHostsFile='" + knownHostsFile + '\'' +
-				", privateKeyFile='" + privateKeyFile + '\'' +
+				", user='" + user + '\'' +
+				", passwd='" + passwd + '\'' +
 				", isDefault=" + isDefault +
-				", sshForward=" + sshForward +
 				'}';
 	}
 }

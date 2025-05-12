@@ -44,7 +44,7 @@ public class ConnectController extends Controller<ConnectMessage> {
         connectTask.setOnSucceeded(event -> {
                 connectInteractor.setRotateShipWheel(false);
                 mainController.createLoadingController();
-                mainController.setStatus("(Connected) " + connectInteractor.getHost());
+//                mainController.setStatus("(Connected) " + connectInteractor.getHost());
                 connectInteractor.closeLoginStage();
                 mainController.openWelcomeMVCI();
 //                mainController.loadCommonLists();

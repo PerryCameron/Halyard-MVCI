@@ -40,6 +40,7 @@ Thumbs.db
 /.gradle/
 
 # Gradle cache and wrapper
+.gradle/
 .gradle/cache/
 /.gradle/wrapper/dists/
 /.gradle/wrapper/gradle-wrapper.jar

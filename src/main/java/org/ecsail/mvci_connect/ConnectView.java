@@ -69,7 +69,8 @@ public class ConnectView implements Builder<Region> {
         HBox hboxUserText = new HBox();
         hboxUserLabel.getChildren().add(new Label("Username:"));
         TextField userName = TextFieldFx.textFieldOf(200,"Username");
-        userName.textProperty().bindBidirectional(connectModel.sqlUserProperty());
+        System.out.println("just set bind: " + connectModel.currentLoginProperty().get().userProperty().get());
+        userName.textProperty().bindBidirectional(connectModel.currentLoginProperty().get().userProperty());
         hboxUserText.getChildren().add(userName);
         hBox.getChildren().addAll(hboxUserLabel, hboxUserText);
         return hBox;
@@ -78,7 +79,7 @@ public class ConnectView implements Builder<Region> {
     private Node PassBox() { // 2
         HBox hBox = HBoxFx.hBoxOf(new Insets(5));
         PasswordField passwordField = TextFieldFx.passwordFieldOf(200,"Password");
-        passwordField.textProperty().bindBidirectional(connectModel.sqlPassProperty());
+        passwordField.textProperty().bindBidirectional(connectModel.currentLoginProperty().get().passwdProperty());
         HBox hboxPassLabel = HBoxFx.hBoxOf(Pos.CENTER_LEFT, 90);
         HBox hboxPassText = new HBox();
         hboxPassLabel.getChildren().add(new Label("Password:"));
@@ -96,7 +97,7 @@ public class ConnectView implements Builder<Region> {
         hBoxHostTextField.getChildren().add(hostName);
         connectModel.getHBoxMap().put("host-container-box",hBoxHostContainer);
         connectModel.getHBoxMap().put("host-text-field", hBoxHostTextField);
-        hostName.textProperty().bindBidirectional(connectModel.hostProperty());
+        hostName.textProperty().bindBidirectional(connectModel.currentLoginProperty().get().hostProperty());
         hboxHostLabel.getChildren().add(new Label("Hostname:"));
         hBoxHostContainer.getChildren().add(createComboBox());
         hBox.getChildren().addAll(hboxHostLabel,hBoxHostContainer);
@@ -152,32 +153,21 @@ public class ConnectView implements Builder<Region> {
 
     private VBox createBottomContainerBox() {
         VBox vBox = new VBox();
-        vBox.getChildren().addAll(createSqlPortBox(),createUseSshBox(),createDataBaseBox(), createSshUserBox(),
-                createKnownHostsBox(), createPrivateKeyBox(), createEditButtonsBox());
+//        vBox.getChildren().addAll(createSqlPortBox(),createUseSshBox(),createDataBaseBox(), createSshUserBox(),
+//                createKnownHostsBox(), createPrivateKeyBox(), createEditButtonsBox());
+                vBox.getChildren().addAll(portBox(), createEditButtonsBox());
         return vBox;
     }
 
-    private Node createSqlPortBox() {
+    private Node portBox() {
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER_LEFT);
-        TextField localSqlPortText = TextFieldFx.textFieldOf(60, connectModel.localSqlPortProperty());
+        TextField localSqlPortText = TextFieldFx.textFieldOf(60, connectModel.currentLoginProperty().get().portProperty().get());
         HBox hboxPortLabel = HBoxFx.hBoxOf(Pos.CENTER_LEFT, 90, new Insets(5));
-        hboxPortLabel.getChildren().add(new Label("SQL Port:"));
+        hboxPortLabel.getChildren().add(new Label("Port:"));
         HBox hboxPortText = HBoxFx.hBoxOf(Pos.CENTER_LEFT,100,new Insets(5),20);
         hboxPortText.getChildren().add(localSqlPortText);
         hBox.getChildren().addAll(hboxPortLabel, hboxPortText, setDefaultCheckBox());
-        return hBox;
-    }
-
-    private Node createUseSshBox() {
-        HBox hBox = new HBox();
-        hBox.setAlignment(Pos.CENTER_LEFT);
-        TextField localSshPortText = TextFieldFx.textFieldOf(60, connectModel.sshPortProperty());
-        HBox useSshTunnelLabel = HBoxFx.hBoxOf(Pos.CENTER_LEFT, 90, new Insets(5));
-        useSshTunnelLabel.getChildren().add(new Label("SSH Port:"));
-        HBox hboxPortText = HBoxFx.hBoxOf(Pos.CENTER_LEFT,100,new Insets(5),20);
-        hboxPortText.getChildren().add(localSshPortText);
-        hBox.getChildren().addAll(useSshTunnelLabel, hboxPortText, setUseSshCheckBox());
         return hBox;
     }
 
@@ -191,65 +181,6 @@ public class ConnectView implements Builder<Region> {
             }
         });
         return checkBox;
-    }
-
-    private Node setUseSshCheckBox() {
-        CheckBox checkBox = new CheckBox("SSH Tunnel");
-        checkBox.selectedProperty().bindBidirectional(connectModel.sshUsedProperty());
-        checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-                connectModel.getComboBox().getValue().setSshForward(newValue);
-        });
-        return checkBox;
-    }
-
-    private Node createDataBaseBox() {
-        HBox hBox = new HBox();
-        HBox hboxDataBaseLabel = HBoxFx.hBoxOf(Pos.CENTER_LEFT, 90, new Insets(5));
-        hboxDataBaseLabel.getChildren().add(new Label("Database:"));
-        HBox hboxDataBaseText = HBoxFx.hBoxOf(new Insets(5));
-        TextField dataBase = TextFieldFx.textFieldOf(200,connectModel.databaseProperty());
-        hboxDataBaseText.getChildren().add(dataBase);
-        hBox.getChildren().addAll(hboxDataBaseLabel,hboxDataBaseText);
-        return hBox;
-    }
-
-    private Node createSshUserBox() {
-        HBox hBox = new HBox();
-        HBox hboxSshUserLabel = HBoxFx.hBoxOf(Pos.CENTER_LEFT, 90, new Insets(5));
-        hboxSshUserLabel.getChildren().add(new Label("ssh user:"));
-        HBox hboxSshUserText = HBoxFx.hBoxOf(new Insets(5));
-        TextField sshUser = TextFieldFx.textFieldOf(200,connectModel.sshUserProperty());
-        hboxSshUserText.getChildren().add(sshUser);
-        hBox.getChildren().addAll(hboxSshUserLabel,hboxSshUserText);
-        return hBox;
-    }
-
-    private Node createKnownHostsBox() {
-        HBox hBox = new HBox();
-        TextField knownHost = TextFieldFx.textFieldOf(200, connectModel.knownHostsProperty());
-        HBox knownHostLabel = HBoxFx.hBoxOf(Pos.CENTER_LEFT, 90, new Insets(5,5,5,5));
-        knownHostLabel.getChildren().add(new Label("knownhosts:"));
-        HBox knownHostText = HBoxFx.hBoxOf(new Insets(5));
-        knownHostText.getChildren().add(knownHost);
-        Button button = new Button("Select");
-        HBox createKnownHost = HBoxFx.hBoxOf(new Insets(5));
-        createKnownHost.getChildren().add(button);
-        hBox.getChildren().addAll(knownHostLabel,knownHostText,createKnownHost);
-        return hBox;
-    }
-
-    private Node createPrivateKeyBox() {
-        HBox hBox = new HBox();
-        TextField privateKey = TextFieldFx.textFieldOf(200, connectModel.privateKeyProperty());
-        HBox privateKeyLabel = HBoxFx.hBoxOf(Pos.CENTER_LEFT, 90, new Insets(5,5,5,5));
-        privateKeyLabel.getChildren().add(new Label("Private Key:"));
-        HBox privateKeyText = HBoxFx.hBoxOf(new Insets(5));
-        privateKeyText.getChildren().add(privateKey);
-        Button button = new Button("Select");
-        HBox createPrivateKey = HBoxFx.hBoxOf(new Insets(5));
-        createPrivateKey.getChildren().add(button);
-        hBox.getChildren().addAll(privateKeyLabel,privateKeyText,createPrivateKey);
-        return hBox;
     }
 
     private Node createEditButtonsBox() {
@@ -286,31 +217,25 @@ public class ConnectView implements Builder<Region> {
 
     private void updateFields() {
         LoginDTO newValue = connectModel.getComboBox().getValue();
-        connectModel.setSqlUser(newValue.getSqlUser());
-        connectModel.setSqlPass(newValue.getSqlPasswd());
-        connectModel.setHost(newValue.getHost());
-        connectModel.setSshUsed(newValue.isSshForward());
-        connectModel.setLocalSqlPort(newValue.getLocalSqlPort());
-        connectModel.setSshUser(newValue.getSshUser());
-        connectModel.setKnownHosts(newValue.getKnownHostsFile());
-        connectModel.setDefault(newValue.isDefault());
-        connectModel.setSshPort(newValue.getSshPort());
-        connectModel.setDatabase(newValue.getDatabase());
-        connectModel.setPrivateKey(newValue.getPrivateKeyFile());
+        connectModel.currentLoginProperty().get().userProperty().set(newValue.getUser());
+        connectModel.currentLoginProperty().get().passwdProperty().set(newValue.getPasswd());
+        connectModel.currentLoginProperty().get().hostProperty().set(newValue.getHost());
+        connectModel.currentLoginProperty().get().isDefaultProperty().set(newValue.isDefault());
+        connectModel.currentLoginProperty().get().portProperty().set(newValue.getPortAsString());
     }
 
     private void updateSelectedLogin() {
-        connectModel.getComboBox().getValue().setSqlUser(connectModel.getSqlUser());
-        connectModel.getComboBox().getValue().setSqlPasswd(connectModel.getSqlPass());
-        connectModel.getComboBox().getValue().setHost(connectModel.getHost());
-        connectModel.getComboBox().getValue().setSshForward(connectModel.sshUsed());
-        connectModel.getComboBox().getValue().setSshUser(connectModel.getSshUser());
-        connectModel.getComboBox().getValue().setLocalSqlPort(connectModel.getLocalSqlPort());
-        connectModel.getComboBox().getValue().setKnownHostsFile(connectModel.getKnownHosts());
-        connectModel.getComboBox().getValue().setDefault(connectModel.isDefault());
-        connectModel.getComboBox().getValue().setSshPort(connectModel.getSshPort());
-        connectModel.getComboBox().getValue().setDatabase(connectModel.getDatabase());
-        connectModel.getComboBox().getValue().setPrivateKeyFile(connectModel.getPrivateKey());
+//        connectModel.getComboBox().getValue().setSqlUser(connectModel.getSqlUser());
+//        connectModel.getComboBox().getValue().setSqlPasswd(connectModel.getSqlPass());
+//        connectModel.getComboBox().getValue().setHost(connectModel.getHost());
+//        connectModel.getComboBox().getValue().setSshForward(connectModel.sshUsed());
+//        connectModel.getComboBox().getValue().setSshUser(connectModel.getSshUser());
+//        connectModel.getComboBox().getValue().setLocalSqlPort(connectModel.getLocalSqlPort());
+//        connectModel.getComboBox().getValue().setKnownHostsFile(connectModel.getKnownHosts());
+//        connectModel.getComboBox().getValue().setDefault(connectModel.isDefault());
+//        connectModel.getComboBox().getValue().setSshPort(connectModel.getSshPort());
+//        connectModel.getComboBox().getValue().setDatabase(connectModel.getDatabase());
+//        connectModel.getComboBox().getValue().setPrivateKeyFile(connectModel.getPrivateKey());
     }
 
     protected void setStageHeightListener() {

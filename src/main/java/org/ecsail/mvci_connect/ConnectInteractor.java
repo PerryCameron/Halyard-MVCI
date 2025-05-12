@@ -3,9 +3,9 @@ package org.ecsail.mvci_connect;
 import javafx.stage.Stage;
 //import org.ecsail.connection.Connections;
 import org.ecsail.dto.LoginDTO;
+import org.ecsail.dto.LoginDTOProperty;
 import org.ecsail.fileio.FileIO;
 import org.ecsail.interfaces.ConfigFilePaths;
-import org.ecsail.widgetfx.ObjectFx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,10 +17,8 @@ public class ConnectInteractor implements ConfigFilePaths {
 
     private static final Logger logger = LoggerFactory.getLogger(ConnectInteractor.class);
     private final ConnectModel connectModel;
-//    private final Connections connections;
     public ConnectInteractor(ConnectModel connectModel) {
         this.connectModel = connectModel;
-//        this.connections = new Connections(connectModel);
     }
 
     public void supplyLogins() {
@@ -28,10 +26,15 @@ public class ConnectInteractor implements ConfigFilePaths {
         if (FileIO.hostFileExists(LOGIN_FILE))
             openLoginObjects(loginDTOS);
         else {
-            logger.info("Starting application for first time");
-            loginDTOS.add(ObjectFx.createLoginDTO()); // we are starting application for the first time
+            logger.info("login file does not exist.");
+            loginDTOS.add(new LoginDTO(1,8080,"hostName","LoginDTO","passWord",true)); // we are starting application for the first time
         }
-        connectModel.setLoginDTOS((ArrayList<LoginDTO>) loginDTOS);
+        connectModel.getLoginDTOS().addAll(loginDTOS);
+        // property is filled with this, but need to take info from default login DTO and
+        connectModel.currentLoginProperty().set(new LoginDTOProperty());
+        // we need to find the default, and set the
+        System.out.println("just set current login property: " + connectModel.currentLoginProperty().get().userProperty().get());
+        System.out.println("They are loaded" + connectModel.getLoginDTOS());
     }
 
     public static void openLoginObjects(List<LoginDTO> logins) {
@@ -45,7 +48,7 @@ public class ConnectInteractor implements ConfigFilePaths {
                     logins.add((LoginDTO) x);
                 in.close();
             } catch (Exception e) {
-				logger.error("Error occurred during reading of " + LOGIN_FILE);
+                logger.error("Error occurred during reading of {}", LOGIN_FILE);
 				logger.error(e.getMessage());
                 e.printStackTrace();
             }
@@ -63,12 +66,8 @@ public class ConnectInteractor implements ConfigFilePaths {
             e.printStackTrace();
             System.exit(0);
         }
-        logger.info(LOGIN_FILE + " saved");
+        logger.info("{} saved", LOGIN_FILE);
     }
-
-//    public Connections getConnections() {
-//        return connections;
-//    }
 
     public void logError(String message) {
         logger.error(message);
@@ -87,8 +86,5 @@ public class ConnectInteractor implements ConfigFilePaths {
     }
     protected void setRotateShipWheel(boolean rotate) {
         connectModel.setRotateShipWheel(rotate);
-    }
-    protected String getHost() {
-        return connectModel.getHost();
     }
 }

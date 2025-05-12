@@ -1,0 +1,69 @@
+package org.ecsail.dto;
+
+import javafx.beans.property.*;
+
+public class LoginDTOProperty {
+
+	private IntegerProperty id = new SimpleIntegerProperty(1);
+	private StringProperty port = new SimpleStringProperty("8080");
+	private StringProperty host = new SimpleStringProperty("host");
+	private StringProperty user = new SimpleStringProperty("LoginDTOProperty");
+	private StringProperty passwd = new SimpleStringProperty("passwd");
+	private BooleanProperty isDefault = new SimpleBooleanProperty(true);
+
+	public LoginDTOProperty(int id, String port, String host, String user, String passwd, boolean isDefault) {
+		this.id.set(id);
+		this.port.set(port);
+		this.host.set(host);
+		this.user.set(user);
+		this.passwd.set(passwd);
+		this.isDefault.set(isDefault);
+	}
+
+	public LoginDTOProperty() {
+	}
+
+	public IntegerProperty idProperty() {
+		return id;
+	}
+
+	public String getPort() {
+		return port.get();
+	}
+
+	public StringProperty portProperty() {
+		return port;
+	}
+
+	public StringProperty hostProperty() {
+		return host;
+	}
+
+	public StringProperty userProperty() {
+		return user;
+	}
+
+	public StringProperty passwdProperty() {
+		return passwd;
+	}
+
+	public boolean isDefault() {
+		return isDefault.get();
+	}
+
+	public BooleanProperty isDefaultProperty() {
+		return isDefault;
+	}
+
+	@Override
+	public String toString() {
+		return "LoginDTOProperty{" +
+				"id=" + id.get() +
+				", port=" + port.get() +
+				", host=" + host.get() +
+				", user=" + user.get() +
+				", passwd=" + passwd.get() +
+				", isDefault=" + isDefault.get() +
+				'}';
+	}
+}

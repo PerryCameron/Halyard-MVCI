@@ -56,22 +56,6 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-to-slf4j:2.20.0")
     implementation("org.slf4j:jcl-over-slf4j:2.0.5")
 
-//    // MariaDB JDBC Driver
-//    implementation("org.mariadb.jdbc:mariadb-java-client:3.2.0")
-
-//    // Spring JDBC
-//    implementation("org.springframework:spring-jdbc:6.1.7")
-
-//    // JSON library
-//    implementation("org.json:json:20240303")
-
-//    // Apache HTTP Client
-//    implementation("org.apache.httpcomponents:httpcore:4.4.15")
-//    implementation("org.apache.httpcomponents:httpclient:4.5.14")
-
-//    // JSch for SSH connections
-//    implementation("com.github.mwiede:jsch:0.2.7")
-
     // iText PDF
     implementation("com.itextpdf:itext7-core:7.2.6")
     implementation("com.itextpdf:layout:7.2.6")
@@ -158,22 +142,14 @@ tasks.register<Exec>("packageApp") {
     // Directly point to the jpackage tool in your Java 21 SDK
     commandLine(
         "C:/Users/sesa91827/.jdks/jdk-21.0.6-full/bin/jpackage",  // Path to your jpackage
-        "--input",
-        "build/libs",  // Path to the JAR file directory
-        "--main-jar",
-        "Halyard-all.jar",  // Replace with your actual JAR name
-        "--main-class",
-        "org.ecsail.BaseApplication",  // Replace with your actual main class
-        "--name",
-        "Halyard",  // Name of the app
-        "--type",
-        "app-image",  // You can also use pkg, dmg, exe, etc.
-        "--runtime-image",
-        "C:/Users/sesa91827/.jdks/jdk-21.0.6-full",  // Path to Java 21 runtime image
-        "--dest",
-        "build/jpackage",  // Output destination
-        "--icon",
-        "src/main/resources/images/app-icon.ico"  // Optional: Path to your app's icon
+        "--input", "build/libs",  // Path to the JAR file directory
+        "--main-jar", "Halyard-all.jar",  // Replace with your actual JAR name
+        "--main-class", "org.ecsail.BaseApplication",  // Replace with your actual main class
+        "--name", "Halyard",  // Name of the app
+        "--type", "app-image",  // You can also use pkg, dmg, exe, etc.
+        "--runtime-image", "C:/Users/sesa91827/.jdks/jdk-21.0.6-full",  // Path to Java 21 runtime image
+        "--dest", "build/jpackage",  // Output destination
+        "--icon", "src/main/resources/images/app-icon.ico"  // Optional: Path to your app's icon
     )
 }
 
