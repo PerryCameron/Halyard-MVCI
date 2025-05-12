@@ -24,11 +24,8 @@ public class ConnectModel {
     private final DoubleProperty centerPaneHeight = new SimpleDoubleProperty();
     private final ObservableMap<String, HBox> hBoxMap = FXCollections.observableHashMap();
     private final ObservableMap<String, VBox> vBoxMap = FXCollections.observableHashMap();
-
     private final IntegerProperty localSqlPort = new SimpleIntegerProperty();
     private final BooleanProperty isDefault = new SimpleBooleanProperty();
-
-
     private final StringProperty database = new SimpleStringProperty();
     private final StringProperty statusBarText = new SimpleStringProperty();
     private final ObjectProperty<LoginDTOProperty> currentLogin = new SimpleObjectProperty<>(new LoginDTOProperty());

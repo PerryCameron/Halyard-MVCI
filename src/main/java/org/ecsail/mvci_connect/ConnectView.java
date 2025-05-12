@@ -30,7 +30,6 @@ public class ConnectView implements Builder<Region> {
     private final RunState runState;
     Consumer<ConnectMessage> action;
 
-//    private final LoginDTOListSupplier loginSupplier;
     public ConnectView(ConnectModel model, Consumer<ConnectMessage> action) {
         this.connectModel = model;
         this.runState = new RunStateImpl(model);
@@ -114,7 +113,6 @@ public class ConnectView implements Builder<Region> {
                 System.out.println("---------------------------------------------------------");
                 System.out.println("New Value Selected ----->" + newValue);
                 action.accept(ConnectMessage.SET_CURRENT_LOGIN_AS_DEFAULT);
-                action.accept(ConnectMessage.PRINT_LOGIN_OBJECTS);
             }
             else connectModel.getComboBox().getSelectionModel().select(connectModel.getComboBox().getItems().size() - 1);
         });
@@ -175,18 +173,6 @@ public class ConnectView implements Builder<Region> {
 
     private Node setDefaultCheckBox() {
         CheckBox checkBox = new CheckBox("Default login");
-//        checkBox.selectedProperty().bindBidirectional(connectModel.defaultProperty());
-//        checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-//            if(newValue) {
-//                // going to remove this
-////                connectModel.getComboBox().getItems().stream().forEach(loginDto -> loginDto.setDefault(false));
-////                connectModel.getComboBox().getValue().setDefault(true);
-////                // clear default for all login objects
-////                connectModel.getLoginDTOS().stream().forEach(loginDto -> loginDto.setDefault(false));
-////                // set current to match.
-////                action.accept(ConnectMessage.COPY_CURRENT_TO_MATCHING);
-//            }
-//        });
         return checkBox;
     }
 
@@ -194,11 +180,8 @@ public class ConnectView implements Builder<Region> {
         HBox hBox = HBoxFx.hBoxOf(new Insets(20,0,20,0),Pos.CENTER, 10);
         Button buttonSave = new Button("Save");
         buttonSave.setOnAction(event -> {
-//            updateSelectedLogin();
             // copies current loginDTO(bound to textFields) , to the correct loginDTO in the list
             action.accept(ConnectMessage.COPY_CURRENT_TO_MATCHING); // copies values in textfield to matching loginDTO in list
-            // prints our current state
-            action.accept(ConnectMessage.PRINT_LOGIN_OBJECTS);
             // back to normal mode
             runState.setMode(RunState.Mode.NORMAL, this);
             // saves the changes
@@ -208,7 +191,7 @@ public class ConnectView implements Builder<Region> {
         });
         Button buttonDelete = new Button("Delete");
         buttonDelete.setOnAction(event -> {
-            connectModel.getComboBox().getItems().remove(connectModel.getComboBox().getValue());
+            action.accept(ConnectMessage.DELETE_CURRENT_LOGIN);
             action.accept(ConnectMessage.SAVE_LOGINS);
             runState.setMode(RunState.Mode.NORMAL, this);
         });
@@ -227,22 +210,6 @@ public class ConnectView implements Builder<Region> {
                 if(connectModel.isRotateShipWheel()) rotateTransition.play();
                 else rotateTransition.stop();
             });
-    }
-
-
-
-    private void updateSelectedLogin() {
-//        connectModel.getComboBox().getValue().setSqlUser(connectModel.getSqlUser());
-//        connectModel.getComboBox().getValue().setSqlPasswd(connectModel.getSqlPass());
-//        connectModel.getComboBox().getValue().setHost(connectModel.getHost());
-//        connectModel.getComboBox().getValue().setSshForward(connectModel.sshUsed());
-//        connectModel.getComboBox().getValue().setSshUser(connectModel.getSshUser());
-//        connectModel.getComboBox().getValue().setLocalSqlPort(connectModel.getLocalSqlPort());
-//        connectModel.getComboBox().getValue().setKnownHostsFile(connectModel.getKnownHosts());
-//        connectModel.getComboBox().getValue().setDefault(connectModel.isDefault());
-//        connectModel.getComboBox().getValue().setSshPort(connectModel.getSshPort());
-//        connectModel.getComboBox().getValue().setDatabase(connectModel.getDatabase());
-//        connectModel.getComboBox().getValue().setPrivateKeyFile(connectModel.getPrivateKey());
     }
 
     protected void setStageHeightListener() {

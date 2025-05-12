@@ -3,7 +3,6 @@ package org.ecsail.mvci_connect;
 import javafx.stage.Stage;
 //import org.ecsail.connection.Connections;
 import org.ecsail.dto.LoginDTO;
-import org.ecsail.dto.LoginDTOProperty;
 import org.ecsail.fileio.FileIO;
 import org.ecsail.interfaces.ConfigFilePaths;
 import org.slf4j.Logger;
@@ -33,7 +32,6 @@ public class ConnectInteractor implements ConfigFilePaths {
         }
         connectModel.getLoginDTOS().addAll(loginDTOS);
         copyDefaultToCurrentLogin();
-        printLoginObjects();
         updateComboBox();
     }
 
@@ -91,6 +89,27 @@ public class ConnectInteractor implements ConfigFilePaths {
         connectModel.currentLoginProperty().get().setAsNew(index);
         updateComboBox();
     }
+
+    public void deleteLogin() {
+        Optional<LoginDTO> loginDTO = connectModel.getLoginDTOS().stream().filter(login -> login.getId() == connectModel.currentLoginProperty()
+                .get().getId()).findFirst();
+        if(loginDTO.isPresent()) {
+            connectModel.getLoginDTOS().remove(loginDTO.get());
+        } else {
+            logger.warn("No login found to delete from current login.");
+        }
+        selectFirstAvailableLogin();
+    }
+
+    private void selectFirstAvailableLogin() {
+        if (connectModel.getLoginDTOS().size() > 0) {
+            connectModel.currentLoginProperty().get().copyLogin(connectModel.getLoginDTOS().get(0));
+            updateComboBox();
+        } else {
+            createNewLogin();
+        }
+    }
+
     // gets the value in the comboBox, finds the correct LoginDTO in the list and copies it to our LoginDTO property
     protected void updateCurrentLogin() {
         String newValue = connectModel.getComboBox().getValue();
@@ -156,15 +175,15 @@ public class ConnectInteractor implements ConfigFilePaths {
         logger.info("{} saved", LOGIN_FILE);
     }
 
-    public void printLoginObjects() {
-        System.out.println("---Printing login objects");
-        connectModel.getLoginDTOS().forEach(loginDTO -> {
-            System.out.println(loginDTO);
-        });
-        System.out.println("---Printing current object");
-        System.out.println(connectModel.currentLoginProperty().get());
-        System.out.println("");
-    }
+//    public void printLoginObjects() {
+//        System.out.println("---Printing login objects");
+//        connectModel.getLoginDTOS().forEach(loginDTO -> {
+//            System.out.println(loginDTO);
+//        });
+//        System.out.println("---Printing current object");
+//        System.out.println(connectModel.currentLoginProperty().get());
+//        System.out.println("");
+//    }
 
     private int findNextIndex() {
         return connectModel.getLoginDTOS().stream()
@@ -180,8 +199,7 @@ public class ConnectInteractor implements ConfigFilePaths {
     public void logInfo(String message) {
         logger.info(message);
     }
-    public void loadCommonLists() {
-    }
+
     public Stage getStage() {
         return connectModel.getConnectStage();
     }
@@ -191,6 +209,4 @@ public class ConnectInteractor implements ConfigFilePaths {
     protected void setRotateShipWheel(boolean rotate) {
         connectModel.setRotateShipWheel(rotate);
     }
-
-
 }

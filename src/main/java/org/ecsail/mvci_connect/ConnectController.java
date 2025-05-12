@@ -28,11 +28,12 @@ public class ConnectController extends Controller<ConnectMessage> {
             case CONNECT_TO_SERVER -> connectToServer();
             case SUPPLY_LOGINS -> connectInteractor.supplyLogins();
             case COPY_CURRENT_TO_MATCHING -> connectInteractor.copyCurrentLoginToMatchingLoginInList();
-            case PRINT_LOGIN_OBJECTS -> connectInteractor.printLoginObjects();
+//            case PRINT_LOGIN_OBJECTS -> connectInteractor.printLoginObjects();
             case SET_CURRENT_LOGIN_AS_DEFAULT -> connectInteractor.setCurrentLoginAsDefault();
             case UPDATE_CURRENT_LOGIN -> connectInteractor.updateCurrentLogin();
             case UPDATE_COMBO_BOX -> connectInteractor.updateComboBox();
             case CREATE_NEW_LOGIN -> connectInteractor.createNewLogin();
+            case DELETE_CURRENT_LOGIN -> connectInteractor.deleteLogin();
         }
     }
 

@@ -27,8 +27,6 @@ public class RunStateImpl implements RunState {
         setModeProperty(mode);
     }
 
-
-
     @Override
     public Mode getMode() {
         return modeProperty.get();
