@@ -6,7 +6,7 @@ import org.ecsail.interfaces.RunState;
 
 public class RunStateImpl implements RunState {
 
-    private ObjectProperty<Mode> modeProperty;
+    private final ObjectProperty<Mode> modeProperty;
     ConnectModel connectModel;
 
     public RunStateImpl(ConnectModel model) {

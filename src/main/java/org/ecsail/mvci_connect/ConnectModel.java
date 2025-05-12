@@ -24,16 +24,15 @@ public class ConnectModel {
     private final DoubleProperty centerPaneHeight = new SimpleDoubleProperty();
     private final ObservableMap<String, HBox> hBoxMap = FXCollections.observableHashMap();
     private final ObservableMap<String, VBox> vBoxMap = FXCollections.observableHashMap();
-    private final IntegerProperty localSqlPort = new SimpleIntegerProperty();
     private final BooleanProperty isDefault = new SimpleBooleanProperty();
     private final StringProperty database = new SimpleStringProperty();
     private final StringProperty statusBarText = new SimpleStringProperty();
-    private final ObjectProperty<LoginDTOProperty> currentLogin = new SimpleObjectProperty<>(new LoginDTOProperty());
-    private ArrayList<LoginDTO> loginDTOS = new ArrayList<>();
+    private final LoginDTOProperty currentLogin = new LoginDTOProperty(); // not really a property, but has fields that are.
+    private final ArrayList<LoginDTO> loginDTOS = new ArrayList<>();
 
 
 
-    public ObjectProperty<LoginDTOProperty> currentLoginProperty() {
+    public LoginDTOProperty currentLoginProperty() {
         return currentLogin;
     }
 
@@ -76,14 +75,6 @@ public class ConnectModel {
         this.comboBox.set(comboBox);
     }
 
-    public int getLocalSqlPort() {
-        return localSqlPort.get();
-    }
-
-    public IntegerProperty localSqlPortProperty() {
-        return localSqlPort;
-    }
-
     public ObservableMap<String, HBox> getHBoxMap() {
         return hBoxMap;
     }
@@ -124,24 +115,12 @@ public class ConnectModel {
         return centerPaneHeight;
     }
 
-    public String getStatusBarText() {
-        return statusBarText.get();
-    }
-
     public StringProperty statusBarTextProperty() {
         return statusBarText;
     }
 
-    public void setStatusBarText(String statusBarText) {
-        this.statusBarText.set(statusBarText);
-    }
-
     public ArrayList<LoginDTO> getLoginDTOS() {
         return loginDTOS;
-    }
-
-    public void setLoginDTOS(ArrayList<LoginDTO> loginDTOS) {
-        this.loginDTOS = loginDTOS;
     }
 
     public ObservableList<String> getComboValues() {

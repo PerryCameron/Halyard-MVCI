@@ -37,13 +37,13 @@ public class ConnectInteractor implements ConfigFilePaths {
 
     private void copyDefaultToCurrentLogin() {
         if (connectModel.getLoginDTOS().size() == 1) {
-            connectModel.currentLoginProperty().get().copyLogin(connectModel.getLoginDTOS().get(0));
+            connectModel.currentLoginProperty().copyLogin(connectModel.getLoginDTOS().getFirst());
         } else {
             connectModel.getLoginDTOS().stream()
                     .filter(LoginDTO::isDefault)
                     .findFirst()
                     .ifPresentOrElse(
-                            defaultLogin -> connectModel.currentLoginProperty().get().copyLogin(defaultLogin),
+                            defaultLogin -> connectModel.currentLoginProperty().copyLogin(defaultLogin),
                             () -> logger.warn("No default login found to copy to current login.")
                     );
         }
@@ -51,10 +51,11 @@ public class ConnectInteractor implements ConfigFilePaths {
 
     // copies current loginDTO(bound to textFields) , to the correct loginDTO in the list
     public void copyCurrentLoginToMatchingLoginInList() {
-        if (connectModel.getLoginDTOS().size() > 0) {
-            Optional<LoginDTO> matchingLoginDTO = connectModel.getLoginDTOS().stream().filter(loginDTO -> loginDTO.getId() == connectModel.currentLoginProperty().get().getId()).findFirst();
+        if (!connectModel.getLoginDTOS().isEmpty()) {
+            Optional<LoginDTO> matchingLoginDTO = connectModel.getLoginDTOS().stream()
+                    .filter(loginDTO -> loginDTO.getId() == connectModel.currentLoginProperty().getId()).findFirst();
             if(matchingLoginDTO.isPresent()) {
-                matchingLoginDTO.get().copyLoginDTOProperty(connectModel.currentLoginProperty().get());
+                matchingLoginDTO.get().copyLoginDTOProperty(connectModel.currentLoginProperty());
             } else {
                 logger.warn("No matching login object found in login list.");
             }
@@ -74,7 +75,7 @@ public class ConnectInteractor implements ConfigFilePaths {
         // Set it as default and copy to current login
         if (selectedLogin.isPresent()) {
             selectedLogin.get().setDefault(true); // ✅ This was missing
-            connectModel.currentLoginProperty().get().copyLogin(selectedLogin.get());
+            connectModel.currentLoginProperty().copyLogin(selectedLogin.get());
         } else {
             logger.warn("No login found to set as default.");
         }
@@ -86,13 +87,13 @@ public class ConnectInteractor implements ConfigFilePaths {
         connectModel.getComboBox().getItems().add("");
         int index = findNextIndex();
         connectModel.getLoginDTOS().add(new LoginDTO(index,8080,"","","",false));
-        connectModel.currentLoginProperty().get().setAsNew(index);
+        connectModel.currentLoginProperty().setAsNew(index);
         updateComboBox();
     }
 
     public void deleteLogin() {
         Optional<LoginDTO> loginDTO = connectModel.getLoginDTOS().stream().filter(login -> login.getId() == connectModel.currentLoginProperty()
-                .get().getId()).findFirst();
+                .getId()).findFirst();
         if(loginDTO.isPresent()) {
             connectModel.getLoginDTOS().remove(loginDTO.get());
         } else {
@@ -102,8 +103,8 @@ public class ConnectInteractor implements ConfigFilePaths {
     }
 
     private void selectFirstAvailableLogin() {
-        if (connectModel.getLoginDTOS().size() > 0) {
-            connectModel.currentLoginProperty().get().copyLogin(connectModel.getLoginDTOS().get(0));
+        if (!connectModel.getLoginDTOS().isEmpty()) {
+            connectModel.currentLoginProperty().copyLogin(connectModel.getLoginDTOS().getFirst());
             updateComboBox();
         } else {
             createNewLogin();
@@ -117,7 +118,7 @@ public class ConnectInteractor implements ConfigFilePaths {
                 .filter(login -> login.getHost().equals(newValue))
                 .findFirst()
                 .ifPresentOrElse(
-                        loginDTO -> connectModel.currentLoginProperty().get().copyLogin(loginDTO),
+                        loginDTO -> connectModel.currentLoginProperty().copyLogin(loginDTO),
                         () -> logger.warn("No login found to copy to current login.")
                 );
     }
@@ -138,7 +139,7 @@ public class ConnectInteractor implements ConfigFilePaths {
         connectModel.getComboBox().getItems().addAll(connectModel.getComboValues());
 
         // Set the selected value to the current login's host
-        connectModel.getComboBox().setValue(connectModel.currentLoginProperty().get().hostProperty().getValue());
+        connectModel.getComboBox().setValue(connectModel.currentLoginProperty().hostProperty().getValue());
     }
 
 
@@ -155,7 +156,6 @@ public class ConnectInteractor implements ConfigFilePaths {
             } catch (Exception e) {
                 logger.error("Error occurred during reading of {}", LOGIN_FILE);
 				logger.error(e.getMessage());
-                e.printStackTrace();
             }
     }
 
@@ -169,7 +169,6 @@ public class ConnectInteractor implements ConfigFilePaths {
             out.close();
         } catch (Exception e) {
             logger.error(e.getMessage());
-            e.printStackTrace();
             System.exit(0);
         }
         logger.info("{} saved", LOGIN_FILE);

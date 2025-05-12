@@ -67,7 +67,7 @@ public class ConnectView implements Builder<Region> {
         HBox hboxUserText = new HBox();
         hboxUserLabel.getChildren().add(new Label("Username:"));
         TextField userName = TextFieldFx.textFieldOf(200,"Username");
-        userName.textProperty().bindBidirectional(connectModel.currentLoginProperty().get().userProperty());
+        userName.textProperty().bindBidirectional(connectModel.currentLoginProperty().userProperty());
         hboxUserText.getChildren().add(userName);
         hBox.getChildren().addAll(hboxUserLabel, hboxUserText);
         return hBox;
@@ -76,7 +76,7 @@ public class ConnectView implements Builder<Region> {
     private Node PassBox() { // 2
         HBox hBox = HBoxFx.hBoxOf(new Insets(5));
         PasswordField passwordField = TextFieldFx.passwordFieldOf(200,"Password");
-        passwordField.textProperty().bindBidirectional(connectModel.currentLoginProperty().get().passwdProperty());
+        passwordField.textProperty().bindBidirectional(connectModel.currentLoginProperty().passwdProperty());
         HBox hboxPassLabel = HBoxFx.hBoxOf(Pos.CENTER_LEFT, 90);
         HBox hboxPassText = new HBox();
         hboxPassLabel.getChildren().add(new Label("Password:"));
@@ -94,7 +94,7 @@ public class ConnectView implements Builder<Region> {
         hBoxHostTextField.getChildren().add(hostName);
         connectModel.getHBoxMap().put("host-container-box",hBoxHostContainer);
         connectModel.getHBoxMap().put("host-text-field", hBoxHostTextField);
-        hostName.textProperty().bindBidirectional(connectModel.currentLoginProperty().get().hostProperty());
+        hostName.textProperty().bindBidirectional(connectModel.currentLoginProperty().hostProperty());
         hboxHostLabel.getChildren().add(new Label("Hostname:"));
         hBoxHostContainer.getChildren().add(createComboBox());
         hBox.getChildren().addAll(hboxHostLabel,hBoxHostContainer);
@@ -110,8 +110,6 @@ public class ConnectView implements Builder<Region> {
         hBox.getChildren().add(comboBox);
         comboBox.valueProperty().addListener((Observable, oldValue, newValue) -> {
             if(newValue != null) {
-                System.out.println("---------------------------------------------------------");
-                System.out.println("New Value Selected ----->" + newValue);
                 action.accept(ConnectMessage.SET_CURRENT_LOGIN_AS_DEFAULT);
             }
             else connectModel.getComboBox().getSelectionModel().select(connectModel.getComboBox().getItems().size() - 1);
@@ -162,18 +160,17 @@ public class ConnectView implements Builder<Region> {
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER_LEFT);
         TextField portTextField = TextFieldFx.textFieldOf(60, "port");
-        portTextField.textProperty().bindBidirectional(connectModel.currentLoginProperty().get().portProperty());
+        portTextField.textProperty().bindBidirectional(connectModel.currentLoginProperty().portProperty());
         HBox hboxPortLabel = HBoxFx.hBoxOf(Pos.CENTER_LEFT, 90, new Insets(5));
         hboxPortLabel.getChildren().add(new Label("Port:"));
-        HBox hboxPortText = HBoxFx.hBoxOf(Pos.CENTER_LEFT,100,new Insets(5),20);
+        HBox hboxPortText = HBoxFx.hBoxOf(Pos.CENTER_LEFT,100, new Insets(5),20);
         hboxPortText.getChildren().add(portTextField);
         hBox.getChildren().addAll(hboxPortLabel, hboxPortText, setDefaultCheckBox());
         return hBox;
     }
 
     private Node setDefaultCheckBox() {
-        CheckBox checkBox = new CheckBox("Default login");
-        return checkBox;
+        return new CheckBox("Default login");
     }
 
     private Node createEditButtonsBox() {
@@ -181,7 +178,7 @@ public class ConnectView implements Builder<Region> {
         Button buttonSave = new Button("Save");
         buttonSave.setOnAction(event -> {
             // copies current loginDTO(bound to textFields) , to the correct loginDTO in the list
-            action.accept(ConnectMessage.COPY_CURRENT_TO_MATCHING); // copies values in textfield to matching loginDTO in list
+            action.accept(ConnectMessage.COPY_CURRENT_TO_MATCHING); // copies values in textField to matching loginDTO in list
             // back to normal mode
             runState.setMode(RunState.Mode.NORMAL, this);
             // saves the changes
