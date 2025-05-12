@@ -29,7 +29,7 @@ public class ConnectModel {
 
     private final StringProperty database = new SimpleStringProperty();
     private final StringProperty statusBarText = new SimpleStringProperty();
-    private final ObjectProperty<LoginDTOProperty> currentLogin = new SimpleObjectProperty<>();
+    private final ObjectProperty<LoginDTOProperty> currentLogin = new SimpleObjectProperty<>(new LoginDTOProperty());
     private ArrayList<LoginDTO> loginDTOS = new ArrayList<>();
 
 

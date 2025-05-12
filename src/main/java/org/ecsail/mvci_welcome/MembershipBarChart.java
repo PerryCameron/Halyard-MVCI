@@ -7,12 +7,17 @@ import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import org.ecsail.dto.StatsDTO;
 import org.ecsail.interfaces.ChartConstants;
+import org.ecsail.mvci_connect.ConnectInteractor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.stream.IntStream;
 
 public class MembershipBarChart extends BarChart<String,Number> implements ChartConstants {
     private final WelcomeModel welcomeModel;
     Series<String,Number> seriesData = new Series<>();
+    private static final Logger logger = LoggerFactory.getLogger(MembershipBarChart.class);
+
 
     protected MembershipBarChart(WelcomeModel welcomeModel) {
         super(new CategoryAxis(),new NumberAxis());
@@ -25,16 +30,18 @@ public class MembershipBarChart extends BarChart<String,Number> implements Chart
     }
 
     private void addData() {
-        for (StatsDTO s: welcomeModel.getStats()) {
-            switch (welcomeModel.getChartSet()) {
-                case NON_RENEW ->
-                        welcomeModel.getNonRenewData().add(new Data<>(String.valueOf(s.getFiscalYear()), s.getNonRenewMemberships()));
-                case NEW_MEMBER ->
-                        welcomeModel.getNewMemberData().add(new Data<>(String.valueOf(s.getFiscalYear()), s.getNewMemberships()));
-                case RETURN_MEMBER ->
-                        welcomeModel.getReturnMemberData().add(new Data<>(String.valueOf(s.getFiscalYear()), s.getReturnMemberships()));
+        if(welcomeModel.getStats() != null) {
+            for (StatsDTO s : welcomeModel.getStats()) {
+                switch (welcomeModel.getChartSet()) {
+                    case NON_RENEW ->
+                            welcomeModel.getNonRenewData().add(new Data<>(String.valueOf(s.getFiscalYear()), s.getNonRenewMemberships()));
+                    case NEW_MEMBER ->
+                            welcomeModel.getNewMemberData().add(new Data<>(String.valueOf(s.getFiscalYear()), s.getNewMemberships()));
+                    case RETURN_MEMBER ->
+                            welcomeModel.getReturnMemberData().add(new Data<>(String.valueOf(s.getFiscalYear()), s.getReturnMemberships()));
+                }
             }
-        }
+        } else logger.warn("There are no statistics available");
     }
 
     private void setSeriesData() {

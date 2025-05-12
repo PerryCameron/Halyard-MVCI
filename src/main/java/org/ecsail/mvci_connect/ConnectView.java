@@ -153,8 +153,6 @@ public class ConnectView implements Builder<Region> {
 
     private VBox createBottomContainerBox() {
         VBox vBox = new VBox();
-//        vBox.getChildren().addAll(createSqlPortBox(),createUseSshBox(),createDataBaseBox(), createSshUserBox(),
-//                createKnownHostsBox(), createPrivateKeyBox(), createEditButtonsBox());
                 vBox.getChildren().addAll(portBox(), createEditButtonsBox());
         return vBox;
     }

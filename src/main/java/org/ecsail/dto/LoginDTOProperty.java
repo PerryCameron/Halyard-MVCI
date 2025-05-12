@@ -23,8 +23,21 @@ public class LoginDTOProperty {
 	public LoginDTOProperty() {
 	}
 
+	public void copyLogin(LoginDTO loginDTO) {
+		this.id.set(loginDTO.getId());
+		this.port.set(String.valueOf(loginDTO.getPort()));
+		this.host.set(loginDTO.getHost());
+		this.user.set(loginDTO.getUser());
+		this.passwd.set(loginDTO.getPasswd());
+		this.isDefault.set(loginDTO.isDefault());
+	}
+
 	public IntegerProperty idProperty() {
 		return id;
+	}
+
+	public int getId() {
+		return id.get();
 	}
 
 	public String getPort() {

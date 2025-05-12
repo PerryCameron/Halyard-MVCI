@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ConnectInteractor implements ConfigFilePaths {
 
@@ -23,19 +24,47 @@ public class ConnectInteractor implements ConfigFilePaths {
 
     public void supplyLogins() {
         List<LoginDTO> loginDTOS = new ArrayList<>();
-        if (FileIO.hostFileExists(LOGIN_FILE))
+        if (FileIO.hostFileExists(LOGIN_FILE)) {
             openLoginObjects(loginDTOS);
-        else {
+            logger.info("Added {} logins", loginDTOS.size());
+        } else {
             logger.info("login file does not exist.");
             loginDTOS.add(new LoginDTO(1,8080,"hostName","LoginDTO","passWord",true)); // we are starting application for the first time
         }
         connectModel.getLoginDTOS().addAll(loginDTOS);
-        // property is filled with this, but need to take info from default login DTO and
-        connectModel.currentLoginProperty().set(new LoginDTOProperty());
+        copyDefaultToCurrentLogin();
         // we need to find the default, and set the
         System.out.println("just set current login property: " + connectModel.currentLoginProperty().get().userProperty().get());
         System.out.println("They are loaded" + connectModel.getLoginDTOS());
     }
+
+    private void copyDefaultToCurrentLogin() {
+        if (connectModel.getLoginDTOS().size() == 1) {
+            connectModel.currentLoginProperty().get().copyLogin(connectModel.getLoginDTOS().get(0));
+        } else {
+            Optional<LoginDTO> defaultLoginOpt = connectModel.getLoginDTOS().stream()
+                    .filter(LoginDTO::isDefault)
+                    .findFirst();
+            if (defaultLoginOpt.isPresent()) {
+                connectModel.currentLoginProperty().get().copyLogin(defaultLoginOpt.get());
+            } else {
+                logger.warn("No default login found to copy to current login.");
+            }
+        }
+    }
+
+    // copies the contents of what is in text fields to matching LoginDTO in list
+    private void copyCurrentToMatchingLogin() {
+        if (connectModel.getLoginDTOS().size() > 0) {
+            Optional<LoginDTO> matchingLoginDTO = connectModel.getLoginDTOS().stream().filter(loginDTO -> loginDTO.getId() == connectModel.currentLoginProperty().get().getId()).findFirst();
+            if(matchingLoginDTO.isPresent()) {
+                matchingLoginDTO.get().copyLoginDTOProperty(connectModel.currentLoginProperty().get());
+            } else {
+                logger.warn("No matching login object found in login list.");
+            }
+        }
+    }
+
 
     public static void openLoginObjects(List<LoginDTO> logins) {
         File g = new File(LOGIN_FILE);
@@ -55,6 +84,7 @@ public class ConnectInteractor implements ConfigFilePaths {
     }
 
     public void saveLoginObjects() {  // saves user file to disk
+        copyCurrentToMatchingLogin();
         File g = new File(LOGIN_FILE);
         ArrayList<LoginDTO> unwrappedList = new ArrayList<>(connectModel.getComboBox().getItems());
         try	{
@@ -68,6 +98,8 @@ public class ConnectInteractor implements ConfigFilePaths {
         }
         logger.info("{} saved", LOGIN_FILE);
     }
+
+
 
     public void logError(String message) {
         logger.error(message);

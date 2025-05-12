@@ -3,6 +3,8 @@ package org.ecsail.mvci_welcome;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.StackedBarChart;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
@@ -14,6 +16,8 @@ public class MembershipStackedBarChart extends StackedBarChart<String,Number> {
 	private final Series<String,Number> seriesSocial = new Series<>();
 	private final Series<String,Number> seriesLakeAssociate = new Series<>();
 	private final Series<String,Number> seriesLifeMember = new Series<>();
+	private static final Logger logger = LoggerFactory.getLogger(MembershipStackedBarChart.class);
+
 
 	public MembershipStackedBarChart(WelcomeModel welcomeModel) {
 		super(new CategoryAxis(),new NumberAxis());
@@ -36,14 +40,17 @@ public class MembershipStackedBarChart extends StackedBarChart<String,Number> {
 	}
 
 	private void addData() {
-		welcomeModel.getStats().forEach(s -> {
-			welcomeModel.getFamilyData().add(new Data<>(String.valueOf(s.getFiscalYear()), s.getFamily()));
-			welcomeModel.getRegularData().add(new Data<>(String.valueOf(s.getFiscalYear()), s.getRegular()));
-			welcomeModel.getSocialData().add(new Data<>(String.valueOf(s.getFiscalYear()), s.getSocial()));
-			welcomeModel.getLakeAssociateData().add(new Data<>(String.valueOf(s.getFiscalYear()), s.getLakeAssociates()));
-			welcomeModel.getLifeMemberData().add(new Data<>(String.valueOf(s.getFiscalYear()), s.getLifeMembers()));
-		});
-		setData();
+		if(welcomeModel.getStats() != null) {
+			welcomeModel.getStats().forEach(s -> {
+				welcomeModel.getFamilyData().add(new Data<>(String.valueOf(s.getFiscalYear()), s.getFamily()));
+				welcomeModel.getRegularData().add(new Data<>(String.valueOf(s.getFiscalYear()), s.getRegular()));
+				welcomeModel.getSocialData().add(new Data<>(String.valueOf(s.getFiscalYear()), s.getSocial()));
+				welcomeModel.getLakeAssociateData().add(new Data<>(String.valueOf(s.getFiscalYear()), s.getLakeAssociates()));
+				welcomeModel.getLifeMemberData().add(new Data<>(String.valueOf(s.getFiscalYear()), s.getLifeMembers()));
+			});
+			setData();
+		} else logger.warn("There are no stats available");
+
 	}
 
 	private void setData() {

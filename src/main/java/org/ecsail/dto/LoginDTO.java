@@ -24,6 +24,15 @@ public class LoginDTO implements Serializable {
 		this.isDefault = isDefault;
 	}
 
+	public void copyLoginDTOProperty(LoginDTOProperty loginDTOProperty) {
+		this.id = loginDTOProperty.idProperty().getValue();
+		this.port = Integer.parseInt(loginDTOProperty.portProperty().getValue());
+		this.host = loginDTOProperty.hostProperty().getValue();
+		this.user = loginDTOProperty.userProperty().getValue();
+		this.passwd = loginDTOProperty.passwdProperty().getValue();
+		this.isDefault = loginDTOProperty.isDefaultProperty().getValue();
+	}
+
 	public int getId() {
 		return id;
 	}
