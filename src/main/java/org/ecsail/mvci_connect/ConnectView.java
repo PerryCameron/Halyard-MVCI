@@ -69,7 +69,6 @@ public class ConnectView implements Builder<Region> {
         HBox hboxUserText = new HBox();
         hboxUserLabel.getChildren().add(new Label("Username:"));
         TextField userName = TextFieldFx.textFieldOf(200,"Username");
-        System.out.println("just set bind: " + connectModel.currentLoginProperty().get().userProperty().get());
         userName.textProperty().bindBidirectional(connectModel.currentLoginProperty().get().userProperty());
         hboxUserText.getChildren().add(userName);
         hBox.getChildren().addAll(hboxUserLabel, hboxUserText);
@@ -107,13 +106,16 @@ public class ConnectView implements Builder<Region> {
     private Node createComboBox() {
         HBox hBox = new HBox();
         connectModel.getHBoxMap().put("host-combo-box",hBox);
-        LogInComboBox comboBox = new LogInComboBox(200, connectModel.getLoginDTOS());
-        connectModel.setComboBox(comboBox);
-        comboBox.setValue(comboBox.getItems().stream().filter(LoginDTO::isDefault).findFirst().orElse(null));
-        updateFields();
+        ComboBox<String> comboBox = connectModel.getComboBox();
+        comboBox.setPrefWidth(200);
+        action.accept(ConnectMessage.UPDATE_CURRENT_LOGIN);
         hBox.getChildren().add(comboBox);
         comboBox.valueProperty().addListener((Observable, oldValue, newValue) -> {
-            if(newValue != null) updateFields();
+            if(newValue != null) {
+                action.accept(ConnectMessage.SET_CURRENT_LOGIN_AS_DEFAULT);
+                action.accept(ConnectMessage.UPDATE_CURRENT_LOGIN);
+                action.accept(ConnectMessage.PRINT_LOGIN_OBJECTS);
+            }
             else connectModel.getComboBox().getSelectionModel().select(connectModel.getComboBox().getItems().size() - 1);
         });
         return hBox;
@@ -160,24 +162,30 @@ public class ConnectView implements Builder<Region> {
     private Node portBox() {
         HBox hBox = new HBox();
         hBox.setAlignment(Pos.CENTER_LEFT);
-        TextField localSqlPortText = TextFieldFx.textFieldOf(60, connectModel.currentLoginProperty().get().portProperty().get());
+        TextField portTextField = TextFieldFx.textFieldOf(60, "port");
+        portTextField.textProperty().bindBidirectional(connectModel.currentLoginProperty().get().portProperty());
         HBox hboxPortLabel = HBoxFx.hBoxOf(Pos.CENTER_LEFT, 90, new Insets(5));
         hboxPortLabel.getChildren().add(new Label("Port:"));
         HBox hboxPortText = HBoxFx.hBoxOf(Pos.CENTER_LEFT,100,new Insets(5),20);
-        hboxPortText.getChildren().add(localSqlPortText);
+        hboxPortText.getChildren().add(portTextField);
         hBox.getChildren().addAll(hboxPortLabel, hboxPortText, setDefaultCheckBox());
         return hBox;
     }
 
     private Node setDefaultCheckBox() {
         CheckBox checkBox = new CheckBox("Default login");
-        checkBox.selectedProperty().bindBidirectional(connectModel.defaultProperty());
-        checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue) {
-                connectModel.getComboBox().getItems().stream().forEach(loginDto -> loginDto.setDefault(false));
-                connectModel.getComboBox().getValue().setDefault(true);
-            }
-        });
+//        checkBox.selectedProperty().bindBidirectional(connectModel.defaultProperty());
+//        checkBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+//            if(newValue) {
+//                // going to remove this
+////                connectModel.getComboBox().getItems().stream().forEach(loginDto -> loginDto.setDefault(false));
+////                connectModel.getComboBox().getValue().setDefault(true);
+////                // clear default for all login objects
+////                connectModel.getLoginDTOS().stream().forEach(loginDto -> loginDto.setDefault(false));
+////                // set current to match.
+////                action.accept(ConnectMessage.COPY_CURRENT_TO_MATCHING);
+//            }
+//        });
         return checkBox;
     }
 
@@ -185,10 +193,12 @@ public class ConnectView implements Builder<Region> {
         HBox hBox = HBoxFx.hBoxOf(new Insets(20,0,20,0),Pos.CENTER, 10);
         Button buttonSave = new Button("Save");
         buttonSave.setOnAction(event -> {
-            updateSelectedLogin();
+//            updateSelectedLogin();
+            action.accept(ConnectMessage.COPY_CURRENT_TO_MATCHING); // copies values in textfield to matching loginDTO in list
+            action.accept(ConnectMessage.PRINT_LOGIN_OBJECTS);
             runState.setMode(RunState.Mode.NORMAL);
             action.accept(ConnectMessage.SAVE_LOGINS);
-            updateFields();
+            action.accept(ConnectMessage.UPDATE_CURRENT_LOGIN);
         });
         Button buttonDelete = new Button("Delete");
         buttonDelete.setOnAction(event -> {
@@ -213,14 +223,7 @@ public class ConnectView implements Builder<Region> {
             });
     }
 
-    private void updateFields() {
-        LoginDTO newValue = connectModel.getComboBox().getValue();
-        connectModel.currentLoginProperty().get().userProperty().set(newValue.getUser());
-        connectModel.currentLoginProperty().get().passwdProperty().set(newValue.getPasswd());
-        connectModel.currentLoginProperty().get().hostProperty().set(newValue.getHost());
-        connectModel.currentLoginProperty().get().isDefaultProperty().set(newValue.isDefault());
-        connectModel.currentLoginProperty().get().portProperty().set(newValue.getPortAsString());
-    }
+
 
     private void updateSelectedLogin() {
 //        connectModel.getComboBox().getValue().setSqlUser(connectModel.getSqlUser());

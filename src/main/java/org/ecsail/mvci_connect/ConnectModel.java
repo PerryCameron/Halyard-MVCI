@@ -2,6 +2,7 @@ package org.ecsail.mvci_connect;
 
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.HBox;
@@ -15,7 +16,8 @@ import java.util.ArrayList;
 public class ConnectModel {
 
     protected Stage connectStage = new Stage();
-    private final ObjectProperty<ComboBox<LoginDTO>> comboBox = new SimpleObjectProperty<>();
+    private final ObjectProperty<ComboBox<String>> comboBox = new SimpleObjectProperty<>(new ComboBox<>());
+    private final ObservableList<String> comboValues = FXCollections.observableArrayList();
     private final DoubleProperty titleBarHeight = new SimpleDoubleProperty();
     private final BooleanProperty rotateShipWheel = new SimpleBooleanProperty(false);
     private final DoubleProperty bottomPaneHeight = new SimpleDoubleProperty();
@@ -35,7 +37,6 @@ public class ConnectModel {
 
 
     public ObjectProperty<LoginDTOProperty> currentLoginProperty() {
-        System.out.println("Getting current login");
         return currentLogin;
     }
 
@@ -70,16 +71,13 @@ public class ConnectModel {
         return vBoxMap;
     }
 
-    public ComboBox<LoginDTO> getComboBox() {
+    public ComboBox<String> getComboBox() {
         return comboBox.get();
     }
 
-    public void setComboBox(ComboBox<LoginDTO> comboBox) {
+    public void setComboBox(ComboBox<String> comboBox) {
         this.comboBox.set(comboBox);
     }
-
-
-
 
     public int getLocalSqlPort() {
         return localSqlPort.get();
@@ -147,5 +145,9 @@ public class ConnectModel {
 
     public void setLoginDTOS(ArrayList<LoginDTO> loginDTOS) {
         this.loginDTOS = loginDTOS;
+    }
+
+    public ObservableList<String> getComboValues() {
+        return comboValues;
     }
 }

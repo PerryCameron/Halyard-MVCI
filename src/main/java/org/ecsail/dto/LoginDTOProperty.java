@@ -24,6 +24,7 @@ public class LoginDTOProperty {
 	}
 
 	public void copyLogin(LoginDTO loginDTO) {
+		System.out.println("Copied from LoginDTO");
 		this.id.set(loginDTO.getId());
 		this.port.set(String.valueOf(loginDTO.getPort()));
 		this.host.set(loginDTO.getHost());

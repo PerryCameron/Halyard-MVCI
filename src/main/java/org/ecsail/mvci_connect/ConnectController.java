@@ -5,8 +5,11 @@ import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import org.ecsail.interfaces.Controller;
 import org.ecsail.mvci_main.MainController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ConnectController extends Controller<ConnectMessage> {
+    private static final Logger logger = LoggerFactory.getLogger(ConnectController.class);
     MainController mainController;
     ConnectView connectView;
     ConnectInteractor connectInteractor;
@@ -24,6 +27,10 @@ public class ConnectController extends Controller<ConnectMessage> {
             case SAVE_LOGINS -> connectInteractor.saveLoginObjects();
             case CONNECT_TO_SERVER -> connectToServer();
             case SUPPLY_LOGINS -> connectInteractor.supplyLogins();
+            case COPY_CURRENT_TO_MATCHING -> connectInteractor.copyCurrentLoginToMatchingLoginInList();
+            case PRINT_LOGIN_OBJECTS -> connectInteractor.printLoginObjects();
+            case SET_CURRENT_LOGIN_AS_DEFAULT -> connectInteractor.setCurrentLoginAsDefault();
+            case UPDATE_CURRENT_LOGIN -> connectInteractor.updateCurrentLogin();
         }
     }
 
@@ -37,6 +44,7 @@ public class ConnectController extends Controller<ConnectMessage> {
             @Override
             protected Boolean call() {
                 // Perform database connection here
+                logger.info("Connecting to server...");
 //                return connectInteractor.getConnections().connect();
                 return null;
             }

@@ -25,6 +25,7 @@ public class LoginDTO implements Serializable {
 	}
 
 	public void copyLoginDTOProperty(LoginDTOProperty loginDTOProperty) {
+		System.out.println("Copied from LoginDTOProperty");
 		this.id = loginDTOProperty.idProperty().getValue();
 		this.port = Integer.parseInt(loginDTOProperty.portProperty().getValue());
 		this.host = loginDTOProperty.hostProperty().getValue();

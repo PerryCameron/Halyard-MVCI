@@ -3,7 +3,6 @@ package org.ecsail.mvci_connect;
 import javafx.stage.Stage;
 //import org.ecsail.connection.Connections;
 import org.ecsail.dto.LoginDTO;
-import org.ecsail.dto.LoginDTOProperty;
 import org.ecsail.fileio.FileIO;
 import org.ecsail.interfaces.ConfigFilePaths;
 import org.slf4j.Logger;
@@ -33,9 +32,8 @@ public class ConnectInteractor implements ConfigFilePaths {
         }
         connectModel.getLoginDTOS().addAll(loginDTOS);
         copyDefaultToCurrentLogin();
-        // we need to find the default, and set the
-        System.out.println("just set current login property: " + connectModel.currentLoginProperty().get().userProperty().get());
-        System.out.println("They are loaded" + connectModel.getLoginDTOS());
+        printLoginObjects();
+        updateComboBox();
     }
 
     private void copyDefaultToCurrentLogin() {
@@ -53,8 +51,7 @@ public class ConnectInteractor implements ConfigFilePaths {
         }
     }
 
-    // copies the contents of what is in text fields to matching LoginDTO in list
-    private void copyCurrentToMatchingLogin() {
+    public void copyCurrentLoginToMatchingLoginInList() {
         if (connectModel.getLoginDTOS().size() > 0) {
             Optional<LoginDTO> matchingLoginDTO = connectModel.getLoginDTOS().stream().filter(loginDTO -> loginDTO.getId() == connectModel.currentLoginProperty().get().getId()).findFirst();
             if(matchingLoginDTO.isPresent()) {
@@ -65,6 +62,34 @@ public class ConnectInteractor implements ConfigFilePaths {
         }
     }
 
+    public void setCurrentLoginAsDefault() {
+        connectModel.getLoginDTOS().forEach(loginDTO -> {
+            loginDTO.setDefault(false);
+        });
+        connectModel.currentLoginProperty().get().isDefaultProperty().set(true);
+        System.out.println("----->" + connectModel.currentLoginProperty().get());
+        copyCurrentLoginToMatchingLoginInList();
+        saveLoginObjects();
+    }
+
+    protected void updateCurrentLogin() {
+        String newValue = connectModel.getComboBox().getValue();
+        Optional<LoginDTO> loginDTO = connectModel.getLoginDTOS().stream().filter(login -> login.getHost().equals(newValue)).findFirst();
+        if (loginDTO.isPresent()) {
+            connectModel.currentLoginProperty().get().copyLogin(loginDTO.get());
+        } else {
+            logger.warn("No login found to copy to current login.");
+        }
+    }
+
+    protected void updateComboBox() {
+        connectModel.getComboBox().getItems().clear();
+        for(LoginDTO loginDTO: connectModel.getLoginDTOS()) {
+            connectModel.getComboValues().add(loginDTO.getHost());
+        }
+        connectModel.getComboBox().getItems().addAll(connectModel.getComboValues());
+        connectModel.getComboBox().setValue(connectModel.currentLoginProperty().get().hostProperty().getValue());
+    }
 
     public static void openLoginObjects(List<LoginDTO> logins) {
         File g = new File(LOGIN_FILE);
@@ -84,9 +109,9 @@ public class ConnectInteractor implements ConfigFilePaths {
     }
 
     public void saveLoginObjects() {  // saves user file to disk
-        copyCurrentToMatchingLogin();
+        copyCurrentLoginToMatchingLoginInList();
         File g = new File(LOGIN_FILE);
-        ArrayList<LoginDTO> unwrappedList = new ArrayList<>(connectModel.getComboBox().getItems());
+        ArrayList<LoginDTO> unwrappedList = new ArrayList<>(connectModel.getLoginDTOS());
         try	{
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(g));
             out.writeObject(unwrappedList);
@@ -99,6 +124,15 @@ public class ConnectInteractor implements ConfigFilePaths {
         logger.info("{} saved", LOGIN_FILE);
     }
 
+    public void printLoginObjects() {
+        System.out.println("---Printing login objects");
+        connectModel.getLoginDTOS().forEach(loginDTO -> {
+            System.out.println(loginDTO);
+        });
+        System.out.println("---Printing current object");
+        System.out.println(connectModel.currentLoginProperty().get());
+        System.out.println("");
+    }
 
 
     public void logError(String message) {
@@ -119,4 +153,6 @@ public class ConnectInteractor implements ConfigFilePaths {
     protected void setRotateShipWheel(boolean rotate) {
         connectModel.setRotateShipWheel(rotate);
     }
+
+
 }
