@@ -171,7 +171,9 @@ public class ConnectView implements Builder<Region> {
     }
 
     private Node setDefaultCheckBox() {
-        return new CheckBox("Default login");
+        CheckBox checkBox = new CheckBox("Default login");
+        checkBox.selectedProperty().bindBidirectional(connectModel.currentLoginProperty().isDefaultProperty());
+        return checkBox;
     }
 
     private Node createEditButtonsBox() {
@@ -225,8 +227,8 @@ public class ConnectView implements Builder<Region> {
         connectModel.getConnectStage().requestFocus();
         connectModel.getConnectStage().toFront();
         connectModel.getConnectStage().setResizable(false);
-        connectModel.getConnectStage().setX(BaseApplication.primaryStage.getX() + 260);
-        connectModel.getConnectStage().setY(BaseApplication.primaryStage.getY() + 300);
+        connectModel.getConnectStage().setX(BaseApplication.primaryStage.getX() + 280);
+        connectModel.getConnectStage().setY(BaseApplication.primaryStage.getY() + 340);
         getTitleIcon(connectModel.getConnectStage());
         connectModel.getConnectStage().show();
     }
