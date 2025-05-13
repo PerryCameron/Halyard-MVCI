@@ -8,6 +8,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.ecsail.BaseApplication;
 import org.ecsail.dto.LoginDTO;
 import org.ecsail.dto.LoginDTOProperty;
 
@@ -29,8 +30,19 @@ public class ConnectModel {
     private final StringProperty statusBarText = new SimpleStringProperty();
     private final LoginDTOProperty currentLogin = new LoginDTOProperty(); // not really a property, but has fields that are.
     private final ArrayList<LoginDTO> loginDTOS = new ArrayList<>();
+    private final HttpClientUtil httpClient = new HttpClientUtil();
 
+    // Add this method to update the server URL in HttpClientUtil
+    public void updateServerUrl() {
+        String host = currentLogin.hostProperty().get();
+        String port = currentLogin.portProperty().get();
+        String serverUrl = (BaseApplication.testMode ? "http" : "https") + "://" + host + ":" + port;
+        httpClient.setServerUrl(serverUrl);
+    }
 
+    public HttpClientUtil getHttpClient() {
+        return httpClient;
+    }
 
     public LoginDTOProperty currentLoginProperty() {
         return currentLogin;

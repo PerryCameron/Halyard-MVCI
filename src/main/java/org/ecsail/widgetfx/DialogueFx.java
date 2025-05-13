@@ -79,7 +79,7 @@ public class DialogueFx {
         alert.showAndWait();
     }
 
-    private boolean showMaxSessionsDialog() {
+    public static boolean showMaxSessionsDialog() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Session Limit Reached");
         alert.setHeaderText("You’ve reached the maximum number of sessions (3).");
@@ -96,7 +96,7 @@ public class DialogueFx {
         return result.isPresent() && result.get() == logoutOthersButton;
     }
 
-    private void showAlert(String title, String message) {
+    public static void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
         alert.setHeaderText(null);

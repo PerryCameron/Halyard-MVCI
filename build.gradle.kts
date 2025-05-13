@@ -56,12 +56,14 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-to-slf4j:2.20.0")
     implementation("org.slf4j:jcl-over-slf4j:2.0.5")
 
+    // Core OkHttp dependency (already included)
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    // Add the logging-interceptor dependency
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+
     // iText PDF
     implementation("com.itextpdf:itext7-core:7.2.6")
     implementation("com.itextpdf:layout:7.2.6")
-
-    // OkHttp for HTTP requests
-    implementation("com.squareup.okhttp3:okhttp:4.12.0")
 
     // JavaMail API
     implementation("javax.mail:mail:1.4.7")

@@ -1,5 +1,5 @@
 package org.ecsail.mvci_connect;
-
+import okhttp3.logging.HttpLoggingInterceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
 import org.slf4j.Logger;
@@ -18,13 +18,16 @@ public class HttpClientUtil {
     private String serverUrl;
 
     public HttpClientUtil() {
-        // Custom CookieJar to store cookies in memory
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(message -> logger.debug(message));
+        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
         CookieJar cookieJar = new CookieJar() {
             private final Map<String, List<Cookie>> cookieStore = new HashMap<>();
 
             @Override
             public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
                 cookieStore.put(url.host(), new ArrayList<>(cookies));
+                logger.info("Saved cookies for host {}: {}", url.host(), cookies);
             }
 
             @Override
@@ -36,6 +39,7 @@ public class HttpClientUtil {
 
         client = new OkHttpClient.Builder()
                 .cookieJar(cookieJar)
+                .addInterceptor(loggingInterceptor)
                 .build();
 
         objectMapper = new ObjectMapper();
@@ -65,14 +69,18 @@ public class HttpClientUtil {
     }
 
     public Response login(String username, String password) throws IOException {
-        RequestBody formBody = new FormBody.Builder()
-                .add("username", username)
-                .add("password", password)
-                .build();
+        Map<String, String> loginRequest = new HashMap<>();
+        loginRequest.put("username", username);
+        loginRequest.put("password", password);
+
+        RequestBody body = RequestBody.create(
+                MediaType.parse("application/json"),
+                objectMapper.writeValueAsString(loginRequest)
+        );
 
         Request request = new Request.Builder()
-                .url(serverUrl + "login")
-                .post(formBody)
+                .url(serverUrl + "api/login")
+                .post(body)
                 .build();
 
         return client.newCall(request).execute();

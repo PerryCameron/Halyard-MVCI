@@ -1,16 +1,22 @@
 package org.ecsail.mvci_connect;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.stage.Stage;
 //import org.ecsail.connection.Connections;
+import okhttp3.Response;
 import org.ecsail.dto.LoginDTO;
 import org.ecsail.fileio.FileIO;
 import org.ecsail.interfaces.ConfigFilePaths;
+import org.ecsail.widgetfx.DialogueFx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import java.util.HashMap;
 import java.util.Optional;
 
 public class ConnectInteractor implements ConfigFilePaths {
@@ -21,6 +27,7 @@ public class ConnectInteractor implements ConfigFilePaths {
         this.connectModel = connectModel;
     }
 
+    // supplies saved logins from users local hardrive
     public void supplyLogins() {
         List<LoginDTO> loginDTOS = new ArrayList<>();
         if (FileIO.hostFileExists(LOGIN_FILE)) {
@@ -28,11 +35,115 @@ public class ConnectInteractor implements ConfigFilePaths {
             logger.info("Added {} logins", loginDTOS.size());
         } else {
             logger.info("login file does not exist.");
-            loginDTOS.add(new LoginDTO(1,8080,"hostName","LoginDTO","passWord",true)); // we are starting application for the first time
+            loginDTOS.add(new LoginDTO(1, 8080, "localhost", "user", "password", true)); // Default for first-time use
         }
         connectModel.getLoginDTOS().addAll(loginDTOS);
         copyDefaultToCurrentLogin();
         updateComboBox();
+
+        // Set the server URL for HttpClientUtil
+        connectModel.updateServerUrl();
+
+        // Check if authentication is required
+        if (requiresAuthentication()) {
+            logger.info("Authentication required, showing login dialog.");
+            // Dialog is already shown by ConnectView; proceed with login on user action
+        } else {
+            logger.info("No authentication required, proceeding directly.");
+            // Notify controller to proceed without login
+            connectModel.setRotateShipWheel(false);
+            // Trigger the controller to move forward (e.g., to the main app screen)
+            // This will be handled in ConnectController
+        }
+    }
+
+    private boolean requiresAuthentication() {
+        try {
+            return connectModel.getHttpClient().requiresAuthentication();
+        } catch (IOException e) {
+            logger.error("Failed to check authentication status", e);
+            DialogueFx.showAlert("Error", "Failed to connect to server: " + e.getMessage());
+            return true; // Assume authentication is required if the check fails
+        }
+    }
+
+    public boolean connectToServer() {
+        String username = connectModel.currentLoginProperty().userProperty().get();
+        String password = connectModel.currentLoginProperty().passwdProperty().get();
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        connectModel.updateServerUrl();
+        logger.info("Attempting to login to server: {}", connectModel.getHttpClient().getServerUrl());
+        logger.info("Username: {}", username);
+
+        while (true) {
+            try (Response response = connectModel.getHttpClient().login(username, password)) {
+                logger.info("Login response status: {}", response.code());
+                logger.info("Login response headers: {}", response.headers());
+                if (!response.isSuccessful()) {
+                    String errorBody = response.body() != null ? response.body().string() : "No response body";
+                    logger.warn("Login request failed with status: {}, body: {}", response.code(), errorBody);
+                    if (response.code() == 415) {
+                        DialogueFx.showAlert("Error", "Unsupported media type. Please contact support.");
+                        return false;
+                    }
+                    Map<String, String> result = response.body() != null ?
+                            objectMapper.readValue(errorBody, Map.class) : new HashMap<>();
+                    String status = result.getOrDefault("status", "unknown");
+                    String message = result.getOrDefault("message", "Unknown error");
+
+                    if ("error".equals(status)) {
+                        logger.warn("Login failed: {}", message);
+                        DialogueFx.showAlert("Login Failed", message);
+                        return false;
+                    } else if ("max_sessions".equals(status)) {
+                        logger.warn("Maximum sessions reached");
+                        boolean retry = DialogueFx.showMaxSessionsDialog();
+                        if (retry) {
+                            try (Response logoutResponse = connectModel.getHttpClient().logoutOthers()) {
+                                logger.info("Logout others response status: {}", logoutResponse.code());
+                                if (logoutResponse.isSuccessful()) {
+                                    logger.info("Successfully logged out other sessions, retrying login");
+                                    continue;
+                                } else {
+                                    logger.error("Failed to log out other sessions");
+                                    DialogueFx.showAlert("Error", "Failed to log out other sessions.");
+                                    return false;
+                                }
+                            }
+                        } else {
+                            logger.info("User chose not to retry after maximum sessions reached");
+                            return false;
+                        }
+                    } else {
+                        logger.error("Unexpected response from server: Status code {}, Status: {}", response.code(), status);
+                        DialogueFx.showAlert("Error", "Unexpected response from server: " + response.code());
+                        return false;
+                    }
+                }
+
+                Map<String, String> result = objectMapper.readValue(response.body().string(), Map.class);
+                String status = result.get("status");
+                String message = result.get("message");
+
+                if ("success".equals(status)) {
+                    logger.info("Login successful: {}", message);
+                    return true;
+                } else {
+                    logger.error("Unexpected response status: {}", status);
+                    DialogueFx.showAlert("Error", "Unexpected response from server.");
+                    return false;
+                }
+            } catch (IOException e) {
+                logger.error("Failed to connect to server", e);
+                DialogueFx.showAlert("Error", "Failed to connect to server: " + e.getMessage());
+                return false;
+            }
+        }
+    }
+
+    protected Response logOutOthers() throws IOException {
+        return connectModel.getHttpClient().logoutOthers();
     }
 
     private void copyDefaultToCurrentLogin() {

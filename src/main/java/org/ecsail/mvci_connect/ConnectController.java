@@ -3,24 +3,47 @@ package org.ecsail.mvci_connect;
 import javafx.concurrent.Task;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
+import okhttp3.Response;
 import org.ecsail.interfaces.Controller;
 import org.ecsail.mvci_main.MainController;
+import org.ecsail.widgetfx.DialogueFx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 public class ConnectController extends Controller<ConnectMessage> {
     private static final Logger logger = LoggerFactory.getLogger(ConnectController.class);
     MainController mainController;
     ConnectView connectView;
     ConnectInteractor connectInteractor;
+    private boolean authenticationRequired;
 
     public ConnectController(MainController mainController) {
         ConnectModel connectModel = new ConnectModel();
         this.mainController = mainController;
         connectInteractor = new ConnectInteractor(connectModel);
         action(ConnectMessage.SUPPLY_LOGINS);
-        connectView = new ConnectView(connectModel, this::action);
+
+        try {
+            authenticationRequired = connectModel.getHttpClient().requiresAuthentication();
+        } catch (IOException e) {
+            logger.error("Failed to check authentication status", e);
+            authenticationRequired = true;
+            DialogueFx.showAlert("Error", "Failed to connect to server: " + e.getMessage());
+        }
+
+        if (!authenticationRequired) {
+            logger.info("No authentication required, proceeding directly.");
+            connectInteractor.setRotateShipWheel(false);
+            mainController.createLoadingController();
+            connectInteractor.closeLoginStage();
+            mainController.openWelcomeMVCI();
+        } else {
+            connectView = new ConnectView(connectModel, this::action);
+        }
     }
+
     @Override
     public void action(ConnectMessage actionEnum) {
         switch (actionEnum) {
@@ -36,49 +59,65 @@ public class ConnectController extends Controller<ConnectMessage> {
         }
     }
 
+//    @Override
+//    public Region getView() {
+//        return connectView.build();
+//    }
+
     @Override
     public Region getView() {
-        return connectView.build();
+        return authenticationRequired ? connectView.build() : null;
     }
 
     private void connectToServer() {
         Task<Boolean> connectTask = new Task<>() {
             @Override
-            protected Boolean call() {
-                // Perform database connection here
+            protected Boolean call() throws Exception {
                 logger.info("Connecting to server...");
-//                return connectInteractor.getConnections().connect();
-                return null;
+                return connectInteractor.connectToServer();
             }
         };
         connectTask.setOnSucceeded(event -> {
-                connectInteractor.setRotateShipWheel(false);
+            connectInteractor.setRotateShipWheel(false);
+            if (connectTask.getValue()) {
                 mainController.createLoadingController();
-//                mainController.setStatus("(Connected) " + connectInteractor.getHost());
                 connectInteractor.closeLoginStage();
                 mainController.openWelcomeMVCI();
-//                mainController.loadCommonLists();
+            }
         });
-        connectTask.setOnFailed(event -> connectInteractor.logError(connectTask.getException().getMessage()));
+        connectTask.setOnFailed(event -> {
+            connectInteractor.setRotateShipWheel(false);
+            Throwable e = connectTask.getException();
+            if (e != null) {
+                boolean retry = DialogueFx.showMaxSessionsDialog();
+                if (retry) {
+                    Task<Void> logoutTask = new Task<>() {
+                        @Override
+                        protected Void call() throws Exception {
+                            try (Response logoutResponse = connectInteractor.logOutOthers()) {
+                                if (logoutResponse.isSuccessful()) {
+                                    logger.info("Successfully logged out other sessions");
+                                } else {
+                                    throw new Exception("Failed to log out other sessions");
+                                }
+                            }
+                            return null;
+                        }
+                    };
+                    logoutTask.setOnSucceeded(evt -> connectToServer()); // Retry login
+                    logoutTask.setOnFailed(evt -> DialogueFx.showAlert("Error", "Failed to log out other sessions."));
+                    new Thread(logoutTask).start();
+                }
+            } else {
+                DialogueFx.showAlert("Error", e.getMessage());
+            }
+        });
         Thread thread = new Thread(connectTask);
         thread.start();
     }
 
     public void closeConnection() {
-        //                connectInteractor.getConnections().getSqlConnection().close();
-        connectInteractor.logInfo("SQL: Connection closed");
-        //            PortForwardingL sshConnection = connectInteractor.getConnections().getSshConnection();
-            // if ssh is connected then disconnect
-//            if (sshConnection != null && sshConnection.getSession().isConnected()) {
-//                connectInteractor.logInfo("ssh connection is active: " + sshConnection.getSession().isConnected());
-//                try {
-//                    sshConnection.getSession().delPortForwardingL(3306);
-//                    sshConnection.getSession().disconnect();
-//                    connectInteractor.logInfo("SSH: port forwarding closed");
-//                } catch (JSchException e) {
-//                    e.printStackTrace();
-//                }
-//            }
+        connectInteractor.logInfo("Connection closed");
     }
 
     public Stage getStage() {
