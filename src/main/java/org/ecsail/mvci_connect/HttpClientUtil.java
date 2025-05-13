@@ -95,6 +95,22 @@ public class HttpClientUtil {
         return client.newCall(request).execute();
     }
 
+    public void logout() throws IOException {
+        Request request = new Request.Builder()
+                .url(serverUrl + "logout")
+                .post(new FormBody.Builder().build())
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            logger.info("Logout response status: {}", response.code());
+        }
+
+        CookieJar cookieJar = client.cookieJar();
+        if (cookieJar instanceof CookieJar) {
+            ((CookieJar) cookieJar).saveFromResponse(HttpUrl.parse(serverUrl), new ArrayList<>());
+        }
+    }
+
     public Response makeRequest(String endpoint) throws IOException {
         Request request = new Request.Builder()
                 .url(serverUrl + endpoint)
