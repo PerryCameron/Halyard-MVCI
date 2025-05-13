@@ -48,8 +48,7 @@ public class MainController extends Controller<MainMessage> implements Status {
     @Override
     public void action(MainMessage action) {
         switch (action) {
-            case CLOSE_ALL_CONNECTIONS_AND_EXIT -> connectController.closeConnection();
-            case CLOSE_ALL_CONNECTIONS -> closeAllConnections();
+            case CLOSE_ALL_CONNECTIONS_AND_EXIT, CLOSE_ALL_CONNECTIONS -> closeAllConnections();
             case CREATE_CONNECT_CONTROLLER -> createConnectController();
             case BACKUP_DATABASE -> backUpDatabase();
             case SHOW_LOG -> showDebugLog();
@@ -142,18 +141,6 @@ public class MainController extends Controller<MainMessage> implements Status {
         mainView.addNewTab("Welcome", new WelcomeController(this).getView(), -1);
     }
 
-//    public void loadCommonLists() {
-//        Task<Boolean> connectTask = new Task<>() {
-//            @Override
-//            protected Boolean call() {
-//                mainInteractor.loadCommonLists(getConnections());
-//                return null;
-//            }
-//        };
-//        Thread thread = new Thread(connectTask);
-//        thread.start();
-//    }
-
     public void showLoadingSpinner(boolean isVisible) {
         loadingController.showLoadSpinner(isVisible);
     }
@@ -162,16 +149,16 @@ public class MainController extends Controller<MainMessage> implements Status {
         loadingController.setOffset(x, y);
     }
 
-//    public Connections getConnections() {
-//        return connectController.getConnectInteractor().getConnections();
-//    }
-
     public MainModel getMainModel() {
         return mainInteractor.getMainModel();
     }
 
     private void closeAllConnections() {
-        connectController.closeConnection();
+        try {
+            connectController.getHttpClient().logout();
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
         Platform.runLater(() -> {
             mainInteractor.getMainModel().getMainTabPane().getTabs().clear();
             getMainModel().getMainTabPane().getTabs().add(new Tab("Log in"));

@@ -11,15 +11,6 @@ public class LoginDTOProperty {
 	private StringProperty passwd = new SimpleStringProperty("passwd");
 	private BooleanProperty isDefault = new SimpleBooleanProperty(true);
 
-//	public LoginDTOProperty(int id, String port, String host, String user, String passwd, boolean isDefault) {
-//		this.id.set(id);
-//		this.port.set(port);
-//		this.host.set(host);
-//		this.user.set(user);
-//		this.passwd.set(passwd);
-//		this.isDefault.set(isDefault);
-//	}
-
 	public LoginDTOProperty() {
 	}
 
@@ -33,7 +24,6 @@ public class LoginDTOProperty {
 	}
 
 	public void copyLogin(LoginDTO loginDTO) {
-		System.out.println("LoginDTOProperty: Fields Copied from LoginDTO");
 		this.id.set(loginDTO.getId());
 		this.port.set(String.valueOf(loginDTO.getPort()));
 		this.host.set(loginDTO.getHost());

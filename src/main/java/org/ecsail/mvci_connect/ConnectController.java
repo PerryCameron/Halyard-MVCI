@@ -116,8 +116,12 @@ public class ConnectController extends Controller<ConnectMessage> {
         thread.start();
     }
 
-    public void closeConnection() {
-        connectInteractor.logInfo("Connection closed");
+//    public void closeConnection() {
+//        connectInteractor.logInfo("Connection closed");
+//    }
+
+    public HttpClientUtil getHttpClient() {
+        return connectInteractor.getHttpClient();
     }
 
     public Stage getStage() {

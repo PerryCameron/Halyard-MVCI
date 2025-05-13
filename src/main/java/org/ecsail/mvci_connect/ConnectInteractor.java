@@ -1,5 +1,6 @@
 package org.ecsail.mvci_connect;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.stage.Stage;
 //import org.ecsail.connection.Connections;
@@ -88,7 +89,9 @@ public class ConnectInteractor implements ConfigFilePaths {
                         return false;
                     }
                     Map<String, String> result = response.body() != null ?
-                            objectMapper.readValue(errorBody, Map.class) : new HashMap<>();
+                            objectMapper.readValue(errorBody, new TypeReference<>() {
+                            }) :
+                            new HashMap<>();
                     String status = result.getOrDefault("status", "unknown");
                     String message = result.getOrDefault("message", "Unknown error");
 
@@ -122,7 +125,12 @@ public class ConnectInteractor implements ConfigFilePaths {
                     }
                 }
 
-                Map<String, String> result = objectMapper.readValue(response.body().string(), Map.class);
+                Map<String, String> result = objectMapper.readValue(
+                        response.body().string(),
+                        new TypeReference<>() {
+                        }
+                );
+
                 String status = result.get("status");
                 String message = result.get("message");
 
@@ -318,5 +326,9 @@ public class ConnectInteractor implements ConfigFilePaths {
     }
     protected void setRotateShipWheel(boolean rotate) {
         connectModel.setRotateShipWheel(rotate);
+    }
+
+    public HttpClientUtil getHttpClient() {
+        return connectModel.getHttpClient();
     }
 }

@@ -1,4 +1,5 @@
 package org.ecsail.mvci_connect;
+import com.fasterxml.jackson.core.type.TypeReference;
 import okhttp3.logging.HttpLoggingInterceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
@@ -61,7 +62,10 @@ public class HttpClientUtil {
 
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful() && response.body() != null) {
-                Map<String, Boolean> result = objectMapper.readValue(response.body().string(), Map.class);
+                Map<String, Boolean> result = objectMapper.readValue(
+                        response.body().string(),
+                        new TypeReference<Map<String, Boolean>>() {}
+                );
                 return result.getOrDefault("requiresAuth", true);
             }
             throw new IOException("Failed to check authentication status: " + response.code());
@@ -74,8 +78,8 @@ public class HttpClientUtil {
         loginRequest.put("password", password);
 
         RequestBody body = RequestBody.create(
-                MediaType.parse("application/json"),
-                objectMapper.writeValueAsString(loginRequest)
+                objectMapper.writeValueAsString(loginRequest),
+                MediaType.parse("application/json")
         );
 
         Request request = new Request.Builder()
@@ -85,6 +89,9 @@ public class HttpClientUtil {
 
         return client.newCall(request).execute();
     }
+
+//    C:\Users\sesa91827\IdeaProjects\Halyard-MVCI\src\main\java\org\ecsail\mvci_connect\HttpClientUtil.java:80: warning: [deprecation] create(MediaType,String) in RequestBody has been deprecated
+//    RequestBody body = RequestBody.create(
 
     public Response logoutOthers() throws IOException {
         Request request = new Request.Builder()
@@ -107,7 +114,7 @@ public class HttpClientUtil {
 
         CookieJar cookieJar = client.cookieJar();
         if (cookieJar instanceof CookieJar) {
-            ((CookieJar) cookieJar).saveFromResponse(HttpUrl.parse(serverUrl), new ArrayList<>());
+            cookieJar.saveFromResponse(HttpUrl.parse(serverUrl), new ArrayList<>());
         }
     }
 
