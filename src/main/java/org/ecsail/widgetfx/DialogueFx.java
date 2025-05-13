@@ -1,10 +1,7 @@
 package org.ecsail.widgetfx;
 
 import javafx.event.EventHandler;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.DialogPane;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
@@ -74,6 +71,35 @@ public class DialogueFx {
     public static void customAlertWithShow(String header, String message, Alert.AlertType type) {
         Alert alert = new Alert(type);
         alert.setHeaderText(header);
+        alert.setContentText(message);
+        tieAlertToStage(alert, 600, 400);
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add("css/dark/dialogue.css");
+        dialogPane.getStyleClass().add("myDialog");
+        alert.showAndWait();
+    }
+
+    private boolean showMaxSessionsDialog() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Session Limit Reached");
+        alert.setHeaderText("You’ve reached the maximum number of sessions (3).");
+        alert.setContentText("Please log out from other devices to continue.");
+        tieAlertToStage(alert, 600, 400);
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add("css/dark/dialogue.css");
+        dialogPane.getStyleClass().add("myDialog");
+        ButtonType logoutOthersButton = new ButtonType("Log Out from Other Devices");
+        ButtonType tryAgainLaterButton = new ButtonType("Try Again Later", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getButtonTypes().setAll(logoutOthersButton, tryAgainLaterButton);
+
+        Optional<ButtonType> result = alert.showAndWait();
+        return result.isPresent() && result.get() == logoutOthersButton;
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
         alert.setContentText(message);
         tieAlertToStage(alert, 600, 400);
         DialogPane dialogPane = alert.getDialogPane();
