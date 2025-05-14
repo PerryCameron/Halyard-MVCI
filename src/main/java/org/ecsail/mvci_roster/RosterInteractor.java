@@ -1,16 +1,24 @@
 package org.ecsail.mvci_roster;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import okhttp3.Response;
+import org.ecsail.dto.DbRosterSettingsDTO;
 import org.ecsail.dto.MembershipListDTO;
+import org.ecsail.dto.MembershipListRadioDTO;
 import org.ecsail.mvci_roster.export.Xls_roster;
 import org.ecsail.static_tools.StringTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.nio.file.AccessDeniedException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class RosterInteractor {
@@ -119,6 +127,58 @@ public RosterInteractor(RosterModel rm) {
     protected void sortRoster() {
         rosterModel.getRosters().sort(Comparator.comparing(MembershipListDTO::getMembershipId));
         rosterModel.getRosterTableView().refresh(); // this is a hack because sometimes it won't refresh (doesn't work)
+    }
+
+    public void getRadioChoices() throws Exception {
+        String endpoint = "radioChoices";
+        String jsonResponse = fetchDataFromHalyard(endpoint);
+        logger.debug("Radio choices response: {}", jsonResponse);
+        List<MembershipListRadioDTO> choices = rosterModel.getObjectMapper().readValue(
+                jsonResponse,
+                new TypeReference<>() {
+                }
+        );
+        logger.info("Fetched {} radio choices", choices.size());
+        Platform.runLater(() -> {
+            rosterModel.getRadioChoices().addAll(choices); // this is saying required type is MembershipListRadioDTO
+            logger.info("Radio choices model updated with {} choices", rosterModel.getRadioChoices().size());
+        });
+    }
+
+    public void getRosterSettings() throws Exception {
+        String endpoint = "searchableListItems";
+        String jsonResponse = fetchDataFromHalyard(endpoint);
+        logger.debug("Roster Settings response: {}", jsonResponse);
+        List<DbRosterSettingsDTO> choices = rosterModel.getObjectMapper().readValue(
+                jsonResponse,
+                new TypeReference<>() {
+                }
+        );
+        logger.info("Fetched {} Roster", choices.size());
+        Platform.runLater(() -> {
+            rosterModel.getRosterSettings().addAll(choices);
+            logger.info("Radio choices model updated with {} choices", rosterModel.getRadioChoices().size());
+        });
+    }
+
+    private String fetchDataFromHalyard(String endpoint) throws Exception {
+        try (Response response = rosterModel.getHttpClient().makeRequest("halyard/" + endpoint)) {
+            logger.info("Fetching data from /halyard/{}: Status {}", endpoint, response.code());
+            String contentType = response.header("Content-Type", "");
+            if (contentType.contains("text/html")) {
+                logger.warn("Received HTML response, likely a redirect to login page. Session may be invalid.");
+                throw new Exception("Session invalid: Server redirected to login page. Please log in again.");
+            }
+            if (response.code() == 403) {
+                throw new AccessDeniedException("Access Denied: You don’t have the required permissions to access this resource.");
+            } else if (response.isSuccessful() && response.body() != null) {
+                return response.body().string();
+            } else {
+                throw new Exception("Failed to fetch data: " + response.code());
+            }
+        } catch (IOException e) {
+            throw new Exception("Failed to fetch data: " + e.getMessage());
+        }
     }
 
 //    protected void getRadioChoices() {

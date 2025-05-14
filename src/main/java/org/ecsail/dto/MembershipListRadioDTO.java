@@ -18,6 +18,9 @@ public class MembershipListRadioDTO {
         this.selected = selected;
     }
 
+    public MembershipListRadioDTO() {
+    }
+
     public int getId() {
         return id;
     }

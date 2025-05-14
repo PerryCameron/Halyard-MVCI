@@ -1,5 +1,6 @@
 package org.ecsail.mvci_roster;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -10,16 +11,19 @@ import org.ecsail.dto.DbRosterSettingsDTO;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.dto.MembershipListRadioDTO;
 import org.ecsail.mvci_main.MainModel;
+import org.ecsail.static_tools.HttpClientUtil;
 
 import java.io.File;
 import java.time.Year;
 import java.util.ArrayList;
 
 public class RosterModel {
-    private final MainModel mainModel;
+    private final ObjectMapper objectMapper;
+    private final MainModel mainModel = null;
     private final ObservableList<MembershipListDTO> rosters = FXCollections.observableArrayList();
     private final ObservableList<MembershipListDTO> searchedRosters = FXCollections.observableArrayList();
     private final ObservableList<MembershipListRadioDTO> radioChoices = FXCollections.observableArrayList();
+    private final HttpClientUtil httpClient;
     private ObservableList<DbRosterSettingsDTO> rosterSettings = FXCollections.observableArrayList();
     private final ArrayList<RosterSettingsCheckBox> checkBoxes = new ArrayList<>();
     private final SimpleObjectProperty<TableView<MembershipListDTO>> rosterTableView = new SimpleObjectProperty<>();
@@ -32,12 +36,23 @@ public class RosterModel {
     private final IntegerProperty selectedYear = new SimpleIntegerProperty(Year.now().getValue());
     private final BooleanProperty isActiveSearch = new SimpleBooleanProperty(false);
     private final BooleanProperty listsLoaded = new SimpleBooleanProperty(false);
+
+
+
+
     public RosterModel(MainModel mainModel) {
-        this.mainModel = mainModel;
+        this.httpClient = mainModel.getHttpClient();
+        this.objectMapper = mainModel.getObjectMapper();
     }
 
 
+    public ObjectMapper getObjectMapper() {
+        return objectMapper;
+    }
 
+    public HttpClientUtil getHttpClient() {
+        return httpClient;
+    }
 
     public TableColumn<MembershipListDTO, Text> getSlipColumn() {
         return slipColumn.get();
@@ -139,7 +154,5 @@ public class RosterModel {
         return listsLoaded.get();
     }
 
-    public MainModel getMainModel() {
-        return mainModel;
-    }
+
 }

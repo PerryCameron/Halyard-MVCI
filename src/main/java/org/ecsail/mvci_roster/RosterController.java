@@ -15,7 +15,6 @@ public class RosterController extends Controller<RosterMessage> {
         mainController = mc;
         RosterModel rosterModel = new RosterModel(mainController.getMainModel());
         rosterInteractor = new RosterInteractor(rosterModel);
-//        rosterInteractor = new RosterInteractor(rosterModel, mainController.getConnections());
         action(RosterMessage.GET_DATA); // moved this last, we will see if it works
         rosterView = new RosterView(rosterModel, this::action);
     }
@@ -86,9 +85,9 @@ public class RosterController extends Controller<RosterMessage> {
         mainController.showLoadingSpinner(true);
         Task<Void> task = new Task<>() {
             @Override
-            protected Void call() {
-//                rosterInteractor.getRadioChoices();
-//                rosterInteractor.getRosterSettings();
+            protected Void call() throws Exception {
+                rosterInteractor.getRadioChoices();
+                rosterInteractor.getRosterSettings();
                 return null;
             }
         };

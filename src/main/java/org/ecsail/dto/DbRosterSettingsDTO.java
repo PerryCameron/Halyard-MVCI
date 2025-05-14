@@ -22,6 +22,9 @@ public class DbRosterSettingsDTO {
         this.exportable = exportable;
     }
 
+    public DbRosterSettingsDTO() {
+    }
+
     public int getId() {
         return id;
     }
