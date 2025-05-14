@@ -85,8 +85,6 @@ public class WelcomeController extends Controller<WelcomeMessage> {
         new Thread(task).start();
     }
 
-
-
     public Region getView() {
         return welcomeView.build();
     }

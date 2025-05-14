@@ -47,7 +47,8 @@ public class MainController extends Controller<MainMessage> implements Status {
     @Override
     public void action(MainMessage action) {
         switch (action) {
-            case CLOSE_ALL_CONNECTIONS_AND_EXIT, CLOSE_ALL_CONNECTIONS -> closeAllConnections();
+            case CLOSE_ALL_CONNECTIONS_AND_EXIT -> closeAllConnectionsAndExit();
+            case CLOSE_ALL_CONNECTIONS -> closeAllConnections();
             case CREATE_CONNECT_CONTROLLER -> createConnectController();
             case BACKUP_DATABASE -> backUpDatabase();
             case SHOW_LOG -> showDebugLog();
@@ -158,6 +159,14 @@ public class MainController extends Controller<MainMessage> implements Status {
             mainInteractor.getMainModel().getMainTabPane().getTabs().clear();
             getMainModel().getMainTabPane().getTabs().add(new Tab("Log in"));
             createConnectController();
+        });
+    }
+
+    private void closeAllConnectionsAndExit() {
+        mainInteractor.logout();
+        Platform.runLater(() -> {
+            mainInteractor.getMainModel().getMainTabPane().getTabs().clear();
+            System.exit(0);
         });
     }
 

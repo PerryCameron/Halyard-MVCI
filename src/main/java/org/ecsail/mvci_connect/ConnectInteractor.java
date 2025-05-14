@@ -338,4 +338,8 @@ public class ConnectInteractor implements ConfigFilePaths {
             }
         }
     }
+
+    public String server() {
+        return connectModel.getHttpClient().getServerUrl().toString();
+    }
 }
