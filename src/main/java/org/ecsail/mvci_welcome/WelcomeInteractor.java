@@ -18,10 +18,10 @@ public class WelcomeInteractor {
     private static final Logger logger = LoggerFactory.getLogger(WelcomeInteractor.class);
     private WelcomeModel welcomeModel;
 
-public WelcomeInteractor(WelcomeModel welcomeModel) {
-    this.welcomeModel = welcomeModel;
+    public WelcomeInteractor(WelcomeModel welcomeModel) {
+        this.welcomeModel = welcomeModel;
 
-}
+    }
 
     public void fetchStatistics() throws Exception {
         int startYear = welcomeModel.getDefaultStartYear();
@@ -29,17 +29,27 @@ public WelcomeInteractor(WelcomeModel welcomeModel) {
         String endpoint = "statistics?startYear=" + startYear + "&stopYear=" + endYear;
 
         String jsonResponse = fetchDataFromHalyard(endpoint);
+        logger.debug("Statistics response: {}", jsonResponse); // Log the raw JSON response
         List<StatsDTO> statsDTOS = welcomeModel.getObjectMapper().readValue(
                 jsonResponse,
                 new TypeReference<>() {
                 }
         );
-        Platform.runLater(() -> welcomeModel.setStats(new ArrayList<>(statsDTOS)));
+        logger.info("Fetched {} statistics records", statsDTOS.size()); // Log the number of records
+        Platform.runLater(() -> {
+            welcomeModel.setStats(new ArrayList<>(statsDTOS));
+            logger.info("Statistics model updated with {} records", welcomeModel.getStats().size());
+        });
     }
 
     private String fetchDataFromHalyard(String endpoint) throws Exception {
         try (Response response = welcomeModel.getHttpClient().makeRequest("halyard/" + endpoint)) {
             logger.info("Fetching data from /halyard/{}: Status {}", endpoint, response.code());
+            String contentType = response.header("Content-Type", "");
+            if (contentType.contains("text/html")) {
+                logger.warn("Received HTML response, likely a redirect to login page. Session may be invalid.");
+                throw new Exception("Session invalid: Server redirected to login page. Please log in again.");
+            }
             if (response.code() == 403) {
                 throw new AccessDeniedException("Access Denied: You don’t have the required permissions to access this resource.");
             } else if (response.isSuccessful() && response.body() != null) {
@@ -109,5 +119,18 @@ public WelcomeInteractor(WelcomeModel welcomeModel) {
 
     public String getTab() {
         return welcomeModel.getTabName();
+    }
+
+    public WelcomeModel getWelcomeModel() {
+        return welcomeModel;
+    }
+
+    public void logout() {
+        try {
+            logger.warn("Logging out and clearing session from " + welcomeModel.getHttpClient().getServerUrl());
+            welcomeModel.getHttpClient().logout();
+        } catch (IOException ex) {
+            logger.warn("Failed to clear session during redirect to login", ex);
+        }
     }
 }

@@ -170,4 +170,8 @@ public class MainController extends Controller<MainMessage> implements Status {
         mainInteractor.setStatus(status);
     }
 
+    public void showLoginDialog() {
+//        connectController.getView();
+        logger.warn("loggged out");
+    }
 }

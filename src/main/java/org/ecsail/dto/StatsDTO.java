@@ -47,7 +47,10 @@ public StatsDTO(int statId, int fiscalYear, int activeMemberships, int nonRenewM
 	this.initiation = initiation;
 }
 
-public int getStatId() {
+	public StatsDTO() {
+	}
+
+	public int getStatId() {
 	return statId;
 }
 

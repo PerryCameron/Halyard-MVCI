@@ -111,6 +111,7 @@ public class HttpClientUtil {
                 .post(new FormBody.Builder().build())
                 .build();
 
+        logger.debug("Sending logout-others request");
         return client.newCall(request).execute();
     }
 
@@ -120,6 +121,7 @@ public class HttpClientUtil {
                 .post(new FormBody.Builder().build())
                 .build();
 
+        logger.debug("Sending logout request");
         try (Response response = client.newCall(request).execute()) {
             logger.info("Logout response status: {}", response.code());
         }
@@ -136,6 +138,7 @@ public class HttpClientUtil {
                 .get()
                 .build();
 
+        logger.debug("Sending request to {} with cookies: {}", endpoint, client.cookieJar().loadForRequest(HttpUrl.parse(serverUrl + endpoint)));
         return client.newCall(request).execute();
     }
 }
