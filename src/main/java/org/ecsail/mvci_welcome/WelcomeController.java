@@ -3,6 +3,7 @@ package org.ecsail.mvci_welcome;
 import javafx.concurrent.Task;
 import javafx.scene.layout.Region;
 import org.ecsail.interfaces.Controller;
+import org.ecsail.static_tools.HttpClientUtil;
 import org.ecsail.mvci_main.MainController;
 
 public class WelcomeController extends Controller<WelcomeMessage> {
@@ -13,9 +14,7 @@ public class WelcomeController extends Controller<WelcomeMessage> {
     public WelcomeController(MainController mainController) {
         WelcomeModel welcomeModel = new WelcomeModel(mainController.getMainModel());
         this.mainController = mainController;
-//        welcomeInteractor = new WelcomeInteractor(welcomeModel, mainController.getConnections());
         welcomeInteractor = new WelcomeInteractor(welcomeModel);
-
         getStatisticsOnLaunch();
         this.welcomeView = new WelcomeView(welcomeModel, this::action);
     }
@@ -32,8 +31,8 @@ public class WelcomeController extends Controller<WelcomeMessage> {
     private void getStatisticsOnLaunch() {
             Task<Void> task = new Task<>() {
                 @Override
-                protected Void call() {
-//                    welcomeInteractor.setStatistics();
+                protected Void call() throws Exception {
+                    welcomeInteractor.fetchStatistics();
                     return null;
                 }
             };
@@ -53,6 +52,7 @@ public class WelcomeController extends Controller<WelcomeMessage> {
         task.setOnFailed(e -> welcomeInteractor.taskOnFailed(e));
         new Thread(task).start();
     }
+
 
     public Region getView() {
        return welcomeView.build();

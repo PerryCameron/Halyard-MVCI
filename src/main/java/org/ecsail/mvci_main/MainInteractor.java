@@ -11,6 +11,8 @@ import org.ecsail.widgetfx.PaneFx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+
 public class MainInteractor implements ConfigFilePaths {
 
     private static final Logger logger = LoggerFactory.getLogger(MainInteractor.class);
@@ -31,6 +33,14 @@ public class MainInteractor implements ConfigFilePaths {
         });
     }
 
+    public void setComplete() {
+        try  {
+            Platform.runLater(() -> mainModel.returnMessageProperty().set(MainMessage.PRIMARY_STAGE_COMPLETE));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void printMembershipList(MembershipListDTO membershipListDTO) {
         logger.info(membershipListDTO.toString());
     }
@@ -44,10 +54,11 @@ public class MainInteractor implements ConfigFilePaths {
     public MainModel getMainModel() {
         return mainModel;
     }
-    public void setComplete() {
-        logger.info("primaryStage completed");
-        Platform.runLater(() -> mainModel.setReturnMessage(MainMessage.PRIMARY_STAGE_COMPLETE));
-    }
+
+//    public void setComplete() {
+//        logger.info("primaryStage completed");
+//        Platform.runLater(() -> mainModel.setReturnMessage(MainMessage.PRIMARY_STAGE_COMPLETE));
+//    }
 
     public void setChangeStatus(Status.light status) {
         // changing this property causes a listener to react which changes the lights
@@ -63,6 +74,14 @@ public class MainInteractor implements ConfigFilePaths {
             return false;
         }
         return true;
+    }
+
+    public void logout() {
+        try {
+            mainModel.getHttpClient().logout();
+        } catch (IOException e) {
+            logger.error(e.getMessage());
+        }
     }
 
 

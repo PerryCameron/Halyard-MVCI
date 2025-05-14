@@ -1,25 +1,56 @@
 package org.ecsail.mvci_welcome;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import javafx.application.Platform;
 import javafx.concurrent.WorkerStateEvent;
+import okhttp3.Response;
+import org.ecsail.dto.StatsDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.nio.file.AccessDeniedException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class WelcomeInteractor {
 
     private static final Logger logger = LoggerFactory.getLogger(WelcomeInteractor.class);
     private WelcomeModel welcomeModel;
-//    private Connections connections;
-//    private StatRepository statRepository;
 
-//    public WelcomeInteractor(WelcomeModel welcomeModel, Connections connections) {
-//        this.welcomeModel = welcomeModel;
-//        this.connections = connections;
-//        this.statRepository = new StatRepositoryImpl(connections.getDataSource());
-//    }
 public WelcomeInteractor(WelcomeModel welcomeModel) {
     this.welcomeModel = welcomeModel;
 
 }
+
+    public void fetchStatistics() throws Exception {
+        int startYear = welcomeModel.getDefaultStartYear();
+        int endYear = startYear + welcomeModel.getYearSpan();
+        String endpoint = "statistics?startYear=" + startYear + "&stopYear=" + endYear;
+
+        String jsonResponse = fetchDataFromHalyard(endpoint);
+        List<StatsDTO> statsDTOS = welcomeModel.getObjectMapper().readValue(
+                jsonResponse,
+                new TypeReference<>() {
+                }
+        );
+        Platform.runLater(() -> welcomeModel.setStats(new ArrayList<>(statsDTOS)));
+    }
+
+    private String fetchDataFromHalyard(String endpoint) throws Exception {
+        try (Response response = welcomeModel.getHttpClient().makeRequest("halyard/" + endpoint)) {
+            logger.info("Fetching data from /halyard/{}: Status {}", endpoint, response.code());
+            if (response.code() == 403) {
+                throw new AccessDeniedException("Access Denied: You don’t have the required permissions to access this resource.");
+            } else if (response.isSuccessful() && response.body() != null) {
+                return response.body().string();
+            } else {
+                throw new Exception("Failed to fetch data: " + response.code());
+            }
+        } catch (IOException e) {
+            throw new Exception("Failed to fetch data: " + e.getMessage());
+        }
+    }
 
 //    protected void setStatistics() {
 //        int endYear = welcomeModel.getDefaultStartYear() + welcomeModel.getYearSpan();

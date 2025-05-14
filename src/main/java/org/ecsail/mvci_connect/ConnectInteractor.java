@@ -1,13 +1,12 @@
 package org.ecsail.mvci_connect;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.stage.Stage;
-//import org.ecsail.connection.Connections;
 import okhttp3.Response;
 import org.ecsail.dto.LoginDTO;
 import org.ecsail.fileio.FileIO;
 import org.ecsail.interfaces.ConfigFilePaths;
+import org.ecsail.static_tools.HttpClientUtil;
 import org.ecsail.widgetfx.DialogueFx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,18 +43,6 @@ public class ConnectInteractor implements ConfigFilePaths {
 
         // Set the server URL for HttpClientUtil
         connectModel.updateServerUrl();
-
-//        // Check if authentication is required
-//        if (requiresAuthentication()) {
-//            logger.info("Authentication required, showing login dialog.");
-//            // Dialog is already shown by ConnectView; proceed with login on user action
-//        } else {
-//            logger.info("No authentication required, proceeding directly.");
-//            // Notify controller to proceed without login
-//            connectModel.setRotateShipWheel(false);
-//            // Trigger the controller to move forward (e.g., to the main app screen)
-//            // This will be handled in ConnectController
-//        }
     }
 
     protected boolean requiresAuthentication() throws IOException {
@@ -65,7 +52,7 @@ public class ConnectInteractor implements ConfigFilePaths {
     public boolean connectToServer() {
         String username = connectModel.currentLoginProperty().userProperty().get();
         String password = connectModel.currentLoginProperty().passwdProperty().get();
-        ObjectMapper objectMapper = new ObjectMapper();
+
 
         connectModel.updateServerUrl();
         logger.info("Attempting to login to server: {}", connectModel.getHttpClient().getServerUrl());
@@ -83,7 +70,7 @@ public class ConnectInteractor implements ConfigFilePaths {
                         return false;
                     }
                     Map<String, String> result = response.body() != null ?
-                            objectMapper.readValue(errorBody, new TypeReference<>() {
+                            connectModel.getObjectMapper().readValue(errorBody, new TypeReference<>() {
                             }) :
                             new HashMap<>();
                     String status = result.getOrDefault("status", "unknown");
@@ -119,7 +106,7 @@ public class ConnectInteractor implements ConfigFilePaths {
                     }
                 }
 
-                Map<String, String> result = objectMapper.readValue(
+                Map<String, String> result = connectModel.getObjectMapper().readValue(
                         response.body().string(),
                         new TypeReference<>() {
                         }

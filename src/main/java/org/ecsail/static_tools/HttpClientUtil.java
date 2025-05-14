@@ -1,4 +1,4 @@
-package org.ecsail.mvci_connect;
+package org.ecsail.static_tools;
 import com.fasterxml.jackson.core.type.TypeReference;
 import okhttp3.logging.HttpLoggingInterceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;

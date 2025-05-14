@@ -1,5 +1,6 @@
 package org.ecsail.mvci_connect;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -11,6 +12,8 @@ import javafx.stage.Stage;
 import org.ecsail.BaseApplication;
 import org.ecsail.dto.LoginDTO;
 import org.ecsail.dto.LoginDTOProperty;
+import org.ecsail.mvci_main.MainModel;
+import org.ecsail.static_tools.HttpClientUtil;
 
 import java.util.ArrayList;
 
@@ -30,8 +33,14 @@ public class ConnectModel {
     private final StringProperty statusBarText = new SimpleStringProperty();
     private final LoginDTOProperty currentLogin = new LoginDTOProperty(); // not really a property, but has fields that are.
     private final ArrayList<LoginDTO> loginDTOS = new ArrayList<>();
-    private final HttpClientUtil httpClient = new HttpClientUtil();
+    private final HttpClientUtil httpClient;
+    private final ObjectMapper objectMapper;
     private final BooleanProperty authenticationRequired = new SimpleBooleanProperty();
+
+    public ConnectModel(MainModel mainModel) {
+        this.httpClient = mainModel.getHttpClient(); // Initialize here
+        this.objectMapper = mainModel.getObjectMapper(); // Initialize here
+    }
 
     // Add this method to update the server URL in HttpClientUtil
     public void updateServerUrl() {
@@ -142,5 +151,9 @@ public class ConnectModel {
 
     public BooleanProperty isAuthenticationRequired() {
         return authenticationRequired;
+    }
+
+    public ObjectMapper getObjectMapper() {
+        return objectMapper;
     }
 }

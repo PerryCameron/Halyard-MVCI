@@ -6,6 +6,8 @@ import javafx.stage.Stage;
 import okhttp3.Response;
 import org.ecsail.interfaces.Controller;
 import org.ecsail.mvci_main.MainController;
+import org.ecsail.mvci_main.MainModel;
+import org.ecsail.static_tools.HttpClientUtil;
 import org.ecsail.widgetfx.DialogueFx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +19,7 @@ public class ConnectController extends Controller<ConnectMessage> {
     ConnectInteractor connectInteractor;
 
     public ConnectController(MainController mainController) {
-        ConnectModel connectModel = new ConnectModel();
+        ConnectModel connectModel = new ConnectModel(mainController.getMainModel());
         this.mainController = mainController;
         connectInteractor = new ConnectInteractor(connectModel);
         action(ConnectMessage.SUPPLY_LOGINS);

@@ -1,6 +1,7 @@
 package org.ecsail.mvci_main;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.animation.Timeline;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -9,6 +10,7 @@ import javafx.collections.ObservableMap;
 import javafx.scene.control.TabPane;
 import org.ecsail.dto.BoardPositionDTO;
 import org.ecsail.interfaces.Status;
+import org.ecsail.static_tools.HttpClientUtil;
 
 
 public class MainModel {
@@ -19,6 +21,8 @@ public class MainModel {
     private final ObservableMap<String, Timeline> LightAnimationMap = FXCollections.observableHashMap();
     private final SimpleObjectProperty<Status.light> lightStatusProperty = new SimpleObjectProperty<>();
     private final ObjectProperty<MainMessage> returnMessage = new SimpleObjectProperty<>();
+    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final HttpClientUtil httpClient = new HttpClientUtil();
     private Integer msId;
 
 
@@ -73,5 +77,13 @@ public class MainModel {
     }
     public void setMainTabPane(TabPane mainTabPane) {
         this.mainTabPane.set(mainTabPane);
+    }
+
+    public ObjectMapper getObjectMapper() {
+        return objectMapper;
+    }
+
+    public HttpClientUtil getHttpClient() {
+        return httpClient;
     }
 }

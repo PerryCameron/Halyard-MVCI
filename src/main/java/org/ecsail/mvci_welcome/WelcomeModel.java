@@ -1,17 +1,20 @@
 package org.ecsail.mvci_welcome;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.chart.XYChart;
 import org.ecsail.dto.StatsDTO;
+import org.ecsail.static_tools.HttpClientUtil;
 import org.ecsail.mvci_main.MainModel;
 
 import java.time.Year;
 import java.util.ArrayList;
 
 public class WelcomeModel {
-    private final MainModel mainModel;
+    private final HttpClientUtil httpClient;
+    private final ObjectMapper objectMapper;
     private ArrayList<StatsDTO> stats;
     private final ObservableList<XYChart.Data<String, Number>> familyData = FXCollections.observableArrayList();
     private final ObservableList<XYChart.Data<String, Number>> regularData = FXCollections.observableArrayList();
@@ -34,11 +37,8 @@ public class WelcomeModel {
     private final IntegerProperty startYear = new SimpleIntegerProperty(1970);
 
     public WelcomeModel(MainModel mainModel) {
-        this.mainModel = mainModel;
-    }
-
-    public MainModel getMainModel() {
-        return mainModel;
+        this.httpClient = mainModel.getHttpClient();
+        this.objectMapper = mainModel.getObjectMapper();
     }
 
     public double getProgress() {
@@ -191,5 +191,13 @@ public class WelcomeModel {
 
     public void setRefreshCharts(boolean refreshCharts) {
         this.refreshCharts.set(refreshCharts);
+    }
+
+    public HttpClientUtil getHttpClient() {
+        return httpClient;
+    }
+
+    public ObjectMapper getObjectMapper() {
+        return objectMapper;
     }
 }

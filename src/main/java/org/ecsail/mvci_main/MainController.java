@@ -2,13 +2,11 @@ package org.ecsail.mvci_main;
 
 
 import javafx.application.Platform;
-import javafx.concurrent.Task;
 import javafx.scene.Scene;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import org.ecsail.BaseApplication;
-//import org.ecsail.connection.Connections;
 import org.ecsail.dto.BoatListDTO;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.interfaces.Controller;
@@ -45,6 +43,7 @@ public class MainController extends Controller<MainMessage> implements Status {
         mainView = new MainView(mainModel, this::action);
         mainInteractor.setComplete();
     }
+
     @Override
     public void action(MainMessage action) {
         switch (action) {
@@ -154,11 +153,7 @@ public class MainController extends Controller<MainMessage> implements Status {
     }
 
     private void closeAllConnections() {
-        try {
-            connectController.getHttpClient().logout();
-        } catch (IOException e) {
-            logger.error(e.getMessage());
-        }
+        mainInteractor.logout();
         Platform.runLater(() -> {
             mainInteractor.getMainModel().getMainTabPane().getTabs().clear();
             getMainModel().getMainTabPane().getTabs().add(new Tab("Log in"));
@@ -174,4 +169,5 @@ public class MainController extends Controller<MainMessage> implements Status {
     public void setStatus(String status) {
         mainInteractor.setStatus(status);
     }
+
 }
