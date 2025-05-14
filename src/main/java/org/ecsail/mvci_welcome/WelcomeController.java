@@ -26,10 +26,9 @@ public class WelcomeController extends Controller<WelcomeMessage> {
     public void action(WelcomeMessage message) {
         switch (message) {
             case OPEN_TAB -> mainController.openTab(welcomeInteractor.getTab());
-//            case RELOAD_STATS -> welcomeInteractor.reloadStats();
+            case RELOAD_STATS -> welcomeInteractor.reloadStats();
             case UPDATE_STATS -> updateStats();
         }
-        ;
     }
 
     private void getStatisticsOnLaunch() {
@@ -40,7 +39,10 @@ public class WelcomeController extends Controller<WelcomeMessage> {
                 return null;
             }
         };
-        task.setOnSucceeded(e -> welcomeInteractor.setStatSucceeded());
+        task.setOnSucceeded(e -> {
+            welcomeInteractor.setStatSucceeded();
+            welcomeInteractor.triggerInitialChartUpdate();
+        });
         task.setOnFailed(e -> {
             logger.error("Failed to fetch statistics", e.getSource().getException());
             String errorMessage = e.getSource().getException().getMessage();

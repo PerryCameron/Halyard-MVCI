@@ -13,6 +13,8 @@ import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.ecsail.interfaces.ChartConstants.NEW_MEMBER;
+
 public class WelcomeInteractor {
 
     private static final Logger logger = LoggerFactory.getLogger(WelcomeInteractor.class);
@@ -61,6 +63,24 @@ public class WelcomeInteractor {
             throw new Exception("Failed to fetch data: " + e.getMessage());
         }
     }
+
+
+    public void reloadStats() {
+        logger.info("Reloading stats...");
+        try {
+            fetchStatistics();
+        } catch (Exception e) {
+            logger.error("Failed to reload stats", e);
+        }
+        Platform.runLater(() -> {
+            welcomeModel.setRefreshCharts(!welcomeModel.isRefreshCharts());
+        });
+    }
+
+    public void triggerInitialChartUpdate() {
+        welcomeModel.getMembershipBarChart().changeData(NEW_MEMBER);
+    }
+
 
 //    protected void setStatistics() {
 //        int endYear = welcomeModel.getDefaultStartYear() + welcomeModel.getYearSpan();
@@ -133,4 +153,5 @@ public class WelcomeInteractor {
             logger.warn("Failed to clear session during redirect to login", ex);
         }
     }
+
 }

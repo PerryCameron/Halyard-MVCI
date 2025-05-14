@@ -48,17 +48,17 @@ public class WelcomeView implements Builder<Region>, ChartConstants {
     }
 
     private Node addChartControls() {
-        HBox hBox = HBoxFx.hBoxOf(new Insets(5,0,5,0),Pos.CENTER,15.0);
-        Node hBoxStart = HBoxFx.hBoxOf(5, Pos.CENTER_LEFT, new Label("Start"),createStartYearComboBox());
+        HBox hBox = HBoxFx.hBoxOf(new Insets(5, 0, 5, 0), Pos.CENTER, 15.0);
+        Node hBoxStart = HBoxFx.hBoxOf(5, Pos.CENTER_LEFT, new Label("Start"), createStartYearComboBox());
         Node hBoxStop = HBoxFx.hBoxOf(5, Pos.CENTER_LEFT, new Label("Year Span"), createYearSpanComboBox());
-        Node hBoxTop = HBoxFx.hBoxOf(5, Pos.CENTER_LEFT, new Label("Bottom"),createChartSelectionComboBox());
-        hBox.getChildren().addAll(hBoxStart,hBoxStop,hBoxTop,createRefreshButton());
+        Node hBoxTop = HBoxFx.hBoxOf(5, Pos.CENTER_LEFT, new Label("Bottom"), createChartSelectionComboBox());
+        hBox.getChildren().addAll(hBoxStart, hBoxStop, hBoxTop, createRefreshButton());
         return hBox;
     }
 
     private Node createRefreshButton() {
         var button = new Button("Refresh Data");
-        button.setOnAction((event)-> {
+        button.setOnAction((event) -> {
             Stage stage = new Stage();
             stage.setTitle("Updating Statistics");
             stage.setScene(new Scene(new DialogProgressIndicator(welcomeModel).build()));
@@ -68,17 +68,34 @@ public class WelcomeView implements Builder<Region>, ChartConstants {
             stage.show();
             action.accept(WelcomeMessage.UPDATE_STATS);
             welcomeModel.dataBaseStatisticsRefreshedProperty().addListener((observable, oldValue, newValue) -> {
-                if(newValue) stage.close();
+                if (newValue) stage.close();
                 welcomeModel.setDataBaseStatisticsRefreshed(false);
             });
         });
         return button;
     }
 
+    //    private Node createChartSelectionComboBox() {
+//        var comboBox = new ComboBox<String>();
+//        comboBox.getItems().addAll("Non-Renew","New","Return");
+//        comboBox.setValue("New");
+//        comboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
+//            switch (newValue) {
+//                case "Non-Renew" -> welcomeModel.getMembershipBarChart().changeData(NON_RENEW);
+//                case "New" -> welcomeModel.getMembershipBarChart().changeData(NEW_MEMBER);
+//                case "Return" -> welcomeModel.getMembershipBarChart().changeData(RETURN_MEMBER);
+//            }
+//        });
+//        return comboBox;
+//    }
     private Node createChartSelectionComboBox() {
         var comboBox = new ComboBox<String>();
-        comboBox.getItems().addAll("Non-Renew","New","Return");
+        comboBox.getItems().addAll("Non-Renew", "New", "Return");
         comboBox.setValue("New");
+
+        // Manually trigger the initial chart update
+//        welcomeModel.getMembershipBarChart().changeData(NEW_MEMBER);
+
         comboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             switch (newValue) {
                 case "Non-Renew" -> welcomeModel.getMembershipBarChart().changeData(NON_RENEW);
@@ -88,6 +105,7 @@ public class WelcomeView implements Builder<Region>, ChartConstants {
         });
         return comboBox;
     }
+
 
     private Node createYearSpanComboBox() {
         ComboBox<Integer> comboBox = new ComboBox<>();
@@ -104,7 +122,7 @@ public class WelcomeView implements Builder<Region>, ChartConstants {
             welcomeModel.refreshChartsProperty().addListener(dataLoadedListener);
             action.accept(WelcomeMessage.RELOAD_STATS);
         });
-        return  comboBox;
+        return comboBox;
     }
 
     private Node createStartYearComboBox() {
@@ -129,14 +147,14 @@ public class WelcomeView implements Builder<Region>, ChartConstants {
         VBox vBox = new VBox();
         welcomeModel.setMembershipStackedBarChart(new MembershipStackedBarChart(welcomeModel));
         welcomeModel.setMembershipBarChart(new MembershipBarChart(welcomeModel));
-        vBox.getChildren().addAll(welcomeModel.getMembershipStackedBarChart(),welcomeModel.getMembershipBarChart());
+        vBox.getChildren().addAll(welcomeModel.getMembershipStackedBarChart(), welcomeModel.getMembershipBarChart());
         return vBox;
     }
 
     private Node setUpRightPane() {
-        VBox vBox = VBoxFx.vBoxOf(new Insets(15,10,0,0), 400.0,350.0,10.0);
-        String[] categories = {"People","Slips","Board of Directors","Create New Membership","Deposits",
-                "Rosters","Boats","Notes","Jotform"};
+        VBox vBox = VBoxFx.vBoxOf(new Insets(15, 10, 0, 0), 400.0, 350.0, 10.0);
+        String[] categories = {"People", "Slips", "Board of Directors", "Create New Membership", "Deposits",
+                "Rosters", "Boats", "Notes", "Jotform"};
         Arrays.stream(categories).forEach(category -> vBox.getChildren().add(newBigButton(category)));
         return vBox;
     }
