@@ -45,27 +45,21 @@ public class ConnectInteractor implements ConfigFilePaths {
         // Set the server URL for HttpClientUtil
         connectModel.updateServerUrl();
 
-        // Check if authentication is required
-        if (requiresAuthentication()) {
-            logger.info("Authentication required, showing login dialog.");
-            // Dialog is already shown by ConnectView; proceed with login on user action
-        } else {
-            logger.info("No authentication required, proceeding directly.");
-            // Notify controller to proceed without login
-            connectModel.setRotateShipWheel(false);
-            // Trigger the controller to move forward (e.g., to the main app screen)
-            // This will be handled in ConnectController
-        }
+//        // Check if authentication is required
+//        if (requiresAuthentication()) {
+//            logger.info("Authentication required, showing login dialog.");
+//            // Dialog is already shown by ConnectView; proceed with login on user action
+//        } else {
+//            logger.info("No authentication required, proceeding directly.");
+//            // Notify controller to proceed without login
+//            connectModel.setRotateShipWheel(false);
+//            // Trigger the controller to move forward (e.g., to the main app screen)
+//            // This will be handled in ConnectController
+//        }
     }
 
-    private boolean requiresAuthentication() {
-        try {
-            return connectModel.getHttpClient().requiresAuthentication();
-        } catch (IOException e) {
-            logger.error("Failed to check authentication status", e);
-            DialogueFx.showAlert("Error", "Failed to connect to server: " + e.getMessage());
-            return true; // Assume authentication is required if the check fails
-        }
+    protected boolean requiresAuthentication() throws IOException {
+        return connectModel.getHttpClient().requiresAuthentication();
     }
 
     public boolean connectToServer() {
@@ -143,8 +137,8 @@ public class ConnectInteractor implements ConfigFilePaths {
                     return false;
                 }
             } catch (IOException e) {
-                logger.error("Failed to connect to server", e);
-                DialogueFx.showAlert("Error", "Failed to connect to server: " + e.getMessage());
+                logger.error("No server response:", e.getMessage());
+                DialogueFx.showAlert("Error", "No server response: " + e.getMessage());
                 return false;
             }
         }
@@ -330,5 +324,31 @@ public class ConnectInteractor implements ConfigFilePaths {
 
     public HttpClientUtil getHttpClient() {
         return connectModel.getHttpClient();
+    }
+
+    protected ConnectModel getConnectModel() {
+        return connectModel;
+    }
+
+    protected boolean getAuthenticationRequired() {
+        return connectModel.isAuthenticationRequired().get();
+    }
+
+    public void requiresAuthenticationOrDialogue() {
+        while (true) {
+            try {
+                connectModel.isAuthenticationRequired().set(requiresAuthentication());
+                break; // If successful, exit the loop
+            } catch (IOException e) {
+                logger.error("Failed to check authentication status", e);
+                boolean retry = DialogueFx.showServerUnreachableDialog();
+                if (!retry) {
+                    logger.info("User chose to close the application due to server being unreachable.");
+                    System.exit(0); // Exit the app
+                }
+                // If retry is true, loop continues and tries again
+                logger.info("Retrying server connection...");
+            }
+        }
     }
 }

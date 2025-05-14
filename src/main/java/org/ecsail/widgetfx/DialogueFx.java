@@ -60,7 +60,7 @@ public class DialogueFx {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setHeaderText(header);
         alert.setContentText(message);
-        tieAlertToStage(alert, 600, 400);
+        tieAlertToStage(alert, 400, 200);
         DialogPane dialogPane = alert.getDialogPane();
         dialogPane.getStylesheets().add("css/dark/dialogue.css");
         dialogPane.getStyleClass().add("myDialog");
@@ -96,12 +96,28 @@ public class DialogueFx {
         return result.isPresent() && result.get() == logoutOthersButton;
     }
 
+    public static boolean showServerUnreachableDialog() {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Server Unreachable");
+        alert.setHeaderText("Server unreachable: try again?");
+        alert.setContentText("The server is not responding. Would you like to try again?");
+        tieAlertToStage(alert, 400, 200);
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add("css/dark/dialogue.css");
+        dialogPane.getStyleClass().add("myDialog");
+        ButtonType yesButton = new ButtonType("Yes");
+        ButtonType closeButton = new ButtonType("Close Application", ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getButtonTypes().setAll(yesButton, closeButton);
+        Optional<ButtonType> result = alert.showAndWait();
+        return result.isPresent() && result.get() == yesButton;
+    }
+
     public static void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
-        tieAlertToStage(alert, 600, 400);
+        tieAlertToStage(alert, 400, 200);
         DialogPane dialogPane = alert.getDialogPane();
         dialogPane.getStylesheets().add("css/dark/dialogue.css");
         dialogPane.getStyleClass().add("myDialog");

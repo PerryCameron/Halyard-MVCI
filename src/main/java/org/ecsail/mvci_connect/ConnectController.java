@@ -10,38 +10,18 @@ import org.ecsail.widgetfx.DialogueFx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
-
 public class ConnectController extends Controller<ConnectMessage> {
     private static final Logger logger = LoggerFactory.getLogger(ConnectController.class);
     MainController mainController;
     ConnectView connectView;
     ConnectInteractor connectInteractor;
-    private boolean authenticationRequired;
 
     public ConnectController(MainController mainController) {
         ConnectModel connectModel = new ConnectModel();
         this.mainController = mainController;
         connectInteractor = new ConnectInteractor(connectModel);
         action(ConnectMessage.SUPPLY_LOGINS);
-
-        try {
-            authenticationRequired = connectModel.getHttpClient().requiresAuthentication();
-        } catch (IOException e) {
-            logger.error("Failed to check authentication status", e);
-            authenticationRequired = true;
-            DialogueFx.showAlert("Error", "Failed to connect to server: " + e.getMessage());
-        }
-
-        if (!authenticationRequired) {
-            logger.info("No authentication required, proceeding directly.");
-            connectInteractor.setRotateShipWheel(false);
-            mainController.createLoadingController();
-            connectInteractor.closeLoginStage();
-            mainController.openWelcomeMVCI();
-        } else {
-            connectView = new ConnectView(connectModel, this::action);
-        }
+        checkIfAuthenticationRequired();
     }
 
     @Override
@@ -59,14 +39,9 @@ public class ConnectController extends Controller<ConnectMessage> {
         }
     }
 
-//    @Override
-//    public Region getView() {
-//        return connectView.build();
-//    }
-
     @Override
     public Region getView() {
-        return authenticationRequired ? connectView.build() : null;
+        return connectInteractor.getAuthenticationRequired() ? connectView.build() : null;
     }
 
     private void connectToServer() {
@@ -116,9 +91,18 @@ public class ConnectController extends Controller<ConnectMessage> {
         thread.start();
     }
 
-//    public void closeConnection() {
-//        connectInteractor.logInfo("Connection closed");
-//    }
+    private void checkIfAuthenticationRequired() {
+        connectInteractor.requiresAuthenticationOrDialogue();
+        if (!connectInteractor.getAuthenticationRequired()) {
+            logger.info("No authentication required, proceeding directly.");
+            connectInteractor.setRotateShipWheel(false);
+            mainController.createLoadingController();
+            connectInteractor.closeLoginStage();
+            mainController.openWelcomeMVCI();
+        } else {
+            connectView = new ConnectView(connectInteractor.getConnectModel(), this::action);
+        }
+    }
 
     public HttpClientUtil getHttpClient() {
         return connectInteractor.getHttpClient();

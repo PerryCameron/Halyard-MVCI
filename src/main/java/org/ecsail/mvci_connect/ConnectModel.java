@@ -31,6 +31,7 @@ public class ConnectModel {
     private final LoginDTOProperty currentLogin = new LoginDTOProperty(); // not really a property, but has fields that are.
     private final ArrayList<LoginDTO> loginDTOS = new ArrayList<>();
     private final HttpClientUtil httpClient = new HttpClientUtil();
+    private final BooleanProperty authenticationRequired = new SimpleBooleanProperty();
 
     // Add this method to update the server URL in HttpClientUtil
     public void updateServerUrl() {
@@ -137,5 +138,9 @@ public class ConnectModel {
 
     public ObservableList<String> getComboValues() {
         return comboValues;
+    }
+
+    public BooleanProperty isAuthenticationRequired() {
+        return authenticationRequired;
     }
 }

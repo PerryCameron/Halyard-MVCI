@@ -54,6 +54,17 @@ public class HttpClientUtil {
         return serverUrl;
     }
 
+    /**
+     * Checks if authentication is required by sending a GET request to the server's /auth-check endpoint.
+     * The endpoint is expected to return a JSON response with a "requiresAuth" boolean field indicating
+     * whether authentication is needed.
+     *
+     * @return true if authentication is required, false otherwise. Defaults to true if the "requiresAuth"
+     *         field is missing in the response.
+     * @throws IOException if the request fails, the response is not successful, or the response body cannot
+     *                     be read or parsed as JSON. The exception message includes the HTTP status code if
+     *                     the response is not successful.
+     */
     public boolean requiresAuthentication() throws IOException {
         Request request = new Request.Builder()
                 .url(serverUrl + "auth-check")
@@ -64,7 +75,8 @@ public class HttpClientUtil {
             if (response.isSuccessful() && response.body() != null) {
                 Map<String, Boolean> result = objectMapper.readValue(
                         response.body().string(),
-                        new TypeReference<Map<String, Boolean>>() {}
+                        new TypeReference<>() {
+                        }
                 );
                 return result.getOrDefault("requiresAuth", true);
             }
