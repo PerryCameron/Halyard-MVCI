@@ -28,7 +28,6 @@ public class WelcomeModel {
     private final IntegerProperty defaultStartYear = new SimpleIntegerProperty(Year.now().getValue() - 20);
     private final IntegerProperty yearSpan = new SimpleIntegerProperty(21);
     private final IntegerProperty chartSet = new SimpleIntegerProperty(1);
-    private final BooleanProperty dataBaseStatisticsRefreshed = new SimpleBooleanProperty(false);
     private final ObjectProperty<MembershipBarChart> membershipBarChart = new SimpleObjectProperty<>();
     private final ObjectProperty<MembershipStackedBarChart> membershipStackedBarChart = new SimpleObjectProperty<>();
     private final BooleanProperty refreshCharts = new SimpleBooleanProperty(false);
@@ -71,18 +70,6 @@ public class WelcomeModel {
 
     public void setSelectedYear(int selectedYear) {
         this.selectedYear.set(selectedYear);
-    }
-
-    public boolean isDataBaseStatisticsRefreshed() {
-        return dataBaseStatisticsRefreshed.get();
-    }
-
-    public BooleanProperty dataBaseStatisticsRefreshedProperty() {
-        return dataBaseStatisticsRefreshed;
-    }
-
-    public void setDataBaseStatisticsRefreshed(boolean dataBaseStatisticsRefreshed) {
-        this.dataBaseStatisticsRefreshed.set(dataBaseStatisticsRefreshed);
     }
 
     public MembershipBarChart getMembershipBarChart() {

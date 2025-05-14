@@ -59,43 +59,15 @@ public class WelcomeView implements Builder<Region>, ChartConstants {
     private Node createRefreshButton() {
         var button = new Button("Refresh Data");
         button.setOnAction((event) -> {
-            Stage stage = new Stage();
-            stage.setTitle("Updating Statistics");
-            stage.setScene(new Scene(new DialogProgressIndicator(welcomeModel).build()));
-            stage.getScene().getStylesheets().add("css/dark/custom_dialogue.css");
-            // locate in middle of application
-            stage.addEventHandler(WindowEvent.WINDOW_SHOWN, EventFx.setStageLocation(stage));
-            stage.show();
             action.accept(WelcomeMessage.UPDATE_STATS);
-            welcomeModel.dataBaseStatisticsRefreshedProperty().addListener((observable, oldValue, newValue) -> {
-                if (newValue) stage.close();
-                welcomeModel.setDataBaseStatisticsRefreshed(false);
-            });
         });
         return button;
     }
 
-    //    private Node createChartSelectionComboBox() {
-//        var comboBox = new ComboBox<String>();
-//        comboBox.getItems().addAll("Non-Renew","New","Return");
-//        comboBox.setValue("New");
-//        comboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
-//            switch (newValue) {
-//                case "Non-Renew" -> welcomeModel.getMembershipBarChart().changeData(NON_RENEW);
-//                case "New" -> welcomeModel.getMembershipBarChart().changeData(NEW_MEMBER);
-//                case "Return" -> welcomeModel.getMembershipBarChart().changeData(RETURN_MEMBER);
-//            }
-//        });
-//        return comboBox;
-//    }
     private Node createChartSelectionComboBox() {
         var comboBox = new ComboBox<String>();
         comboBox.getItems().addAll("Non-Renew", "New", "Return");
         comboBox.setValue("New");
-
-        // Manually trigger the initial chart update
-//        welcomeModel.getMembershipBarChart().changeData(NEW_MEMBER);
-
         comboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
             switch (newValue) {
                 case "Non-Renew" -> welcomeModel.getMembershipBarChart().changeData(NON_RENEW);
@@ -105,7 +77,6 @@ public class WelcomeView implements Builder<Region>, ChartConstants {
         });
         return comboBox;
     }
-
 
     private Node createYearSpanComboBox() {
         ComboBox<Integer> comboBox = new ComboBox<>();

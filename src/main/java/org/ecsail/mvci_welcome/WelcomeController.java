@@ -1,5 +1,6 @@
 package org.ecsail.mvci_welcome;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import javafx.concurrent.Task;
 import javafx.scene.layout.Region;
 import org.ecsail.interfaces.Controller;
@@ -50,7 +51,7 @@ public class WelcomeController extends Controller<WelcomeMessage> {
                 logger.warn("Session invalid, redirecting to login dialog");
                 redirectToLogin();
             } else {
-                DialogueFx.showAlert("Error", "Failed to fetch statistics: " + errorMessage);
+                DialogueFx.errorAlert("Error", "Failed to fetch statistics: " + errorMessage);
             }
         });
         new Thread(task).start();
@@ -64,17 +65,26 @@ public class WelcomeController extends Controller<WelcomeMessage> {
     }
 
     public void updateStats() {
-        Task<Void> task = new Task<>() {
+        Task<String> task = new Task<>() {
             @Override
-            protected Void call() {
-//                welcomeInteractor.updateProgressBar();
-                return null;
+            protected String call() throws Exception {
+                return welcomeInteractor.recompileStatsAndFetchData();
             }
         };
-//        task.setOnSucceeded(e -> welcomeInteractor.setStatUpdateSucceeded());
+        task.setOnSucceeded(e -> {
+            String jsonResponse = task.getValue(); // Get the result from the task
+            try {
+                welcomeInteractor.setStatUpdateSucceeded(jsonResponse);
+            } catch (JsonProcessingException ex) {
+                logger.error("Failed to update stats", ex);
+            }
+        });
+
         task.setOnFailed(e -> welcomeInteractor.taskOnFailed(e));
+
         new Thread(task).start();
     }
+
 
 
     public Region getView() {

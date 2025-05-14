@@ -55,18 +55,18 @@ public class DialogueFx {
         return alert;
     }
 
-    public static Alert errorAlert(String header, String message) {
-        System.out.println("errorAlert");
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setHeaderText(header);
-        alert.setContentText(message);
-        tieAlertToStage(alert, 400, 200);
-        DialogPane dialogPane = alert.getDialogPane();
-        dialogPane.getStylesheets().add("css/dark/dialogue.css");
-        dialogPane.getStyleClass().add("myDialog");
-        alert.showAndWait();
-        return alert;
-    }
+//    public static Alert errorAlert(String header, String message) {
+//        System.out.println("errorAlert");
+//        Alert alert = new Alert(Alert.AlertType.ERROR);
+//        alert.setHeaderText(header);
+//        alert.setContentText(message);
+//        tieAlertToStage(alert, 400, 200);
+//        DialogPane dialogPane = alert.getDialogPane();
+//        dialogPane.getStylesheets().add("css/dark/dialogue.css");
+//        dialogPane.getStyleClass().add("myDialog");
+//        alert.showAndWait();
+//        return alert;
+//    }
 
     public static void customAlertWithShow(String header, String message, Alert.AlertType type) {
         Alert alert = new Alert(type);
@@ -112,8 +112,20 @@ public class DialogueFx {
         return result.isPresent() && result.get() == yesButton;
     }
 
-    public static void showAlert(String title, String message) {
+    public static void errorAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        tieAlertToStage(alert, 400, 200);
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add("css/dark/dialogue.css");
+        dialogPane.getStyleClass().add("myDialog");
+        alert.showAndWait();
+    }
+
+    public static void infoAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);

@@ -66,7 +66,7 @@ public class ConnectInteractor implements ConfigFilePaths {
                     String errorBody = response.body() != null ? response.body().string() : "No response body";
                     logger.warn("Login request failed with status: {}, body: {}", response.code(), errorBody);
                     if (response.code() == 415) {
-                        DialogueFx.showAlert("Error", "Unsupported media type. Please contact support.");
+                        DialogueFx.errorAlert("Error", "Unsupported media type. Please contact support.");
                         return false;
                     }
                     Map<String, String> result = response.body() != null ?
@@ -78,7 +78,7 @@ public class ConnectInteractor implements ConfigFilePaths {
 
                     if ("error".equals(status)) {
                         logger.warn("Login failed: {}", message);
-                        DialogueFx.showAlert("Login Failed", message);
+                        DialogueFx.errorAlert("Login Failed", message);
                         return false;
                     } else if ("max_sessions".equals(status)) {
                         logger.warn("Maximum sessions reached");
@@ -91,7 +91,7 @@ public class ConnectInteractor implements ConfigFilePaths {
                                     continue;
                                 } else {
                                     logger.error("Failed to log out other sessions");
-                                    DialogueFx.showAlert("Error", "Failed to log out other sessions.");
+                                    DialogueFx.errorAlert("Error", "Failed to log out other sessions.");
                                     return false;
                                 }
                             }
@@ -101,7 +101,7 @@ public class ConnectInteractor implements ConfigFilePaths {
                         }
                     } else {
                         logger.error("Unexpected response from server: Status code {}, Status: {}", response.code(), status);
-                        DialogueFx.showAlert("Error", "Unexpected response from server: " + response.code());
+                        DialogueFx.errorAlert("Error", "Unexpected response from server: " + response.code());
                         return false;
                     }
                 }
@@ -120,12 +120,12 @@ public class ConnectInteractor implements ConfigFilePaths {
                     return true;
                 } else {
                     logger.error("Unexpected response status: {}", status);
-                    DialogueFx.showAlert("Error", "Unexpected response from server.");
+                    DialogueFx.errorAlert("Error", "Unexpected response from server.");
                     return false;
                 }
             } catch (IOException e) {
                 logger.error("No server response:", e.getMessage());
-                DialogueFx.showAlert("Error", "No server response: " + e.getMessage());
+                DialogueFx.errorAlert("Error", "No server response: " + e.getMessage());
                 return false;
             }
         }

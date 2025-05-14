@@ -80,11 +80,11 @@ public class ConnectController extends Controller<ConnectMessage> {
                         }
                     };
                     logoutTask.setOnSucceeded(evt -> connectToServer()); // Retry login
-                    logoutTask.setOnFailed(evt -> DialogueFx.showAlert("Error", "Failed to log out other sessions."));
+                    logoutTask.setOnFailed(evt -> DialogueFx.errorAlert("Error", "Failed to log out other sessions."));
                     new Thread(logoutTask).start();
                 }
             } else {
-                DialogueFx.showAlert("Error", e.getMessage());
+                DialogueFx.errorAlert("Error", e.getMessage());
             }
         });
         Thread thread = new Thread(connectTask);
