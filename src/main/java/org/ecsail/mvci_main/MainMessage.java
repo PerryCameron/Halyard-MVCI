@@ -8,5 +8,5 @@ public enum MainMessage {
     PRIMARY_STAGE_COMPLETE,
     SELECT_TAB,
     SHOW_LOG,
-    NONE
+    STOP_SPINNER, NONE
 }

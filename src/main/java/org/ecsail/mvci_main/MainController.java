@@ -52,6 +52,7 @@ public class MainController extends Controller<MainMessage> implements Status {
             case CREATE_CONNECT_CONTROLLER -> createConnectController();
             case BACKUP_DATABASE -> backUpDatabase();
             case SHOW_LOG -> showDebugLog();
+            case STOP_SPINNER -> showLoadingSpinner(false);
         }
     }
 

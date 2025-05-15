@@ -4,6 +4,7 @@ package org.ecsail.mvci_main;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -22,8 +23,11 @@ import javafx.util.Builder;
 import javafx.util.Duration;
 import org.ecsail.BaseApplication;
 import org.ecsail.interfaces.Status;
+import org.ecsail.mvci_connect.ConnectInteractor;
 import org.ecsail.static_tools.VersionUtil;
 import org.ecsail.widgetfx.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 import java.util.Objects;
@@ -32,6 +36,7 @@ import java.util.function.Consumer;
 import static java.lang.System.getProperty;
 
 public class MainView implements Builder<Region> {
+    private static final Logger logger = LoggerFactory.getLogger(MainView.class);
     private final MainModel mainModel;
     Consumer<MainMessage> action;
     public MainView(MainModel mainModel, Consumer<MainMessage> m) {
@@ -52,19 +57,21 @@ public class MainView implements Builder<Region> {
         BaseApplication.primaryStage.getIcons().add(mainIcon);
         BaseApplication.primaryStage.setTitle("Halyard");
         setViewListener();
-//        tabListener();
+        setCommunicationErrorListener();
         return borderPane;
     }
 
-//    private void tabListener() {
-//        mainModel.getMainTabPane().getSelectionModel().selectedItemProperty().addListener(
-//                (observable, oldTab, newTab) -> {
-//                    if (newTab != null && newTab.getUserData() != null) {
-//                        System.out.println(newTab.getUserData().toString());
-//                    }
-//                }
-//        );
-//    }
+    private void setCommunicationErrorListener() {
+        mainModel.clientConnectErrorProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                action.accept(MainMessage.STOP_SPINNER);
+                logger.error("discovered a problem");
+                Platform.runLater(() -> {
+                    DialogueFx.errorAlert("There was a problem", mainModel.errorMessageProperty().get());
+                });
+            }
+        });
+    }
 
     private void setViewListener() {
         ChangeListener<MainMessage> viewListener = ListenerFx.addSingleFireEnumListener(() ->

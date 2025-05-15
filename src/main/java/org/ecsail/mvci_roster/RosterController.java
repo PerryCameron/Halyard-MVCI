@@ -35,10 +35,6 @@ public class RosterController extends Controller<RosterMessage> {
         }
     }
 
-//    private void launchTab() {
-//        mainController.openMembershipMVCI(rosterInteractor.getMembership());
-//    }
-
     private void exportRoster() {
         Task<Void> task = new Task<>() {
             @Override
@@ -51,6 +47,7 @@ public class RosterController extends Controller<RosterMessage> {
     }
 
     private void search() {
+        rosterInteractor.logSearch();
         Task<Void> task = new Task<>() {
             @Override
             protected Void call() {
@@ -65,20 +62,12 @@ public class RosterController extends Controller<RosterMessage> {
     }
 
     private void updateRoster() {
-        System.out.println("updateRoster()");
-//        mainController.setSpinnerOffset(-175, -25); // default JFX Thread
-//        mainController.showLoadingSpinner(true); // default JFX Thread
+        mainController.setSpinnerOffset(-175, -25); // default JFX Thread
+        mainController.showLoadingSpinner(true); // default JFX Thread
          // default JFX Thread
         Task<List<RosterDTOFx>> task = new Task<>() {
             @Override
-            protected List<RosterDTOFx> call() throws Exception {
-//                rosterInteractor.updateRoster(); // not FX
-//                rosterInteractor.fillTableView(); // not FX
-//                Platform.runLater(() -> {
-//                    rosterInteractor.changeState(); // JFX Thread
-//                    rosterInteractor.clearSearchBox(); // JFX Thread
-//                    rosterInteractor.sortRoster(); // JFX Thread
-//                });
+            protected List<RosterDTOFx> call() {
                 try {
                     return rosterInteractor.updateRoster();
                 } catch (Exception e) {
@@ -94,8 +83,7 @@ public class RosterController extends Controller<RosterMessage> {
             rosterInteractor.setRoster(updatedRoster);
             rosterInteractor.sortRoster();
             rosterInteractor.setNumberOfRecords(updatedRoster.size());
-//            rosterModel.getRosters().setAll(updatedRoster);
-//            mainController.showLoadingSpinner(false);
+            mainController.showLoadingSpinner(false);
         });
         new Thread(task).start();
     }

@@ -11,6 +11,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.Builder;
 import org.ecsail.dto.RosterDTOFx;
+import org.ecsail.static_tools.StringTools;
 import org.ecsail.widgetfx.TableColumnFx;
 import org.ecsail.widgetfx.TableViewFx;
 
@@ -112,12 +113,12 @@ public class RosterTableView implements Builder<TableView<RosterDTOFx>> {
             Text text = new Text();
             String valueDisplayed = "";
             if (rosterDTOFx.typeProperty().get() != null) {
-                valueDisplayed = rosterDTOFx.typeProperty().get();
+                valueDisplayed = StringTools.getMembershipDescription(rosterDTOFx.typeProperty().get());
             }
             switch (valueDisplayed) {
-                case "SO" -> text.setFill(Color.GREEN);
-                case "FM" -> text.setFill(Color.BLUE);
-                case "RM" -> text.setFill(Color.RED);
+                case "Social" -> text.setFill(Color.GREEN);
+                case "Family" -> text.setFill(Color.BLUE);
+                case "Regular" -> text.setFill(Color.RED);
             }
             text.setText(valueDisplayed);
             return new SimpleObjectProperty<>(text);

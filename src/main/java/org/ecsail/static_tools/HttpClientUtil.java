@@ -1,37 +1,42 @@
 package org.ecsail.static_tools;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import okhttp3.logging.HttpLoggingInterceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
+import org.ecsail.mvci_main.MainModel;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class HttpClientUtil {
     private static final Logger logger = LoggerFactory.getLogger(HttpClientUtil.class);
     private final OkHttpClient client;
     private final ObjectMapper objectMapper;
+    private final MainModel mainModel;
     private String serverUrl;
 
-    public HttpClientUtil() {
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(message -> logger.debug(message));
+
+    public HttpClientUtil(MainModel mainModel) {
+        this.mainModel = mainModel;
+
+        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor(logger::debug);
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         CookieJar cookieJar = new CookieJar() {
             private final Map<String, List<Cookie>> cookieStore = new HashMap<>();
 
             @Override
-            public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
+            public void saveFromResponse(HttpUrl url, @NotNull List<Cookie> cookies) {
                 cookieStore.put(url.host(), new ArrayList<>(cookies));
-//                logger.info("Saved cookies for host {}: {}", url.host(), cookies);
+                logger.info("Saved cookies for host {}: {}", url.host(), cookies);
             }
 
+            @NotNull
             @Override
             public List<Cookie> loadForRequest(HttpUrl url) {
                 List<Cookie> cookies = cookieStore.get(url.host());
@@ -61,7 +66,7 @@ public class HttpClientUtil {
      * whether authentication is needed.
      *
      * @return true if authentication is required, false otherwise. Defaults to true if the "requiresAuth"
-     *         field is missing in the response.
+     * field is missing in the response.
      * @throws IOException if the request fails, the response is not successful, or the response body cannot
      *                     be read or parsed as JSON. The exception message includes the HTTP status code if
      *                     the response is not successful.
@@ -81,6 +86,7 @@ public class HttpClientUtil {
                 );
                 return result.getOrDefault("requiresAuth", true);
             }
+            signalError("Failed to check authentication status: " + response.code());
             throw new IOException("Failed to check authentication status: " + response.code());
         }
     }
@@ -103,16 +109,13 @@ public class HttpClientUtil {
         return client.newCall(request).execute();
     }
 
-//    C:\Users\sesa91827\IdeaProjects\Halyard-MVCI\src\main\java\org\ecsail\mvci_connect\HttpClientUtil.java:80: warning: [deprecation] create(MediaType,String) in RequestBody has been deprecated
-//    RequestBody body = RequestBody.create(
-
     public Response logoutOthers() throws IOException {
         Request request = new Request.Builder()
                 .url(serverUrl + "logout-others")
                 .post(new FormBody.Builder().build())
                 .build();
 
-//        logger.debug("Sending logout-others request");
+        logger.debug("Sending logout-others request");
         return client.newCall(request).execute();
     }
 
@@ -122,15 +125,13 @@ public class HttpClientUtil {
                 .post(new FormBody.Builder().build())
                 .build();
 
-//        logger.debug("Sending logout request");
+        logger.debug("Sending logout request");
         try (Response response = client.newCall(request).execute()) {
-//            logger.info("Logout response status: {}", response.code());
+            logger.info("Logout response status: {}", response.code());
         }
 
         CookieJar cookieJar = client.cookieJar();
-        if (cookieJar instanceof CookieJar) {
-            cookieJar.saveFromResponse(HttpUrl.parse(serverUrl), new ArrayList<>());
-        }
+            cookieJar.saveFromResponse(Objects.requireNonNull(HttpUrl.parse(serverUrl)), new ArrayList<>());
     }
 
     public Response makeRequest(String endpoint) throws IOException {
@@ -139,27 +140,40 @@ public class HttpClientUtil {
                 .get()
                 .build();
 
-//        logger.debug("Sending request to {} with cookies: {}", endpoint, client.cookieJar().loadForRequest(HttpUrl.parse(serverUrl + endpoint)));
+        logger.debug("Sending request to {} with cookies: {}", endpoint, client.cookieJar().loadForRequest(Objects.requireNonNull(HttpUrl.parse(serverUrl + endpoint))));
         return client.newCall(request).execute();
     }
 
     public String fetchDataFromHalyard(String endpoint) throws Exception {
         try (Response response = makeRequest("halyard/" + endpoint)) {
-//            logger.info("Fetching data from /halyard/{}: Status {}", endpoint, response.code());
+            logger.info("Fetching data from /halyard/{}: Status {}", endpoint, response.code());
             String contentType = response.header("Content-Type", "");
+            assert contentType != null;
             if (contentType.contains("text/html")) {
-//                logger.warn("Received HTML response, likely a redirect to login page. Session may be invalid.");
+                signalError("Session invalid: Server redirected to login page. Please log in again.");
                 throw new Exception("Session invalid: Server redirected to login page. Please log in again.");
             }
             if (response.code() == 403) {
+                signalError("Access Denied: You don’t have the required permissions to access this resource. " + response.code());
                 throw new AccessDeniedException("Access Denied: You don’t have the required permissions to access this resource.");
             } else if (response.isSuccessful() && response.body() != null) {
                 return response.body().string();
             } else {
+                signalError("Failed to fetch data: " + response.code());
                 throw new Exception("Failed to fetch data: " + response.code());
             }
         } catch (IOException e) {
+            signalError(e.getMessage());
             throw new Exception("Failed to fetch data: " + e.getMessage());
         }
+    }
+
+    private void signalError(String message) {
+        mainModel.toggleClientConnectError();
+        mainModel.errorMessageProperty().set(message);
+    }
+
+    public ObjectMapper getObjectMapper() {
+        return objectMapper;
     }
 }

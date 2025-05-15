@@ -22,7 +22,9 @@ public class MainModel {
     private final SimpleObjectProperty<Status.light> lightStatusProperty = new SimpleObjectProperty<>();
     private final ObjectProperty<MainMessage> returnMessage = new SimpleObjectProperty<>();
     private final ObjectMapper objectMapper = new ObjectMapper();
-    private final HttpClientUtil httpClient = new HttpClientUtil();
+    private final BooleanProperty clientConnectError = new SimpleBooleanProperty(false);
+    private final StringProperty errorMessage = new SimpleStringProperty("");
+    private final HttpClientUtil httpClient = new HttpClientUtil(this);
     private Integer msId;
 
 
@@ -85,5 +87,18 @@ public class MainModel {
 
     public HttpClientUtil getHttpClient() {
         return httpClient;
+    }
+
+    public BooleanProperty clientConnectErrorProperty() {
+        return clientConnectError;
+    }
+
+    public StringProperty errorMessageProperty() {
+        return errorMessage;
+    }
+
+    public void toggleClientConnectError() {
+        clientConnectError.set(true);
+        clientConnectError.set(false);
     }
 }

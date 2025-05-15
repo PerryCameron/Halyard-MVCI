@@ -128,44 +128,7 @@ public RosterInteractor(RosterModel rm) {
                 }
         );
         return CopyPOJOtoFx.copyRoster(roster);
-//        System.out.println("The size of the roster is" + roster.size());
-//        logger.info("Fetched {} roster records", roster.size());
-//        Platform.runLater(() -> {
-//
-//            rosterModel.getRosters().clear();
-//            rosterModel.getRosters().setAll(roster);
-//            logger.info("Roster model updated with {} records", rosterModel.getRosters().size());
-//        });
     }
-
-
-    // new version of method without unchecked cast
-//    protected void updateRoster() {
-//        Method method;
-//        try {
-//            method = membershipRepo.getClass().getMethod(rosterModel.getSelectedRadioBox().getMethod(), Integer.class);
-//            logger.info("Getting roster from database");
-//            Object result = method.invoke(membershipRepo, rosterModel.getSelectedYear());
-//            if (result instanceof List<?> rawList) {
-//                List<MembershipListDTO> rosterList = rawList.stream()
-//                        .filter(MembershipListDTO.class::isInstance)
-//                        .map(MembershipListDTO.class::cast)
-//                        .toList();
-//                ObservableList<MembershipListDTO> updatedRoster = FXCollections.observableArrayList(rosterList);
-//                Platform.runLater(() -> {
-//                    logger.info("Adding roster to model");
-//                    rosterModel.getRosters().setAll(setSlipsForRoster(updatedRoster));
-//                    // Force table view refresh
-//                    rosterModel.getRosters().add(null); // Trigger change
-//                    rosterModel.getRosters().remove(null); // Remove dummy entry
-//                });
-//            } else {
-//                throw new IllegalStateException("Expected a List from method invocation, got: " + result);
-//            }
-//        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-//            logger.error(e.getMessage());
-//        }
-//    }
 
     protected void exportRoster() {
         try {
@@ -234,5 +197,9 @@ public RosterInteractor(RosterModel rm) {
 
     public void setNumberOfRecords(int size) {
         rosterModel.numberOfRecordsProperty().set(String.valueOf(size));
+    }
+
+    public void logSearch() {
+    logger.info("Search made: {}", rosterModel.getTextFieldString());
     }
 }

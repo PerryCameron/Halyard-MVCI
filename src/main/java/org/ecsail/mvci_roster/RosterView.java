@@ -1,6 +1,8 @@
 package org.ecsail.mvci_roster;
 
+import javafx.animation.KeyFrame;
 import javafx.animation.PauseTransition;
+import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -14,7 +16,6 @@ import javafx.scene.text.Text;
 import javafx.util.Builder;
 import javafx.util.Duration;
 import org.ecsail.dto.DbRosterSettingsDTO;
-import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.dto.MembershipListRadioDTO;
 import org.ecsail.dto.RosterDTOFx;
 import org.ecsail.mvci_roster.export.SaveFileChooser;
@@ -129,19 +130,18 @@ public class RosterView implements Builder<Region> {
     }
 
     private Node setUpSearchBox() {
+        Timeline debounce = new Timeline(new KeyFrame(Duration.seconds(1), event -> action.accept(SEARCH)));
+        debounce.setCycleCount(1); // Ensures it only runs once after inactivity
         HBox hBox = HBoxFx.hBoxOf(new Insets(5,0,15,0),Pos.CENTER_LEFT, 5.0);
         Text text = new Text("Search");
         text.setId("invoice-text-number");
         TextField textField = new TextField();
         rosterModel.textFieldStringProperty().bindBidirectional(textField.textProperty());
         hBox.getChildren().addAll(text, textField);
-        PauseTransition pause = new PauseTransition(Duration.seconds(1));
-        textField.textProperty().addListener(
-                (observable, oldValue, newValue) -> {
-                    pause.setOnFinished(event -> action.accept(SEARCH));
-                    pause.playFromStart();
-                }
-        );
+        textField.textProperty().addListener((observable, oldValue, newValue) -> {
+            debounce.stop(); // Reset the timer
+            debounce.playFromStart(); // Start the timer
+        });
         return hBox;
     }
 
