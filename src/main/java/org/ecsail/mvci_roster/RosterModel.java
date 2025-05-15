@@ -35,23 +35,16 @@ public class RosterModel {
     private final BooleanProperty listsLoaded = new SimpleBooleanProperty(false);
 
 
-
-
     public RosterModel(MainModel mainModel) {
         this.httpClient = mainModel.getHttpClient();
         this.objectMapper = mainModel.getObjectMapper();
     }
-
-
     public ObjectMapper getObjectMapper() {
         return objectMapper;
     }
-
     public HttpClientUtil getHttpClient() {
         return httpClient;
     }
-
-
     public File getFileToSave() {
         return fileToSave.get();
     }
@@ -69,9 +62,6 @@ public class RosterModel {
     }
     public ObservableList<DbRosterSettingsDTO> getRosterSettings() {
         return rosterSettings;
-    }
-    public void setRosterSettings(ObservableList<DbRosterSettingsDTO> rosterSettings) {
-        this.rosterSettings = rosterSettings;
     }
     public boolean isSearchMode() {
         return isActiveSearch.get();
@@ -123,7 +113,6 @@ public class RosterModel {
     public ObservableList<RosterDTOFx> getRosters() {
         return rosters;
     }
-
     public boolean isListsLoaded() {
         return listsLoaded.get();
     }
@@ -131,39 +120,30 @@ public class RosterModel {
     public SimpleObjectProperty<TableView<RosterDTOFx>> rosterTableViewProperty() {
         return rosterTableView;
     }
-
     public SimpleObjectProperty<File> fileToSaveProperty() {
         return fileToSave;
     }
-
     public TableColumn<RosterDTOFx, Text> getSlipColumn() {
         return slipColumn.get();
     }
-
     public SimpleObjectProperty<TableColumn<RosterDTOFx, Text>> slipColumnProperty() {
         return slipColumn;
     }
-
     public RosterDTOFx getSelectedMembershipList() {
         return selectedMembershipList.get();
     }
-
     public SimpleObjectProperty<RosterDTOFx> selectedMembershipListProperty() {
         return selectedMembershipList;
     }
-
     public String getNumberOfRecords() {
         return numberOfRecords.get();
     }
-
     public IntegerProperty selectedYearProperty() {
         return selectedYear;
     }
-
     public boolean isIsActiveSearch() {
         return isActiveSearch.get();
     }
-
     public BooleanProperty isActiveSearchProperty() {
         return isActiveSearch;
     }

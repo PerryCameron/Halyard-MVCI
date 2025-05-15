@@ -69,7 +69,7 @@ public RosterInteractor(RosterModel rm) {
 
     protected void sortRoster() {
         rosterModel.getRosters().sort(Comparator.comparing(RosterDTOFx::getId));
-        rosterModel.getRosterTableView().refresh(); // this is a hack because sometimes it won't refresh (doesn't work)
+        rosterModel.getRosterTableView().refresh();
     }
 
     public void getRadioChoices() throws Exception {
@@ -230,5 +230,9 @@ public RosterInteractor(RosterModel rm) {
 
     public void setRoster(List<RosterDTOFx> updatedRoster) {
         rosterModel.getRosters().addAll(updatedRoster);
+    }
+
+    public void setNumberOfRecords(int size) {
+        rosterModel.numberOfRecordsProperty().set(String.valueOf(size));
     }
 }

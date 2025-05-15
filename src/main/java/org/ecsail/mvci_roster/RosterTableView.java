@@ -68,7 +68,7 @@ public class RosterTableView implements Builder<TableView<RosterDTOFx>> {
     private TableColumn<RosterDTOFx,String> create6() {
         TableColumn<RosterDTOFx, String> col = TableColumnFx.stringTableColumn(RosterDTOFx::nameProperty,"Name");
         col.setStyle("-fx-alignment: center-left");
-        col.prefWidthProperty().bind(rosterModel.getRosterTableView().widthProperty().multiply(0.15));
+        col.prefWidthProperty().bind(rosterModel.getRosterTableView().widthProperty().multiply(0.2));
         return col;
     }
 
@@ -128,7 +128,7 @@ public class RosterTableView implements Builder<TableView<RosterDTOFx>> {
 
     private TableColumn<RosterDTOFx,String> create2() {
         TableColumn<RosterDTOFx, String> col = TableColumnFx.stringTableColumn(RosterDTOFx::joinDateProperty,"Join Date");
-        col.prefWidthProperty().bind(rosterModel.getRosterTableView().widthProperty().multiply(0.15));
+        col.prefWidthProperty().bind(rosterModel.getRosterTableView().widthProperty().multiply(0.10));
         col.setStyle("-fx-alignment: center");
         return col;
     }

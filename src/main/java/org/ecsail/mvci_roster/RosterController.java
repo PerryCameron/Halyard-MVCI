@@ -92,6 +92,8 @@ public class RosterController extends Controller<RosterMessage> {
             System.out.println("roster size: " + updatedRoster.size());
             rosterInteractor.clearMainRoster(); // Clear the list first
             rosterInteractor.setRoster(updatedRoster);
+            rosterInteractor.sortRoster();
+            rosterInteractor.setNumberOfRecords(updatedRoster.size());
 //            rosterModel.getRosters().setAll(updatedRoster);
 //            mainController.showLoadingSpinner(false);
         });
