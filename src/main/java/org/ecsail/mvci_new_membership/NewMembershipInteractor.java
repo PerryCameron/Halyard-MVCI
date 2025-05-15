@@ -1,10 +1,9 @@
 package org.ecsail.mvci_new_membership;
 
 import javafx.application.Platform;
-import org.ecsail.dto.MembershipIdDTO;
 import org.ecsail.dto.MembershipListDTO;
-import org.ecsail.dto.NotesDTO;
-import org.ecsail.dto.PersonDTO;
+import org.ecsail.dto.NotesDTOFx;
+import org.ecsail.dto.PersonDTOFx;
 import org.ecsail.interfaces.ConfigFilePaths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,7 +80,7 @@ public class NewMembershipInteractor implements ConfigFilePaths {
 
     public void createPrimaryMember() {
         try {
-            PersonDTO personDTO = new PersonDTO(newMembershipModel.getMembership().getMsId(), 1, true);
+            PersonDTOFx personDTO = new PersonDTOFx(newMembershipModel.getMembership().getMsId(), 1, true);
             personDTO.setBirthday(LocalDate.of(1900, 1, 1));
 //            PersonDTO person = personRepo.insertPerson(personDTO);
 //            if(person.getpId() != 0) {
@@ -115,12 +114,12 @@ public class NewMembershipInteractor implements ConfigFilePaths {
 
     public void createMembershipIdRow() {
         try {
-            MembershipIdDTO membershipIdDTO = new MembershipIdDTO();
-            membershipIdDTO.setFiscalYear(Year.now().getValue());
-            membershipIdDTO.setMsId(newMembershipModel.getMembership().getMsId());
-            membershipIdDTO.setMemType(newMembershipModel.getMembership().getMemType());
-            membershipIdDTO.setMembershipId(newMembershipModel.getMembershipId());
-            membershipIdDTO.setIsRenew(true);
+//            MembershipIdDTO membershipIdDTO = new MembershipIdDTO();
+//            membershipIdDTO.setFiscalYear(Year.now().getValue());
+//            membershipIdDTO.setMsId(newMembershipModel.getMembership().getMsId());
+//            membershipIdDTO.setMemType(newMembershipModel.getMembership().getMemType());
+//            membershipIdDTO.setMembershipId(newMembershipModel.getMembershipId());
+//            membershipIdDTO.setIsRenew(true);
 //        int ok = memberIdRepo.insert(membershipIdDTO);
 //        if(ok == 1)
 //            Platform.runLater(() -> {
@@ -134,7 +133,7 @@ public class NewMembershipInteractor implements ConfigFilePaths {
 
     public void createMemoToDocument() {
         try {
-            NotesDTO notesDTO = new NotesDTO("N", newMembershipModel.getMembership().getMsId());
+            NotesDTOFx notesDTO = new NotesDTOFx("N", newMembershipModel.getMembership().getMsId());
             notesDTO.setMemoDate(LocalDate.now());
             notesDTO.setMemo("Created new membership record " + LocalDateTime.now());
 //            int ok = notesRepo.insertNote(notesDTO);

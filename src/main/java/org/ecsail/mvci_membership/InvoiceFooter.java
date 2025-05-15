@@ -16,8 +16,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
-import org.ecsail.dto.InvoiceDTO;
-import org.ecsail.dto.MembershipIdDTO;
+import org.ecsail.dto.InvoiceDTOFx;
+import org.ecsail.dto.MembershipIdDTOFx;
 import org.ecsail.dto.PaymentDTO;
 import org.ecsail.enums.PaymentType;
 import org.ecsail.enums.Success;
@@ -30,7 +30,7 @@ import java.util.Arrays;
 
 public class InvoiceFooter implements Builder<Region> {
     private InvoiceView invoiceView;
-    private InvoiceDTO invoiceDTO;
+    private InvoiceDTOFx invoiceDTO;
     private TableView<PaymentDTO> tableView;
     BooleanProperty renew = new SimpleBooleanProperty(false);
 
@@ -71,8 +71,8 @@ public class InvoiceFooter implements Builder<Region> {
         return checkBox;
     }
 
-    private MembershipIdDTO getMembershipID() {
-        MembershipIdDTO membershipIdDTO = invoiceView.getMembershipView().getMembershipModel().getMembership().getMembershipIdDTOS()
+    private MembershipIdDTOFx getMembershipID() {
+        MembershipIdDTOFx membershipIdDTO = invoiceView.getMembershipView().getMembershipModel().getMembership().getMembershipIdDTOS()
                 .stream().filter(id -> id.getFiscalYear() == invoiceDTO.getYear())
                 .findFirst().orElse(null);
         if(membershipIdDTO == null)
@@ -99,7 +99,7 @@ public class InvoiceFooter implements Builder<Region> {
             invoiceView.successProperty().addListener(ListenerFx.createSingleUseEnumListener(() ->
                     viewMessaging(invoiceView.successProperty().get())));
             if(!invoiceDTO.isSupplemental()) { // no need to update an ID record if invoice is a supplemental record
-                MembershipIdDTO membershipIdDTO = getMembershipID();
+                MembershipIdDTOFx membershipIdDTO = getMembershipID();
                 membershipIdDTO.setIsRenew(renew.get());
                 invoiceView.getMembershipView().getMembershipModel().setSelectedMembershipId(membershipIdDTO);
                 invoiceView.getMembershipView().sendMessage().accept(MembershipMessage.UPDATE_MEMBERSHIP_ID);

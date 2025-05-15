@@ -309,10 +309,6 @@ public class ConnectInteractor implements ConfigFilePaths {
         connectModel.setRotateShipWheel(rotate);
     }
 
-    public HttpClientUtil getHttpClient() {
-        return connectModel.getHttpClient();
-    }
-
     protected ConnectModel getConnectModel() {
         return connectModel;
     }

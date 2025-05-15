@@ -10,7 +10,7 @@ import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.util.Builder;
 import org.ecsail.dto.BoardPositionDTO;
 import org.ecsail.dto.OfficerDTO;
-import org.ecsail.dto.PersonDTO;
+import org.ecsail.dto.PersonDTOFx;
 import org.ecsail.enums.Officer;
 import org.ecsail.widgetfx.TableColumnFx;
 import org.ecsail.widgetfx.TableViewFx;
@@ -21,11 +21,11 @@ import java.util.stream.Collectors;
 
 
 public class OfficerTableView implements Builder<TableView<OfficerDTO>> {
-    private final PersonDTO person;
+    private final PersonDTOFx person;
     private final MembershipModel membershipModel;
     private final MembershipView membershipView;
 
-    public OfficerTableView(PersonDTO personDTO, MembershipView membershipView) {
+    public OfficerTableView(PersonDTOFx personDTO, MembershipView membershipView) {
         this.person = personDTO;
         this.membershipModel = membershipView.getMembershipModel();
         this.membershipView = membershipView;

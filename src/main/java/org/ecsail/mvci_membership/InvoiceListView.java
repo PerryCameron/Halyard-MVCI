@@ -11,7 +11,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
-import org.ecsail.dto.InvoiceDTO;
+import org.ecsail.dto.InvoiceDTOFx;
 import org.ecsail.static_tools.CustomTools;
 import org.ecsail.widgetfx.*;
 
@@ -63,7 +63,7 @@ public class InvoiceListView implements Builder<Tab> {
         return ButtonFx.buttonOf("Add", 60, () -> {
             addSingleFireObjectListener(membershipModel.selectedInvoiceProperty(), () -> {
                 CustomTools.removeExistingTabAndCreateNew(membershipView);
-                membershipModel.getMembership().getInvoiceDTOS().sort(Comparator.comparing(InvoiceDTO::getYear).reversed());
+                membershipModel.getMembership().getInvoiceDTOS().sort(Comparator.comparing(InvoiceDTOFx::getYear).reversed());
             });
             membershipView.sendMessage().accept(MembershipMessage.INSERT_INVOICE);
             // TODO open tab
@@ -91,9 +91,9 @@ public class InvoiceListView implements Builder<Tab> {
 
     private Node addTable() {
         HBox hBox = HBoxFx.hBoxOf(new Insets(5,5,5,5));
-        TableView<InvoiceDTO> tableView = TableViewFx.tableViewOf(InvoiceDTO.class);
+        TableView<InvoiceDTOFx> tableView = TableViewFx.tableViewOf(InvoiceDTOFx.class);
         tableView.getColumns().addAll(Arrays.asList(col1(),col2(),col3(),col4(),col5()));
-        TableView.TableViewSelectionModel<InvoiceDTO> selectionModel = tableView.getSelectionModel();
+        TableView.TableViewSelectionModel<InvoiceDTOFx> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) membershipView.getMembershipModel().setSelectedInvoice(newSelection);
         });
@@ -107,39 +107,39 @@ public class InvoiceListView implements Builder<Tab> {
         return hBox;
     }
 
-    private TableColumn<InvoiceDTO,Integer> col1() { //
-        TableColumn<InvoiceDTO,Integer> col = new TableColumn<>("Year");
+    private TableColumn<InvoiceDTOFx,Integer> col1() { //
+        TableColumn<InvoiceDTOFx,Integer> col = new TableColumn<>("Year");
         col.setCellValueFactory(new PropertyValueFactory<>("year"));
         col.setMaxWidth( 1f * Integer.MAX_VALUE * 20 );
         return col;
     }
 
-    private TableColumn<InvoiceDTO,Integer> col2() { //
-        TableColumn<InvoiceDTO,Integer> col = new TableColumn<>("Fees");
+    private TableColumn<InvoiceDTOFx,Integer> col2() { //
+        TableColumn<InvoiceDTOFx,Integer> col = new TableColumn<>("Fees");
         col.setCellValueFactory(new PropertyValueFactory<>("total"));
         col.setMaxWidth( 1f * Integer.MAX_VALUE * 20 );
         col.setStyle( "-fx-alignment: CENTER-RIGHT;");
         return col;
     }
 
-    private TableColumn<InvoiceDTO,Integer> col3() { //
-        TableColumn<InvoiceDTO,Integer> col = new TableColumn<>("Credit");
+    private TableColumn<InvoiceDTOFx,Integer> col3() { //
+        TableColumn<InvoiceDTOFx,Integer> col = new TableColumn<>("Credit");
         col.setCellValueFactory(new PropertyValueFactory<>("credit"));
         col.setMaxWidth( 1f * Integer.MAX_VALUE * 20 );
         col.setStyle( "-fx-alignment: CENTER-RIGHT;");
         return col;
     }
 
-    private TableColumn<InvoiceDTO,Integer> col4() { //
-        TableColumn<InvoiceDTO,Integer> col = new TableColumn<>("Paid");
+    private TableColumn<InvoiceDTOFx,Integer> col4() { //
+        TableColumn<InvoiceDTOFx,Integer> col = new TableColumn<>("Paid");
         col.setCellValueFactory(new PropertyValueFactory<>("paid"));
         col.setMaxWidth( 1f * Integer.MAX_VALUE * 20 );
         col.setStyle( "-fx-alignment: CENTER-RIGHT;");
         return col;
     }
 
-    private TableColumn<InvoiceDTO,Integer> col5() { //
-        TableColumn<InvoiceDTO,Integer> col = new TableColumn<>("Balance");
+    private TableColumn<InvoiceDTOFx,Integer> col5() { //
+        TableColumn<InvoiceDTOFx,Integer> col = new TableColumn<>("Balance");
         col.setCellValueFactory(new PropertyValueFactory<>("balance"));
         col.setMaxWidth( 1f * Integer.MAX_VALUE * 20 );
         col.setStyle( "-fx-alignment: CENTER-RIGHT;");

@@ -9,7 +9,7 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import org.ecsail.dto.LabelDTO;
-import org.ecsail.dto.PersonDTO;
+import org.ecsail.dto.PersonDTOFx;
 import org.ecsail.static_tools.LabelPrinter;
 import org.ecsail.widgetfx.DialogueFx;
 import org.ecsail.widgetfx.HBoxFx;
@@ -105,7 +105,7 @@ public class PropertiesTabView implements Builder<Tab> {
         button.setOnAction((actionEvent -> {
             ArrayList<LabelDTO> labels = new ArrayList<>();
             LabelDTO label;
-            for (PersonDTO person : membershipView.getMembershipModel().getPeople()) {
+            for (PersonDTOFx person : membershipView.getMembershipModel().getPeople()) {
                 if (person.getMemberType() == 2) {
                     label = new LabelDTO();
                     label.setCity("Indianapolis, Indiana");
@@ -125,7 +125,7 @@ public class PropertiesTabView implements Builder<Tab> {
         button.setOnAction((actionEvent -> {
             ArrayList<LabelDTO> labels = new ArrayList<>();
             LabelDTO label;
-            for (PersonDTO person : membershipView.getMembershipModel().getPeople()) {
+            for (PersonDTOFx person : membershipView.getMembershipModel().getPeople()) {
                 if (person.getMemberType() == 1) {
                     label = new LabelDTO();
                     label.setCity("Indianapolis, Indiana");

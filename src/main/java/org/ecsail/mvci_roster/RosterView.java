@@ -16,6 +16,7 @@ import javafx.util.Duration;
 import org.ecsail.dto.DbRosterSettingsDTO;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.dto.MembershipListRadioDTO;
+import org.ecsail.dto.RosterDTOFx;
 import org.ecsail.mvci_roster.export.SaveFileChooser;
 import org.ecsail.static_tools.HalyardPaths;
 import org.ecsail.widgetfx.HBoxFx;
@@ -52,8 +53,8 @@ public class RosterView implements Builder<Region> {
 
     private Node setUpTableView() {
         VBox vBox = VBoxFx.vBoxOf(new Insets(5,5,0,10));
-        TableView<MembershipListDTO> tableView = new RosterTableView(this).build();
-        rosterModel.setRosterTableView(tableView);
+        TableView<RosterDTOFx> tableView = new RosterTableView(this).build();
+        rosterModel.getRosterTableView().setItems(getRosterModel().getRosters());
         vBox.getChildren().add(tableView);
         return vBox;
     }
@@ -107,6 +108,7 @@ public class RosterView implements Builder<Region> {
         }
         return vBox;
     }
+
     protected void setRadioListener() {
         // this is the one being called on launch of tab
         rosterModel.selectedRadioBoxProperty().addListener(Observable -> action.accept(CHANGE_LIST_TYPE));

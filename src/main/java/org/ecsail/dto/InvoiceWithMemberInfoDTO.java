@@ -5,7 +5,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-public class InvoiceWithMemberInfoDTO extends InvoiceDTO {
+public class InvoiceWithMemberInfoDTO extends InvoiceDTOFx {
 
     private final IntegerProperty membershipId;  // Member ID used in real life
     private final StringProperty f_name;

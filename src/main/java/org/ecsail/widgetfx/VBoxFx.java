@@ -9,10 +9,8 @@ import javafx.scene.control.TitledPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import org.ecsail.dto.InvoiceDTO;
-import org.ecsail.dto.PaymentDTO;
+import org.ecsail.dto.InvoiceDTOFx;
 
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class VBoxFx {
@@ -132,7 +130,7 @@ public class VBoxFx {
         return vBox;
     }
 
-    public static VBox customVBox(InvoiceDTO invoiceDTO) {
+    public static VBox customVBox(InvoiceDTOFx invoiceDTO) {
         VBox vBox = vBoxOf(new Insets(5,5,5,20));
         Label date = new Label("");
         if(!invoiceDTO.getPaymentDTOS().isEmpty())

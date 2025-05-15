@@ -3,8 +3,13 @@ package org.ecsail.mvci_roster;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.scene.layout.Region;
+import org.ecsail.dto.MembershipListDTO;
+import org.ecsail.dto.RosterDTO;
+import org.ecsail.dto.RosterDTOFx;
 import org.ecsail.interfaces.Controller;
 import org.ecsail.mvci_main.MainController;
+
+import java.util.List;
 
 public class RosterController extends Controller<RosterMessage> {
     MainController mainController;
@@ -22,7 +27,7 @@ public class RosterController extends Controller<RosterMessage> {
     @Override
     public void action(RosterMessage action) {
         switch (action) {
-            case LAUNCH_TAB -> launchTab();
+//            case LAUNCH_TAB -> launchTab();
             case SEARCH -> search();
             case EXPORT_XPS -> exportRoster();
             case CHANGE_LIST_TYPE, UPDATE_YEAR -> updateRoster();
@@ -30,9 +35,9 @@ public class RosterController extends Controller<RosterMessage> {
         }
     }
 
-    private void launchTab() {
-        mainController.openMembershipMVCI(rosterInteractor.getMembership());
-    }
+//    private void launchTab() {
+//        mainController.openMembershipMVCI(rosterInteractor.getMembership());
+//    }
 
     private void exportRoster() {
         Task<Void> task = new Task<>() {
@@ -60,27 +65,41 @@ public class RosterController extends Controller<RosterMessage> {
     }
 
     private void updateRoster() {
-        mainController.setSpinnerOffset(-175, -25); // default JFX Thread
-        mainController.showLoadingSpinner(true); // default JFX Thread
-        rosterInteractor.clearMainRoster(); // default JFX Thread
-        Task<Void> task = new Task<>() {
+        System.out.println("updateRoster()");
+//        mainController.setSpinnerOffset(-175, -25); // default JFX Thread
+//        mainController.showLoadingSpinner(true); // default JFX Thread
+         // default JFX Thread
+        Task<List<RosterDTOFx>> task = new Task<>() {
             @Override
-            protected Void call() {
+            protected List<RosterDTOFx> call() throws Exception {
 //                rosterInteractor.updateRoster(); // not FX
-                rosterInteractor.fillTableView(); // not FX
-                Platform.runLater(() -> {
-                    rosterInteractor.changeState(); // JFX Thread
-                    rosterInteractor.clearSearchBox(); // JFX Thread
-                    rosterInteractor.sortRoster(); // JFX Thread
-                });
+//                rosterInteractor.fillTableView(); // not FX
+//                Platform.runLater(() -> {
+//                    rosterInteractor.changeState(); // JFX Thread
+//                    rosterInteractor.clearSearchBox(); // JFX Thread
+//                    rosterInteractor.sortRoster(); // JFX Thread
+//                });
+                try {
+                    return rosterInteractor.updateRoster();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 return null;
             }
         };
-        task.setOnSucceeded(e -> mainController.showLoadingSpinner(false));
+        task.setOnSucceeded(e -> {
+            List<RosterDTOFx> updatedRoster = task.getValue();
+            System.out.println("roster size: " + updatedRoster.size());
+            rosterInteractor.clearMainRoster(); // Clear the list first
+            rosterInteractor.setRoster(updatedRoster);
+//            rosterModel.getRosters().setAll(updatedRoster);
+//            mainController.showLoadingSpinner(false);
+        });
         new Thread(task).start();
     }
 
     private void getRosterData() {
+        System.out.println("getRosterData()");
         mainController.setSpinnerOffset(50, 50);
         mainController.showLoadingSpinner(true);
         Task<Void> task = new Task<>() {

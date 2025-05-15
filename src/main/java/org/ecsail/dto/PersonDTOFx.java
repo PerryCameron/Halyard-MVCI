@@ -6,7 +6,7 @@ import javafx.collections.ObservableList;
 
 import java.time.LocalDate;
 
-public class PersonDTO {
+public class PersonDTOFx {
 	private IntegerProperty pId;
 	private IntegerProperty msId;
 	private IntegerProperty memberType; // 1 == primary 2 == secondary 3 == dependant
@@ -23,9 +23,9 @@ public class PersonDTO {
 	private ObservableList<AwardDTO> awards = FXCollections.observableArrayList();
 	private ObservableList<OfficerDTO> officer = FXCollections.observableArrayList();
 
-	public PersonDTO(Integer pid, Integer ms_id, Integer memberType, String firstName, String lastName,
-                     LocalDate birthday, String occupation,
-                     String business, Boolean isActive, String nickName, Integer oldMsid) {
+	public PersonDTOFx(Integer pid, Integer ms_id, Integer memberType, String firstName, String lastName,
+					   LocalDate birthday, String occupation,
+					   String business, Boolean isActive, String nickName, Integer oldMsid) {
 		this.pId = new SimpleIntegerProperty(pid);
 		this.msId = new SimpleIntegerProperty(ms_id);
 		this.memberType = new SimpleIntegerProperty(memberType);
@@ -39,7 +39,7 @@ public class PersonDTO {
 		this.oldMsid = new SimpleIntegerProperty(oldMsid);
 	}
 
-	public PersonDTO(Integer msId, Integer memberType, Boolean isActive) {
+	public PersonDTOFx(Integer msId, Integer memberType, Boolean isActive) {
 		this.pId = new SimpleIntegerProperty(0);
 		this.msId = new SimpleIntegerProperty(msId);
 		this.memberType = new SimpleIntegerProperty(memberType);
@@ -53,7 +53,7 @@ public class PersonDTO {
 		this.oldMsid = new SimpleIntegerProperty(0);
 	}
 
-	public PersonDTO() {
+	public PersonDTOFx() {
 		this.pId = new SimpleIntegerProperty(0);
 		this.msId = new SimpleIntegerProperty(0);
 		this.memberType = new SimpleIntegerProperty(0);
@@ -67,7 +67,7 @@ public class PersonDTO {
 		this.oldMsid = new SimpleIntegerProperty(0);
 	}
 
-	public PersonDTO(int msId) {
+	public PersonDTOFx(int msId) {
 		this.pId = new SimpleIntegerProperty(0);
 		this.msId = new SimpleIntegerProperty(msId);
 		this.memberType = new SimpleIntegerProperty(0);
@@ -81,7 +81,7 @@ public class PersonDTO {
 		this.oldMsid = new SimpleIntegerProperty(0);
 	}
 
-	public PersonDTO(PersonDTO p) { // for cloning
+	public PersonDTOFx(PersonDTOFx p) { // for cloning
 		this.pId = new SimpleIntegerProperty(p.getpId());
 		this.msId = new SimpleIntegerProperty(p.getMsId());
 		this.memberType = new SimpleIntegerProperty(p.getMemberType());

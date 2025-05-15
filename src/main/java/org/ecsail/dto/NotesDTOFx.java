@@ -4,7 +4,7 @@ import javafx.beans.property.*;
 
 import java.time.LocalDate;
 
-public class NotesDTO {
+public class NotesDTOFx {
 
     private final IntegerProperty memoId;
     private final IntegerProperty msId;
@@ -14,8 +14,8 @@ public class NotesDTO {
     private final StringProperty category;
     private final IntegerProperty boatId;
 
-    public NotesDTO(Integer memoId, Integer msId, LocalDate memoDate,
-                    String memo, Integer invoiceId, String category, int boatId) {
+    public NotesDTOFx(Integer memoId, Integer msId, LocalDate memoDate,
+                      String memo, Integer invoiceId, String category, int boatId) {
         super();
         this.memoId = new SimpleIntegerProperty(memoId);
         this.msId = new SimpleIntegerProperty(msId);
@@ -26,7 +26,7 @@ public class NotesDTO {
         this.boatId = new SimpleIntegerProperty(boatId);
     }
 
-    public NotesDTO(int boatId, String type) {
+    public NotesDTOFx(int boatId, String type) {
         super();
         this.memoId = new SimpleIntegerProperty(0);
         this.msId = new SimpleIntegerProperty(0);
@@ -37,7 +37,7 @@ public class NotesDTO {
         this.boatId = new SimpleIntegerProperty(boatId);
     }
 
-    public NotesDTO(String type, int msId) {
+    public NotesDTOFx(String type, int msId) {
         super();
         this.memoId = new SimpleIntegerProperty(0);
         this.msId = new SimpleIntegerProperty(msId);

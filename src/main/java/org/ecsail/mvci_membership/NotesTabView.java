@@ -9,7 +9,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
-import org.ecsail.dto.NotesDTO;
+import org.ecsail.dto.NotesDTOFx;
 import org.ecsail.widgetfx.*;
 
 import java.time.LocalDate;
@@ -58,10 +58,10 @@ public class NotesTabView implements Builder<Tab> {
     }
 
     private Node addTable() {
-        TableView<NotesDTO> tableView = TableViewFx.tableViewOf(NotesDTO.class, 200);
+        TableView<NotesDTOFx> tableView = TableViewFx.tableViewOf(NotesDTOFx.class, 200);
         tableView.setItems(membershipView.getMembershipModel().getMembership().getNotesDTOS());
         tableView.getColumns().addAll(Arrays.asList(col1(), col2(), col3()));
-        TableView.TableViewSelectionModel<NotesDTO> selectionModel = tableView.getSelectionModel();
+        TableView.TableViewSelectionModel<NotesDTOFx> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) membershipModel.setSelectedNote(newSelection);
         });
@@ -69,11 +69,11 @@ public class NotesTabView implements Builder<Tab> {
         return tableView;
     }
 
-    private TableColumn<NotesDTO, String> col3() {
-        TableColumn<NotesDTO, String> col3 = TableColumnFx.editableStringTableColumn(NotesDTO::memoProperty, "Note");
+    private TableColumn<NotesDTOFx, String> col3() {
+        TableColumn<NotesDTOFx, String> col3 = TableColumnFx.editableStringTableColumn(NotesDTOFx::memoProperty, "Note");
         col3.setPrefWidth(740);
         col3.setOnEditCommit(t -> {
-            NotesDTO notesDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
+            NotesDTOFx notesDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
             notesDTO.setMemo(t.getNewValue());
             membershipModel.setSelectedNote(notesDTO);
             System.out.println("Column 3 and note: " + notesDTO.getMemoId());
@@ -83,15 +83,15 @@ public class NotesTabView implements Builder<Tab> {
         return col3;
     }
 
-    private TableColumn<NotesDTO, String> col2() {
-        TableColumn<NotesDTO, String> col2 = new TableColumn<>("Type");
+    private TableColumn<NotesDTOFx, String> col2() {
+        TableColumn<NotesDTOFx, String> col2 = new TableColumn<>("Type");
         col2.setCellValueFactory(new PropertyValueFactory<>("category"));
         col2.setMaxWidth(1f * Integer.MAX_VALUE * 5);    // Type
         return col2;
     }
 
-    private TableColumn<NotesDTO, LocalDate> col1() {
-        TableColumn<NotesDTO, LocalDate> col1 = new TableColumn<>("Date");
+    private TableColumn<NotesDTOFx, LocalDate> col1() {
+        TableColumn<NotesDTOFx, LocalDate> col1 = new TableColumn<>("Date");
         col1.setCellValueFactory(cellData -> cellData.getValue().memoDateProperty());
         col1.setCellFactory(CallBackFX.createDatePickerCellFactory(notesDTO -> {
             membershipModel.setSelectedNote(notesDTO);

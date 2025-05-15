@@ -8,7 +8,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.util.Builder;
 import org.ecsail.dto.AwardDTO;
-import org.ecsail.dto.PersonDTO;
+import org.ecsail.dto.PersonDTOFx;
 import org.ecsail.enums.Awards;
 import org.ecsail.widgetfx.TableColumnFx;
 import org.ecsail.widgetfx.TableViewFx;
@@ -16,11 +16,11 @@ import org.ecsail.widgetfx.TableViewFx;
 import java.util.Arrays;
 
 public class AwardTableView implements Builder<TableView<AwardDTO>> {
-    private final PersonDTO person;
+    private final PersonDTOFx person;
     private final MembershipView membershipView;
     private final MembershipModel membershipModel;
 
-    public AwardTableView(PersonDTO personDTO, MembershipView membershipView) {
+    public AwardTableView(PersonDTOFx personDTO, MembershipView membershipView) {
         this.person = personDTO;
         this.membershipView = membershipView;
         this.membershipModel = membershipView.getMembershipModel();

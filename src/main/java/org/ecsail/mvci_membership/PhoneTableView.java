@@ -12,7 +12,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.util.Builder;
-import org.ecsail.dto.PersonDTO;
+import org.ecsail.dto.PersonDTOFx;
 import org.ecsail.dto.PhoneDTO;
 import org.ecsail.enums.PhoneType;
 import org.ecsail.widgetfx.TableColumnFx;
@@ -25,10 +25,10 @@ import java.util.regex.Pattern;
 public class PhoneTableView implements Builder<TableView<PhoneDTO>> {
 
     private final MembershipView membershipView;
-    private final PersonDTO person;
+    private final PersonDTOFx person;
     private final MembershipModel membershipModel;
 
-    public PhoneTableView(PersonDTO personDTO, MembershipView membershipView) {
+    public PhoneTableView(PersonDTOFx personDTO, MembershipView membershipView) {
         this.person = personDTO;
         this.membershipView = membershipView;
         this.membershipModel = membershipView.getMembershipModel();

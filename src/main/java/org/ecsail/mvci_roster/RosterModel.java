@@ -7,9 +7,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.text.Text;
-import org.ecsail.dto.DbRosterSettingsDTO;
-import org.ecsail.dto.MembershipListDTO;
-import org.ecsail.dto.MembershipListRadioDTO;
+import org.ecsail.dto.*;
 import org.ecsail.mvci_main.MainModel;
 import org.ecsail.static_tools.HttpClientUtil;
 
@@ -19,18 +17,17 @@ import java.util.ArrayList;
 
 public class RosterModel {
     private final ObjectMapper objectMapper;
-    private final MainModel mainModel = null;
-    private final ObservableList<MembershipListDTO> rosters = FXCollections.observableArrayList();
-    private final ObservableList<MembershipListDTO> searchedRosters = FXCollections.observableArrayList();
+    private final ObservableList<RosterDTOFx> rosters = FXCollections.observableArrayList();
+    private final ObservableList<RosterDTOFx> searchedRosters = FXCollections.observableArrayList();
     private final ObservableList<MembershipListRadioDTO> radioChoices = FXCollections.observableArrayList();
     private final HttpClientUtil httpClient;
     private ObservableList<DbRosterSettingsDTO> rosterSettings = FXCollections.observableArrayList();
     private final ArrayList<RosterSettingsCheckBox> checkBoxes = new ArrayList<>();
-    private final SimpleObjectProperty<TableView<MembershipListDTO>> rosterTableView = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<TableView<RosterDTOFx>> rosterTableView = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<RosterRadioHBox> selectedRadioBox = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<File> fileToSave = new SimpleObjectProperty<>();
-    private final SimpleObjectProperty<TableColumn<MembershipListDTO, Text>> slipColumn = new SimpleObjectProperty<>();
-    private final SimpleObjectProperty<MembershipListDTO> selectedMembershipList = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<TableColumn<RosterDTOFx, Text>> slipColumn = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<RosterDTOFx> selectedMembershipList = new SimpleObjectProperty<>();
     private final StringProperty numberOfRecords = new SimpleStringProperty("0");
     private final StringProperty textFieldString = new SimpleStringProperty();
     private final IntegerProperty selectedYear = new SimpleIntegerProperty(Year.now().getValue());
@@ -54,28 +51,7 @@ public class RosterModel {
         return httpClient;
     }
 
-    public TableColumn<MembershipListDTO, Text> getSlipColumn() {
-        return slipColumn.get();
-    }
 
-    public SimpleObjectProperty<TableColumn<MembershipListDTO, Text>> slipColumnProperty() {
-        return slipColumn;
-    }
-
-    public void setSlipColumn(TableColumn<MembershipListDTO, Text> slipColumn) {
-        this.slipColumn.set(slipColumn);
-    }
-
-    public MembershipListDTO getSelectedMembershipList() {
-        return selectedMembershipList.get();
-    }
-
-    public SimpleObjectProperty<MembershipListDTO> selectedMembershipListProperty() {
-        return selectedMembershipList;
-    }
-    public void setSelectedMembershipList(MembershipListDTO selectedMembershipList) {
-        this.selectedMembershipList.set(selectedMembershipList);
-    }
     public File getFileToSave() {
         return fileToSave.get();
     }
@@ -103,7 +79,7 @@ public class RosterModel {
     public void setIsSearchMode(boolean isActiveSearch) {
         this.isActiveSearch.set(isActiveSearch);
     }
-    public ObservableList<MembershipListDTO> getSearchedRosters() {
+    public ObservableList<RosterDTOFx> getSearchedRosters() {
         return searchedRosters;
     }
     public RosterRadioHBox getSelectedRadioBox() {
@@ -118,13 +94,11 @@ public class RosterModel {
     public ObservableList<MembershipListRadioDTO> getRadioChoices() {
         return radioChoices;
     }
-    public TableView<MembershipListDTO> getRosterTableView() {
+    public TableView<RosterDTOFx> getRosterTableView() {
         return rosterTableView.get();
     }
 
-    public void setRosterTableView(TableView<MembershipListDTO> rosterTableView) {
-        this.rosterTableView.set(rosterTableView);
-    }
+
     public String getTextFieldString() {
         return textFieldString.get();
     }
@@ -146,7 +120,7 @@ public class RosterModel {
     public void setNumberOfRecords(String numberOfRecords) {
         this.numberOfRecords.set(numberOfRecords);
     }
-    public ObservableList<MembershipListDTO> getRosters() {
+    public ObservableList<RosterDTOFx> getRosters() {
         return rosters;
     }
 
@@ -154,5 +128,43 @@ public class RosterModel {
         return listsLoaded.get();
     }
 
+    public SimpleObjectProperty<TableView<RosterDTOFx>> rosterTableViewProperty() {
+        return rosterTableView;
+    }
 
+    public SimpleObjectProperty<File> fileToSaveProperty() {
+        return fileToSave;
+    }
+
+    public TableColumn<RosterDTOFx, Text> getSlipColumn() {
+        return slipColumn.get();
+    }
+
+    public SimpleObjectProperty<TableColumn<RosterDTOFx, Text>> slipColumnProperty() {
+        return slipColumn;
+    }
+
+    public RosterDTOFx getSelectedMembershipList() {
+        return selectedMembershipList.get();
+    }
+
+    public SimpleObjectProperty<RosterDTOFx> selectedMembershipListProperty() {
+        return selectedMembershipList;
+    }
+
+    public String getNumberOfRecords() {
+        return numberOfRecords.get();
+    }
+
+    public IntegerProperty selectedYearProperty() {
+        return selectedYear;
+    }
+
+    public boolean isIsActiveSearch() {
+        return isActiveSearch.get();
+    }
+
+    public BooleanProperty isActiveSearchProperty() {
+        return isActiveSearch;
+    }
 }

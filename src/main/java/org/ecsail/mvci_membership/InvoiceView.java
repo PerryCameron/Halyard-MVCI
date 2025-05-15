@@ -11,7 +11,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import org.ecsail.dto.DbInvoiceDTO;
-import org.ecsail.dto.InvoiceDTO;
+import org.ecsail.dto.InvoiceDTOFx;
 import org.ecsail.enums.Success;
 import org.ecsail.static_tools.CustomTools;
 import org.ecsail.widgetfx.*;
@@ -20,7 +20,7 @@ import java.util.Comparator;
 
 public class InvoiceView implements Builder<Tab> {
     private final MembershipView membershipView;
-    private InvoiceDTO invoiceDTO;
+    private InvoiceDTOFx invoiceDTO;
     private SimpleObjectProperty<Success> success;  // used to notify of successful transactions
 
 
@@ -113,7 +113,7 @@ public class InvoiceView implements Builder<Tab> {
         getMembershipView().getMembershipModel().setInvoiceSaved(Success.NULL);
     }
 
-    public InvoiceDTO getInvoiceDTO() {
+    public InvoiceDTOFx getInvoiceDTO() {
         return invoiceDTO;
     }
 

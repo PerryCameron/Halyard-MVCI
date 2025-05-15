@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.nio.file.AccessDeniedException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +29,7 @@ public class HttpClientUtil {
             @Override
             public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
                 cookieStore.put(url.host(), new ArrayList<>(cookies));
-                logger.info("Saved cookies for host {}: {}", url.host(), cookies);
+//                logger.info("Saved cookies for host {}: {}", url.host(), cookies);
             }
 
             @Override
@@ -111,7 +112,7 @@ public class HttpClientUtil {
                 .post(new FormBody.Builder().build())
                 .build();
 
-        logger.debug("Sending logout-others request");
+//        logger.debug("Sending logout-others request");
         return client.newCall(request).execute();
     }
 
@@ -121,9 +122,9 @@ public class HttpClientUtil {
                 .post(new FormBody.Builder().build())
                 .build();
 
-        logger.debug("Sending logout request");
+//        logger.debug("Sending logout request");
         try (Response response = client.newCall(request).execute()) {
-            logger.info("Logout response status: {}", response.code());
+//            logger.info("Logout response status: {}", response.code());
         }
 
         CookieJar cookieJar = client.cookieJar();
@@ -138,7 +139,27 @@ public class HttpClientUtil {
                 .get()
                 .build();
 
-        logger.debug("Sending request to {} with cookies: {}", endpoint, client.cookieJar().loadForRequest(HttpUrl.parse(serverUrl + endpoint)));
+//        logger.debug("Sending request to {} with cookies: {}", endpoint, client.cookieJar().loadForRequest(HttpUrl.parse(serverUrl + endpoint)));
         return client.newCall(request).execute();
+    }
+
+    public String fetchDataFromHalyard(String endpoint) throws Exception {
+        try (Response response = makeRequest("halyard/" + endpoint)) {
+//            logger.info("Fetching data from /halyard/{}: Status {}", endpoint, response.code());
+            String contentType = response.header("Content-Type", "");
+            if (contentType.contains("text/html")) {
+//                logger.warn("Received HTML response, likely a redirect to login page. Session may be invalid.");
+                throw new Exception("Session invalid: Server redirected to login page. Please log in again.");
+            }
+            if (response.code() == 403) {
+                throw new AccessDeniedException("Access Denied: You don’t have the required permissions to access this resource.");
+            } else if (response.isSuccessful() && response.body() != null) {
+                return response.body().string();
+            } else {
+                throw new Exception("Failed to fetch data: " + response.code());
+            }
+        } catch (IOException e) {
+            throw new Exception("Failed to fetch data: " + e.getMessage());
+        }
     }
 }

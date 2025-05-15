@@ -5,6 +5,8 @@ import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.ecsail.dto.DbRosterSettingsDTO;
 import org.ecsail.dto.MembershipListDTO;
+import org.ecsail.dto.RosterDTO;
+import org.ecsail.dto.RosterDTOFx;
 import org.ecsail.interfaces.ConfigFilePaths;
 import org.ecsail.mvci_roster.RosterModel;
 import org.slf4j.Logger;
@@ -32,7 +34,7 @@ public class Xls_roster implements ConfigFilePaths {
 		ArrayList<String> headers = (ArrayList<String>) getHeaders();
 		Integer selectedYear = 0;
 		if(rosterModel.getRosters().size() > 1)
-			selectedYear = rosterModel.getRosters().get(0).getSelectedYear();
+//			selectedYear = rosterModel.getRosters().get(0).getSelectedYear();
 		logger.info("Creating Roster..");
 		Workbook workBook = new XSSFWorkbook(); // new HSSFWorkbook() for generating `.xls` file
 
@@ -136,7 +138,7 @@ public class Xls_roster implements ConfigFilePaths {
 //		return fileName += " Roster.xlsx";
 //	}
 
-	private Object getField(MembershipListDTO m, DbRosterSettingsDTO dto) {
+	private Object getField(RosterDTOFx m, DbRosterSettingsDTO dto) {
 		Object obj;
 		try {
 			Method method = m.getClass().getMethod(dto.getGetter());
@@ -151,7 +153,7 @@ public class Xls_roster implements ConfigFilePaths {
 		return obj;
 	}
 
-	private Row createRow(Sheet sheet, int rowNum, MembershipListDTO m) {
+	private Row createRow(Sheet sheet, int rowNum, RosterDTOFx m) {
 		Row row = sheet.createRow(rowNum);
 		int cellNumber = 0;
 		for(DbRosterSettingsDTO dto: rosterModel.getRosterSettings()) {

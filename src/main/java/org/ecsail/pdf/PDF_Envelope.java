@@ -12,11 +12,8 @@ import com.itextpdf.layout.Document;
 import com.itextpdf.layout.borders.Border;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.*;
-import com.itextpdf.layout.properties.AreaBreakType;
 import com.itextpdf.layout.properties.HorizontalAlignment;
 import com.itextpdf.layout.properties.VerticalAlignment;
-import org.ecsail.dto.MembershipDTO;
-import org.ecsail.dto.MembershipIdDTO;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.mvci_membership.DataBaseService;
 import org.ecsail.mvci_membership.MembershipModel;
@@ -30,7 +27,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.*;
 
 public class PDF_Envelope {

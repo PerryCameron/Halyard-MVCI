@@ -11,27 +11,25 @@ import org.ecsail.enums.Success;
 import org.ecsail.interfaces.SlipUser;
 import org.ecsail.mvci_main.MainModel;
 
-import java.util.ArrayList;
-
 public class MembershipModel {
 
     // Person information for membership
-    private ObservableMap<PersonDTO, TableView<EmailDTO>> emailTableView = FXCollections.observableHashMap();
-    private ObservableMap<PersonDTO, TableView<PhoneDTO>> phoneTableView = FXCollections.observableHashMap();
-    private ObservableMap<PersonDTO, TableView<AwardDTO>> awardTableView = FXCollections.observableHashMap();
-    private ObservableMap<PersonDTO, TableView<OfficerDTO>> officerTableView = FXCollections.observableHashMap();
-    private final ObservableMap<PersonDTO, StackPane> stackPaneMap = FXCollections.observableHashMap();
-    private ObservableMap<PersonDTO, RadioButton> selectedRadioForPerson = FXCollections.observableHashMap();
-    private ObservableMap<PersonDTO, ComboBox<String>> personComboBox = FXCollections.observableHashMap();
-    private ObservableMap<PersonDTO, Tab> selectedPropertiesTab = FXCollections.observableHashMap();
-    private ObservableMap<PersonDTO, TextField> personTextField = FXCollections.observableHashMap();
-    private ObservableList<PersonDTO> people = FXCollections.observableArrayList();
+    private ObservableMap<PersonDTOFx, TableView<EmailDTO>> emailTableView = FXCollections.observableHashMap();
+    private ObservableMap<PersonDTOFx, TableView<PhoneDTO>> phoneTableView = FXCollections.observableHashMap();
+    private ObservableMap<PersonDTOFx, TableView<AwardDTO>> awardTableView = FXCollections.observableHashMap();
+    private ObservableMap<PersonDTOFx, TableView<OfficerDTO>> officerTableView = FXCollections.observableHashMap();
+    private final ObservableMap<PersonDTOFx, StackPane> stackPaneMap = FXCollections.observableHashMap();
+    private ObservableMap<PersonDTOFx, RadioButton> selectedRadioForPerson = FXCollections.observableHashMap();
+    private ObservableMap<PersonDTOFx, ComboBox<String>> personComboBox = FXCollections.observableHashMap();
+    private ObservableMap<PersonDTOFx, Tab> selectedPropertiesTab = FXCollections.observableHashMap();
+    private ObservableMap<PersonDTOFx, TextField> personTextField = FXCollections.observableHashMap();
+    private ObservableList<PersonDTOFx> people = FXCollections.observableArrayList();
     private final SimpleObjectProperty<MembershipListDTO> membership = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<SlipDTO> slip = new SimpleObjectProperty<>();
-    private final SimpleObjectProperty<TableView<BoatDTO>> boatTableView = new SimpleObjectProperty<>();
-    private final SimpleObjectProperty<TableView<NotesDTO>> notesTableView = new SimpleObjectProperty<>();
-    private final SimpleObjectProperty<TableView<MembershipIdDTO>> idTableView = new SimpleObjectProperty<>();
-    private final SimpleObjectProperty<TableView<InvoiceDTO>> invoiceListTableView = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<TableView<BoatDTOFx>> boatTableView = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<TableView<NotesDTOFx>> notesTableView = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<TableView<MembershipIdDTOFx>> idTableView = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<TableView<InvoiceDTOFx>> invoiceListTableView = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TabPane> peopleTabPane = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TabPane> infoTabPane = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TabPane> extraTabPane = new SimpleObjectProperty<>();
@@ -41,15 +39,15 @@ public class MembershipModel {
     private final StringProperty membershipId = new SimpleStringProperty("");
     private final MainModel mainModel;
     private ObservableMap<String,Control> slipControls = FXCollections.observableHashMap();
-    private final SimpleObjectProperty<NotesDTO> selectedNote = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<NotesDTOFx> selectedNote = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<AwardDTO> selectedAward = new SimpleObjectProperty<>();
-    private final SimpleObjectProperty<BoatDTO> selectedBoat = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<BoatDTOFx> selectedBoat = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<EmailDTO> selectedEmail = new SimpleObjectProperty<>();
-    private final SimpleObjectProperty<MembershipIdDTO> selectedMembershipId = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<MembershipIdDTOFx> selectedMembershipId = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<OfficerDTO> selectedOfficer = new SimpleObjectProperty<>();
-    private final SimpleObjectProperty<PersonDTO> selectedPerson = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<PersonDTOFx> selectedPerson = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<PhoneDTO> selectedPhone = new SimpleObjectProperty<>();
-    private final SimpleObjectProperty<InvoiceDTO> selectedInvoice = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<InvoiceDTOFx> selectedInvoice = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<PaymentDTO> selectedPayment = new SimpleObjectProperty<>();
     private final StringProperty selectedString = new SimpleStringProperty("");
     private final SimpleIntegerProperty selectedInvoiceCreateYear = new SimpleIntegerProperty(0);
@@ -117,27 +115,27 @@ public class MembershipModel {
         this.selectedInvoiceCreateYear.set(selectedInvoiceCreateYear);
     }
 
-    public TableView<InvoiceDTO> getInvoiceListTableView() {
+    public TableView<InvoiceDTOFx> getInvoiceListTableView() {
         return invoiceListTableView.get();
     }
 
-    public SimpleObjectProperty<TableView<InvoiceDTO>> invoiceListTableViewProperty() {
+    public SimpleObjectProperty<TableView<InvoiceDTOFx>> invoiceListTableViewProperty() {
         return invoiceListTableView;
     }
 
-    public void setInvoiceListTableView(TableView<InvoiceDTO> invoiceListTableView) {
+    public void setInvoiceListTableView(TableView<InvoiceDTOFx> invoiceListTableView) {
         this.invoiceListTableView.set(invoiceListTableView);
     }
 
-    public InvoiceDTO getSelectedInvoice() {
+    public InvoiceDTOFx getSelectedInvoice() {
         return selectedInvoice.get();
     }
 
-    public SimpleObjectProperty<InvoiceDTO> selectedInvoiceProperty() {
+    public SimpleObjectProperty<InvoiceDTOFx> selectedInvoiceProperty() {
         return selectedInvoice;
     }
 
-    public void setSelectedInvoice(InvoiceDTO selectedInvoice) {
+    public void setSelectedInvoice(InvoiceDTOFx selectedInvoice) {
         this.selectedInvoice.set(selectedInvoice);
     }
 
@@ -189,15 +187,15 @@ public class MembershipModel {
         this.selectedOfficer.set(selectedOfficer);
     }
 
-    public MembershipIdDTO getSelectedMembershipId() {
+    public MembershipIdDTOFx getSelectedMembershipId() {
         return selectedMembershipId.get();
     }
 
-    public SimpleObjectProperty<MembershipIdDTO> selectedMembershipIdProperty() {
+    public SimpleObjectProperty<MembershipIdDTOFx> selectedMembershipIdProperty() {
         return selectedMembershipId;
     }
 
-    public void setSelectedMembershipId(MembershipIdDTO selectedMembershipId) {
+    public void setSelectedMembershipId(MembershipIdDTOFx selectedMembershipId) {
         this.selectedMembershipId.set(selectedMembershipId);
     }
 
@@ -213,15 +211,15 @@ public class MembershipModel {
         this.selectedEmail.set(selectedEmail);
     }
 
-    public BoatDTO getSelectedBoat() {
+    public BoatDTOFx getSelectedBoat() {
         return selectedBoat.get();
     }
 
-    public SimpleObjectProperty<BoatDTO> selectedBoatProperty() {
+    public SimpleObjectProperty<BoatDTOFx> selectedBoatProperty() {
         return selectedBoat;
     }
 
-    public void setSelectedBoat(BoatDTO selectedBoat) {
+    public void setSelectedBoat(BoatDTOFx selectedBoat) {
         this.selectedBoat.set(selectedBoat);
     }
 
@@ -237,51 +235,51 @@ public class MembershipModel {
         this.selectedAward.set(selectedAward);
     }
 
-    public NotesDTO getSelectedNote() {
+    public NotesDTOFx getSelectedNote() {
         return selectedNote.get();
     }
 
-    public SimpleObjectProperty<NotesDTO> selectedNoteProperty() {
+    public SimpleObjectProperty<NotesDTOFx> selectedNoteProperty() {
         return selectedNote;
     }
 
-    public void setSelectedNote(NotesDTO selectedNote) {
+    public void setSelectedNote(NotesDTOFx selectedNote) {
         this.selectedNote.set(selectedNote);
     }
 
-    public TableView<MembershipIdDTO> getIdTableView() {
+    public TableView<MembershipIdDTOFx> getIdTableView() {
         return idTableView.get();
     }
 
-    public SimpleObjectProperty<TableView<MembershipIdDTO>> idTableViewProperty() {
+    public SimpleObjectProperty<TableView<MembershipIdDTOFx>> idTableViewProperty() {
         return idTableView;
     }
 
-    public void setIdTableView(TableView<MembershipIdDTO> idTableView) {
+    public void setIdTableView(TableView<MembershipIdDTOFx> idTableView) {
         this.idTableView.set(idTableView);
     }
 
-    public TableView<NotesDTO> getNotesTableView() {
+    public TableView<NotesDTOFx> getNotesTableView() {
         return notesTableView.get();
     }
 
-    public SimpleObjectProperty<TableView<NotesDTO>> notesTableViewProperty() {
+    public SimpleObjectProperty<TableView<NotesDTOFx>> notesTableViewProperty() {
         return notesTableView;
     }
 
-    public void setNotesTableView(TableView<NotesDTO> notesTableView) {
+    public void setNotesTableView(TableView<NotesDTOFx> notesTableView) {
         this.notesTableView.set(notesTableView);
     }
 
-    public TableView<BoatDTO> getBoatTableView() {
+    public TableView<BoatDTOFx> getBoatTableView() {
         return boatTableView.get();
     }
 
-    public SimpleObjectProperty<TableView<BoatDTO>> boatTableViewProperty() {
+    public SimpleObjectProperty<TableView<BoatDTOFx>> boatTableViewProperty() {
         return boatTableView;
     }
 
-    public void setBoatTableView(TableView<BoatDTO> boatTableView) {
+    public void setBoatTableView(TableView<BoatDTOFx> boatTableView) {
         this.boatTableView.set(boatTableView);
     }
 
@@ -377,86 +375,86 @@ public class MembershipModel {
         this.slip.set(slip);
     }
 
-    public ObservableMap<PersonDTO, TableView<OfficerDTO>> getOfficerTableView() {
+    public ObservableMap<PersonDTOFx, TableView<OfficerDTO>> getOfficerTableView() {
         return officerTableView;
     }
 
-    public void setOfficerTableView(ObservableMap<PersonDTO, TableView<OfficerDTO>> officerTableView) {
+    public void setOfficerTableView(ObservableMap<PersonDTOFx, TableView<OfficerDTO>> officerTableView) {
         this.officerTableView = officerTableView;
     }
 
-    public ObservableMap<PersonDTO, TableView<AwardDTO>> getAwardTableView() {
+    public ObservableMap<PersonDTOFx, TableView<AwardDTO>> getAwardTableView() {
         return awardTableView;
     }
 
-    public void setAwardTableView(ObservableMap<PersonDTO, TableView<AwardDTO>> awardTableView) {
+    public void setAwardTableView(ObservableMap<PersonDTOFx, TableView<AwardDTO>> awardTableView) {
         this.awardTableView = awardTableView;
     }
 
-    public ObservableMap<PersonDTO, Tab> getSelectedPropertiesTab() {
+    public ObservableMap<PersonDTOFx, Tab> getSelectedPropertiesTab() {
         return selectedPropertiesTab;
     }
 
-    public void setSelectedPropertiesTab(ObservableMap<PersonDTO, Tab> selectedPropertiesTab) {
+    public void setSelectedPropertiesTab(ObservableMap<PersonDTOFx, Tab> selectedPropertiesTab) {
         this.selectedPropertiesTab = selectedPropertiesTab;
     }
 
-    public ObservableMap<PersonDTO, TableView<PhoneDTO>> getPhoneTableView() {
+    public ObservableMap<PersonDTOFx, TableView<PhoneDTO>> getPhoneTableView() {
         return phoneTableView;
     }
 
-    public void setPhoneTableView(ObservableMap<PersonDTO, TableView<PhoneDTO>> phoneTableView) {
+    public void setPhoneTableView(ObservableMap<PersonDTOFx, TableView<PhoneDTO>> phoneTableView) {
         this.phoneTableView = phoneTableView;
     }
 
-    public ObservableMap<PersonDTO, TableView<EmailDTO>> getEmailTableView() {
+    public ObservableMap<PersonDTOFx, TableView<EmailDTO>> getEmailTableView() {
         return emailTableView;
     }
 
-    public void setEmailTableView(ObservableMap<PersonDTO, TableView<EmailDTO>> emailTableView) {
+    public void setEmailTableView(ObservableMap<PersonDTOFx, TableView<EmailDTO>> emailTableView) {
         this.emailTableView = emailTableView;
     }
 
-    public ObservableMap<PersonDTO, ComboBox<String>> getPersonComboBox() {
+    public ObservableMap<PersonDTOFx, ComboBox<String>> getPersonComboBox() {
         return personComboBox;
     }
 
-    public void setPersonComboBox(ObservableMap<PersonDTO, ComboBox<String>> personComboBox) {
+    public void setPersonComboBox(ObservableMap<PersonDTOFx, ComboBox<String>> personComboBox) {
         this.personComboBox = personComboBox;
     }
 
-    public ObservableMap<PersonDTO, TextField> getPersonTextField() {
+    public ObservableMap<PersonDTOFx, TextField> getPersonTextField() {
         return personTextField;
     }
 
-    public void setPersonTextField(ObservableMap<PersonDTO, TextField> personTextField) {
+    public void setPersonTextField(ObservableMap<PersonDTOFx, TextField> personTextField) {
         this.personTextField = personTextField;
     }
-    public PersonDTO getSelectedPerson() {
+    public PersonDTOFx getSelectedPerson() {
         return selectedPerson.get();
     }
-    public SimpleObjectProperty<PersonDTO> selectedPersonProperty() {
+    public SimpleObjectProperty<PersonDTOFx> selectedPersonProperty() {
         return selectedPerson;
     }
-    public void setSelectedPerson(PersonDTO selectedPerson) {
+    public void setSelectedPerson(PersonDTOFx selectedPerson) {
         this.selectedPerson.set(selectedPerson);
     }
-    public void setSelectedRadioForPerson(ObservableMap<PersonDTO, RadioButton> selectedRadioForPerson) {
+    public void setSelectedRadioForPerson(ObservableMap<PersonDTOFx, RadioButton> selectedRadioForPerson) {
         this.selectedRadioForPerson = selectedRadioForPerson;
     }
-    public ObservableMap<PersonDTO, RadioButton> getSelectedRadioForPerson() {
+    public ObservableMap<PersonDTOFx, RadioButton> getSelectedRadioForPerson() {
         return selectedRadioForPerson;
     }
-    public ObservableMap<PersonDTO, StackPane> getStackPaneMap() {
+    public ObservableMap<PersonDTOFx, StackPane> getStackPaneMap() {
         return stackPaneMap;
     }
     public MainModel getMainModel() {
         return mainModel;
     }
-    public ObservableList<PersonDTO> getPeople() {
+    public ObservableList<PersonDTOFx> getPeople() {
         return people;
     }
-    public void setPeople(ObservableList<PersonDTO> people) {
+    public void setPeople(ObservableList<PersonDTOFx> people) {
         this.people = people;
     }
     public MembershipListDTO getMembership() {

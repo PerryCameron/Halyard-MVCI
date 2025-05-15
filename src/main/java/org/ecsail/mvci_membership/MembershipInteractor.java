@@ -1,15 +1,9 @@
 package org.ecsail.mvci_membership;
 
 import javafx.application.Platform;
-import org.ecsail.dto.PersonDTO;
 import org.ecsail.interfaces.SlipUser;
-import org.ecsail.pdf.PDF_Envelope;
-import org.ecsail.widgetfx.DialogueFx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.util.List;
 
 public class MembershipInteractor implements SlipUser {
     private final MembershipModel membershipModel;
