@@ -68,7 +68,7 @@ public class MainView implements Builder<Region> {
         mainModel.clientConnectErrorProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null && newValue == true) {
                 action.accept(MainMessage.STOP_SPINNER);
-                logger.error("discovered a problem");
+                logger.error("MainView::setCommunicationErrorListener() triggered");
                 Platform.runLater(() -> {
                     Optional<ButtonType> result = DialogueFx.errorAlertWithAction("There was a problem", mainModel.errorMessageProperty().get());
                     action.accept(MainMessage.SET_CONNECT_ERROR_FALSE);

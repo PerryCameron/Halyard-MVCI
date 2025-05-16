@@ -14,7 +14,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Builder;
 import javafx.util.Duration;
-import org.ecsail.dto.DbRosterSettingsDTO;
 import org.ecsail.dto.MembershipListRadioDTO;
 import org.ecsail.dto.RosterDTOFx;
 import org.ecsail.mvci_roster.export.SaveFileChooser;
@@ -112,20 +111,6 @@ public class RosterView implements Builder<Region> {
     protected void setRadioListener() {
         // this is the one being called on launch of tab
         rosterModel.selectedRadioBoxProperty().addListener(Observable -> action.accept(CHANGE_LIST_TYPE));
-    }
-
-//    private Node setUpFieldSelectedToSearchBox() {
-//        return VBoxFx.vBoxOfCheckBoxes(this::setAllCheckBoxes);
-//    }
-
-    protected Node setAllCheckBoxes() {
-        VBox checkVBox = new VBox(5);
-        for(DbRosterSettingsDTO dto: rosterModel.getRosterSettings()) {
-            RosterSettingsCheckBox checkBox = new RosterSettingsCheckBox(dto, "searchable");
-            rosterModel.getCheckBoxes().add(checkBox);
-            checkVBox.getChildren().add(checkBox);
-        }
-        return checkVBox;
     }
 
     private Node setUpSearchBox() {

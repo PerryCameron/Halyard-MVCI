@@ -53,7 +53,7 @@ public class MainController extends Controller<MainMessage> implements Status {
             case SHOW_LOG -> showDebugLog();
             case STOP_SPINNER -> showLoadingSpinner(false);
             case SET_CONNECT_ERROR_FALSE -> mainInteractor.setConnectError(false);
-            case SET_CONNECT_ERROR_TRUE -> mainInteractor.setConnectError(true);
+//            case SET_CONNECT_ERROR_TRUE -> mainInteractor.setConnectError(true);
         }
     }
 

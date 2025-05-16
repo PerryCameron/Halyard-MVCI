@@ -48,17 +48,20 @@ public class RosterController extends Controller<RosterMessage> {
 
     private void search() {
         rosterInteractor.search();
-        Task<Void> task = new Task<>() {
-            @Override
-            protected Void call() {
-                rosterInteractor.fillTableView(); // not FX
-                Platform.runLater(() -> {
-                    rosterInteractor.changeState(); // JFX Thread
-                });
-                return null;
-            }
-        };
-        new Thread(task).start();
+//        Task<Void> task = new Task<>() {
+//            @Override
+//            protected Void call() {
+//                rosterInteractor.fillTableView(); // not FX
+//                Platform.runLater(() -> {
+//                    rosterInteractor.changeState(); // JFX Thread
+//                });
+//                return null;
+//            }
+//        };
+//        new Thread(task).start();
+
+
+        updateRoster();
     }
 
     private void updateRoster() {
@@ -78,9 +81,8 @@ public class RosterController extends Controller<RosterMessage> {
         };
         task.setOnSucceeded(e -> {
             List<RosterDTOFx> updatedRoster = task.getValue();
-            System.out.println("roster size: " + updatedRoster.size());
+            rosterInteractor.sortRoster(updatedRoster);
             rosterInteractor.clearMainRoster(); // Clear the list first
-            rosterInteractor.sortRoster();
             rosterInteractor.setNumberOfRecords(updatedRoster.size());
             mainController.showLoadingSpinner(false);
             rosterInteractor.setRoster(updatedRoster);

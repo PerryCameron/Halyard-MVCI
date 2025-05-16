@@ -67,9 +67,8 @@ public RosterInteractor(RosterModel rm) {
         rosterModel.getRosters().clear();
     }
 
-    protected void sortRoster() {
-        rosterModel.getRosters().sort(Comparator.comparing(RosterDTOFx::getId));
-        rosterModel.getRosterTableView().refresh();
+    protected void sortRoster(List<RosterDTOFx> updatedRoster) {
+        updatedRoster.sort(Comparator.comparing(RosterDTOFx::getId));
     }
 
     public void getRadioChoices() throws Exception {
@@ -201,7 +200,7 @@ public RosterInteractor(RosterModel rm) {
     }
 
     public void search() {
+    logger.info("making search");
         logger.info("Search made: {}", rosterModel.getTextFieldString());
-
     }
 }
