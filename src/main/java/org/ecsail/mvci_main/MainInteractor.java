@@ -84,6 +84,10 @@ public class MainInteractor implements ConfigFilePaths {
         }
     }
 
+    public void setConnectError(boolean b) {
+        mainModel.setConnectError(b);
+    }
+
 
 //    public void setChangeStatus(Status.light status) {
 //        Platform.runLater(() -> {

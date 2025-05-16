@@ -97,6 +97,10 @@ public class MainModel {
         return errorMessage;
     }
 
+    public void setConnectError(boolean connectError) {
+        this.clientConnectError.set(connectError);
+    }
+
     public void toggleClientConnectError() {
         clientConnectError.set(true);
         clientConnectError.set(false);

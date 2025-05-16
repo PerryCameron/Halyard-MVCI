@@ -169,7 +169,7 @@ public class HttpClientUtil {
     }
 
     private void signalError(String message) {
-        mainModel.toggleClientConnectError();
+        mainModel.setConnectError(true);
         mainModel.errorMessageProperty().set(message);
     }
 

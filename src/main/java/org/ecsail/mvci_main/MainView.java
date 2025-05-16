@@ -66,11 +66,12 @@ public class MainView implements Builder<Region> {
      */
     private void setCommunicationErrorListener() {
         mainModel.clientConnectErrorProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
+            if (newValue != null && newValue == true) {
                 action.accept(MainMessage.STOP_SPINNER);
                 logger.error("discovered a problem");
                 Platform.runLater(() -> {
                     Optional<ButtonType> result = DialogueFx.errorAlertWithAction("There was a problem", mainModel.errorMessageProperty().get());
+                    action.accept(MainMessage.SET_CONNECT_ERROR_FALSE);
                     result.ifPresent(button -> {
                         if(button == ButtonType.OK)  {
                             action.accept(MainMessage.CLOSE_ALL_CONNECTIONS);

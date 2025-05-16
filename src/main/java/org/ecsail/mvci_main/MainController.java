@@ -52,8 +52,12 @@ public class MainController extends Controller<MainMessage> implements Status {
             case CREATE_CONNECT_CONTROLLER -> createConnectController();
             case SHOW_LOG -> showDebugLog();
             case STOP_SPINNER -> showLoadingSpinner(false);
+            case SET_CONNECT_ERROR_FALSE -> mainInteractor.setConnectError(false);
+            case SET_CONNECT_ERROR_TRUE -> mainInteractor.setConnectError(true);
         }
     }
+
+
 
     private void showDebugLog() {
         Desktop desktop = Desktop.getDesktop(); // Gui_Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()
