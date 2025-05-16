@@ -47,7 +47,7 @@ public class RosterController extends Controller<RosterMessage> {
     }
 
     private void search() {
-        rosterInteractor.logSearch();
+        rosterInteractor.search();
         Task<Void> task = new Task<>() {
             @Override
             protected Void call() {

@@ -105,6 +105,7 @@ public class DialogueFx {
         DialogPane dialogPane = alert.getDialogPane();
         dialogPane.getStylesheets().add("css/dark/dialogue.css");
         dialogPane.getStyleClass().add("myDialog");
+        getTitleIcon(dialogPane);
         ButtonType yesButton = new ButtonType("Yes");
         ButtonType closeButton = new ButtonType("Close Application", ButtonBar.ButtonData.CANCEL_CLOSE);
         alert.getButtonTypes().setAll(yesButton, closeButton);
@@ -121,8 +122,24 @@ public class DialogueFx {
         DialogPane dialogPane = alert.getDialogPane();
         dialogPane.getStylesheets().add("css/dark/dialogue.css");
         dialogPane.getStyleClass().add("myDialog");
+        getTitleIcon(dialogPane);
         alert.showAndWait();
     }
+
+    public static Optional<ButtonType> errorAlertWithAction(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        tieAlertToStage(alert, 400, 200);
+
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add("css/dark/dialogue.css");
+        dialogPane.getStyleClass().add("myDialog");
+        getTitleIcon(dialogPane);
+        return alert.showAndWait();
+    }
+
 
     public static void infoAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -133,6 +150,7 @@ public class DialogueFx {
         DialogPane dialogPane = alert.getDialogPane();
         dialogPane.getStylesheets().add("css/dark/dialogue.css");
         dialogPane.getStyleClass().add("myDialog");
+        getTitleIcon(dialogPane);
         alert.showAndWait();
     }
 

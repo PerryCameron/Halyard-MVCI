@@ -163,7 +163,7 @@ public class HttpClientUtil {
                 throw new Exception("Failed to fetch data: " + response.code());
             }
         } catch (IOException e) {
-            signalError(e.getMessage());
+            signalError("Failed to fetch data: " + e.getMessage());
             throw new Exception("Failed to fetch data: " + e.getMessage());
         }
     }

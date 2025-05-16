@@ -1,7 +1,6 @@
 package org.ecsail.mvci_roster;
 
 import javafx.animation.KeyFrame;
-import javafx.animation.PauseTransition;
 import javafx.animation.Timeline;
 import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
@@ -62,7 +61,7 @@ public class RosterView implements Builder<Region> {
 
     private Node setUpLeftPane() {
         VBox vBox = VBoxFx.vBoxOf(220.0,10.0, new Insets(10,0,0,10));
-        vBox.getChildren().addAll(setUpRecordCountBox(),setUpSearchBox(),setUpFieldSelectedToSearchBox(),
+        vBox.getChildren().addAll(setUpRecordCountBox(),setUpSearchBox(),
                 createRadioBox(),setUpFieldSelectedToExport());
         return vBox;
     }
@@ -115,9 +114,9 @@ public class RosterView implements Builder<Region> {
         rosterModel.selectedRadioBoxProperty().addListener(Observable -> action.accept(CHANGE_LIST_TYPE));
     }
 
-    private Node setUpFieldSelectedToSearchBox() {
-        return VBoxFx.vBoxOfCheckBoxes(this::setAllCheckBoxes);
-    }
+//    private Node setUpFieldSelectedToSearchBox() {
+//        return VBoxFx.vBoxOfCheckBoxes(this::setAllCheckBoxes);
+//    }
 
     protected Node setAllCheckBoxes() {
         VBox checkVBox = new VBox(5);

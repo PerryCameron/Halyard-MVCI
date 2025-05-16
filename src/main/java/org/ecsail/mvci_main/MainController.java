@@ -50,14 +50,9 @@ public class MainController extends Controller<MainMessage> implements Status {
             case CLOSE_ALL_CONNECTIONS_AND_EXIT -> closeAllConnectionsAndExit();
             case CLOSE_ALL_CONNECTIONS -> closeAllConnections();
             case CREATE_CONNECT_CONTROLLER -> createConnectController();
-            case BACKUP_DATABASE -> backUpDatabase();
             case SHOW_LOG -> showDebugLog();
             case STOP_SPINNER -> showLoadingSpinner(false);
         }
-    }
-
-    public void backUpDatabase() {
-//        Database.BackUp(getConnections().getDataSource());
     }
 
     private void showDebugLog() {

@@ -104,9 +104,6 @@ public RosterInteractor(RosterModel rm) {
         });
     }
 
-
-    // for some reason it is properly downloading the data as I noticed in the logs, but it is not filling the table view
-    // below it is the old method I used to use when using jdbcTemplate
     protected List<RosterDTOFx> updateRoster() throws Exception {
         // Build the endpoint path and query parameters manually
         StringBuilder endpoint = new StringBuilder("roster");
@@ -199,7 +196,8 @@ public RosterInteractor(RosterModel rm) {
         rosterModel.numberOfRecordsProperty().set(String.valueOf(size));
     }
 
-    public void logSearch() {
-    logger.info("Search made: {}", rosterModel.getTextFieldString());
+    public void search() {
+        logger.info("Search made: {}", rosterModel.getTextFieldString());
+
     }
 }

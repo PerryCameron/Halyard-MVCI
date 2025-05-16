@@ -21,9 +21,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Builder;
 import javafx.util.Duration;
+import java.util.Optional;
 import org.ecsail.BaseApplication;
 import org.ecsail.interfaces.Status;
-import org.ecsail.mvci_connect.ConnectInteractor;
 import org.ecsail.static_tools.VersionUtil;
 import org.ecsail.widgetfx.*;
 import org.slf4j.Logger;
@@ -61,13 +61,22 @@ public class MainView implements Builder<Region> {
         return borderPane;
     }
 
+    /*
+    This is what happens when we get some sort of communication error
+     */
     private void setCommunicationErrorListener() {
         mainModel.clientConnectErrorProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 action.accept(MainMessage.STOP_SPINNER);
                 logger.error("discovered a problem");
                 Platform.runLater(() -> {
-                    DialogueFx.errorAlert("There was a problem", mainModel.errorMessageProperty().get());
+                    Optional<ButtonType> result = DialogueFx.errorAlertWithAction("There was a problem", mainModel.errorMessageProperty().get());
+                    result.ifPresent(button -> {
+                        if(button == ButtonType.OK)  {
+                            action.accept(MainMessage.CLOSE_ALL_CONNECTIONS);
+                        }
+                    });
+
                 });
             }
         });
@@ -185,9 +194,8 @@ public class MainView implements Builder<Region> {
 
     private Menu createFileMenu() {
         Menu menu = new Menu("File");
-        MenuItem backUp = MenuFx.menuItemOf("Backup DataBase", x -> action.accept(MainMessage.BACKUP_DATABASE), null);
         MenuItem close = MenuFx.menuItemOf("Close Connection", x -> action.accept(MainMessage.CLOSE_ALL_CONNECTIONS), null);
-        menu.getItems().addAll(close,backUp);
+        menu.getItems().addAll(close);
         return menu;
     }
 
@@ -204,6 +212,7 @@ public class MainView implements Builder<Region> {
     private static boolean isMac() {
         return getProperty("os.name").contains("Mac");
     }
+
     protected void closeTabs() {
         mainModel.getMainTabPane().getTabs().clear();
     }
