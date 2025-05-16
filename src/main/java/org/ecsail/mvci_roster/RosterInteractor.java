@@ -189,7 +189,11 @@ public RosterInteractor(RosterModel rm) {
     }
 
     public void setRoster(List<RosterDTOFx> updatedRoster) {
-        rosterModel.getRosters().addAll(updatedRoster);
+    // should already be in FX thread, but this is to make sure it doesn't stick.
+        Platform.runLater(() -> {
+            rosterModel.getRosters().addAll(updatedRoster);
+            rosterModel.getRosterTableView().refresh();
+        });
     }
 
     public void setNumberOfRecords(int size) {

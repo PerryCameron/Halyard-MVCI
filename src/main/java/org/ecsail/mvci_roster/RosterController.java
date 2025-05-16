@@ -80,10 +80,10 @@ public class RosterController extends Controller<RosterMessage> {
             List<RosterDTOFx> updatedRoster = task.getValue();
             System.out.println("roster size: " + updatedRoster.size());
             rosterInteractor.clearMainRoster(); // Clear the list first
-            rosterInteractor.setRoster(updatedRoster);
             rosterInteractor.sortRoster();
             rosterInteractor.setNumberOfRecords(updatedRoster.size());
             mainController.showLoadingSpinner(false);
+            rosterInteractor.setRoster(updatedRoster);
         });
         new Thread(task).start();
     }
