@@ -3,6 +3,7 @@ package org.ecsail.mvci_membership;
 import javafx.concurrent.Task;
 import javafx.scene.layout.Region;
 import org.ecsail.dto.MembershipListDTO;
+import org.ecsail.dto.RosterDTOFx;
 import org.ecsail.interfaces.Controller;
 import org.ecsail.mvci_main.MainController;
 import static org.ecsail.mvci_membership.MembershipMessage.*;
@@ -14,9 +15,9 @@ public class MembershipController extends Controller<MembershipMessage> {
     MainController mainController;
     DataBaseService db;
 
-    public MembershipController(MainController mc, MembershipListDTO ml) {
+    public MembershipController(MainController mc, RosterDTOFx rosterDTOFxDTO) {
         this.mainController = mc;
-        MembershipModel membershipModel = new MembershipModel(ml , mainController.getMainModel());
+        MembershipModel membershipModel = new MembershipModel(rosterDTOFxDTO , mainController.getMainModel());
 //        this.membershipInteractor = new MembershipInteractor(membershipModel,mainController.getConnections());
         this.membershipInteractor = new MembershipInteractor(membershipModel);
 

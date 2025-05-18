@@ -34,7 +34,8 @@ public class NewMembershipController extends Controller<NewMembershipMessage> {
     }
 
     private void launchTab() {
-        mainController.openMembershipMVCI(newMembershipInteractor.getMembershipList());
+        System.out.println("Launching tab: new Membership");
+//        mainController.openMembershipMVCI(newMembershipInteractor.getMembershipList());
     }
 
     private void createMembership() {

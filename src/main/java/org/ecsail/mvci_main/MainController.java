@@ -9,6 +9,8 @@ import javafx.scene.paint.Color;
 import org.ecsail.BaseApplication;
 import org.ecsail.dto.BoatListDTO;
 import org.ecsail.dto.MembershipListDTO;
+import org.ecsail.dto.RosterDTO;
+import org.ecsail.dto.RosterDTOFx;
 import org.ecsail.interfaces.Controller;
 import org.ecsail.interfaces.Status;
 import org.ecsail.mvci_boat.BoatController;
@@ -81,9 +83,9 @@ public class MainController extends Controller<MainMessage> implements Status {
         loadingController.getStage().setScene(new Scene(loadingController.getView(), Color.TRANSPARENT));
     }
 
-    public void openMembershipMVCI(MembershipListDTO m) {
-        if (mainInteractor.tabIsNotOpen(m.getMsId()))
-            mainView.addNewTab("Mem " + m.getMembershipId(), new MembershipController(this, m).getView(), m.getMsId());
+    public void openMembershipMVCI(RosterDTOFx rosterDTOFx) {
+        if (mainInteractor.tabIsNotOpen(rosterDTOFx.getMsId()))
+            mainView.addNewTab("Mem " + rosterDTOFx.getId(), new MembershipController(this, rosterDTOFx).getView(), rosterDTOFx.getMsId());
     }
 
     public void openBoatMVCI(BoatListDTO b) {

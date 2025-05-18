@@ -24,6 +24,7 @@ public class MembershipModel {
     private ObservableMap<PersonDTOFx, Tab> selectedPropertiesTab = FXCollections.observableHashMap();
     private ObservableMap<PersonDTOFx, TextField> personTextField = FXCollections.observableHashMap();
     private ObservableList<PersonDTOFx> people = FXCollections.observableArrayList();
+    private final SimpleObjectProperty<RosterDTOFx> membershipFromRosterList = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<MembershipListDTO> membership = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<SlipDTO> slip = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TableView<BoatDTOFx>> boatTableView = new SimpleObjectProperty<>();
@@ -56,7 +57,10 @@ public class MembershipModel {
     private int[] success = new int[16];
 
 
-
+    public MembershipModel(RosterDTOFx rosterDTOFx, MainModel mainModel) {
+        membershipFromRosterList.set(rosterDTOFx);
+        this.mainModel = mainModel;
+    }
 
 
     public int[] getSuccess() {
@@ -466,9 +470,11 @@ public class MembershipModel {
     public void setMembership(MembershipListDTO membership) {
         this.membership.set(membership);
     }
-    public MembershipModel(MembershipListDTO membershipListDTO, MainModel mainModel) {
-        membership.set(membershipListDTO);
-        this.mainModel = mainModel;
+    public RosterDTOFx getMembershipFromRosterList() {
+        return membershipFromRosterList.get();
     }
 
+    public SimpleObjectProperty<RosterDTOFx> membershipFromRosterListProperty() {
+        return membershipFromRosterList;
+    }
 }

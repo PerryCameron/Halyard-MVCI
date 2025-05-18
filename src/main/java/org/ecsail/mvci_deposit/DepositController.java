@@ -35,7 +35,8 @@ public class DepositController extends Controller<DepositMessage> {
     }
 
     private void launchTab() {
-        mainController.openMembershipMVCI(depositInteractor.getMembershipList());
+        System.out.println("Launching tab: Deposit");
+//        mainController.openMembershipMVCI(depositInteractor.getMembershipList());
     }
 
     private void getSlipData() {

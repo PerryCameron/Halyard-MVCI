@@ -35,7 +35,7 @@ public class BodController extends Controller<BodMessage> {
     }
 
     private void launchTab() {
-        mainController.openMembershipMVCI(bodInteractor.getMembershipList());
+//        mainController.openMembershipMVCI(bodInteractor.getMembershipList());
     }
 
     private void getSlipData() {

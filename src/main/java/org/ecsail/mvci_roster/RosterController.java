@@ -27,12 +27,16 @@ public class RosterController extends Controller<RosterMessage> {
     @Override
     public void action(RosterMessage action) {
         switch (action) {
-//            case LAUNCH_TAB -> launchTab();
+            case LAUNCH_TAB -> launchTab();
             case SEARCH -> search();
             case EXPORT_XPS -> exportRoster();
             case CHANGE_LIST_TYPE, UPDATE_YEAR -> updateRoster();
             case GET_DATA -> getRosterData();
         }
+    }
+
+    private void launchTab() {
+        mainController.openMembershipMVCI(rosterInteractor.getMembership());
     }
 
     private void exportRoster() {
