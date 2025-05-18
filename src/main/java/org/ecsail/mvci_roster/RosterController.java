@@ -36,7 +36,7 @@ public class RosterController extends Controller<RosterMessage> {
     }
 
     private void launchTab() {
-        mainController.openMembershipMVCI(rosterInteractor.getMembership());
+        mainController.openMembershipMVCI(rosterInteractor.getMembership(), rosterInteractor.getSelectedYear());
     }
 
     private void exportRoster() {

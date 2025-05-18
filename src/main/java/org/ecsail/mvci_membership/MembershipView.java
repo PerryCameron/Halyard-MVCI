@@ -36,11 +36,11 @@ public class MembershipView implements Builder<Region> {
     public Region build() {
         VBox vBox = VBoxFx.vBoxOf(new Insets(0, 10, 0, 10));
         BorderPane borderPane = new BorderPane();
-        borderPane.setTop(createHeader());
-        borderPane.setLeft(createPeopleTabPane());
-        borderPane.setRight(createInfoTabPane());
-        borderPane.setCenter(creteDivider());
-        borderPane.setBottom(createExtrasTabPane());
+//        borderPane.setTop(createHeader());
+//        borderPane.setLeft(createPeopleTabPane());
+//        borderPane.setRight(createInfoTabPane());
+//        borderPane.setCenter(creteDivider());
+//        borderPane.setBottom(createExtrasTabPane());
         vBox.getChildren().add(borderPane);
         setViewListener();
         return vBox;
@@ -61,7 +61,7 @@ public class MembershipView implements Builder<Region> {
     private Runnable viewMessaging(MembershipMessage message) { // when database updates, this makes UI reflect.
         return () -> {
             switch (message) {
-                case DATA_LOAD_SUCCEED -> launchDataDependentUI();
+//                case DATA_LOAD_SUCCEED -> launchDataDependentUI();
                 case DELETE_MEMBER_FROM_DATABASE_SUCCEED -> removePersonTab();
                 case DELETE_PRIMARY_MEMBER_FROM_DATABASE_SUCCEED -> afterPrimaryMemberRemoved();
                 case MOVE_SECONDARY_TO_PRIMARY_SUCCEED -> changeTabName("Secondary", "Primary");

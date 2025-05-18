@@ -83,9 +83,9 @@ public class MainController extends Controller<MainMessage> implements Status {
         loadingController.getStage().setScene(new Scene(loadingController.getView(), Color.TRANSPARENT));
     }
 
-    public void openMembershipMVCI(RosterDTOFx rosterDTOFx) {
+    public void openMembershipMVCI(RosterDTOFx rosterDTOFx, int selectedYear) {
         if (mainInteractor.tabIsNotOpen(rosterDTOFx.getMsId()))
-            mainView.addNewTab("Mem " + rosterDTOFx.getId(), new MembershipController(this, rosterDTOFx).getView(), rosterDTOFx.getMsId());
+            mainView.addNewTab("Mem " + rosterDTOFx.getId(), new MembershipController(this, rosterDTOFx, selectedYear).getView(), rosterDTOFx.getMsId());
     }
 
     public void openBoatMVCI(BoatListDTO b) {

@@ -2,7 +2,6 @@ package org.ecsail.mvci_membership;
 
 import javafx.concurrent.Task;
 import javafx.scene.layout.Region;
-import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.dto.RosterDTOFx;
 import org.ecsail.interfaces.Controller;
 import org.ecsail.mvci_main.MainController;
@@ -15,13 +14,10 @@ public class MembershipController extends Controller<MembershipMessage> {
     MainController mainController;
     DataBaseService db;
 
-    public MembershipController(MainController mc, RosterDTOFx rosterDTOFxDTO) {
+    public MembershipController(MainController mc, RosterDTOFx rosterDTOFxDTO, int selectedYear) {
         this.mainController = mc;
-        MembershipModel membershipModel = new MembershipModel(rosterDTOFxDTO , mainController.getMainModel());
-//        this.membershipInteractor = new MembershipInteractor(membershipModel,mainController.getConnections());
+        MembershipModel membershipModel = new MembershipModel(rosterDTOFxDTO, selectedYear,  mainController.getMainModel());
         this.membershipInteractor = new MembershipInteractor(membershipModel);
-
-//        this.db = membershipInteractor.getDataBaseService();
         action(GET_DATA);
         membershipView = new MembershipView(membershipModel, this::action);
     }
@@ -157,7 +153,8 @@ public class MembershipController extends Controller<MembershipMessage> {
         mainController.showLoadingSpinner(true);
         Task<Void> task = new Task<>() {
             @Override
-            protected Void call() {
+            protected Void call() throws Exception {
+                membershipInteractor.getMembershiptoPOJO();
 //                db.selectPersons();
 //                db.selectSlipInfo();
 //                db.selectBoats();

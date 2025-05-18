@@ -16,7 +16,7 @@ import java.time.Year;
 import java.util.ArrayList;
 
 public class RosterModel {
-    private final ObjectMapper objectMapper;
+//    private final ObjectMapper objectMapper;
     private final ObservableList<RosterDTOFx> rosters = FXCollections.observableArrayList();
     private final ObservableList<RosterDTOFx> searchedRosters = FXCollections.observableArrayList();
     private final ObservableList<MembershipListRadioDTO> radioChoices = FXCollections.observableArrayList();
@@ -37,10 +37,6 @@ public class RosterModel {
 
     public RosterModel(MainModel mainModel) {
         this.httpClient = mainModel.getHttpClient();
-        this.objectMapper = mainModel.getHttpClient().getObjectMapper();
-    }
-    public ObjectMapper getObjectMapper() {
-        return objectMapper;
     }
     public HttpClientUtil getHttpClient() {
         return httpClient;

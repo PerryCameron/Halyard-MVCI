@@ -5,6 +5,11 @@ import org.ecsail.interfaces.SlipUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+
 public class MembershipInteractor implements SlipUser {
     private final MembershipModel membershipModel;
     private static final Logger logger = LoggerFactory.getLogger(MembershipInteractor.class);
@@ -86,4 +91,45 @@ public MembershipInteractor(MembershipModel membershipModel) {
 //            logger.error(e.getMessage());
 //        }
     }
+
+//    public void getMembershiptoPOJO() throws Exception {
+//        StringBuilder endpoint = new StringBuilder("membership");
+//        endpoint.append("?year=").append(membershipModel.selectedMembershipYearProperty().getValue());
+//        endpoint.append("&msid=").append(URLEncoder.encode(String.valueOf(membershipModel.getMembershipFromRosterList().getMsId()), StandardCharsets.UTF_8.name()));
+//        try {
+//            String jsonResponse = membershipModel.getHttpClient().fetchDataFromHalyard(endpoint.toString());
+//
+//            System.out.println(jsonResponse);
+//        } catch (UnsupportedEncodingException e) {
+//            logger.error(e.getMessage());
+//            e.printStackTrace();
+//        }
+//
+//    }
+public void getMembershiptoPOJO() {
+    Logger logger = LoggerFactory.getLogger(getClass());
+    StringBuilder endpoint = new StringBuilder("membership");
+    try {
+        endpoint.append("?year=").append(membershipModel.selectedMembershipYearProperty().getValue());
+        endpoint.append("&msId=").append(URLEncoder.encode(String.valueOf(membershipModel.getMembershipFromRosterList().getMsId()), StandardCharsets.UTF_8.name()));
+        logger.debug("Constructed endpoint: {}", endpoint);
+
+        String jsonResponse = membershipModel.getHttpClient().fetchDataFromHalyard(endpoint.toString());
+        if (jsonResponse == null || jsonResponse.trim().isEmpty()) {
+            logger.warn("Received null or empty JSON response from endpoint: {}", endpoint.toString());
+            System.out.println("No JSON response received from endpoint: " + endpoint.toString());
+        } else {
+            logger.info("JSON Response: {}", jsonResponse);
+        }
+    } catch (UnsupportedEncodingException e) {
+        logger.error("Encoding error for endpoint: {}", e.getMessage(), e);
+        System.out.println("Encoding error: " + e.getMessage());
+    } catch (IOException e) {
+        logger.error("IO error fetching data from endpoint {}: {}", endpoint.toString(), e.getMessage(), e);
+        System.out.println("IO error: " + e.getMessage());
+    } catch (Exception e) {
+        logger.error("Unexpected error fetching data: {}", e.getMessage(), e);
+        System.out.println("Unexpected error: " + e.getMessage());
+    }
+}
 }

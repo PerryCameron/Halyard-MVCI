@@ -10,9 +10,10 @@ import org.ecsail.dto.*;
 import org.ecsail.enums.Success;
 import org.ecsail.interfaces.SlipUser;
 import org.ecsail.mvci_main.MainModel;
+import org.ecsail.static_tools.HttpClientUtil;
 
 public class MembershipModel {
-
+    private ObservableList<BoardPositionDTO> boardPositionDTOS;
     // Person information for membership
     private ObservableMap<PersonDTOFx, TableView<EmailDTO>> emailTableView = FXCollections.observableHashMap();
     private ObservableMap<PersonDTOFx, TableView<PhoneDTO>> phoneTableView = FXCollections.observableHashMap();
@@ -38,7 +39,7 @@ public class MembershipModel {
     private final ObjectProperty<MembershipMessage> returnMessage = new SimpleObjectProperty<>();
     private final StringProperty sublease = new SimpleStringProperty("");
     private final StringProperty membershipId = new SimpleStringProperty("");
-    private final MainModel mainModel;
+    private final HttpClientUtil httpClient;
     private ObservableMap<String,Control> slipControls = FXCollections.observableHashMap();
     private final SimpleObjectProperty<NotesDTOFx> selectedNote = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<AwardDTO> selectedAward = new SimpleObjectProperty<>();
@@ -52,14 +53,17 @@ public class MembershipModel {
     private final SimpleObjectProperty<PaymentDTO> selectedPayment = new SimpleObjectProperty<>();
     private final StringProperty selectedString = new SimpleStringProperty("");
     private final SimpleIntegerProperty selectedInvoiceCreateYear = new SimpleIntegerProperty(0);
+    private final SimpleIntegerProperty selectedMembershipYear = new SimpleIntegerProperty(0);
     private final SimpleObjectProperty<Success> invoiceSaved = new SimpleObjectProperty<>(Success.NULL);
     private final SimpleBooleanProperty envelopeIsCatalogue = new SimpleBooleanProperty(false);
     private int[] success = new int[16];
 
 
-    public MembershipModel(RosterDTOFx rosterDTOFx, MainModel mainModel) {
+    public MembershipModel(RosterDTOFx rosterDTOFx, int selectedYear, MainModel mainModel) {
         membershipFromRosterList.set(rosterDTOFx);
-        this.mainModel = mainModel;
+        this.httpClient = mainModel.getHttpClient();
+        this.boardPositionDTOS = mainModel.getBoardPositionDTOS();
+        this.selectedMembershipYear.set(selectedYear);
     }
 
 
@@ -452,9 +456,6 @@ public class MembershipModel {
     public ObservableMap<PersonDTOFx, StackPane> getStackPaneMap() {
         return stackPaneMap;
     }
-    public MainModel getMainModel() {
-        return mainModel;
-    }
     public ObservableList<PersonDTOFx> getPeople() {
         return people;
     }
@@ -476,5 +477,17 @@ public class MembershipModel {
 
     public SimpleObjectProperty<RosterDTOFx> membershipFromRosterListProperty() {
         return membershipFromRosterList;
+    }
+
+    public SimpleIntegerProperty selectedMembershipYearProperty() {
+        return selectedMembershipYear;
+    }
+
+    public HttpClientUtil getHttpClient() {
+        return httpClient;
+    }
+
+    public ObservableList<BoardPositionDTO> getBoardPositionDTOS() {
+        return boardPositionDTOS;
     }
 }

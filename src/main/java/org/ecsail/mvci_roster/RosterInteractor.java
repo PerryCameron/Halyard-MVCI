@@ -75,7 +75,7 @@ public RosterInteractor(RosterModel rm) {
         String endpoint = "radioChoices";
         String jsonResponse = rosterModel.getHttpClient().fetchDataFromHalyard(endpoint);
         logger.debug("Radio choices response: {}", jsonResponse);
-        List<MembershipListRadioDTO> choices = rosterModel.getObjectMapper().readValue(
+        List<MembershipListRadioDTO> choices = rosterModel.getHttpClient().getObjectMapper().readValue(
                 jsonResponse,
                 new TypeReference<>() {
                 }
@@ -91,7 +91,7 @@ public RosterInteractor(RosterModel rm) {
         String endpoint = "searchableListItems";
         String jsonResponse = rosterModel.getHttpClient().fetchDataFromHalyard(endpoint);
         logger.debug("Roster Settings response: {}", jsonResponse);
-        List<DbRosterSettingsDTO> choices = rosterModel.getObjectMapper().readValue(
+        List<DbRosterSettingsDTO> choices = rosterModel.getHttpClient().getObjectMapper().readValue(
                 jsonResponse,
                 new TypeReference<>() {
                 }
@@ -118,7 +118,7 @@ public RosterInteractor(RosterModel rm) {
         // Fetch data using the constructed endpoint
         String jsonResponse = rosterModel.getHttpClient().fetchDataFromHalyard(endpoint.toString());
 //        logger.debug("Roster response: {}", jsonResponse);
-        List<RosterDTO> roster = rosterModel.getObjectMapper().readValue(
+        List<RosterDTO> roster = rosterModel.getHttpClient().getObjectMapper().readValue(
                 jsonResponse,
                 new TypeReference<>() {
                 }
@@ -202,5 +202,9 @@ public RosterInteractor(RosterModel rm) {
     public void search() {
     logger.info("making search");
         logger.info("Search made: {}", rosterModel.getTextFieldString());
+    }
+
+    public int getSelectedYear() {
+        return rosterModel.getSelectedYear();
     }
 }

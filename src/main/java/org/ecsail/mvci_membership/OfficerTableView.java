@@ -59,7 +59,7 @@ public class OfficerTableView implements Builder<TableView<OfficerDTO>> {
     }
 
     private TableColumn<OfficerDTO, String> createColumn2() {
-        ObservableList<BoardPositionDTO> boardPositions = FXCollections.observableArrayList(membershipModel.getMainModel().getBoardPositionDTOS());
+        ObservableList<BoardPositionDTO> boardPositions = FXCollections.observableArrayList(membershipModel.getBoardPositionDTOS());
         ObservableList<String> officerList = FXCollections.observableArrayList(boardPositions.stream().map(BoardPositionDTO::position).collect(Collectors.toList()));
         final TableColumn<OfficerDTO, String> col2 = new TableColumn<>("Officers, Chairs and Board");
         col2.setCellValueFactory(param -> {
