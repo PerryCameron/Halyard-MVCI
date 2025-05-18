@@ -3,6 +3,7 @@ package org.ecsail.dto;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.ecsail.pojo.Person;
 
 import java.time.LocalDate;
 
@@ -91,6 +92,20 @@ public class PersonDTOFx {
 		this.occupation = new SimpleStringProperty(p.getOccupation());
 		this.business = new SimpleStringProperty(p.getBusiness());
 		this.active = new SimpleBooleanProperty(p.isActive());
+		this.nickName = new SimpleStringProperty(p.getNickName());
+		this.oldMsid = new SimpleIntegerProperty(p.getOldMsid());
+	}
+
+	public PersonDTOFx(Person p) { // for cloning
+		this.pId = new SimpleIntegerProperty(p.getpId());
+		this.msId = new SimpleIntegerProperty(p.getMsId());
+		this.memberType = new SimpleIntegerProperty(p.getMemberType());
+		this.firstName = new SimpleStringProperty(p.getFirstName());
+		this.lastName = new SimpleStringProperty(p.getLastName());
+		this.birthday = new SimpleObjectProperty<>(p.getBirthday() != null ? LocalDate.parse(p.getBirthday()) : null);
+		this.occupation = new SimpleStringProperty(p.getOccupation());
+		this.business = new SimpleStringProperty(p.getBusiness());
+		this.active = new SimpleBooleanProperty(p.getActive() == 1);
 		this.nickName = new SimpleStringProperty(p.getNickName());
 		this.oldMsid = new SimpleIntegerProperty(p.getOldMsid());
 	}

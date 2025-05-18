@@ -12,7 +12,6 @@ public class MembershipController extends Controller<MembershipMessage> {
     MembershipInteractor membershipInteractor;
     MembershipView membershipView;
     MainController mainController;
-    DataBaseService db;
 
     public MembershipController(MainController mc, RosterDTOFx rosterDTOFxDTO, int selectedYear) {
         this.mainController = mc;
@@ -162,6 +161,8 @@ public class MembershipController extends Controller<MembershipMessage> {
         task.setOnSucceeded(e -> {
             mainController.showLoadingSpinner(false);
             membershipInteractor.setDataLoaded();
+
+
         });
         new Thread(task).start();
     }

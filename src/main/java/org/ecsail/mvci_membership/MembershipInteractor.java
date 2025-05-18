@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import org.ecsail.dto.MembershipDTOFx;
 import org.ecsail.interfaces.SlipUser;
 import org.ecsail.pojo.Membership;
+import org.ecsail.static_tools.CopyPOJOtoFx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -132,6 +133,20 @@ public class MembershipInteractor implements SlipUser {
     }
 
     public void convertPOJOsToFXProperties(Membership membership) {
-        membershipModel.membershipProperty().set(new MembershipDTOFx(membership));
+        MembershipDTOFx membershipDTOFx = new MembershipDTOFx(membership);
+        membershipModel.membershipProperty().set(membershipDTOFx);
+        try {
+            membershipDTOFx.getPeople().addAll(CopyPOJOtoFx.copyPeople(membership.getPeople()));
+        } catch (Exception e) {
+            logger.error("Failed to convert membership to FX: {}", e.getMessage(), e);
+        }
+
+    }
+
+    public void addDataToUI() {
+
+
+
+
     }
 }

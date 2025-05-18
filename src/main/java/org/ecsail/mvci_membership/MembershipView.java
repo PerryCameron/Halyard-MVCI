@@ -50,10 +50,38 @@ public class MembershipView implements Builder<Region> {
     private void setDataLoadedListener(BorderPane borderPane) {
         membershipModel.dataIsLoadedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
-                borderPane.setTop(createHeader());
-                System.out.println("Data Loaded!");
+                try {
+                    borderPane.setTop(createHeader());
+                    borderPane.setLeft(createPeopleTabPane());
+                    addPeopleTabs();
+                    System.out.println("Data Loaded!");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
             }
         });
+    }
+
+    private void addPeopleTabs() {
+        membershipModel.membershipProperty().get().getPeople().forEach(personDTO -> membershipModel.getPeopleTabPane().getTabs()
+                .add(new PersonTabView(this, personDTO).build()));
+    }
+
+    private void launchDataDependentUI() {
+//        membershipModel.getPeople().forEach(personDTO -> membershipModel.getPeopleTabPane().getTabs()
+//                .add(new PersonTabView(this, personDTO).build()));
+        membershipModel.getPeopleTabPane().getTabs().add(new AddPersonTabView(this).build());
+        // right tabPane
+        membershipModel.getInfoTabPane().getTabs().add(new SlipTabView(this).build());
+        membershipModel.getInfoTabPane().getTabs().add(new MembershipIdView(this).build());
+        membershipModel.getInfoTabPane().getTabs().add(new InvoiceListView(this).build());
+        // bottom tabPane
+        membershipModel.getExtraTabPane().getTabs().add(new BoatTabView(this).build());
+        membershipModel.getExtraTabPane().getTabs().add(new NotesTabView(this).build());
+        membershipModel.getExtraTabPane().getTabs().add(new PropertiesTabView(this).build());
+        membershipModel.getExtraTabPane().getTabs().add(new AttachmentsTabView(this).build());
+        membershipModel.getExtraTabPane().getTabs().add(new AddressTabView(this).build());
     }
 
 
@@ -154,21 +182,7 @@ public class MembershipView implements Builder<Region> {
         membershipModel.getPeopleTabPane().getTabs().remove(tab);
     }
 
-    private void launchDataDependentUI() {
-        membershipModel.getPeople().forEach(personDTO -> membershipModel.getPeopleTabPane().getTabs()
-                .add(new PersonTabView(this, personDTO).build()));
-        membershipModel.getPeopleTabPane().getTabs().add(new AddPersonTabView(this).build());
-        // right tabPane
-        membershipModel.getInfoTabPane().getTabs().add(new SlipTabView(this).build());
-        membershipModel.getInfoTabPane().getTabs().add(new MembershipIdView(this).build());
-        membershipModel.getInfoTabPane().getTabs().add(new InvoiceListView(this).build());
-        // bottom tabPane
-        membershipModel.getExtraTabPane().getTabs().add(new BoatTabView(this).build());
-        membershipModel.getExtraTabPane().getTabs().add(new NotesTabView(this).build());
-        membershipModel.getExtraTabPane().getTabs().add(new PropertiesTabView(this).build());
-        membershipModel.getExtraTabPane().getTabs().add(new AttachmentsTabView(this).build());
-        membershipModel.getExtraTabPane().getTabs().add(new AddressTabView(this).build());
-    }
+
 
     private Node createExtrasTabPane() {
         HBox hBox = HBoxFx.hBoxOf(new Insets(10, 0, 0, 0)); // provides space between
@@ -187,14 +201,18 @@ public class MembershipView implements Builder<Region> {
     }
 
     private Node createPeopleTabPane() {
+        System.out.println("createPeopleTabPane() membershipView");
         TabPane tabPane = PaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE, 498, "custom-tab-pane");
         membershipModel.setPeopleTabPane(tabPane);
+
         membershipModel.getPeopleTabPane().getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
             if (newTab.getText().equals("Add")) {
+                System.out.println("Add people");
                 AddPersonTabView addPersonTabView = (AddPersonTabView) newTab.getUserData();
                 membershipModel.setSelectedPerson(addPersonTabView.getPersonDTO());
                 logger.debug("Showing Add tab: " + membershipModel.getSelectedPerson());
             } else {
+                System.out.println("Got here!");
                 PersonTabView personTabView = (PersonTabView) newTab.getUserData();// Get the associated PersonTabView object
                 membershipModel.setSelectedPerson(personTabView.getPersonDTO());
                 logger.debug("Showing Person tab: " + membershipModel.getSelectedPerson());

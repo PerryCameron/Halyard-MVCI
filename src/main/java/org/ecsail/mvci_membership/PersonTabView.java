@@ -57,7 +57,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         borderPane.setId("box-background-light");
         borderPane.setLeft(createFieldDetails());
         borderPane.setCenter(createPictureFrame());
-        borderPane.setBottom(createBottomStacks());
+//        borderPane.setBottom(createBottomStacks());
         vBox.getChildren().add(borderPane);
         this.setContent(vBox);
         return this;

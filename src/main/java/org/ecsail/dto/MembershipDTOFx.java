@@ -5,7 +5,6 @@ import javafx.collections.FXCollections;
 import org.ecsail.pojo.Membership;
 import org.ecsail.pojo.Slip;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MembershipDTOFx {
@@ -99,13 +98,6 @@ public class MembershipDTOFx {
         return membershipId;
     }
 
-//    public int getRenew() {
-//        return renew.get();
-//    }
-//
-//    public SimpleIntegerProperty renewProperty() {
-//        return renew;
-//    }
 
     public String getMemType() {
         return memType.get();
@@ -114,22 +106,6 @@ public class MembershipDTOFx {
     public SimpleStringProperty memTypeProperty() {
         return memType;
     }
-
-//    public int getSelected() {
-//        return selected.get();
-//    }
-//
-//    public SimpleIntegerProperty selectedProperty() {
-//        return selected;
-//    }
-//
-//    public int getLateRenew() {
-//        return lateRenew.get();
-//    }
-//
-//    public SimpleIntegerProperty lateRenewProperty() {
-//        return lateRenew;
-//    }
 
     public int getpId() {
         return pId.get();
@@ -177,5 +153,57 @@ public class MembershipDTOFx {
 
     public SimpleStringProperty zipProperty() {
         return zip;
+    }
+
+    public Slip getSlip() {
+        return slip.get();
+    }
+
+    public ObjectProperty<Slip> slipProperty() {
+        return slip;
+    }
+
+    public List<PersonDTOFx> getPeople() {
+        return people;
+    }
+
+    public List<BoatDTOFx> getBoats() {
+        return boats;
+    }
+
+    public List<InvoiceDTOFx> getInvoices() {
+        return invoices;
+    }
+
+    public List<MembershipIdDTOFx> getMembershipIds() {
+        return membershipIds;
+    }
+
+    public List<Memo2DTOFx> getMemos() {
+        return memos;
+    }
+
+    public void setSlip(Slip slip) {
+        this.slip.set(slip);
+    }
+
+    public void setPeople(List<PersonDTOFx> people) {
+        this.people = people;
+    }
+
+    public void setBoats(List<BoatDTOFx> boats) {
+        this.boats = boats;
+    }
+
+    public void setInvoices(List<InvoiceDTOFx> invoices) {
+        this.invoices = invoices;
+    }
+
+    public void setMembershipIds(List<MembershipIdDTOFx> membershipIds) {
+        this.membershipIds = membershipIds;
+    }
+
+    public void setMemos(List<Memo2DTOFx> memos) {
+        this.memos = memos;
     }
 }
