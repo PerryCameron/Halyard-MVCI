@@ -10,7 +10,7 @@ import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Builder;
 import org.ecsail.custom.RadioButtonCell;
-import org.ecsail.dto.EmailDTO;
+import org.ecsail.dto.EmailDTOFx;
 import org.ecsail.dto.PersonDTOFx;
 import org.ecsail.static_tools.StringTools;
 import org.ecsail.widgetfx.TableColumnFx;
@@ -19,7 +19,7 @@ import org.ecsail.widgetfx.TableViewFx;
 import java.util.Arrays;
 import java.util.List;
 
-public class EmailTableView implements Builder<TableView<EmailDTO>> {
+public class EmailTableView implements Builder<TableView<EmailDTOFx>> {
 
     private final PersonDTOFx person;
     private final MembershipView membershipView;
@@ -32,24 +32,24 @@ public class EmailTableView implements Builder<TableView<EmailDTO>> {
     }
 
     @Override
-    public TableView<EmailDTO> build() {
-        TableView<EmailDTO> tableView = TableViewFx.tableViewOf(EmailDTO.class, 146);
+    public TableView<EmailDTOFx> build() {
+        TableView<EmailDTOFx> tableView = TableViewFx.tableViewOf(EmailDTOFx.class, 146);
         tableView.setItems(person.getEmail());
-        List<TableColumn<EmailDTO, ?>> columns = Arrays.asList(createColumn1(), createColumn2(), createColumn3());
+        List<TableColumn<EmailDTOFx, ?>> columns = Arrays.asList(createColumn1(), createColumn2(), createColumn3());
         tableView.getColumns().setAll(columns);
-        TableView.TableViewSelectionModel<EmailDTO> selectionModel = tableView.getSelectionModel();
+        TableView.TableViewSelectionModel<EmailDTOFx> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) membershipModel.setSelectedEmail(newSelection);
         });
         return tableView;
     }
 
-    private TableColumn<EmailDTO,String> createColumn1() { //
-        TableColumn<EmailDTO, String> col1 = TableColumnFx.editableStringTableColumn(EmailDTO::emailProperty,"Email");
+    private TableColumn<EmailDTOFx,String> createColumn1() { //
+        TableColumn<EmailDTOFx, String> col1 = TableColumnFx.editableStringTableColumn(EmailDTOFx::emailProperty,"Email");
         col1.setOnEditCommit(t -> {
             int email_id = t.getTableView().getItems().get(t.getTablePosition().getRow()).getEmail_id();
             if(StringTools.isValidEmail(t.getNewValue())) {
-                EmailDTO emailDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
+                EmailDTOFx emailDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                 emailDTO.setEmail(t.getNewValue());
                 membershipModel.setSelectedEmail(emailDTO);
                 membershipView.sendMessage().accept(MembershipMessage.UPDATE_EMAIL);
@@ -63,12 +63,12 @@ public class EmailTableView implements Builder<TableView<EmailDTO>> {
         return col1;
     }
 
-    private TableColumn<EmailDTO,Boolean> createColumn2() {
-        TableColumn<EmailDTO, Boolean> col2 = new TableColumn<>("Primary");
+    private TableColumn<EmailDTOFx,Boolean> createColumn2() {
+        TableColumn<EmailDTOFx, Boolean> col2 = new TableColumn<>("Primary");
         col2.setStyle( "-fx-alignment: CENTER;");
         col2.setCellValueFactory(new PropertyValueFactory<>("isPrimaryUse"));
-        ObjectProperty<EmailDTO> previousEmailDTO = new SimpleObjectProperty<>();
-        previousEmailDTO.set(person.getEmail().stream().filter(EmailDTO::getIsPrimaryUse).findFirst().orElse(null));
+        ObjectProperty<EmailDTOFx> previousEmailDTO = new SimpleObjectProperty<>();
+        previousEmailDTO.set(person.getEmail().stream().filter(EmailDTOFx::getIsPrimaryUse).findFirst().orElse(null));
         // TODO make this fucking thing work
         membershipModel.setSelectedEmail(previousEmailDTO.get()); // this may be wrong
         membershipView.sendMessage().accept(MembershipMessage.EMAIL_IS_PRIMARY_USE);
@@ -77,10 +77,10 @@ public class EmailTableView implements Builder<TableView<EmailDTO>> {
         return col2;
     }
 
-    private TableColumn<EmailDTO,Boolean> createColumn3() {
-        TableColumn<EmailDTO, Boolean> col3 = new TableColumn<>("Listed");
+    private TableColumn<EmailDTOFx,Boolean> createColumn3() {
+        TableColumn<EmailDTOFx, Boolean> col3 = new TableColumn<>("Listed");
         col3.setCellValueFactory(param -> {
-            EmailDTO emailDTO = param.getValue();
+            EmailDTOFx emailDTO = param.getValue();
             SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(emailDTO.getIsListed());
             booleanProp.addListener((observable, oldValue, newValue) -> {
                 emailDTO.setListed(newValue);
@@ -90,7 +90,7 @@ public class EmailTableView implements Builder<TableView<EmailDTO>> {
             return booleanProp;
         });
         col3.setCellFactory(p12 -> {
-            CheckBoxTableCell<EmailDTO, Boolean> cell = new CheckBoxTableCell<>();
+            CheckBoxTableCell<EmailDTOFx, Boolean> cell = new CheckBoxTableCell<>();
             cell.setAlignment(Pos.CENTER);
             return cell;
         });

@@ -19,10 +19,10 @@ public class PersonDTOFx {
 	private BooleanProperty active;
 	private StringProperty nickName;
 	private IntegerProperty oldMsid;
-	private ObservableList<PhoneDTO> phones = FXCollections.observableArrayList();
-	private ObservableList<EmailDTO> email = FXCollections.observableArrayList();
-	private ObservableList<AwardDTO> awards = FXCollections.observableArrayList();
-	private ObservableList<OfficerDTO> officer = FXCollections.observableArrayList();
+	private ObservableList<PhoneDTOFx> phones = FXCollections.observableArrayList();
+	private ObservableList<EmailDTOFx> email = FXCollections.observableArrayList();
+	private ObservableList<AwardDTOFx> awards = FXCollections.observableArrayList();
+	private ObservableList<OfficerDTOFx> officer = FXCollections.observableArrayList();
 
 	public PersonDTOFx(Integer pid, Integer ms_id, Integer memberType, String firstName, String lastName,
 					   LocalDate birthday, String occupation,
@@ -111,35 +111,35 @@ public class PersonDTOFx {
 	}
 
 
-	public ObservableList<OfficerDTO> getOfficers() {
+	public ObservableList<OfficerDTOFx> getOfficers() {
 		return officer;
 	}
 
-	public void setOfficer(ObservableList<OfficerDTO> officer) {
+	public void setOfficer(ObservableList<OfficerDTOFx> officer) {
 		this.officer = officer;
 	}
 
-	public ObservableList<AwardDTO> getAwards() {
+	public ObservableList<AwardDTOFx> getAwards() {
 		return awards;
 	}
 
-	public void setAwards(ObservableList<AwardDTO> awards) {
+	public void setAwards(ObservableList<AwardDTOFx> awards) {
 		this.awards = awards;
 	}
 
-	public ObservableList<PhoneDTO> getPhones() {
+	public ObservableList<PhoneDTOFx> getPhones() {
 		return phones;
 	}
 
-	public void setPhones(ObservableList<PhoneDTO> phones) {
+	public void setPhones(ObservableList<PhoneDTOFx> phones) {
 		this.phones = phones;
 	}
 
-	public ObservableList<EmailDTO> getEmail() {
+	public ObservableList<EmailDTOFx> getEmail() {
 		return email;
 	}
 
-	public void setEmail(ObservableList<EmailDTO> email) {
+	public void setEmail(ObservableList<EmailDTOFx> email) {
 		this.email = email;
 	}
 

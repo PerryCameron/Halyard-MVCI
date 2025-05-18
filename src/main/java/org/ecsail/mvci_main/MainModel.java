@@ -64,13 +64,10 @@ public class MainModel {
         this.lightStatusProperty.set(lightStatusProperty);
     }
 
-
     public ObservableList<BoardPositionDTO> getBoardPositionDTOS() {
         return boardPositionDTOS;
     }
-    public void setBoardPositionDTOS(ObservableList<BoardPositionDTO> boardPositionDTOS) {
-        this.boardPositionDTOS = boardPositionDTOS;
-    }
+
     public StringProperty statusLabelProperty() {
         return statusLabel;
     }

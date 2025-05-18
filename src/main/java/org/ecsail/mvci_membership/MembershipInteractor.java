@@ -2,8 +2,10 @@ package org.ecsail.mvci_membership;
 
 import javafx.application.Platform;
 import org.ecsail.dto.MembershipDTOFx;
+import org.ecsail.dto.PersonDTOFx;
 import org.ecsail.interfaces.SlipUser;
 import org.ecsail.pojo.Membership;
+import org.ecsail.pojo.Person;
 import org.ecsail.static_tools.CopyPOJOtoFx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -136,7 +138,11 @@ public class MembershipInteractor implements SlipUser {
         MembershipDTOFx membershipDTOFx = new MembershipDTOFx(membership);
         membershipModel.membershipProperty().set(membershipDTOFx);
         try {
+            // Add convert the people
             membershipDTOFx.getPeople().addAll(CopyPOJOtoFx.copyPeople(membership.getPeople()));
+
+
+
         } catch (Exception e) {
             logger.error("Failed to convert membership to FX: {}", e.getMessage(), e);
         }

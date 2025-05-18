@@ -1,21 +1,21 @@
 package org.ecsail.repository.interfaces;
 
 import org.ecsail.dto.PersonDTOFx;
-import org.ecsail.dto.PhoneDTO;
+import org.ecsail.dto.PhoneDTOFx;
 
 import java.util.List;
 
 public interface PhoneRepository {
-    List<PhoneDTO> getPhoneByPid(int p_id);
+    List<PhoneDTOFx> getPhoneByPid(int p_id);
 
-    List<PhoneDTO> getPhoneByPerson(PersonDTOFx p);
+    List<PhoneDTOFx> getPhoneByPerson(PersonDTOFx p);
 
-    PhoneDTO getListedPhoneByType(PersonDTOFx p, String type);
+    PhoneDTOFx getListedPhoneByType(PersonDTOFx p, String type);
 
-    PhoneDTO getPhoneByType(String pid, String type);
-    int update(PhoneDTO o);
-    int delete(PhoneDTO o);
-    int insert(PhoneDTO o);
+    PhoneDTOFx getPhoneByType(String pid, String type);
+    int update(PhoneDTOFx o);
+    int delete(PhoneDTOFx o);
+    int insert(PhoneDTOFx o);
 
     int deletePhones(int pId);
 }

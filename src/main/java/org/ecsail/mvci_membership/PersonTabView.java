@@ -17,7 +17,7 @@ import javafx.scene.text.Text;
 import javafx.util.Builder;
 import org.ecsail.connection.Mail;
 import org.ecsail.custom.CustomDatePicker;
-import org.ecsail.dto.EmailDTO;
+import org.ecsail.dto.EmailDTOFx;
 import org.ecsail.dto.PersonDTOFx;
 import org.ecsail.enums.MemberType;
 import org.ecsail.interfaces.ConfigFilePaths;
@@ -57,7 +57,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         borderPane.setId("box-background-light");
         borderPane.setLeft(createFieldDetails());
         borderPane.setCenter(createPictureFrame());
-//        borderPane.setBottom(createBottomStacks());
+        borderPane.setBottom(createBottomStacks());
         vBox.getChildren().add(borderPane);
         this.setContent(vBox);
         return this;
@@ -135,7 +135,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
                 hBox.getChildren().addAll(membershipModel.getAwardTableView().get(personDTO),vBox);
             }
             case Email -> {
-                TableView<EmailDTO> tableView = new EmailTableView(personDTO, membershipView).build();
+                TableView<EmailDTOFx> tableView = new EmailTableView(personDTO, membershipView).build();
                 membershipModel.getEmailTableView().put(personDTO, tableView);
                 VBox vBox = createButtonBox(createAddButton(Email), createDeleteButton(Email), createCopyButton(Email), createEmailButton());
                 hBox.getChildren().addAll(membershipModel.getEmailTableView().get(personDTO),vBox);

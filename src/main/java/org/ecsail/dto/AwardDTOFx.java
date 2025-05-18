@@ -4,10 +4,11 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import org.ecsail.pojo.Award;
 
 import java.time.Year;
 
-public class AwardDTO {
+public class AwardDTOFx {
 	
 	private IntegerProperty awardId;
 	private IntegerProperty pId;
@@ -16,19 +17,26 @@ public class AwardDTO {
 
 
 	
-	public AwardDTO(Integer awardId, Integer pId, String awardYear, String awardType) {
+	public AwardDTOFx(Integer awardId, Integer pId, String awardYear, String awardType) {
 		this.awardId = new SimpleIntegerProperty(awardId);
 		this.pId = new SimpleIntegerProperty(pId);
 		this.awardYear = new SimpleStringProperty(awardYear);
 		this.awardType = new SimpleStringProperty(awardType);
 	}
 
-    public AwardDTO(int pId) {
+    public AwardDTOFx(int pId) {
 		this.awardId = new SimpleIntegerProperty(0);
 		this.pId = new SimpleIntegerProperty(pId);
 		this.awardYear = new SimpleStringProperty(Year.now().toString());
 		this.awardType = new SimpleStringProperty("");
     }
+
+	public AwardDTOFx(Award award) {
+		this.awardId = new SimpleIntegerProperty(award.getAwardId());
+		this.pId = new SimpleIntegerProperty(award.getpId());
+		this.awardYear = new SimpleStringProperty(award.getAwardYear());
+		this.awardType = new SimpleStringProperty(award.getAwardType());
+	}
 
     public final IntegerProperty awardIdProperty() {
 		return this.awardId;

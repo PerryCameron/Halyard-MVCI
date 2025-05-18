@@ -13,7 +13,7 @@ import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.util.Builder;
 import org.ecsail.dto.PersonDTOFx;
-import org.ecsail.dto.PhoneDTO;
+import org.ecsail.dto.PhoneDTOFx;
 import org.ecsail.enums.PhoneType;
 import org.ecsail.widgetfx.TableColumnFx;
 import org.ecsail.widgetfx.TableViewFx;
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class PhoneTableView implements Builder<TableView<PhoneDTO>> {
+public class PhoneTableView implements Builder<TableView<PhoneDTOFx>> {
 
     private final MembershipView membershipView;
     private final PersonDTOFx person;
@@ -35,29 +35,29 @@ public class PhoneTableView implements Builder<TableView<PhoneDTO>> {
     }
 
     @Override
-    public TableView<PhoneDTO> build() {
-        TableView<PhoneDTO> tableView = TableViewFx.tableViewOf(PhoneDTO.class, 146);
+    public TableView<PhoneDTOFx> build() {
+        TableView<PhoneDTOFx> tableView = TableViewFx.tableViewOf(PhoneDTOFx.class, 146);
         tableView.setItems(person.getPhones());
-        List<TableColumn<PhoneDTO, ?>> columns = new ArrayList<>();
+        List<TableColumn<PhoneDTOFx, ?>> columns = new ArrayList<>();
         columns.add(createColumn1());
         columns.add(createColumn2());
         columns.add(createColumn3());
         tableView.getColumns().addAll(columns);
-        TableView.TableViewSelectionModel<PhoneDTO> selectionModel = tableView.getSelectionModel();
+        TableView.TableViewSelectionModel<PhoneDTOFx> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) membershipModel.setSelectedPhone(newSelection);
         });
         return tableView;
     }
 
-    private TableColumn<PhoneDTO,String> createColumn1() {
-        TableColumn<PhoneDTO, String> col1 = TableColumnFx.editableStringTableColumn(PhoneDTO::phoneProperty,"Phone");
+    private TableColumn<PhoneDTOFx,String> createColumn1() {
+        TableColumn<PhoneDTOFx, String> col1 = TableColumnFx.editableStringTableColumn(PhoneDTOFx::phoneProperty,"Phone");
         col1.setOnEditCommit(
                 new EventHandler<>() {
                     @Override
-                    public void handle(TableColumn.CellEditEvent<PhoneDTO, String> t) {
+                    public void handle(TableColumn.CellEditEvent<PhoneDTOFx, String> t) {
                         String processedNumber = processNumber(t.getNewValue());
-                        PhoneDTO phoneDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
+                        PhoneDTOFx phoneDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                         phoneDTO.setPhone(t.getNewValue());
                         membershipModel.setSelectedPhone(phoneDTO);
                         membershipView.sendMessage().accept(MembershipMessage.UPDATE_PHONE);
@@ -105,12 +105,12 @@ public class PhoneTableView implements Builder<TableView<PhoneDTO>> {
         return col1;
     }
 
-    private TableColumn<PhoneDTO,PhoneType> createColumn2() {
+    private TableColumn<PhoneDTOFx,PhoneType> createColumn2() {
         // example for this column found at https://o7planning.org/en/11079/javafx-tableview-tutorial
         ObservableList<PhoneType> phoneTypeList = FXCollections.observableArrayList(PhoneType.values());
-        TableColumn<PhoneDTO, PhoneType> Col2 = new TableColumn<>("Type");
+        TableColumn<PhoneDTOFx, PhoneType> Col2 = new TableColumn<>("Type");
         Col2.setCellValueFactory(param -> {
-            PhoneDTO thisPhone = param.getValue();
+            PhoneDTOFx thisPhone = param.getValue();
             String phoneCode = thisPhone.getPhoneType();
             PhoneType phoneType = PhoneType.getByCode(phoneCode);
             return new SimpleObjectProperty<>(phoneType);
@@ -118,11 +118,11 @@ public class PhoneTableView implements Builder<TableView<PhoneDTO>> {
 
         Col2.setCellFactory(ComboBoxTableCell.forTableColumn(phoneTypeList));
 
-        Col2.setOnEditCommit((TableColumn.CellEditEvent<PhoneDTO, PhoneType> event) -> {
-            TablePosition<PhoneDTO, PhoneType> pos = event.getTablePosition();
+        Col2.setOnEditCommit((TableColumn.CellEditEvent<PhoneDTOFx, PhoneType> event) -> {
+            TablePosition<PhoneDTOFx, PhoneType> pos = event.getTablePosition();
             PhoneType newPhoneType = event.getNewValue();
             int row = pos.getRow();
-            PhoneDTO phoneDTO = event.getTableView().getItems().get(row);
+            PhoneDTOFx phoneDTO = event.getTableView().getItems().get(row);
             phoneDTO.setPhoneType(newPhoneType.getCode()); // makes UI feel snappy
             membershipModel.setSelectedPhone(phoneDTO);
             membershipView.sendMessage().accept(MembershipMessage.UPDATE_PHONE);
@@ -131,10 +131,10 @@ public class PhoneTableView implements Builder<TableView<PhoneDTO>> {
         return Col2;
     }
 
-    private TableColumn<PhoneDTO,?> createColumn3() {
-        TableColumn<PhoneDTO, Boolean> Col3 = new TableColumn<>("Listed");
+    private TableColumn<PhoneDTOFx,?> createColumn3() {
+        TableColumn<PhoneDTOFx, Boolean> Col3 = new TableColumn<>("Listed");
         Col3.setCellValueFactory(param -> {
-            PhoneDTO phoneDTO = param.getValue();
+            PhoneDTOFx phoneDTO = param.getValue();
             SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(phoneDTO.getPhoneListed());
             booleanProp.addListener((observable, oldValue, newValue) -> {
                 phoneDTO.setPhoneListed(newValue); // makes UI feel snappy
@@ -146,7 +146,7 @@ public class PhoneTableView implements Builder<TableView<PhoneDTO>> {
 
         //
         Col3.setCellFactory(p1 -> {
-            CheckBoxTableCell<PhoneDTO, Boolean> cell = new CheckBoxTableCell<>();
+            CheckBoxTableCell<PhoneDTOFx, Boolean> cell = new CheckBoxTableCell<>();
             cell.setAlignment(Pos.CENTER);
             return cell;
         });

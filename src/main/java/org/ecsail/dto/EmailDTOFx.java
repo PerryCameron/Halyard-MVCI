@@ -1,8 +1,9 @@
 package org.ecsail.dto;
 
 import javafx.beans.property.*;
+import org.ecsail.pojo.Email;
 
-public class EmailDTO {
+public class EmailDTOFx {
 	
 	private IntegerProperty email_id;
 	private IntegerProperty pId;
@@ -11,7 +12,7 @@ public class EmailDTO {
 	private BooleanProperty listed;
 
 	
-	public EmailDTO(Integer email_id, Integer pId, Boolean primaryUse, String email, Boolean listed) {
+	public EmailDTOFx(Integer email_id, Integer pId, Boolean primaryUse, String email, Boolean listed) {
 		this.email_id = new SimpleIntegerProperty(email_id);
 		this.pId = new SimpleIntegerProperty(pId);
 		this.primaryUse = new SimpleBooleanProperty(primaryUse);
@@ -19,13 +20,21 @@ public class EmailDTO {
 		this.listed = new SimpleBooleanProperty(listed);
 	}
 
-    public EmailDTO(Integer pId) {
+    public EmailDTOFx(Integer pId) {
 		this.email_id = new SimpleIntegerProperty(0);
 		this.pId = new SimpleIntegerProperty(pId);
 		this.primaryUse = new SimpleBooleanProperty(false);
 		this.email = new SimpleStringProperty("");
 		this.listed = new SimpleBooleanProperty(true);
     }
+
+	public EmailDTOFx(Email email) {
+		this.email_id = new SimpleIntegerProperty(email.getEmailId());
+		this.pId = new SimpleIntegerProperty(email.getpId());
+		this.primaryUse = new SimpleBooleanProperty(email.getPrimaryUse() == 1);
+		this.email = new SimpleStringProperty(email.getEmail());
+		this.listed = new SimpleBooleanProperty(email.getEmailListed() == 1);
+	}
 
 	public int getEmail_id() {
 		return email_id.get();

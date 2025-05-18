@@ -1,17 +1,17 @@
 package org.ecsail.repository.interfaces;
 
-import org.ecsail.dto.AwardDTO;
+import org.ecsail.dto.AwardDTOFx;
 import org.ecsail.dto.PersonDTOFx;
 
 import java.util.List;
 
 public interface AwardRepository {
-    List<AwardDTO> getAwards(PersonDTOFx p);
-    List<AwardDTO> getAwards();
-    int update(AwardDTO o);
-    int insert(AwardDTO o);
+    List<AwardDTOFx> getAwards(PersonDTOFx p);
+    List<AwardDTOFx> getAwards();
+    int update(AwardDTOFx o);
+    int insert(AwardDTOFx o);
 
-    int delete(AwardDTO awardDTO);
+    int delete(AwardDTOFx awardDTO);
 
     int deleteAwards(int pId);
 }

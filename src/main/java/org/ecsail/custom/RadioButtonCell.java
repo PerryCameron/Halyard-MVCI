@@ -3,13 +3,13 @@ package org.ecsail.custom;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableCell;
-import org.ecsail.dto.EmailDTO;
+import org.ecsail.dto.EmailDTOFx;
 
-public class RadioButtonCell extends TableCell<EmailDTO, Boolean> {
+public class RadioButtonCell extends TableCell<EmailDTOFx, Boolean> {
 
-    private final ObjectProperty<EmailDTO> emailDTOObjectProperty;
+    private final ObjectProperty<EmailDTOFx> emailDTOObjectProperty;
 
-    public RadioButtonCell(ObjectProperty<EmailDTO> emailDTOObjectProperty) {
+    public RadioButtonCell(ObjectProperty<EmailDTOFx> emailDTOObjectProperty) {
         this.emailDTOObjectProperty = emailDTOObjectProperty;
     }
 
@@ -26,7 +26,7 @@ public class RadioButtonCell extends TableCell<EmailDTO, Boolean> {
             radioButton.selectedProperty().addListener(
                     (o, old, selected) -> {
                         if (selected) {
-                            EmailDTO emailDTO = getTableRow().getItem();
+                            EmailDTOFx emailDTO = getTableRow().getItem();
                             if (emailDTOObjectProperty.get() != null) {
                                 emailDTOObjectProperty.get().setPrimaryUse(false);
 //          TODO                      SqlUpdate.updateEmail("primary_use", emailDTOObjectProperty.get().getEmail_id(), false);

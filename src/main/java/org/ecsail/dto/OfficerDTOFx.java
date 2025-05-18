@@ -4,10 +4,11 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import org.ecsail.pojo.Officer;
 
 import java.time.Year;
 
-public class OfficerDTO {
+public class OfficerDTOFx {
 
 	private IntegerProperty officerId;
 	private IntegerProperty pId;
@@ -15,8 +16,8 @@ public class OfficerDTO {
 	private StringProperty officerType;
 	private StringProperty fiscalYear;
 	
-	public OfficerDTO(Integer officerId, Integer pId, String boardYear,
-					  String officerType, String fiscalYear) {
+	public OfficerDTOFx(Integer officerId, Integer pId, String boardYear,
+						String officerType, String fiscalYear) {
 		this.officerId = new SimpleIntegerProperty(officerId);
 		this.pId = new SimpleIntegerProperty(pId);
 		this.boardYear = new SimpleStringProperty(boardYear);
@@ -24,13 +25,21 @@ public class OfficerDTO {
 		this.fiscalYear = new SimpleStringProperty(fiscalYear);
 	}
 
-    public OfficerDTO(Integer pId) {
+    public OfficerDTOFx(Integer pId) {
 		this.officerId = new SimpleIntegerProperty(0);
 		this.pId = new SimpleIntegerProperty(pId);
 		this.boardYear = new SimpleStringProperty("0");
 		this.officerType = new SimpleStringProperty("BM");
 		this.fiscalYear = new SimpleStringProperty(Year.now().toString());
     }
+
+	public OfficerDTOFx(Officer officer) {
+		this.officerId = new SimpleIntegerProperty(officer.getOfficerId());
+		this.pId = new SimpleIntegerProperty(officer.getpId());
+		this.boardYear = new SimpleStringProperty(String.valueOf(officer.getBoardYear()));
+		this.officerType = new SimpleStringProperty(officer.getOfficerType());
+		this.fiscalYear = new SimpleStringProperty(String.valueOf(officer.getFiscalYear()));
+	}
 
     public final IntegerProperty officerIdProperty() {
 		return this.officerId;
