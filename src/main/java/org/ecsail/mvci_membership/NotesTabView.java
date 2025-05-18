@@ -59,7 +59,7 @@ public class NotesTabView implements Builder<Tab> {
 
     private Node addTable() {
         TableView<NotesDTOFx> tableView = TableViewFx.tableViewOf(NotesDTOFx.class, 200);
-        tableView.setItems(membershipView.getMembershipModel().getMembership().getNotesDTOS());
+//        tableView.setItems(membershipView.getMembershipModel().membershipProperty().get().getNotesDTOS());
         tableView.getColumns().addAll(Arrays.asList(col1(), col2(), col3()));
         TableView.TableViewSelectionModel<NotesDTOFx> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {

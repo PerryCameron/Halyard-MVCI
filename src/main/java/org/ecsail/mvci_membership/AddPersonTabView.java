@@ -34,7 +34,7 @@ public class AddPersonTabView extends Tab implements Builder<Tab> {
     public AddPersonTabView(MembershipView membershipView) {
         this.membershipView = membershipView;
         this.membershipModel = membershipView.getMembershipModel();
-        this.personDTO = new PersonDTOFx(membershipModel.getMembership().getMsId());
+        this.personDTO = new PersonDTOFx(membershipModel.membershipProperty().get().membershipIdProperty().get());
     }
 
     @Override

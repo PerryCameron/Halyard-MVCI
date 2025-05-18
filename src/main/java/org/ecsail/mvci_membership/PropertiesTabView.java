@@ -91,10 +91,11 @@ public class PropertiesTabView implements Builder<Tab> {
         button.setOnAction(e -> {
             String[] strings = {
                     "Delete Membership",
-                    "Are you sure you want to delete membership " + membershipView.getMembershipModel().getMembership().getMembershipId() + "?",
+                    "Are you sure you want to delete membership " + membershipView.getMembershipModel()
+                            .membershipProperty().get().membershipIdProperty().get() + "?",
                     "",
                     ""};
-            if (DialogueFx.verifyAction(strings, membershipView.getMembershipModel().getMembership()))
+            if (DialogueFx.verifyAction(strings, membershipView.getMembershipModel().membershipProperty().get()))
                 membershipView.sendMessage().accept(MembershipMessage.DELETE_MEMBERSHIP);
         });
         return button;
@@ -109,8 +110,9 @@ public class PropertiesTabView implements Builder<Tab> {
                 if (person.getMemberType() == 2) {
                     label = new LabelDTO();
                     label.setCity("Indianapolis, Indiana");
-                    label.setNameAndMemId(person.getFullName() + " #" + membershipView.getMembershipModel().getMembership().getMembershipId());
-                    label.setExpires("Type " + membershipView.getMembershipModel().getMembership().getMemType() + ", Expires: " + "03/01/" + getYear());
+                    label.setNameAndMemId(person.getFullName() + " #" + membershipView.getMembershipModel().membershipProperty().get().getMembershipId());
+                    label.setExpires("Type " + membershipView.getMembershipModel().membershipProperty().get()
+                            .memTypeProperty().get() + ", Expires: " + "03/01/" + getYear());
                     label.setMember("Member: U.S. Sailing ILYA &YCA");
                     labels.add(label);
                     LabelPrinter.printMembershipLabel(label);
@@ -129,8 +131,9 @@ public class PropertiesTabView implements Builder<Tab> {
                 if (person.getMemberType() == 1) {
                     label = new LabelDTO();
                     label.setCity("Indianapolis, Indiana");
-                    label.setNameAndMemId(person.getFullName() + " #" + String.valueOf(membershipView.getMembershipModel().getMembership().getMembershipId()));
-                    label.setExpires("Type " + membershipView.getMembershipModel().getMembership().getMemType() + ", Expires: " + "03/01/" + getYear());
+                    label.setNameAndMemId(person.getFullName() + " #" + String.valueOf(membershipView.getMembershipModel()
+                            .membershipProperty().get().membershipIdProperty().get()));
+                    label.setExpires("Type " + membershipView.getMembershipModel().membershipProperty().get().memTypeProperty().get() + ", Expires: " + "03/01/" + getYear());
                     label.setMember("Member: U.S. Sailing ILYA &YCA");
                     labels.add(label);
                     LabelPrinter.printMembershipLabel(label);

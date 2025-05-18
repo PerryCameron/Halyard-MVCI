@@ -61,7 +61,7 @@ public class MembershipIdView implements Builder<Tab> {
             if (!isFocused) {
                 datePicker.updateValue();
                 LocalDate date = datePicker.getValue();
-                membershipModel.getMembership().setJoinDate(date.toString());
+                membershipModel.membershipProperty().get().joinDateProperty().set(date.toString());
                 membershipView.sendMessage()
                         .accept(MembershipMessage.UPDATE_MEMBERSHIP_LIST);
             }
@@ -99,8 +99,8 @@ public class MembershipIdView implements Builder<Tab> {
     private LocalDate getDate() {
         LocalDate date;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        if (membershipModel.getMembership().getJoinDate() != null)
-            date = LocalDate.parse(membershipView.getMembershipModel().getMembership().getJoinDate(), formatter);
+        if (membershipModel.membershipProperty().get().joinDateProperty().get() != null)
+            date = LocalDate.parse(membershipView.getMembershipModel().membershipProperty().get().joinDateProperty().get(), formatter);
         else date = LocalDate.parse("1900-01-01", formatter);
         return date;
     }

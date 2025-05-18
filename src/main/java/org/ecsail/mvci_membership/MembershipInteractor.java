@@ -1,6 +1,7 @@
 package org.ecsail.mvci_membership;
 
 import javafx.application.Platform;
+import org.ecsail.dto.MembershipDTOFx;
 import org.ecsail.interfaces.SlipUser;
 import org.ecsail.pojo.Membership;
 import org.slf4j.Logger;
@@ -24,10 +25,12 @@ public class MembershipInteractor implements SlipUser {
         this.membershipModel = membershipModel;
     }
 
-    protected void setListsLoaded() {
+    protected void setDataLoaded() {
         Platform.runLater(() -> {
             logger.info("Data for MembershipView is now loaded");
-            membershipModel.setReturnMessage(MembershipMessage.DATA_LOAD_SUCCEED);
+            membershipModel.dataIsLoadedProperty().set(true);
+//            membershipModel.setReturnMessage(MembershipMessage.DATA_LOAD_SUCCEED);
+
         });
     }
 
@@ -54,7 +57,7 @@ public class MembershipInteractor implements SlipUser {
 
 
     public void deleteMembership() {
-        logger.info("Deleting Membership MSID: " + membershipModel.getMembership().getMsId());
+        logger.info("Deleting Membership MSID: " + membershipModel.membershipProperty().get().msIdProperty().get());
         int success[] = membershipModel.getSuccess();
 //        try {
 //            if (dataBaseService.existsSlipWithMsId()) {
@@ -93,21 +96,7 @@ public class MembershipInteractor implements SlipUser {
 //        }
     }
 
-    //    public void getMembershiptoPOJO() throws Exception {
-//        StringBuilder endpoint = new StringBuilder("membership");
-//        endpoint.append("?year=").append(membershipModel.selectedMembershipYearProperty().getValue());
-//        endpoint.append("&msid=").append(URLEncoder.encode(String.valueOf(membershipModel.getMembershipFromRosterList().getMsId()), StandardCharsets.UTF_8.name()));
-//        try {
-//            String jsonResponse = membershipModel.getHttpClient().fetchDataFromHalyard(endpoint.toString());
-//
-//            System.out.println(jsonResponse);
-//        } catch (UnsupportedEncodingException e) {
-//            logger.error(e.getMessage());
-//            e.printStackTrace();
-//        }
-//
-//    }
-    public void getMembershiptoPOJO() {
+    public Membership getMembershiptoPOJO() {
         Logger logger = LoggerFactory.getLogger(getClass());
         StringBuilder endpoint = new StringBuilder("membership");
         try {
@@ -121,14 +110,9 @@ public class MembershipInteractor implements SlipUser {
                 System.out.println("No JSON response received from endpoint: " + endpoint);
             } else {
                 logger.info("JSON Response: {}", jsonResponse);
-                System.out.println("JSON Response: " + jsonResponse);
-
                 // Deserialize JSON to Membership POJO
                 try {
-                    Membership membership = membershipModel.getHttpClient().getObjectMapper().readValue(jsonResponse, Membership.class);
-                    logger.info("Deserialized Membership: mid={}, msId={}, fiscalYear={}",
-                            membership.getMid(), membership.getMsId(), membership.getFiscalYear());
-                    // Access fields, e.g., membership.getPeople().get(0).getFirstName()
+                    return membershipModel.getHttpClient().getObjectMapper().readValue(jsonResponse, Membership.class);
                 } catch (IOException e) {
                     logger.error("Failed to deserialize JSON: {}", e.getMessage(), e);
                     System.out.println("Deserialization error: " + e.getMessage());
@@ -144,5 +128,10 @@ public class MembershipInteractor implements SlipUser {
             logger.error("Unexpected error fetching data: {}", e.getMessage(), e);
             System.out.println("Unexpected error: " + e.getMessage());
         }
+        return null;
+    }
+
+    public void convertPOJOsToFXProperties(Membership membership) {
+        membershipModel.membershipProperty().set(new MembershipDTOFx(membership));
     }
 }

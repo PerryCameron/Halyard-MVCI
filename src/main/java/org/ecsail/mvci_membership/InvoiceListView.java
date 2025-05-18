@@ -63,7 +63,7 @@ public class InvoiceListView implements Builder<Tab> {
         return ButtonFx.buttonOf("Add", 60, () -> {
             addSingleFireObjectListener(membershipModel.selectedInvoiceProperty(), () -> {
                 CustomTools.removeExistingTabAndCreateNew(membershipView);
-                membershipModel.getMembership().getInvoiceDTOS().sort(Comparator.comparing(InvoiceDTOFx::getYear).reversed());
+//                membershipModel.getInvoiceDTOS().sort(Comparator.comparing(InvoiceDTOFx::getYear).reversed());
             });
             membershipView.sendMessage().accept(MembershipMessage.INSERT_INVOICE);
             // TODO open tab
@@ -82,7 +82,7 @@ public class InvoiceListView implements Builder<Tab> {
         comboBox.setPrefWidth(80);
         int currentYear = Year.now().getValue();
         for (int year = currentYear + 1; year > 1969; year--) comboBox.getItems().add(year);
-        int selectedYear = membershipView.getMembershipModel().getMembership().getSelectedYear();
+        int selectedYear = membershipView.getMembershipModel().membershipProperty().get().fiscalYearProperty().get();
         comboBox.setValue(selectedYear); // sets year for combo box to record year
         membershipView.getMembershipModel().setSelectedInvoiceCreateYear(selectedYear); // sets initial for combo-box
         comboBox.valueProperty().addListener((observable, oldValue, newValue) -> membershipView.getMembershipModel().setSelectedInvoiceCreateYear(newValue));

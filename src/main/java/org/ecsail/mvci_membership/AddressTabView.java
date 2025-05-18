@@ -71,33 +71,33 @@ public class AddressTabView implements Builder<Tab> {
     }
 
     private void setAddressLine1(TextField textField) {
-        textField.setText(membershipView.getMembershipModel().getMembership().getAddress());
+        textField.setText(membershipView.getMembershipModel().membershipProperty().get().addressProperty().get());
         textField.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             //focus out
             if (oldValue) {  // we have focused and unfocused
-                membershipView.getMembershipModel().getMembership().setAddress(textField.getText());
+                membershipView.getMembershipModel().membershipProperty().get().addressProperty().set(textField.getText());
                 membershipView.sendMessage().accept(MembershipMessage.UPDATE_MEMBERSHIP_LIST);
             }
         });
     }
 
     private void setZipCode(TextField textField) {
-        textField.setText(membershipView.getMembershipModel().getMembership().getZip());
+        textField.setText(membershipView.getMembershipModel().membershipProperty().get().getZip());
         textField.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             //focus out
             if (oldValue) {  // we have focused and unfocused
-                membershipView.getMembershipModel().getMembership().setZip(textField.getText());
+                membershipView.getMembershipModel().membershipProperty().get().zipProperty().set(textField.getText());
                 membershipView.sendMessage().accept(MembershipMessage.UPDATE_MEMBERSHIP_LIST);
             }
         });
     }
 
     private void setCity(TextField textField) {
-        textField.setText(membershipView.getMembershipModel().getMembership().getCity());
+        textField.setText(membershipView.getMembershipModel().membershipProperty().get().getCity());
         textField.focusedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             //focus out
             if (oldValue) {  // we have focused and unfocused
-                membershipView.getMembershipModel().getMembership().setCity(textField.getText());
+                membershipView.getMembershipModel().membershipProperty().get().cityProperty().set(textField.getText());
                 membershipView.sendMessage().accept(MembershipMessage.UPDATE_MEMBERSHIP_LIST);
             }
         });
@@ -105,9 +105,9 @@ public class AddressTabView implements Builder<Tab> {
 
     private void setState(ComboBox<String> comboBox) {
         comboBox.setPrefWidth(80);
-        comboBox.setValue(membershipView.getMembershipModel().getMembership().getState());
+        comboBox.setValue(membershipView.getMembershipModel().membershipProperty().get().getState());
         comboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
-            membershipView.getMembershipModel().getMembership().setState(newValue);
+            membershipView.getMembershipModel().membershipProperty().get().stateProperty().set(newValue);
             membershipView.sendMessage().accept(MembershipMessage.UPDATE_MEMBERSHIP_LIST);
         });
     }

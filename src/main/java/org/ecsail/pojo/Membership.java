@@ -18,17 +18,17 @@ public class Membership {
     @JsonProperty("membershipId")
     private int membershipId;
 
-    @JsonProperty("renew")
+    @JsonProperty("renew")  // this was supposed to be a boolean
     private int renew;
 
     @JsonProperty("memType")
     private String memType;
 
-    @JsonProperty("selected")
+    @JsonProperty("selected") // this was suppoed to be a boolean
     private int selected;
 
     @JsonProperty("lateRenew")
-    private int lateRenew;
+    private int lateRenew;   // this was supposed to be a boolean
 
     @JsonProperty("pId")
     private int pId;

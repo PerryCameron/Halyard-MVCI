@@ -72,12 +72,13 @@ public class InvoiceFooter implements Builder<Region> {
     }
 
     private MembershipIdDTOFx getMembershipID() {
-        MembershipIdDTOFx membershipIdDTO = invoiceView.getMembershipView().getMembershipModel().getMembership().getMembershipIdDTOS()
-                .stream().filter(id -> id.getFiscalYear() == invoiceDTO.getYear())
-                .findFirst().orElse(null);
-        if(membershipIdDTO == null)
-            loadHistoryTab();
-        return membershipIdDTO;
+//        MembershipIdDTOFx membershipIdDTO = invoiceView.getMembershipView().getMembershipModel().getMembership().getMembershipIdDTOS()
+//                .stream().filter(id -> id.getFiscalYear() == invoiceDTO.getYear())
+//                .findFirst().orElse(null);
+//        if(membershipIdDTO == null)
+//            loadHistoryTab();
+//        return membershipIdDTO;
+        return null;
     }
 
     private void loadHistoryTab() {  // prevents a null ID if tab was never opened

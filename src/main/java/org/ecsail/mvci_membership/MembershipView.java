@@ -42,9 +42,20 @@ public class MembershipView implements Builder<Region> {
 //        borderPane.setCenter(creteDivider());
 //        borderPane.setBottom(createExtrasTabPane());
         vBox.getChildren().add(borderPane);
-        setViewListener();
+//        setViewListener();
+        setDataLoadedListener(borderPane);
         return vBox;
     }
+
+    private void setDataLoadedListener(BorderPane borderPane) {
+        membershipModel.dataIsLoadedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                borderPane.setTop(createHeader());
+                System.out.println("Data Loaded!");
+            }
+        });
+    }
+
 
     private Node creteDivider() {
         Region region = new Region();
@@ -52,11 +63,11 @@ public class MembershipView implements Builder<Region> {
         return region;
     }
 
-    private void setViewListener() {
-        ChangeListener<MembershipMessage> viewListener = ListenerFx.addSingleFireEnumListener(() ->
-                viewMessaging(membershipModel.returnMessageProperty().get()).run());
-        membershipModel.returnMessageProperty().addListener(viewListener);
-    }
+//    private void setViewListener() {
+//        ChangeListener<MembershipMessage> viewListener = ListenerFx.addSingleFireEnumListener(() ->
+//                viewMessaging(membershipModel.returnMessageProperty().get()).run());
+//        membershipModel.returnMessageProperty().addListener(viewListener);
+//    }
 
     private Runnable viewMessaging(MembershipMessage message) { // when database updates, this makes UI reflect.
         return () -> {
@@ -73,39 +84,40 @@ public class MembershipView implements Builder<Region> {
     }
 
     private void displayDeleteTab() {
-        switch (membershipModel.getReturnMessage()) {
-            case DELETE_MEMBERSHIP_FROM_DATABASE_SUCCEED -> {
-                System.out.println("Successfully deleted membership");
-                int success[] = membershipModel.getSuccess();
-                String message =
-                        "Boat Owner entries removed: " + success[0] + "\n" +
-                        "Membership Notes removed: " + success[1] + "\n" +
-                        "Payments Removed: " + success[2] + "\n" +
-                        "Invoice Items Removed: " + success[3] + "\n" +
-                        "Invoices Removed: " + success[4] + "\n" + "Invoices Removed: " + success[4] + "\n" +
-                        "Wait List Removed: " + success[5] + "\n" +
-                        "FormMsIDHash entry removed: " + success[6] + "\n" +
-                        "Membership ID's removed: " + success[7] + "\n" +
-                        "Persons in membership: " + success[8] + "\n" +
-                        "Phones deleted: " + success[10] + "\n" +
-                        "Email deleted: " + success[11] + "\n" +
-                        "Officer Records deleted: " + success[12] + "\n" +
-                        "User Auth Requests deleted: " + success[13] + "\n" +
-                        "People in membership deleted: " + success[14] + "\n" +
-                        "Memberships Deleted: " + success[9] + "\n";
-                System.out.println(message);
-                try {
-                    DialogueFx.customAlert("Membership Successfully Deleted", message, Alert.AlertType.INFORMATION);
-                } catch (Exception e) {
-                    System.out.println(e);
-                }
-            }
-
-            case DELETE_MEMBERSHIP_FROM_DATABASE_FAIL -> {
-                DialogueFx.errorAlert("Unable to delete membership", "");
-            }
-        }
+//        switch (membershipModel.getReturnMessage()) {
+//            case DELETE_MEMBERSHIP_FROM_DATABASE_SUCCEED -> {
+//                System.out.println("Successfully deleted membership");
+//                int success[] = membershipModel.getSuccess();
+//                String message =
+//                        "Boat Owner entries removed: " + success[0] + "\n" +
+//                                "Membership Notes removed: " + success[1] + "\n" +
+//                                "Payments Removed: " + success[2] + "\n" +
+//                                "Invoice Items Removed: " + success[3] + "\n" +
+//                                "Invoices Removed: " + success[4] + "\n" + "Invoices Removed: " + success[4] + "\n" +
+//                                "Wait List Removed: " + success[5] + "\n" +
+//                                "FormMsIDHash entry removed: " + success[6] + "\n" +
+//                                "Membership ID's removed: " + success[7] + "\n" +
+//                                "Persons in membership: " + success[8] + "\n" +
+//                                "Phones deleted: " + success[10] + "\n" +
+//                                "Email deleted: " + success[11] + "\n" +
+//                                "Officer Records deleted: " + success[12] + "\n" +
+//                                "User Auth Requests deleted: " + success[13] + "\n" +
+//                                "People in membership deleted: " + success[14] + "\n" +
+//                                "Memberships Deleted: " + success[9] + "\n";
+//                System.out.println(message);
+//                try {
+//                    DialogueFx.customAlert("Membership Successfully Deleted", message, Alert.AlertType.INFORMATION);
+//                } catch (Exception e) {
+//                    System.out.println(e);
+//                }
+//            }
+//
+//            case DELETE_MEMBERSHIP_FROM_DATABASE_FAIL -> {
+//                DialogueFx.errorAlert("Unable to delete membership", "");
+//            }
+//        }
     }
+
     private void addPerson() {
         membershipModel.getPeople().add(membershipModel.getSelectedPerson());
         Tab newTab = new PersonTabView(this, new PersonDTOFx(membershipModel.getSelectedPerson())).build();
@@ -193,10 +205,10 @@ public class MembershipView implements Builder<Region> {
 
     private Node createHeader() {
         HBox hBox = HBoxFx.hBoxOf(new Insets(15, 15, 10, 15), Pos.TOP_CENTER, 100);
-        hBox.getChildren().add(newBox("Record Year: ", membershipModel.getMembership().selectedYearProperty()));
-        hBox.getChildren().add(newBox("Membership ID: ", membershipModel.getMembership().membershipIdProperty()));
-        hBox.getChildren().add(newBox("Membership Type: ", membershipModel.getMembership().memTypeProperty()));
-        hBox.getChildren().add(newBox("Join Date: ", membershipModel.getMembership().joinDateProperty()));
+        hBox.getChildren().add(newBox("Record Year: ", membershipModel.membershipProperty().get().fiscalYearProperty()));
+        hBox.getChildren().add(newBox("Membership ID: ", membershipModel.membershipProperty().get().membershipIdProperty()));
+        hBox.getChildren().add(newBox("Membership Type: ", membershipModel.membershipProperty().get().memTypeProperty()));
+        hBox.getChildren().add(newBox("Join Date: ", membershipModel.membershipProperty().get().joinDateProperty()));
         return hBox;
     }
 

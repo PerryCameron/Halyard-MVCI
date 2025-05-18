@@ -154,21 +154,20 @@ public class MembershipController extends Controller<MembershipMessage> {
         Task<Void> task = new Task<>() {
             @Override
             protected Void call() throws Exception {
-                membershipInteractor.getMembershiptoPOJO();
-//                db.selectPersons();
-//                db.selectSlipInfo();
-//                db.selectBoats();
-//                db.selectNotes();
+                // get membership as JSON, deserialize it and then covert to FX objects and set in model
+                membershipInteractor.convertPOJOsToFXProperties(membershipInteractor.getMembershiptoPOJO());
                 return null;
             }
         };
         task.setOnSucceeded(e -> {
             mainController.showLoadingSpinner(false);
-            membershipInteractor.setListsLoaded();
+            membershipInteractor.setDataLoaded();
         });
         new Thread(task).start();
     }
 
     @Override
-    public Region getView() { return membershipView.build(); }
+    public Region getView() {
+        return membershipView.build();
+    }
 }

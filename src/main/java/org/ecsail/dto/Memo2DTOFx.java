@@ -5,7 +5,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-public class Memo2DTO {
+public class Memo2DTOFx {
 
 	private SimpleStringProperty membershipId;
 	private IntegerProperty memo_id;
@@ -15,8 +15,8 @@ public class Memo2DTO {
 	private IntegerProperty invoice_id;
 	private StringProperty category;
 
-	public Memo2DTO(String membershipId, Integer memo_id, Integer msid, String memo_date,
-                    String memo, Integer invoice_id, String category) {
+	public Memo2DTOFx(String membershipId, Integer memo_id, Integer msid, String memo_date,
+					  String memo, Integer invoice_id, String category) {
 		super();
 		this.membershipId = new SimpleStringProperty(membershipId);
 		this.memo_id = new SimpleIntegerProperty(memo_id);

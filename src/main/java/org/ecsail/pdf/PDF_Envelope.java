@@ -53,7 +53,7 @@ public class PDF_Envelope {
 		HalyardPaths.checkPath(HalyardPaths.ECSC_HOME);
 		this.isOneMembership = iom;
 //		this.membershipChair = Objects.requireNonNull(dataBaseService).getCurrentMembershipChair();
-		this.current_membership_id = Objects.requireNonNull(model).getMembership().getMembershipId();
+		this.current_membership_id = Objects.requireNonNull(model).membershipProperty().get().membershipIdProperty().get();
 
 		if(System.getProperty("os.name").equals("Windows 10"))
 		FontProgramFactory.registerFont("c:/windows/fonts/times.ttf", "times");

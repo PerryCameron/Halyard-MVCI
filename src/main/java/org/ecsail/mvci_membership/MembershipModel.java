@@ -25,8 +25,9 @@ public class MembershipModel {
     private ObservableMap<PersonDTOFx, Tab> selectedPropertiesTab = FXCollections.observableHashMap();
     private ObservableMap<PersonDTOFx, TextField> personTextField = FXCollections.observableHashMap();
     private ObservableList<PersonDTOFx> people = FXCollections.observableArrayList();
+
     private final SimpleObjectProperty<RosterDTOFx> membershipFromRosterList = new SimpleObjectProperty<>();
-    private final SimpleObjectProperty<MembershipListDTO> membership = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<MembershipDTOFx> membership = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<SlipDTO> slip = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TableView<BoatDTOFx>> boatTableView = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TableView<NotesDTOFx>> notesTableView = new SimpleObjectProperty<>();
@@ -36,7 +37,8 @@ public class MembershipModel {
     private final SimpleObjectProperty<TabPane> infoTabPane = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TabPane> extraTabPane = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<SlipUser.slip> slipRelationStatus = new SimpleObjectProperty<>();
-    private final ObjectProperty<MembershipMessage> returnMessage = new SimpleObjectProperty<>();
+//    private final ObjectProperty<MembershipMessage> returnMessage = new SimpleObjectProperty<>();
+    private final SimpleBooleanProperty dataIsLoaded = new SimpleBooleanProperty(false);
     private final StringProperty sublease = new SimpleStringProperty("");
     private final StringProperty membershipId = new SimpleStringProperty("");
     private final HttpClientUtil httpClient;
@@ -147,17 +149,17 @@ public class MembershipModel {
         this.selectedInvoice.set(selectedInvoice);
     }
 
-    public MembershipMessage getReturnMessage() {
-        return returnMessage.get();
-    }
-
-    public ObjectProperty<MembershipMessage> returnMessageProperty() {
-        return returnMessage;
-    }
-
-    public void setReturnMessage(MembershipMessage returnMessage) {
-        this.returnMessage.set(returnMessage);
-    }
+//    public MembershipMessage getReturnMessage() {
+//        return returnMessage.get();
+//    }
+//
+//    public ObjectProperty<MembershipMessage> returnMessageProperty() {
+//        return returnMessage;
+//    }
+//
+//    public void setReturnMessage(MembershipMessage returnMessage) {
+//        this.returnMessage.set(returnMessage);
+//    }
 
     public String getSelectedString() {
         return selectedString.get();
@@ -462,15 +464,12 @@ public class MembershipModel {
     public void setPeople(ObservableList<PersonDTOFx> people) {
         this.people = people;
     }
-    public MembershipListDTO getMembership() {
-        return membership.get();
-    }
-    public SimpleObjectProperty<MembershipListDTO> membershipProperty() {
+
+
+    public SimpleObjectProperty<MembershipDTOFx> membershipProperty() {
         return membership;
     }
-    public void setMembership(MembershipListDTO membership) {
-        this.membership.set(membership);
-    }
+
     public RosterDTOFx getMembershipFromRosterList() {
         return membershipFromRosterList.get();
     }
@@ -489,5 +488,9 @@ public class MembershipModel {
 
     public ObservableList<BoardPositionDTO> getBoardPositionDTOS() {
         return boardPositionDTOS;
+    }
+
+    public SimpleBooleanProperty dataIsLoadedProperty() {
+        return dataIsLoaded;
     }
 }
