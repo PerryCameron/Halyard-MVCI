@@ -2,6 +2,7 @@ package org.ecsail.mvci_membership;
 
 import javafx.application.Platform;
 import org.ecsail.interfaces.SlipUser;
+import org.ecsail.pojo.Membership;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,13 +16,13 @@ public class MembershipInteractor implements SlipUser {
     private static final Logger logger = LoggerFactory.getLogger(MembershipInteractor.class);
 //    private final DataBaseService dataBaseService;
 
-//    public MembershipInteractor(MembershipModel membershipModel, Connections connections) {
+    //    public MembershipInteractor(MembershipModel membershipModel, Connections connections) {
 //        this.membershipModel = membershipModel;
 //        this.dataBaseService = new DataBaseService(connections.getDataSource(), membershipModel);
 //    }
-public MembershipInteractor(MembershipModel membershipModel) {
-    this.membershipModel = membershipModel;
-}
+    public MembershipInteractor(MembershipModel membershipModel) {
+        this.membershipModel = membershipModel;
+    }
 
     protected void setListsLoaded() {
         Platform.runLater(() -> {
@@ -92,7 +93,7 @@ public MembershipInteractor(MembershipModel membershipModel) {
 //        }
     }
 
-//    public void getMembershiptoPOJO() throws Exception {
+    //    public void getMembershiptoPOJO() throws Exception {
 //        StringBuilder endpoint = new StringBuilder("membership");
 //        endpoint.append("?year=").append(membershipModel.selectedMembershipYearProperty().getValue());
 //        endpoint.append("&msid=").append(URLEncoder.encode(String.valueOf(membershipModel.getMembershipFromRosterList().getMsId()), StandardCharsets.UTF_8.name()));
@@ -106,30 +107,42 @@ public MembershipInteractor(MembershipModel membershipModel) {
 //        }
 //
 //    }
-public void getMembershiptoPOJO() {
-    Logger logger = LoggerFactory.getLogger(getClass());
-    StringBuilder endpoint = new StringBuilder("membership");
-    try {
-        endpoint.append("?year=").append(membershipModel.selectedMembershipYearProperty().getValue());
-        endpoint.append("&msId=").append(URLEncoder.encode(String.valueOf(membershipModel.getMembershipFromRosterList().getMsId()), StandardCharsets.UTF_8.name()));
-        logger.debug("Constructed endpoint: {}", endpoint);
+    public void getMembershiptoPOJO() {
+        Logger logger = LoggerFactory.getLogger(getClass());
+        StringBuilder endpoint = new StringBuilder("membership");
+        try {
+            endpoint.append("?year=").append(membershipModel.selectedMembershipYearProperty().getValue());
+            endpoint.append("&msId=").append(URLEncoder.encode(String.valueOf(membershipModel.getMembershipFromRosterList().getMsId()), StandardCharsets.UTF_8.name()));
+            logger.debug("Constructed endpoint: {}", endpoint.toString());
 
-        String jsonResponse = membershipModel.getHttpClient().fetchDataFromHalyard(endpoint.toString());
-        if (jsonResponse == null || jsonResponse.trim().isEmpty()) {
-            logger.warn("Received null or empty JSON response from endpoint: {}", endpoint.toString());
-            System.out.println("No JSON response received from endpoint: " + endpoint.toString());
-        } else {
-            logger.info("JSON Response: {}", jsonResponse);
+            String jsonResponse = membershipModel.getHttpClient().fetchDataFromHalyard(endpoint.toString());
+            if (jsonResponse == null || jsonResponse.trim().isEmpty()) {
+                logger.warn("Received null or empty JSON response from endpoint: {}", endpoint);
+                System.out.println("No JSON response received from endpoint: " + endpoint);
+            } else {
+                logger.info("JSON Response: {}", jsonResponse);
+                System.out.println("JSON Response: " + jsonResponse);
+
+                // Deserialize JSON to Membership POJO
+                try {
+                    Membership membership = membershipModel.getHttpClient().getObjectMapper().readValue(jsonResponse, Membership.class);
+                    logger.info("Deserialized Membership: mid={}, msId={}, fiscalYear={}",
+                            membership.getMid(), membership.getMsId(), membership.getFiscalYear());
+                    // Access fields, e.g., membership.getPeople().get(0).getFirstName()
+                } catch (IOException e) {
+                    logger.error("Failed to deserialize JSON: {}", e.getMessage(), e);
+                    System.out.println("Deserialization error: " + e.getMessage());
+                }
+            }
+        } catch (UnsupportedEncodingException e) {
+            logger.error("Encoding error for endpoint: {}", e.getMessage(), e);
+            System.out.println("Encoding error: " + e.getMessage());
+        } catch (IOException e) {
+            logger.error("IO error fetching data from endpoint {}: {}", endpoint.toString(), e.getMessage(), e);
+            System.out.println("IO error: " + e.getMessage());
+        } catch (Exception e) {
+            logger.error("Unexpected error fetching data: {}", e.getMessage(), e);
+            System.out.println("Unexpected error: " + e.getMessage());
         }
-    } catch (UnsupportedEncodingException e) {
-        logger.error("Encoding error for endpoint: {}", e.getMessage(), e);
-        System.out.println("Encoding error: " + e.getMessage());
-    } catch (IOException e) {
-        logger.error("IO error fetching data from endpoint {}: {}", endpoint.toString(), e.getMessage(), e);
-        System.out.println("IO error: " + e.getMessage());
-    } catch (Exception e) {
-        logger.error("Unexpected error fetching data: {}", e.getMessage(), e);
-        System.out.println("Unexpected error: " + e.getMessage());
     }
-}
 }
