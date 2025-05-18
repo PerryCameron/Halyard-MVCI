@@ -71,7 +71,7 @@ public class MainController extends Controller<MainMessage> implements Status {
 
     public void createConnectController() {
         connectController = new ConnectController(this);
-        connectController.getStage().setScene(new Scene(connectController.getView()));
+        connectController.getStage().setScene(new Scene(connectController.getView()));  // line 74
         connectController.getStage().getScene().getStylesheets().add("css/dark/dark.css");
         connectController.setStageHeightListener();
     }

@@ -242,7 +242,7 @@ public class ConnectInteractor implements ConfigFilePaths {
         connectModel.getComboBox().setValue(connectModel.currentLoginProperty().hostProperty().getValue());
     }
 
-
+    // using the object passed in
     public static void openLoginObjects(List<LoginDTO> logins) {
         File g = new File(LOGIN_FILE);
             try {

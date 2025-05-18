@@ -1,5 +1,6 @@
 package org.ecsail.static_tools;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import okhttp3.logging.HttpLoggingInterceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -72,22 +73,39 @@ public class HttpClientUtil {
      *                     the response is not successful.
      */
     public boolean requiresAuthentication() throws IOException {
+        String authUrl = serverUrl + "auth-check";
+        logger.info("Checking authentication at: {}", authUrl);
         Request request = new Request.Builder()
-                .url(serverUrl + "auth-check")
+                .url(authUrl)
                 .get()
                 .build();
 
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful() && response.body() != null) {
-                Map<String, Boolean> result = objectMapper.readValue(
-                        response.body().string(),
-                        new TypeReference<>() {
-                        }
-                );
-                return result.getOrDefault("requiresAuth", true);
+                String bodyString = response.body().string();
+                try {
+                    Map<String, Boolean> result = objectMapper.readValue(bodyString, new TypeReference<>() {});
+                    logger.info("Response: {}", bodyString);
+                    logger.info("Server is reachable: true");
+                    return result.getOrDefault("requiresAuth", true);
+                } catch (JsonProcessingException e) {
+                    logger.error("Failed to parse JSON: {}", e.getMessage());
+                    throw new IOException("Invalid JSON response", e);
+                }
+            } else {
+                String errorBody = response.body() != null ? response.body().string() : "No body";
+                logger.error("Failed to check authentication: code={}, headers={}, body={}",
+                        response.code(), response.headers(), errorBody);
+                if (response.code() == 429) {
+                    logger.error("Too many sessions");
+                    // Trigger max sessions dialog in caller
+                }
+                signalError("Failed to check authentication status: " + response.code());
+                throw new IOException("Failed to check authentication status: " + response.code());
             }
-            signalError("Failed to check authentication status: " + response.code());
-            throw new IOException("Failed to check authentication status: " + response.code());
+        } catch (IOException e) {
+            logger.error("Network error connecting to server: {}", e.getMessage());
+            throw e;
         }
     }
 
@@ -145,6 +163,7 @@ public class HttpClientUtil {
     }
 
     public String fetchDataFromHalyard(String endpoint) throws Exception {
+        requiresAuthentication();
         try (Response response = makeRequest("halyard/" + endpoint)) {
             logger.info("Fetching data from /halyard/{}: Status {}", endpoint, response.code());
             String contentType = response.header("Content-Type", "");

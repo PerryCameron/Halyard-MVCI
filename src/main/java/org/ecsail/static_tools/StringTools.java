@@ -135,6 +135,9 @@ public class StringTools {
             case "SO" -> {
                 return "Social";
             }
+            case "LA" -> {
+                return "Lake Associate";
+            }
             case "LM" -> {
                 return "Life Member";
             }

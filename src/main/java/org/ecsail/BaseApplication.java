@@ -41,9 +41,9 @@ public class BaseApplication extends Application {
 
     @Override
     public void init() {
-        if (!testMode)
-            startFileLogger();
-        else
+//        if (!testMode)
+//            startFileLogger();
+//        else
             logger.info("Halyard: Running test mode");
         VersionUtil.logAppVersion();
     }

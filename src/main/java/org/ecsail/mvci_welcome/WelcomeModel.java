@@ -37,7 +37,7 @@ public class WelcomeModel {
 
     public WelcomeModel(MainModel mainModel) {
         this.httpClient = mainModel.getHttpClient();
-        this.objectMapper = mainModel.getObjectMapper();
+        this.objectMapper = mainModel.getHttpClient().getObjectMapper();
     }
 
     public double getProgress() {

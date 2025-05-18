@@ -37,7 +37,7 @@ public class RosterModel {
 
     public RosterModel(MainModel mainModel) {
         this.httpClient = mainModel.getHttpClient();
-        this.objectMapper = mainModel.getObjectMapper();
+        this.objectMapper = mainModel.getHttpClient().getObjectMapper();
     }
     public ObjectMapper getObjectMapper() {
         return objectMapper;

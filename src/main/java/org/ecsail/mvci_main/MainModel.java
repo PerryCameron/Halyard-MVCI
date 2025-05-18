@@ -21,7 +21,7 @@ public class MainModel {
     private final ObservableMap<String, Timeline> LightAnimationMap = FXCollections.observableHashMap();
     private final SimpleObjectProperty<Status.light> lightStatusProperty = new SimpleObjectProperty<>();
     private final ObjectProperty<MainMessage> returnMessage = new SimpleObjectProperty<>();
-    private final ObjectMapper objectMapper = new ObjectMapper();
+//    private final ObjectMapper objectMapper = new ObjectMapper();
     private final BooleanProperty clientConnectError = new SimpleBooleanProperty(false);
     private final StringProperty errorMessage = new SimpleStringProperty("");
     private final HttpClientUtil httpClient = new HttpClientUtil(this);
@@ -81,9 +81,9 @@ public class MainModel {
         this.mainTabPane.set(mainTabPane);
     }
 
-    public ObjectMapper getObjectMapper() {
-        return objectMapper;
-    }
+//    public ObjectMapper getObjectMapper() {
+//        return objectMapper;
+//    }
 
     public HttpClientUtil getHttpClient() {
         return httpClient;

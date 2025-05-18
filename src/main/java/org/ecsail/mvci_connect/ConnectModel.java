@@ -39,14 +39,18 @@ public class ConnectModel {
 
     public ConnectModel(MainModel mainModel) {
         this.httpClient = mainModel.getHttpClient(); // Initialize here
-        this.objectMapper = mainModel.getObjectMapper(); // Initialize here
+        this.objectMapper = mainModel.getHttpClient().getObjectMapper(); // Initialize here
     }
 
     // Add this method to update the server URL in HttpClientUtil
     public void updateServerUrl() {
         String host = currentLogin.hostProperty().get();
         String port = currentLogin.portProperty().get();
-        String serverUrl = (BaseApplication.testMode ? "http" : "https") + "://" + host + ":" + port;
+        String serverUrl;
+        if (port.equals("0"))
+            serverUrl = (BaseApplication.testMode ? "http" : "https") + "://" + host;
+        else
+            serverUrl = (BaseApplication.testMode ? "http" : "https") + "://" + host + ":" + port;
         httpClient.setServerUrl(serverUrl);
     }
 

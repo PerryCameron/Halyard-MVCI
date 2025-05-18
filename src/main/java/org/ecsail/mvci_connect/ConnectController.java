@@ -21,7 +21,7 @@ public class ConnectController extends Controller<ConnectMessage> {
         this.mainController = mainController;
         connectInteractor = new ConnectInteractor(connectModel);
         action(ConnectMessage.SUPPLY_LOGINS);
-        checkIfAuthenticationRequired();
+        connectView = new ConnectView(connectInteractor.getConnectModel(), this::action);
     }
 
     @Override
@@ -41,7 +41,7 @@ public class ConnectController extends Controller<ConnectMessage> {
 
     @Override
     public Region getView() {
-        return connectInteractor.getAuthenticationRequired() ? connectView.build() : null;
+        return connectView.build();
     }
 
     private void connectToServer() {
@@ -49,6 +49,8 @@ public class ConnectController extends Controller<ConnectMessage> {
             @Override
             protected Boolean call() throws Exception {
                 logger.info("Connecting to server...");
+                if(connectInteractor.requiresAuthentication())
+                    logger.info("Requires authentication");
                 return connectInteractor.connectToServer();
             }
         };
@@ -64,6 +66,7 @@ public class ConnectController extends Controller<ConnectMessage> {
         connectTask.setOnFailed(event -> {
             connectInteractor.setRotateShipWheel(false);
             Throwable e = connectTask.getException();
+            logger.error(connectTask.getMessage());
             if (e != null) {
                 boolean retry = DialogueFx.showMaxSessionsDialog();
                 if (retry) {
@@ -101,7 +104,7 @@ public class ConnectController extends Controller<ConnectMessage> {
             connectInteractor.closeLoginStage();
             mainController.openWelcomeMVCI();
         } else {
-            connectView = new ConnectView(connectInteractor.getConnectModel(), this::action);
+
         }
     }
 
