@@ -36,10 +36,6 @@ public class MembershipView implements Builder<Region> {
     public Region build() {
         VBox vBox = VBoxFx.vBoxOf(new Insets(0, 10, 0, 10));
         BorderPane borderPane = new BorderPane();
-//        borderPane.setTop(createHeader());
-//        borderPane.setLeft(createPeopleTabPane());
-//        borderPane.setRight(createInfoTabPane());
-//        borderPane.setCenter(creteDivider());
 //        borderPane.setBottom(createExtrasTabPane());
         vBox.getChildren().add(borderPane);
 //        setViewListener();
@@ -206,7 +202,7 @@ public class MembershipView implements Builder<Region> {
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        tabPane.getTabs().add(new MembershipIdView(this).build());
+        tabPane.getTabs().add(new MembershipIdView(this).build());
 //        tabPane.getTabs().add(new InvoiceListView(this).build());
         return tabPane;
     }

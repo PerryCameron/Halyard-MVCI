@@ -41,7 +41,7 @@ public class MembershipIdView implements Builder<Tab> {
         VBox vBox = VBoxFx.vBoxOf(new Insets(2, 2, 2, 2), "custom-tap-pane-frame", true); // makes outer border
         vBox.getChildren().add(innerVBox());
         tab.setContent(vBox);
-        ListenerFx.addSingleFireTabListener(tab, () -> membershipView.sendMessage().accept(MembershipMessage.SELECT_IDS));
+//        ListenerFx.addSingleFireTabListener(tab, () -> membershipView.sendMessage().accept(MembershipMessage.SELECT_IDS));
         return tab;
     }
 
@@ -113,6 +113,8 @@ public class MembershipIdView implements Builder<Tab> {
             if (newSelection != null) membershipModel.setSelectedMembershipId(newSelection);
         });
         membershipModel.setIdTableView(tableView);
+        // this was set somewhere else but I have no idea
+        tableView.setItems(FXCollections.observableArrayList(membershipModel.membershipProperty().get().getMembershipIds()));
         return tableView;
     }
 

@@ -142,6 +142,7 @@ public class MembershipInteractor implements SlipUser {
             membershipDTOFx.slipProperty().set(new SlipDTOFx(membership.getSlip()));
             setSlipStatus();
             membershipDTOFx.getPeople().addAll(CopyPOJOtoFx.copyPeople(membership.getPeople()));
+            membershipDTOFx.getMembershipIds().addAll(CopyPOJOtoFx.copyMembershipIds(membership.getMembershipIds()));
 
 
         } catch (Exception e) {
@@ -158,7 +159,7 @@ public class MembershipInteractor implements SlipUser {
             membershipModel.setSlipRelationStatus(SlipUser.slip.noSlip);
         // we are not looking for subleases yet.
     }
-    
+
 
     public void addDataToUI() {
 

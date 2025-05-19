@@ -4,6 +4,7 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import org.ecsail.pojo.MembershipId;
 
 public class MembershipIdDTOFx {
 	private IntegerProperty mId;
@@ -49,8 +50,16 @@ public class MembershipIdDTOFx {
 		this.lateRenew = new SimpleBooleanProperty(false);
 	}
 
-
-
+	public MembershipIdDTOFx(MembershipId membershipId) {
+		this.mId = new SimpleIntegerProperty(membershipId.getmId());
+		this.fiscalYear = new SimpleIntegerProperty(membershipId.getFiscalYear());
+		this.msId = new SimpleIntegerProperty(membershipId.getMsId());
+		this.membershipId = new SimpleIntegerProperty(membershipId.getMembershipId());
+		this.renew = new SimpleBooleanProperty(membershipId.getRenew() == 1);
+		this.memType = new SimpleStringProperty(membershipId.getMemType());
+		this.selected = new SimpleBooleanProperty(membershipId.getSelected() == 1);
+		this.lateRenew = new SimpleBooleanProperty(membershipId.getLateRenew() == 1);
+	}
 
 	public final IntegerProperty mIdProperty() {
 		return this.mId;

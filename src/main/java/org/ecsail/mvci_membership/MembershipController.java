@@ -26,7 +26,7 @@ public class MembershipController extends Controller<MembershipMessage> {
         switch (type) {
             case GET_DATA -> getData();
             case SELECT_INVOICES -> runSpinner(SELECT_INVOICES,-430, 150);
-            case SELECT_IDS -> runSpinner(SELECT_IDS,-430, 150);
+//            case SELECT_IDS -> runSpinner(SELECT_IDS,-430, 150);
             case SELECT_INVOICE -> runSpinner(SELECT_INVOICE,-430, 150);
             case SELECT_FEES -> runSpinner(SELECT_FEES,-430, 150);
             case UPDATE_INVOICE -> runSpinner(UPDATE_INVOICE,-430, 150);
