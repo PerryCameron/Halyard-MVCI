@@ -4,7 +4,6 @@ import org.ecsail.dto.*;
 import org.ecsail.pojo.*;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class CopyPOJOtoFx {
@@ -52,5 +51,21 @@ public class CopyPOJOtoFx {
             membershipIdFxList.add(new MembershipIdDTOFx(membershipId));
         }
         return membershipIdFxList;
+    }
+
+    public static List<InvoiceDTOFx> copyInvoices(List<Invoice> invoices) {
+        List<InvoiceDTOFx> invoiceFxList = new ArrayList<>();
+        for(Invoice invoice : invoices) {
+            invoiceFxList.add(new InvoiceDTOFx(invoice));
+        }
+        return invoiceFxList;
+    }
+
+    public static List<BoatDTOFx> copyBoats(List<Boat> boats) {
+        List<BoatDTOFx> boatFxList = new ArrayList<>();
+        for(Boat boat : boats) {
+            boatFxList.add(new BoatDTOFx(boat));
+        }
+        return boatFxList;
     }
 }

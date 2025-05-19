@@ -1,5 +1,6 @@
 package org.ecsail.mvci_membership;
 
+import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -26,7 +27,8 @@ public class BoatTabView implements Builder<Tab> {
 
     @Override
     public Tab build() {
-        return TabFx.tabOf("Boats", createTableViewAndButtonsBox());
+        return
+                TabFx.tabOf("Boats", createTableViewAndButtonsBox());
     }
 
     private Node createTableViewAndButtonsBox() {
@@ -64,7 +66,7 @@ public class BoatTabView implements Builder<Tab> {
     private Node getTableView() {
         TableView<BoatDTOFx> tableView = TableViewFx.tableViewOf(BoatDTOFx.class, 200);
         membershipView.getMembershipModel().setBoatTableView(tableView);
-//        tableView.setItems(membershipView.getMembershipModel().getMembership().getBoatDTOS());
+        tableView.setItems(FXCollections.observableArrayList(membershipModel.membershipProperty().get().getBoats()));
         tableView.getColumns().addAll(Arrays.asList(col1(),col2(),col3(),col4(),col5(),col7(),col8(),col9(),col10()));
         TableView.TableViewSelectionModel<BoatDTOFx> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {

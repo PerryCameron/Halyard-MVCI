@@ -36,7 +36,6 @@ public class MembershipView implements Builder<Region> {
     public Region build() {
         VBox vBox = VBoxFx.vBoxOf(new Insets(0, 10, 0, 10));
         BorderPane borderPane = new BorderPane();
-//        borderPane.setBottom(createExtrasTabPane());
         vBox.getChildren().add(borderPane);
 //        setViewListener();
         setDataLoadedListener(borderPane);
@@ -51,7 +50,7 @@ public class MembershipView implements Builder<Region> {
                     borderPane.setLeft(createPeopleTabPane());
                     borderPane.setRight(createInfoTabPane());
                     borderPane.setCenter(creteDivider());
-
+                    borderPane.setBottom(createExtrasTabPane());
                     addPeopleTabs();
                     System.out.println("Data Loaded!");
                 } catch (Exception e) {
@@ -68,34 +67,11 @@ public class MembershipView implements Builder<Region> {
         membershipModel.getPeopleTabPane().getTabs().add(new AddPersonTabView(this).build());
     }
 
-    private void launchDataDependentUI() {
-//        membershipModel.getPeople().forEach(personDTO -> membershipModel.getPeopleTabPane().getTabs()
-//                .add(new PersonTabView(this, personDTO).build()));
-
-        // right tabPane
-//        membershipModel.getInfoTabPane().getTabs().add(new SlipTabView(this).build());
-//        membershipModel.getInfoTabPane().getTabs().add(new MembershipIdView(this).build());
-//        membershipModel.getInfoTabPane().getTabs().add(new InvoiceListView(this).build());
-        // bottom tabPane
-        membershipModel.getExtraTabPane().getTabs().add(new BoatTabView(this).build());
-        membershipModel.getExtraTabPane().getTabs().add(new NotesTabView(this).build());
-        membershipModel.getExtraTabPane().getTabs().add(new PropertiesTabView(this).build());
-        membershipModel.getExtraTabPane().getTabs().add(new AttachmentsTabView(this).build());
-        membershipModel.getExtraTabPane().getTabs().add(new AddressTabView(this).build());
-    }
-
-
     private Node creteDivider() {
         Region region = new Region();
         region.setPrefWidth(10);
         return region;
     }
-
-//    private void setViewListener() {
-//        ChangeListener<MembershipMessage> viewListener = ListenerFx.addSingleFireEnumListener(() ->
-//                viewMessaging(membershipModel.returnMessageProperty().get()).run());
-//        membershipModel.returnMessageProperty().addListener(viewListener);
-//    }
 
     private Runnable viewMessaging(MembershipMessage message) { // when database updates, this makes UI reflect.
         return () -> {
@@ -189,6 +165,11 @@ public class MembershipView implements Builder<Region> {
         TabPane tabPane = PaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE, "custom-tab-pane");
         HBox.setHgrow(tabPane, Priority.ALWAYS);
         membershipModel.setExtraTabPane(tabPane);
+        tabPane.getTabs().add(new BoatTabView(this).build());
+//        tabPane.getTabs().add(new NotesTabView(this).build());
+//        tabPane.getTabs().add(new PropertiesTabView(this).build());
+//        tabPane.getTabs().add(new AttachmentsTabView(this).build());
+//        tabPane.getTabs().add(new AddressTabView(this).build());
         hBox.getChildren().add(tabPane);
         return hBox;
     }
@@ -197,13 +178,9 @@ public class MembershipView implements Builder<Region> {
         TabPane tabPane = PaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE, 498, "custom-tab-pane");
         VBox.setVgrow(tabPane, Priority.ALWAYS);  // this works in combo with Vgrow in SlapTabView
         membershipModel.setInfoTabPane(tabPane);
-        try {
-            tabPane.getTabs().add(new SlipTabView(this).build());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        tabPane.getTabs().add(new SlipTabView(this).build());
         tabPane.getTabs().add(new MembershipIdView(this).build());
-//        tabPane.getTabs().add(new InvoiceListView(this).build());
+        tabPane.getTabs().add(new InvoiceListView(this).build());
         return tabPane;
     }
 

@@ -25,7 +25,7 @@ public class MembershipController extends Controller<MembershipMessage> {
     public void action(MembershipMessage type) {
         switch (type) {
             case GET_DATA -> getData();
-            case SELECT_INVOICES -> runSpinner(SELECT_INVOICES,-430, 150);
+//            case SELECT_INVOICES -> runSpinner(SELECT_INVOICES,-430, 150);
 //            case SELECT_IDS -> runSpinner(SELECT_IDS,-430, 150);
             case SELECT_INVOICE -> runSpinner(SELECT_INVOICE,-430, 150);
             case SELECT_FEES -> runSpinner(SELECT_FEES,-430, 150);
@@ -130,8 +130,8 @@ public class MembershipController extends Controller<MembershipMessage> {
             @Override
             protected Void call() {
                 switch (type) {
-//                    case SELECT_INVOICES -> db.selectInvoices();
-//                    case SELECT_IDS -> db.selectIds();
+//                    case SELECT_INVOICES -> db.selectInvoices(); <- this has more pieces not in use
+//                    case SELECT_IDS -> db.selectIds(); <- this has more pieces not in use
 //                    case SELECT_INVOICE -> db.selectInvoice();
 //                    case SELECT_FEES -> db.selectFees();
 //                    case UPDATE_INVOICE -> db.updateInvoice();

@@ -1,5 +1,6 @@
 package org.ecsail.mvci_membership;
 
+import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -42,7 +43,6 @@ public class InvoiceListView implements Builder<Tab> {
         vBox.getChildren().add(borderPane);
         tab.setContent(vBox);
         // Create a listener for tab selection change
-        ListenerFx.addSingleFireTabListener(tab, () -> membershipView.sendMessage().accept(MembershipMessage.SELECT_INVOICES));
         return tab;
     }
 
@@ -103,6 +103,7 @@ public class InvoiceListView implements Builder<Tab> {
             }
         });
         membershipView.getMembershipModel().setInvoiceListTableView(tableView);
+        tableView.setItems(FXCollections.observableArrayList(membershipModel.membershipProperty().get().getInvoices()));
         hBox.getChildren().add(tableView);
         return hBox;
     }

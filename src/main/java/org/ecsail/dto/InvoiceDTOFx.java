@@ -3,8 +3,11 @@ package org.ecsail.dto;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.ecsail.pojo.Invoice;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class InvoiceDTOFx {
@@ -72,6 +75,25 @@ public class InvoiceDTOFx {
         this.closed = new SimpleBooleanProperty(false);
         this.supplemental = new SimpleBooleanProperty(false);
         this.maxCredit = new SimpleStringProperty("");
+    }
+
+    public InvoiceDTOFx(Invoice invoice) {
+        this.id = new SimpleIntegerProperty(invoice.getInvoiceId());
+        this.msId = new SimpleIntegerProperty(0);
+        this.year = new SimpleIntegerProperty(invoice.getFiscalYear());
+        this.paid = new SimpleStringProperty(doubleToCurrency(invoice.getPaid()));
+        this.total = new SimpleStringProperty(doubleToCurrency(invoice.getTotal()));
+        this.credit = new SimpleStringProperty(doubleToCurrency(invoice.getCredit()));
+        this.balance = new SimpleStringProperty(doubleToCurrency(invoice.getBalance()));
+        this.batch = new SimpleIntegerProperty(invoice.getBatch());
+        this.committed = new SimpleBooleanProperty(invoice.getCommitted() == 1);
+        this.closed = new SimpleBooleanProperty(invoice.getClosed() == 1);
+        this.supplemental = new SimpleBooleanProperty(invoice.getSupplemental() == 1);
+        this.maxCredit = new SimpleStringProperty(doubleToCurrency(invoice.getMaxCredit()));
+    }
+
+    public String doubleToCurrency(double value) {
+        return NumberFormat.getCurrencyInstance(Locale.US).format(value);
     }
 
     public void showItems() {
