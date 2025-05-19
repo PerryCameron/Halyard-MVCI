@@ -166,7 +166,7 @@ public class MembershipView implements Builder<Region> {
         HBox.setHgrow(tabPane, Priority.ALWAYS);
         membershipModel.setExtraTabPane(tabPane);
         tabPane.getTabs().add(new BoatTabView(this).build());
-//        tabPane.getTabs().add(new NotesTabView(this).build());
+        tabPane.getTabs().add(new NotesTabView(this).build());
 //        tabPane.getTabs().add(new PropertiesTabView(this).build());
 //        tabPane.getTabs().add(new AttachmentsTabView(this).build());
 //        tabPane.getTabs().add(new AddressTabView(this).build());

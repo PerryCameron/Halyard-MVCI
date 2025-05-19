@@ -1,6 +1,8 @@
 package org.ecsail.dto;
 
 import javafx.beans.property.*;
+import org.apache.poi.sl.usermodel.Notes;
+import org.ecsail.pojo.Memo;
 
 import java.time.LocalDate;
 
@@ -46,6 +48,17 @@ public class NotesDTOFx {
         this.invoiceId = new SimpleIntegerProperty(0);
         this.category = new SimpleStringProperty(type);
         this.boatId = new SimpleIntegerProperty(0);
+    }
+
+    public NotesDTOFx(Memo memo) {
+        super();
+        this.memoId = new SimpleIntegerProperty(memo.getMemoId());
+        this.msId = new SimpleIntegerProperty(memo.getMsId());
+        this.memoDate = new SimpleObjectProperty<>(memo.getMemoDate() != null ? LocalDate.parse(memo.getMemoDate()) : null);
+        this.memo = new SimpleStringProperty(memo.getMemo());
+        this.invoiceId = new SimpleIntegerProperty(memo.getInvoiceId() != null ? memo.getInvoiceId() : 0);
+        this.category = new SimpleStringProperty(memo.getCategory());
+        this.boatId = new SimpleIntegerProperty(memo.getBoatId() != null ? memo.getBoatId() : 0);
     }
 
     public final IntegerProperty memoIdProperty() {

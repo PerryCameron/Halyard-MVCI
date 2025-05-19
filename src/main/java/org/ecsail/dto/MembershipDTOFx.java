@@ -27,7 +27,7 @@ public class MembershipDTOFx {
     private List<BoatDTOFx> boats = FXCollections.observableArrayList();
     private List<InvoiceDTOFx> invoices = FXCollections.observableArrayList();
     private List<MembershipIdDTOFx> membershipIds = FXCollections.observableArrayList();
-    private List<Memo2DTOFx> memos = FXCollections.observableArrayList();
+    private List<NotesDTOFx> memos = FXCollections.observableArrayList();
 
     public MembershipDTOFx(Integer mid, Integer fiscalYear, Integer msId, Integer membershipId,
                            Boolean  renew, String memType, Boolean  selected, Boolean lateRenew,
@@ -175,7 +175,7 @@ public class MembershipDTOFx {
         return membershipIds;
     }
 
-    public List<Memo2DTOFx> getMemos() {
+    public List<NotesDTOFx> getMemos() {
         return memos;
     }
 
@@ -195,7 +195,7 @@ public class MembershipDTOFx {
         this.membershipIds = membershipIds;
     }
 
-    public void setMemos(List<Memo2DTOFx> memos) {
+    public void setMemos(List<NotesDTOFx> memos) {
         this.memos = memos;
     }
 }

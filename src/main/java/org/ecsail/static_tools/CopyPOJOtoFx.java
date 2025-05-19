@@ -4,6 +4,7 @@ import org.ecsail.dto.*;
 import org.ecsail.pojo.*;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class CopyPOJOtoFx {
@@ -67,5 +68,13 @@ public class CopyPOJOtoFx {
             boatFxList.add(new BoatDTOFx(boat));
         }
         return boatFxList;
+    }
+
+    public static List<NotesDTOFx> copyNotes(List<Memo> memos) {
+        List<NotesDTOFx> memoFxList = new ArrayList<>();
+        for(Memo memo : memos) {
+            memoFxList.add((new NotesDTOFx(memo)));
+        }
+        return memoFxList;
     }
 }

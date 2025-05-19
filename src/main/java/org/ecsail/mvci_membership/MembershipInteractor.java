@@ -145,6 +145,7 @@ public class MembershipInteractor implements SlipUser {
             membershipDTOFx.getMembershipIds().addAll(CopyPOJOtoFx.copyMembershipIds(membership.getMembershipIds()));
             membershipDTOFx.getInvoices().addAll(CopyPOJOtoFx.copyInvoices(membership.getInvoices()));
             membershipDTOFx.getBoats().addAll(CopyPOJOtoFx.copyBoats(membership.getBoats()));
+            membershipDTOFx.getMemos().addAll(CopyPOJOtoFx.copyNotes(membership.getMemos()));
 
 
         } catch (Exception e) {
