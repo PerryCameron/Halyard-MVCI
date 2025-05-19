@@ -2,6 +2,8 @@ package org.ecsail.pojo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.ecsail.dto.PersonDTOFx;
+
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -52,6 +54,20 @@ public class Person {
     private List<Officer> officers;
 
     public Person() {
+    }
+
+    public Person(PersonDTOFx fx) {
+        this.pId = fx.getpId();
+        this.msId = fx.getMsId();
+        this.memberType = fx.getMemberType();
+        this.firstName = fx.getFirstName();
+        this.lastName = fx.getLastName();
+        this.occupation = fx.getOccupation();
+        this.business = fx.getBusiness();
+        this.birthday = fx.getBirthday().toString();
+        this.active = fx.isActive() ? 1 : 0;
+        this.nickName = fx.getNickName();
+        this.oldMsid = fx.getOldMsid();
     }
 
     public int getpId() {

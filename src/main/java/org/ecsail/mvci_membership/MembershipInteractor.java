@@ -1,6 +1,10 @@
 package org.ecsail.mvci_membership;
 
 import javafx.application.Platform;
+import okhttp3.MediaType;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 import org.ecsail.dto.MembershipDTOFx;
 import org.ecsail.dto.PersonDTOFx;
 import org.ecsail.dto.SlipDTOFx;
@@ -19,12 +23,6 @@ import java.nio.charset.StandardCharsets;
 public class MembershipInteractor implements SlipUser {
     private final MembershipModel membershipModel;
     private static final Logger logger = LoggerFactory.getLogger(MembershipInteractor.class);
-//    private final DataBaseService dataBaseService;
-
-    //    public MembershipInteractor(MembershipModel membershipModel, Connections connections) {
-//        this.membershipModel = membershipModel;
-//        this.dataBaseService = new DataBaseService(connections.getDataSource(), membershipModel);
-//    }
     public MembershipInteractor(MembershipModel membershipModel) {
         this.membershipModel = membershipModel;
     }
@@ -33,14 +31,8 @@ public class MembershipInteractor implements SlipUser {
         Platform.runLater(() -> {
             logger.info("Data for MembershipView is now loaded");
             membershipModel.dataIsLoadedProperty().set(true);
-//            membershipModel.setReturnMessage(MembershipMessage.DATA_LOAD_SUCCEED);
-
         });
     }
-
-//    public DataBaseService getDataBaseService() {
-//        return dataBaseService;
-//    }
 
     public void uploadMemberPhoto() {
         System.out.println("uploading photo");
@@ -100,6 +92,26 @@ public class MembershipInteractor implements SlipUser {
 //        }
     }
 
+
+    /**
+     * Updates a person's data by sending a POST request to the halyard/update/person endpoint.
+     *
+     * @param // personDTOFx the person data to update
+     * @return the JSON response from the server
+     */
+    public String updatePerson() {
+        logger.debug("Updating person with pId: {}", membershipModel.getSelectedPerson().pIdProperty().get());
+        Person person = new Person(membershipModel.getSelectedPerson());
+        try {
+            String response = membershipModel.getHttpClient().postDataToGybe("update/person", person);
+            logger.debug("Update response: {}", response);
+            return response;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public Membership getMembershiptoPOJO() {
         Logger logger = LoggerFactory.getLogger(getClass());
         StringBuilder endpoint = new StringBuilder("membership");
@@ -108,7 +120,7 @@ public class MembershipInteractor implements SlipUser {
             endpoint.append("&msId=").append(URLEncoder.encode(String.valueOf(membershipModel.getMembershipFromRosterList().getMsId()), StandardCharsets.UTF_8.name()));
             logger.debug("Constructed endpoint: {}", endpoint.toString());
 
-            String jsonResponse = membershipModel.getHttpClient().fetchDataFromHalyard(endpoint.toString());
+            String jsonResponse = membershipModel.getHttpClient().fetchDataFromGybe(endpoint.toString());
             if (jsonResponse == null || jsonResponse.trim().isEmpty()) {
                 logger.warn("Received null or empty JSON response from endpoint: {}", endpoint);
                 System.out.println("No JSON response received from endpoint: " + endpoint);
@@ -146,8 +158,6 @@ public class MembershipInteractor implements SlipUser {
             membershipDTOFx.getInvoices().addAll(CopyPOJOtoFx.copyInvoices(membership.getInvoices()));
             membershipDTOFx.getBoats().addAll(CopyPOJOtoFx.copyBoats(membership.getBoats()));
             membershipDTOFx.getMemos().addAll(CopyPOJOtoFx.copyNotes(membership.getMemos()));
-
-
         } catch (Exception e) {
             logger.error("Failed to convert membership to FX: {}", e.getMessage(), e);
         }
@@ -164,10 +174,4 @@ public class MembershipInteractor implements SlipUser {
     }
 
 
-    public void addDataToUI() {
-
-
-
-
-    }
 }

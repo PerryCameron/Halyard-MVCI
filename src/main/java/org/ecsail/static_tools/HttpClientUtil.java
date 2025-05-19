@@ -20,6 +20,9 @@ public class HttpClientUtil {
     private final ObjectMapper objectMapper;
     private final MainModel mainModel;
     private String serverUrl;
+    private String csrfToken; // Store CSRF token
+    private String csrfHeaderName; // Store CSRF header name (e.g., X-CSRF-TOKEN) // ADD THIS
+
 
 
     public HttpClientUtil(MainModel mainModel) {
@@ -61,6 +64,36 @@ public class HttpClientUtil {
         return serverUrl;
     }
 
+    /* Fetches the CSRF token from /open_api/csrf-token and stores it.
+     * @throws IOException if the request fails or the response is invalid.
+     */
+    private void fetchCsrfToken() throws IOException {
+        Request request = new Request.Builder()
+                .url(serverUrl + "api/csrf-token")
+                .get()
+                .build();
+        try (Response response = client.newCall(request).execute()) {
+            if (response.isSuccessful() && response.body() != null) {
+                String bodyString = response.body().string();
+                try {
+                    Map<String, String> result = objectMapper.readValue(bodyString, new TypeReference<>() {});
+                    csrfToken = result.get("token");
+                    csrfHeaderName = result.get("headerName");
+                    logger.info("Fetched CSRF token: {}, header: {}", csrfToken, csrfHeaderName);
+                    if (csrfToken == null || csrfHeaderName == null) {
+                        throw new IOException("CSRF token or header name missing in response");
+                    }
+                } catch (JsonProcessingException e) {
+                    logger.error("Failed to parse CSRF token JSON: {}", e.getMessage());
+                    throw new IOException("Invalid CSRF token response", e);
+                }
+            } else {
+                logger.error("Failed to fetch CSRF token: code={}", response.code());
+                throw new IOException("Failed to fetch CSRF token: " + response.code());
+            }
+        }
+    }
+
     /**
      * Checks if authentication is required by sending a GET request to the server's /auth-check endpoint.
      * The endpoint is expected to return a JSON response with a "requiresAuth" boolean field indicating
@@ -84,7 +117,8 @@ public class HttpClientUtil {
             if (response.isSuccessful() && response.body() != null) {
                 String bodyString = response.body().string();
                 try {
-                    Map<String, Boolean> result = objectMapper.readValue(bodyString, new TypeReference<>() {});
+                    Map<String, Boolean> result = objectMapper.readValue(bodyString, new TypeReference<>() {
+                    });
                     logger.info("Response: {}", bodyString);
                     logger.info("Server is reachable: true");
                     return result.getOrDefault("requiresAuth", true);
@@ -124,7 +158,13 @@ public class HttpClientUtil {
                 .post(body)
                 .build();
 
-        return client.newCall(request).execute();
+        Response response = client.newCall(request).execute();
+        if (response.isSuccessful()) {
+            fetchCsrfToken(); // Fetch CSRF token after successful login
+        }
+
+        return response;
+//        return client.newCall(request).execute();
     }
 
     public Response logoutOthers() throws IOException {
@@ -132,7 +172,6 @@ public class HttpClientUtil {
                 .url(serverUrl + "logout-others")
                 .post(new FormBody.Builder().build())
                 .build();
-
         logger.debug("Sending logout-others request");
         return client.newCall(request).execute();
     }
@@ -142,14 +181,13 @@ public class HttpClientUtil {
                 .url(serverUrl + "logout")
                 .post(new FormBody.Builder().build())
                 .build();
-
         logger.debug("Sending logout request");
         try (Response response = client.newCall(request).execute()) {
             logger.info("Logout response status: {}", response.code());
         }
-
         CookieJar cookieJar = client.cookieJar();
-            cookieJar.saveFromResponse(Objects.requireNonNull(HttpUrl.parse(serverUrl)), new ArrayList<>());
+        cookieJar.saveFromResponse(Objects.requireNonNull(HttpUrl.parse(serverUrl)), new ArrayList<>());
+        csrfToken = null; // Clear CSRF token on logout
     }
 
     public Response makeRequest(String endpoint) throws IOException {
@@ -157,12 +195,11 @@ public class HttpClientUtil {
                 .url(serverUrl + endpoint)
                 .get()
                 .build();
-
         logger.debug("Sending request to {} with cookies: {}", endpoint, client.cookieJar().loadForRequest(Objects.requireNonNull(HttpUrl.parse(serverUrl + endpoint))));
         return client.newCall(request).execute();
     }
 
-    public String fetchDataFromHalyard(String endpoint) throws Exception {
+    public String fetchDataFromGybe(String endpoint) throws Exception {
         requiresAuthentication();
         try (Response response = makeRequest("halyard/" + endpoint)) {
             logger.info("Fetching data from /halyard/{}: Status {}", endpoint, response.code());
@@ -184,6 +221,68 @@ public class HttpClientUtil {
         } catch (IOException e) {
             signalError("Failed to fetch data: " + e.getMessage());
             throw new Exception("Failed to fetch data: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Sends a POST request to the specified halyard endpoint with the provided data as JSON.
+     *
+     * @param endpoint the endpoint under /halyard/ (e.g., "update/person")
+     * @param data     the object to serialize as JSON for the request body
+     * @return the response body as a string
+     * @throws Exception if authentication is required but fails, the session is invalid,
+     *                   access is denied, or the request fails
+     */
+    public String postDataToGybe(String endpoint, Object data) throws Exception {
+        requiresAuthentication();
+        if (csrfToken == null) {
+            fetchCsrfToken(); // Ensure CSRF token is fetched
+        }
+
+        String jsonPayload;
+        try {
+            jsonPayload = objectMapper.writeValueAsString(data);
+            logger.debug("JSON Payload for POST: {}", jsonPayload);
+        } catch (JsonProcessingException e) {
+            logger.error("Failed to serialize data to JSON", e);
+            throw new Exception("Serialization error", e);
+        }
+
+        RequestBody body = RequestBody.create(
+                jsonPayload,
+                MediaType.parse("application/json; charset=utf-8")
+        );
+        Request request = new Request.Builder()
+                .url(serverUrl + "halyard/" + endpoint)
+                .post(body)
+                .header(csrfHeaderName, csrfToken) // Use dynamic header name
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            logger.info("Posting data to /halyard/{}: Status {}", endpoint, response.code());
+            String contentType = response.header("Content-Type", "");
+            if (contentType != null && contentType.contains("text/html")) {
+                signalError("Session invalid: Server redirected to login page. Please log in again.");
+                throw new Exception("Session invalid: Server redirected to login page. Please log in again.");
+            }
+            if (response.code() == 403) {
+                String responseBody = response.body() != null ? response.body().string() : "";
+                if (responseBody.contains("Invalid CSRF token")) {
+                    logger.info("Invalid CSRF token, fetching new token");
+                    fetchCsrfToken();
+                    return postDataToGybe(endpoint, data); // Retry once
+                }
+                signalError("Access Denied: You don’t have the required permissions to access this resource. " + response.code());
+                throw new AccessDeniedException("Access Denied: You don’t have the required permissions to access this resource.");
+            } else if (response.isSuccessful() && response.body() != null) {
+                return response.body().string();
+            } else {
+                signalError("Failed to post data: " + response.code());
+                throw new Exception("Failed to post data: " + response.code());
+            }
+        } catch (IOException e) {
+            signalError("Failed to post data: " + e.getMessage());
+            throw new Exception("Failed to post data: " + e.getMessage());
         }
     }
 

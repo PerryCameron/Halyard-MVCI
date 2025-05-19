@@ -22,6 +22,7 @@ import org.ecsail.dto.PersonDTOFx;
 import org.ecsail.enums.MemberType;
 import org.ecsail.interfaces.ConfigFilePaths;
 import org.ecsail.interfaces.ObjectType;
+import org.ecsail.mvci_membership.components.AwardTableView;
 import org.ecsail.static_tools.DateTools;
 import org.ecsail.widgetfx.*;
 import org.slf4j.Logger;

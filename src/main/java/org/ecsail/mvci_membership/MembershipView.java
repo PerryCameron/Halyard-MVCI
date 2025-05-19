@@ -3,11 +3,9 @@ package org.ecsail.mvci_membership;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.Property;
-import javafx.beans.value.ChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.*;
@@ -37,7 +35,6 @@ public class MembershipView implements Builder<Region> {
         VBox vBox = VBoxFx.vBoxOf(new Insets(0, 10, 0, 10));
         BorderPane borderPane = new BorderPane();
         vBox.getChildren().add(borderPane);
-//        setViewListener();
         setDataLoadedListener(borderPane);
         return vBox;
     }
@@ -158,8 +155,6 @@ public class MembershipView implements Builder<Region> {
         membershipModel.getPeopleTabPane().getTabs().remove(tab);
     }
 
-
-
     private Node createExtrasTabPane() {
         HBox hBox = HBoxFx.hBoxOf(new Insets(10, 0, 0, 0)); // provides space between
         TabPane tabPane = PaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE, "custom-tab-pane");
@@ -167,9 +162,9 @@ public class MembershipView implements Builder<Region> {
         membershipModel.setExtraTabPane(tabPane);
         tabPane.getTabs().add(new BoatTabView(this).build());
         tabPane.getTabs().add(new NotesTabView(this).build());
-//        tabPane.getTabs().add(new PropertiesTabView(this).build());
+        tabPane.getTabs().add(new PropertiesTabView(this).build());
 //        tabPane.getTabs().add(new AttachmentsTabView(this).build());
-//        tabPane.getTabs().add(new AddressTabView(this).build());
+        tabPane.getTabs().add(new AddressTabView(this).build());
         hBox.getChildren().add(tabPane);
         return hBox;
     }

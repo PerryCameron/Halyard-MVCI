@@ -77,7 +77,7 @@ public class MembershipController extends Controller<MembershipMessage> {
     private void runTask(MembershipMessage type) {
         Task<Void> task = new Task<>() {
             @Override
-            protected Void call() {
+            protected Void call() throws Exception {
                 switch (type) {
 //                    case UPDATE_MEMBERSHIP_LIST -> db.updateMembershipList();
 //                    case UPDATE_MEMBERSHIP_ID -> db.updateMembershipId();
@@ -87,7 +87,7 @@ public class MembershipController extends Controller<MembershipMessage> {
 //                    case UPDATE_NOTE -> db.updateNote();
 //                    case UPDATE_PHONE -> db.updatePhone();
 //                    case UPDATE_OFFICER -> db.updateOfficer();
-//                    case UPDATE_PERSON -> db.updatePerson();
+                    case UPDATE_PERSON -> membershipInteractor.updatePerson();
 //                    case UPDATE_PAYMENT -> db.updatePayment();
 //                    case INSERT_BOAT -> db.insertBoat();
 //                    case INSERT_AWARD -> db.insertAward();
@@ -161,8 +161,6 @@ public class MembershipController extends Controller<MembershipMessage> {
         task.setOnSucceeded(e -> {
             mainController.showLoadingSpinner(false);
             membershipInteractor.setDataLoaded();
-
-
         });
         new Thread(task).start();
     }

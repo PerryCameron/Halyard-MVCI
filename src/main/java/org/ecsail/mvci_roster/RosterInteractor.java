@@ -73,7 +73,7 @@ public RosterInteractor(RosterModel rm) {
 
     public void getRadioChoices() throws Exception {
         String endpoint = "radioChoices";
-        String jsonResponse = rosterModel.getHttpClient().fetchDataFromHalyard(endpoint);
+        String jsonResponse = rosterModel.getHttpClient().fetchDataFromGybe(endpoint);
         logger.debug("Radio choices response: {}", jsonResponse);
         List<MembershipListRadioDTO> choices = rosterModel.getHttpClient().getObjectMapper().readValue(
                 jsonResponse,
@@ -89,7 +89,7 @@ public RosterInteractor(RosterModel rm) {
 
     public void getRosterSettings() throws Exception {
         String endpoint = "searchableListItems";
-        String jsonResponse = rosterModel.getHttpClient().fetchDataFromHalyard(endpoint);
+        String jsonResponse = rosterModel.getHttpClient().fetchDataFromGybe(endpoint);
         logger.debug("Roster Settings response: {}", jsonResponse);
         List<DbRosterSettingsDTO> choices = rosterModel.getHttpClient().getObjectMapper().readValue(
                 jsonResponse,
@@ -116,7 +116,7 @@ public RosterInteractor(RosterModel rm) {
         }
         System.out.println(endpoint);
         // Fetch data using the constructed endpoint
-        String jsonResponse = rosterModel.getHttpClient().fetchDataFromHalyard(endpoint.toString());
+        String jsonResponse = rosterModel.getHttpClient().fetchDataFromGybe(endpoint.toString());
 //        logger.debug("Roster response: {}", jsonResponse);
         List<RosterDTO> roster = rosterModel.getHttpClient().getObjectMapper().readValue(
                 jsonResponse,

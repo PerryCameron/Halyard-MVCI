@@ -32,7 +32,7 @@ public class WelcomeInteractor {
         int endYear = startYear + welcomeModel.getYearSpan();
         String endpoint = "statistics?startYear=" + startYear + "&stopYear=" + endYear;
 
-        String jsonResponse = welcomeModel.getHttpClient().fetchDataFromHalyard(endpoint);
+        String jsonResponse = welcomeModel.getHttpClient().fetchDataFromGybe(endpoint);
         logger.debug("Statistics response: {}", jsonResponse); // Log the raw JSON response
         List<StatsDTO> statsDTOS = welcomeModel.getObjectMapper().readValue(
                 jsonResponse,
