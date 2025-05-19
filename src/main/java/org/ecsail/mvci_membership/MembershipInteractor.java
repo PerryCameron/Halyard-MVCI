@@ -1,14 +1,10 @@
 package org.ecsail.mvci_membership;
 
 import javafx.application.Platform;
-import okhttp3.MediaType;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 import org.ecsail.dto.MembershipDTOFx;
-import org.ecsail.dto.PersonDTOFx;
 import org.ecsail.dto.SlipDTOFx;
 import org.ecsail.interfaces.SlipUser;
+import org.ecsail.pojo.Boat;
 import org.ecsail.pojo.Membership;
 import org.ecsail.pojo.Person;
 import org.ecsail.static_tools.CopyPOJOtoFx;
@@ -92,33 +88,13 @@ public class MembershipInteractor implements SlipUser {
 //        }
     }
 
-
-    /**
-     * Updates a person's data by sending a POST request to the halyard/update/person endpoint.
-     *
-     * @param // personDTOFx the person data to update
-     * @return the JSON response from the server
-     */
-    public String updatePerson() {
-        logger.debug("Updating person with pId: {}", membershipModel.getSelectedPerson().pIdProperty().get());
-        Person person = new Person(membershipModel.getSelectedPerson());
-        try {
-            String response = membershipModel.getHttpClient().postDataToGybe("update/person", person);
-            logger.debug("Update response: {}", response);
-            return response;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
     public Membership getMembershiptoPOJO() {
         Logger logger = LoggerFactory.getLogger(getClass());
         StringBuilder endpoint = new StringBuilder("membership");
         try {
             endpoint.append("?year=").append(membershipModel.selectedMembershipYearProperty().getValue());
             endpoint.append("&msId=").append(URLEncoder.encode(String.valueOf(membershipModel.getMembershipFromRosterList().getMsId()), StandardCharsets.UTF_8.name()));
-            logger.debug("Constructed endpoint: {}", endpoint.toString());
+            logger.debug("Constructed endpoint: {}", endpoint);
 
             String jsonResponse = membershipModel.getHttpClient().fetchDataFromGybe(endpoint.toString());
             if (jsonResponse == null || jsonResponse.trim().isEmpty()) {
@@ -138,7 +114,7 @@ public class MembershipInteractor implements SlipUser {
             logger.error("Encoding error for endpoint: {}", e.getMessage(), e);
             System.out.println("Encoding error: " + e.getMessage());
         } catch (IOException e) {
-            logger.error("IO error fetching data from endpoint {}: {}", endpoint.toString(), e.getMessage(), e);
+            logger.error("IO error fetching data from endpoint {}: {}", endpoint, e.getMessage(), e);
             System.out.println("IO error: " + e.getMessage());
         } catch (Exception e) {
             logger.error("Unexpected error fetching data: {}", e.getMessage(), e);
@@ -167,11 +143,48 @@ public class MembershipInteractor implements SlipUser {
         // person owns a slip
         if(!membershipModel.membershipProperty().get().slipProperty().get().getSlipNumber().isEmpty())
             membershipModel.setSlipRelationStatus(SlipUser.slip.owner);
-//        if(membershipModel.membershipProperty().get().slipProperty().get().subleased_toProperty().get() == 0)
+        // if(membershipModel.membershipProperty().get().slipProperty().get().subleased_toProperty().get() == 0)
         else
             membershipModel.setSlipRelationStatus(SlipUser.slip.noSlip);
         // we are not looking for subleases yet.
     }
 
+    /**
+     * Updates a person's data by sending a POST request to the halyard/update/person endpoint.
+     *
+     * @param // personDTOFx the person data to update
+     * @return the JSON response from the server
+     */
+    public String updatePerson() {
+        logger.debug("Updating person with pId: {}", membershipModel.getSelectedPerson().pIdProperty().get());
+        Person person = new Person(membershipModel.getSelectedPerson());
+        try {
+            String response = membershipModel.getHttpClient().postDataToGybe("update/person", person);
+            logger.debug("Update response: {}", response);
+            return response;
+        } catch (Exception e) {
+            logger.error("Failed to update person: {}", e.getMessage(), e);
+            e.printStackTrace();
+        }
+        return null;
+    }
 
+    /**
+     * Updates a boat's data by sending a POST request to the halyard/update/boat endpoint.
+     *
+     * @param // Boat the boat data to update
+     * @return the JSON response from the server
+     */
+    public String updateBoat() {
+        logger.debug("Updating boat with pId: {}", membershipModel.getSelectedBoat().boatIdProperty().get());
+        Boat boat = new Boat(membershipModel.getSelectedBoat());
+        try {
+            String response = membershipModel.getHttpClient().postDataToGybe("update/boat", boat);
+            logger.debug("Update response: {}", response);
+            return response;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }

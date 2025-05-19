@@ -77,13 +77,13 @@ public class MembershipController extends Controller<MembershipMessage> {
     private void runTask(MembershipMessage type) {
         Task<Void> task = new Task<>() {
             @Override
-            protected Void call() throws Exception {
+            protected Void call() {
                 switch (type) {
 //                    case UPDATE_MEMBERSHIP_LIST -> db.updateMembershipList();
 //                    case UPDATE_MEMBERSHIP_ID -> db.updateMembershipId();
 //                    case UPDATE_AWARD -> db.updateAward();
 //                    case UPDATE_EMAIL -> db.updateEmail();
-//                    case UPDATE_BOAT -> db.updateBoat();
+                    case UPDATE_BOAT -> membershipInteractor.updateBoat();
 //                    case UPDATE_NOTE -> db.updateNote();
 //                    case UPDATE_PHONE -> db.updatePhone();
 //                    case UPDATE_OFFICER -> db.updateOfficer();
@@ -152,7 +152,7 @@ public class MembershipController extends Controller<MembershipMessage> {
         mainController.showLoadingSpinner(true);
         Task<Void> task = new Task<>() {
             @Override
-            protected Void call() throws Exception {
+            protected Void call() {
                 // get membership as JSON, deserialize it and then covert to FX objects and set in model
                 membershipInteractor.convertPOJOsToFXProperties(membershipInteractor.getMembershiptoPOJO());
                 return null;

@@ -2,6 +2,7 @@ package org.ecsail.pojo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.ecsail.dto.BoatDTOFx;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Boat {
@@ -56,8 +57,28 @@ public class Boat {
     // Getters and setters
 
 
+    public Boat(BoatDTOFx selectedBoat) {
+        this.boatId = selectedBoat.getBoatId();
+        this.manufacturer = selectedBoat.getManufacturer();
+        this.manufactureYear = selectedBoat.getManufactureYear();
+        this.registrationNum = selectedBoat.getRegistrationNum();
+        this.model = selectedBoat.getModel();
+        this.boatName = selectedBoat.getBoatName();
+        this.sailNumber = selectedBoat.getSailNumber();
+        this.hasTrailer = selectedBoat.isHasTrailer() == true ? 1 : 0;
+        this.length = selectedBoat.getLoa();
+        this.weight = selectedBoat.getDisplacement();
+        this.keel = selectedBoat.getKeel();
+        this.phrf = selectedBoat.getPhrf();
+        this.draft = selectedBoat.getDraft();
+        this.beam = selectedBoat.getBeam();
+        this.lwl = selectedBoat.getLwl();
+        this.aux = selectedBoat.isAux() == true ? 1 : 0;
+    }
+
     public Boat() {
     }
+
 
     public int getBoatId() {
         return boatId;
