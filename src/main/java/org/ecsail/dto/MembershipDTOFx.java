@@ -22,7 +22,7 @@ public class MembershipDTOFx {
     private SimpleStringProperty city;
     private SimpleStringProperty state;
     private SimpleStringProperty zip;
-    private ObjectProperty<Slip> slip;
+    private ObjectProperty<SlipDTOFx> slip = new SimpleObjectProperty<>();
     private List<PersonDTOFx> people = FXCollections.observableArrayList();
     private List<BoatDTOFx> boats = FXCollections.observableArrayList();
     private List<InvoiceDTOFx> invoices = FXCollections.observableArrayList();
@@ -155,11 +155,7 @@ public class MembershipDTOFx {
         return zip;
     }
 
-    public Slip getSlip() {
-        return slip.get();
-    }
-
-    public ObjectProperty<Slip> slipProperty() {
+    public ObjectProperty<SlipDTOFx> slipProperty() {
         return slip;
     }
 
@@ -181,10 +177,6 @@ public class MembershipDTOFx {
 
     public List<Memo2DTOFx> getMemos() {
         return memos;
-    }
-
-    public void setSlip(Slip slip) {
-        this.slip.set(slip);
     }
 
     public void setPeople(List<PersonDTOFx> people) {

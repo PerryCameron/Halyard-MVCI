@@ -44,9 +44,12 @@ public class MainInteractor implements ConfigFilePaths {
     public void printMembershipList(MembershipListDTO membershipListDTO) {
         logger.info(membershipListDTO.toString());
     }
-    public void getLists() {
-        mainModel.setBoardPositionDTOS(FXCollections.observableArrayList());
-    }
+//
+//    public void getLists() {
+//        mainModel.setBoardPositionDTOS(FXCollections.observableArrayList());
+//    }
+
+
 //    public void loadCommonLists(Connections connections) {
 //        BoardPositionsRepository boardPositionsRepo = new BoardPositionsRepositoryImpl(connections.getDataSource());
 //        mainModel.setBoardPositionDTOS(FXCollections.observableList(boardPositionsRepo.getPositions()));

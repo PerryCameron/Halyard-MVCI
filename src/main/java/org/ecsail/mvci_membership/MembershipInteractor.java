@@ -3,6 +3,7 @@ package org.ecsail.mvci_membership;
 import javafx.application.Platform;
 import org.ecsail.dto.MembershipDTOFx;
 import org.ecsail.dto.PersonDTOFx;
+import org.ecsail.dto.SlipDTOFx;
 import org.ecsail.interfaces.SlipUser;
 import org.ecsail.pojo.Membership;
 import org.ecsail.pojo.Person;
@@ -135,19 +136,29 @@ public class MembershipInteractor implements SlipUser {
     }
 
     public void convertPOJOsToFXProperties(Membership membership) {
-        MembershipDTOFx membershipDTOFx = new MembershipDTOFx(membership);
-        membershipModel.membershipProperty().set(membershipDTOFx);
         try {
-            // Add convert the people
+            MembershipDTOFx membershipDTOFx = new MembershipDTOFx(membership);
+            membershipModel.membershipProperty().set(membershipDTOFx);
+            membershipDTOFx.slipProperty().set(new SlipDTOFx(membership.getSlip()));
+            setSlipStatus();
             membershipDTOFx.getPeople().addAll(CopyPOJOtoFx.copyPeople(membership.getPeople()));
-
 
 
         } catch (Exception e) {
             logger.error("Failed to convert membership to FX: {}", e.getMessage(), e);
         }
-
     }
+
+    private void setSlipStatus() {
+        // person owns a slip
+        if(!membershipModel.membershipProperty().get().slipProperty().get().getSlipNumber().isEmpty())
+            membershipModel.setSlipRelationStatus(SlipUser.slip.owner);
+//        if(membershipModel.membershipProperty().get().slipProperty().get().subleased_toProperty().get() == 0)
+        else
+            membershipModel.setSlipRelationStatus(SlipUser.slip.noSlip);
+        // we are not looking for subleases yet.
+    }
+    
 
     public void addDataToUI() {
 

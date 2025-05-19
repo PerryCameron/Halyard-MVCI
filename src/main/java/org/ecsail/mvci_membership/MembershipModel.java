@@ -13,7 +13,7 @@ import org.ecsail.mvci_main.MainModel;
 import org.ecsail.static_tools.HttpClientUtil;
 
 public class MembershipModel {
-//    private ObservableList<BoardPositionDTO> boardPositionDTOS;
+    private ObservableList<BoardPositionDTO> boardPositionDTOS;
     // Person information for membership
     private ObservableMap<PersonDTOFx, TableView<EmailDTOFx>> emailTableView = FXCollections.observableHashMap();
     private ObservableMap<PersonDTOFx, TableView<PhoneDTOFx>> phoneTableView = FXCollections.observableHashMap();
@@ -28,7 +28,6 @@ public class MembershipModel {
 
     private final SimpleObjectProperty<RosterDTOFx> membershipFromRosterList = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<MembershipDTOFx> membership = new SimpleObjectProperty<>();
-    private final SimpleObjectProperty<SlipDTO> slip = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TableView<BoatDTOFx>> boatTableView = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TableView<NotesDTOFx>> notesTableView = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TableView<MembershipIdDTOFx>> idTableView = new SimpleObjectProperty<>();
@@ -101,10 +100,6 @@ public class MembershipModel {
         this.selectedPayment.set(selectedPayment);
     }
 
-    public Success getInvoiceSaved() {
-        return invoiceSaved.get();
-    }
-
     public SimpleObjectProperty<Success> invoiceSavedProperty() {
         return invoiceSaved;
     }
@@ -113,20 +108,12 @@ public class MembershipModel {
         this.invoiceSaved.set(invoiceSaved);
     }
 
-    public int getSelectedInvoiceCreateYear() {
-        return selectedInvoiceCreateYear.get();
-    }
-
     public SimpleIntegerProperty selectedInvoiceCreateYearProperty() {
         return selectedInvoiceCreateYear;
     }
 
     public void setSelectedInvoiceCreateYear(int selectedInvoiceCreateYear) {
         this.selectedInvoiceCreateYear.set(selectedInvoiceCreateYear);
-    }
-
-    public TableView<InvoiceDTOFx> getInvoiceListTableView() {
-        return invoiceListTableView.get();
     }
 
     public SimpleObjectProperty<TableView<InvoiceDTOFx>> invoiceListTableViewProperty() {
@@ -147,22 +134,6 @@ public class MembershipModel {
 
     public void setSelectedInvoice(InvoiceDTOFx selectedInvoice) {
         this.selectedInvoice.set(selectedInvoice);
-    }
-
-//    public MembershipMessage getReturnMessage() {
-//        return returnMessage.get();
-//    }
-//
-//    public ObjectProperty<MembershipMessage> returnMessageProperty() {
-//        return returnMessage;
-//    }
-//
-//    public void setReturnMessage(MembershipMessage returnMessage) {
-//        this.returnMessage.set(returnMessage);
-//    }
-
-    public String getSelectedString() {
-        return selectedString.get();
     }
 
     public StringProperty selectedStringProperty() {
@@ -371,18 +342,6 @@ public class MembershipModel {
 
     public void setPeopleTabPane(TabPane peopleTabPane) {
         this.peopleTabPane.set(peopleTabPane);
-    }
-
-    public SlipDTO getSlip() {
-        return slip.get();
-    }
-
-    public SimpleObjectProperty<SlipDTO> slipProperty() {
-        return slip;
-    }
-
-    public void setSlip(SlipDTO slip) {
-        this.slip.set(slip);
     }
 
     public ObservableMap<PersonDTOFx, TableView<OfficerDTOFx>> getOfficerTableView() {

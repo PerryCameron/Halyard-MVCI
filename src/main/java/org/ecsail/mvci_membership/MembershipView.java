@@ -53,6 +53,9 @@ public class MembershipView implements Builder<Region> {
                 try {
                     borderPane.setTop(createHeader());
                     borderPane.setLeft(createPeopleTabPane());
+                    borderPane.setRight(createInfoTabPane());
+                    borderPane.setCenter(creteDivider());
+
                     addPeopleTabs();
                     System.out.println("Data Loaded!");
                 } catch (Exception e) {
@@ -66,16 +69,17 @@ public class MembershipView implements Builder<Region> {
     private void addPeopleTabs() {
         membershipModel.membershipProperty().get().getPeople().forEach(personDTO -> membershipModel.getPeopleTabPane().getTabs()
                 .add(new PersonTabView(this, personDTO).build()));
+        membershipModel.getPeopleTabPane().getTabs().add(new AddPersonTabView(this).build());
     }
 
     private void launchDataDependentUI() {
 //        membershipModel.getPeople().forEach(personDTO -> membershipModel.getPeopleTabPane().getTabs()
 //                .add(new PersonTabView(this, personDTO).build()));
-        membershipModel.getPeopleTabPane().getTabs().add(new AddPersonTabView(this).build());
+
         // right tabPane
-        membershipModel.getInfoTabPane().getTabs().add(new SlipTabView(this).build());
-        membershipModel.getInfoTabPane().getTabs().add(new MembershipIdView(this).build());
-        membershipModel.getInfoTabPane().getTabs().add(new InvoiceListView(this).build());
+//        membershipModel.getInfoTabPane().getTabs().add(new SlipTabView(this).build());
+//        membershipModel.getInfoTabPane().getTabs().add(new MembershipIdView(this).build());
+//        membershipModel.getInfoTabPane().getTabs().add(new InvoiceListView(this).build());
         // bottom tabPane
         membershipModel.getExtraTabPane().getTabs().add(new BoatTabView(this).build());
         membershipModel.getExtraTabPane().getTabs().add(new NotesTabView(this).build());
@@ -197,25 +201,29 @@ public class MembershipView implements Builder<Region> {
         TabPane tabPane = PaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE, 498, "custom-tab-pane");
         VBox.setVgrow(tabPane, Priority.ALWAYS);  // this works in combo with Vgrow in SlapTabView
         membershipModel.setInfoTabPane(tabPane);
+        try {
+            tabPane.getTabs().add(new SlipTabView(this).build());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+//        tabPane.getTabs().add(new MembershipIdView(this).build());
+//        tabPane.getTabs().add(new InvoiceListView(this).build());
         return tabPane;
     }
 
     private Node createPeopleTabPane() {
-        System.out.println("createPeopleTabPane() membershipView");
         TabPane tabPane = PaneFx.tabPaneOf(TabPane.TabClosingPolicy.UNAVAILABLE, 498, "custom-tab-pane");
         membershipModel.setPeopleTabPane(tabPane);
 
         membershipModel.getPeopleTabPane().getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
             if (newTab.getText().equals("Add")) {
-                System.out.println("Add people");
                 AddPersonTabView addPersonTabView = (AddPersonTabView) newTab.getUserData();
                 membershipModel.setSelectedPerson(addPersonTabView.getPersonDTO());
-                logger.debug("Showing Add tab: " + membershipModel.getSelectedPerson());
+                logger.debug("Showing Add tab: {}", membershipModel.getSelectedPerson());
             } else {
-                System.out.println("Got here!");
                 PersonTabView personTabView = (PersonTabView) newTab.getUserData();// Get the associated PersonTabView object
                 membershipModel.setSelectedPerson(personTabView.getPersonDTO());
-                logger.debug("Showing Person tab: " + membershipModel.getSelectedPerson());
+                logger.debug("Showing Person tab: {}", membershipModel.getSelectedPerson());
             }
         });
         return tabPane;

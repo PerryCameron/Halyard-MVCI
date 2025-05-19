@@ -126,7 +126,7 @@ public class SlipTabView implements Builder<Tab>, SlipUser {
     private Node setSlipNumber() {
         HBox hBox = HBoxFx.hBoxOf(10, Pos.CENTER_LEFT);
         Text label = TextFx.textOf("Slip Number:","text-white");
-        Text slip = TextFx.textOf(membershipModel.getSlip().getSlipNumber(),"text-bold");
+        Text slip = TextFx.textOf(membershipModel.membershipProperty().get().slipProperty().get().getSlipNumber(),"text-bold");
         hBox.getChildren().addAll(label,slip);
         return hBox;
     }
@@ -143,7 +143,7 @@ public class SlipTabView implements Builder<Tab>, SlipUser {
 
     private String getSlip() {
         switch (membershipModel.getSlipRelationStatus()) {
-            case owner, subLeaser, ownAndSublease -> { return membershipModel.getSlip().getSlipNumber(); }
+            case owner, subLeaser, ownAndSublease -> { return membershipModel.membershipProperty().get().slipProperty().get().getSlipNumber(); }
             default -> { return "none"; }
         }
     }

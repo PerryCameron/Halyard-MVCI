@@ -4,8 +4,9 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import org.ecsail.pojo.Slip;
 
-public class SlipDTO {
+public class SlipDTOFx {
 	
 	private IntegerProperty slip_id;
 	private IntegerProperty ms_id;
@@ -13,8 +14,8 @@ public class SlipDTO {
 	private IntegerProperty subleased_to;
 	private StringProperty altText;
 	
-	public SlipDTO(Integer slip_id, Integer ms_id, String slipNumber,
-                   Integer subleased_to, String altText) {
+	public SlipDTOFx(Integer slip_id, Integer ms_id, String slipNumber,
+					 Integer subleased_to, String altText) {
 		super();
 		this.slip_id = new SimpleIntegerProperty(slip_id);
 		this.ms_id = new SimpleIntegerProperty(ms_id);
@@ -23,13 +24,21 @@ public class SlipDTO {
 		this.altText = new SimpleStringProperty(altText);
 	}
 
-	public SlipDTO() {
+	public SlipDTOFx() {
 		super();
 		this.slip_id = new SimpleIntegerProperty(0);
 		this.ms_id = new SimpleIntegerProperty(0);
 		this.slipNumber = new SimpleStringProperty("none");
 		this.subleased_to = new SimpleIntegerProperty(0);
 		this.altText = new SimpleStringProperty("none");
+	}
+
+	public SlipDTOFx(Slip slip) {
+		this.slip_id = new SimpleIntegerProperty(slip.getSlipId());
+		this.ms_id = new SimpleIntegerProperty(0);
+		this.slipNumber = new SimpleStringProperty(slip.getSlipNum() == null ? "none" : slip.getSlipNum());
+		this.subleased_to = new SimpleIntegerProperty((slip.getSubleasedTo() == null) ? 0 : Integer.parseInt(slip.getSubleasedTo()));
+		this.altText = new SimpleStringProperty(slip.getAltText() == null ? "" : slip.getAltText());
 	}
 
 	public final IntegerProperty slip_idProperty() {

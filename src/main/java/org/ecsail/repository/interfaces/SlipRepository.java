@@ -1,13 +1,13 @@
 package org.ecsail.repository.interfaces;
 
-import org.ecsail.dto.SlipDTO;
+import org.ecsail.dto.SlipDTOFx;
 import org.ecsail.dto.SlipInfoDTO;
 import org.ecsail.dto.SlipStructureDTO;
 
 import java.util.List;
 
 public interface SlipRepository {
-    SlipDTO getSlip(int msId);
+    SlipDTOFx getSlip(int msId);
 
     List<SlipInfoDTO> getSlipInfo();
 
