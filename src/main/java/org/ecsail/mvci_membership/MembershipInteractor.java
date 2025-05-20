@@ -150,6 +150,49 @@ public class MembershipInteractor implements SlipUser {
         // we are not looking for subleases yet.
     }
 
+
+    /**
+     * Updates a membership's notes data by sending a POST request to the halyard/update/notes endpoint.
+     *
+     * @param // NotesDTOFx the position data to update
+     * @return the JSON response from the server
+     */
+    public String updateNotes() {
+        logger.debug("Updating position with pId: {}", membershipModel.getSelectedNote().getMemoId());
+        Note note = new Note(membershipModel.getSelectedNote());
+        try {
+            String response = membershipModel.getHttpClient().postDataToGybe("update/notes", note);
+            return processResponse(response);
+        } catch (Exception e) {
+            logger.error("Failed to update email with pId {}: {}",
+                    membershipModel.getSelectedPerson().pIdProperty().get(), e.getMessage(), e);
+            e.printStackTrace();
+            membershipModel.getMainModel().toggleRxFail(); // Indicate failure
+            return null;
+        }
+    }
+
+    /**
+     * Updates a person's position data by sending a POST request to the halyard/update/position endpoint.
+     *
+     * @param // OfficerDTOFx the position data to update
+     * @return the JSON response from the server
+     */
+    public String updatePosition() {
+        logger.debug("Updating position with pId: {}", membershipModel.getSelectedOfficer().getOfficerId());
+        Officer officer = new Officer(membershipModel.getSelectedOfficer());
+        try {
+            String response = membershipModel.getHttpClient().postDataToGybe("update/position", officer);
+            return processResponse(response);
+        } catch (Exception e) {
+            logger.error("Failed to update email with pId {}: {}",
+                    membershipModel.getSelectedPerson().pIdProperty().get(), e.getMessage(), e);
+            e.printStackTrace();
+            membershipModel.getMainModel().toggleRxFail(); // Indicate failure
+            return null;
+        }
+    }
+
     /**
      * Updates a person's awards data by sending a POST request to the halyard/update/awards endpoint.
      *
@@ -172,9 +215,9 @@ public class MembershipInteractor implements SlipUser {
     }
 
     /**
-     * Updates a person's phone data by sending a POST request to the halyard/update/phone endpoint.
+     * Updates a person's phone data by sending a POST request to the halyard/update/email endpoint.
      *
-     * @param // phoneDTOFx the phone data to update
+     * @param // emailDTOFx the phone data to update
      * @return the JSON response from the server
      */
     public String updateEmail() {

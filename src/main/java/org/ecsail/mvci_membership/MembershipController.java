@@ -38,7 +38,7 @@ public class MembershipController extends Controller<MembershipMessage> {
             case UPDATE_BOAT -> runTask(UPDATE_BOAT);
             case UPDATE_NOTE -> runTask(UPDATE_NOTE);
             case UPDATE_PHONE -> runTask(UPDATE_PHONE);
-            case UPDATE_OFFICER -> runTask(UPDATE_OFFICER);
+            case UPDATE_POSITION -> runTask(UPDATE_POSITION);
             case UPDATE_PERSON -> runTask(UPDATE_PERSON);
             case UPDATE_PAYMENT -> runTask(UPDATE_PAYMENT);
             case INSERT_BOAT -> runTask(INSERT_BOAT);
@@ -84,9 +84,9 @@ public class MembershipController extends Controller<MembershipMessage> {
                     case UPDATE_AWARD -> membershipInteractor.updateAward();
                     case UPDATE_EMAIL -> membershipInteractor.updateEmail();
                     case UPDATE_BOAT -> membershipInteractor.updateBoat();
-//                    case UPDATE_NOTE -> db.updateNote();
+                    case UPDATE_NOTE -> membershipInteractor.updateNotes();
                     case UPDATE_PHONE -> membershipInteractor.updatePhone();
-//                    case UPDATE_OFFICER -> db.updateOfficer();
+                    case UPDATE_POSITION -> membershipInteractor.updatePosition();
                     case UPDATE_PERSON -> membershipInteractor.updatePerson();
 //                    case UPDATE_PAYMENT -> db.updatePayment();
 //                    case INSERT_BOAT -> db.insertBoat();

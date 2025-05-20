@@ -2,9 +2,10 @@ package org.ecsail.pojo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.ecsail.dto.NotesDTOFx;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Memo {
+public class Note {
     @JsonProperty("memoId")
     private int memoId;
 
@@ -26,7 +27,17 @@ public class Memo {
     @JsonProperty("boatId")
     private Integer boatId; // Nullable
 
-    public Memo() {
+    public Note() {
+    }
+
+    public Note(NotesDTOFx notesDTOFx) {
+        this.memoId = notesDTOFx.getMemoId();
+        this.msId = notesDTOFx.getMsId();
+        this.memoDate = notesDTOFx.getMemoDate().toString();
+        this.memo = notesDTOFx.getMemo();
+        this.invoiceId = notesDTOFx.getInvoiceId();
+        this.category = notesDTOFx.getCategory();
+        this.boatId = notesDTOFx.getBoatId();
     }
 
     public int getMemoId() {

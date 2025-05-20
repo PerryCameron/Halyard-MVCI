@@ -69,9 +69,9 @@ public class CopyPOJOtoFx {
         return boatFxList;
     }
 
-    public static List<NotesDTOFx> copyNotes(List<Memo> memos) {
+    public static List<NotesDTOFx> copyNotes(List<Note> memos) {
         List<NotesDTOFx> memoFxList = new ArrayList<>();
-        for(Memo memo : memos) {
+        for(Note memo : memos) {
             memoFxList.add((new NotesDTOFx(memo)));
         }
         return memoFxList;

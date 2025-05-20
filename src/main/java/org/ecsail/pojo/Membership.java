@@ -64,7 +64,7 @@ public class Membership {
     private List<MembershipId> membershipIds;
 
     @JsonProperty("memos")
-    private List<Memo> memos;
+    private List<Note> memos;
 
     public Membership() {
     }
@@ -221,11 +221,11 @@ public class Membership {
         this.membershipIds = membershipIds;
     }
 
-    public List<Memo> getMemos() {
+    public List<Note> getMemos() {
         return memos;
     }
 
-    public void setMemos(List<Memo> memos) {
+    public void setMemos(List<Note> memos) {
         this.memos = memos;
     }
 }

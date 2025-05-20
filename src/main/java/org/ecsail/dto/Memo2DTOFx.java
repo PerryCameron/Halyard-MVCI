@@ -4,7 +4,7 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import org.ecsail.pojo.Memo;
+import org.ecsail.pojo.Note;
 
 public class Memo2DTOFx {
 
@@ -28,7 +28,7 @@ public class Memo2DTOFx {
 		this.category = new SimpleStringProperty(category);
 	}
 
-    public Memo2DTOFx(Memo memo) {
+    public Memo2DTOFx(Note memo) {
 		this.membershipId = new SimpleStringProperty("0");
 		this.memo_id = new SimpleIntegerProperty(memo.getMemoId());
 		this.msid = new SimpleIntegerProperty(memo.getMsId());
