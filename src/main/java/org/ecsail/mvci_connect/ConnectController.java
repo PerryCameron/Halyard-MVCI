@@ -84,7 +84,7 @@ public class ConnectController extends Controller<ConnectMessage> {
                         }
                     };
                     logoutTask.setOnSucceeded(evt -> connectToServer()); // Retry login
-                    logoutTask.setOnFailed(evt -> DialogueFx.errorAlert("Error", "Failed to log out other sessions."));
+                    logoutTask.setOnFailed(evt -> DialogueFx.errorAlert("Error", "Failed to log out other sessions.")); // this needs to change
                     new Thread(logoutTask).start();
                 }
             } else {
@@ -95,19 +95,6 @@ public class ConnectController extends Controller<ConnectMessage> {
         thread.start();
     }
 
-    private void checkIfAuthenticationRequired() {
-        connectInteractor.requiresAuthenticationOrDialogue();
-        if (!connectInteractor.getAuthenticationRequired()) {
-            logger.info("No authentication required, proceeding directly.");
-            connectInteractor.setRotateShipWheel(false);
-            mainController.createLoadingController();
-            connectInteractor.closeLoginStage();
-            mainController.openWelcomeMVCI();
-        } else {
-
-        }
-    }
-
     public Stage getStage() {
         return connectInteractor.getStage();
     }
@@ -116,7 +103,4 @@ public class ConnectController extends Controller<ConnectMessage> {
         connectView.setStageHeightListener();
     }
 
-    public ConnectInteractor getConnectInteractor() {
-        return connectInteractor;
-    }
 }

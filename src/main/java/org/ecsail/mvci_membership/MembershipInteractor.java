@@ -1,5 +1,6 @@
 package org.ecsail.mvci_membership;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Platform;
 import org.ecsail.dto.MembershipDTOFx;
 import org.ecsail.dto.SlipDTOFx;
@@ -8,6 +9,7 @@ import org.ecsail.pojo.Boat;
 import org.ecsail.pojo.Membership;
 import org.ecsail.pojo.Person;
 import org.ecsail.static_tools.CopyPOJOtoFx;
+import org.ecsail.wrappers.UpdateResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -161,12 +163,25 @@ public class MembershipInteractor implements SlipUser {
         try {
             String response = membershipModel.getHttpClient().postDataToGybe("update/person", person);
             logger.debug("Update response: {}", response);
-            return response;
+            // Parse the JSON response into UpdateResponse object
+            UpdateResponse updateResponse = membershipModel.getHttpClient()
+                    .getObjectMapper().readValue(response, UpdateResponse.class);
+            // Toggle the appropriate light based on the success field
+            if (updateResponse.isSuccess()) {
+                membershipModel.getMainMOdel().toggleRxSuccess();
+                logger.info(updateResponse.getMessage());
+            } else {
+                membershipModel.getMainMOdel().toggleRxFail();
+                logger.error(updateResponse.getMessage());
+            }
+            return response; // Return the raw response string as required
         } catch (Exception e) {
-            logger.error("Failed to update person: {}", e.getMessage(), e);
+            logger.error("Failed to update person with pId {}: {}",
+                    membershipModel.getSelectedPerson().pIdProperty().get(), e.getMessage(), e);
             e.printStackTrace();
+            membershipModel.getMainMOdel().toggleRxFail(); // Indicate failure
+            return null;
         }
-        return null;
     }
 
     /**
@@ -181,8 +196,19 @@ public class MembershipInteractor implements SlipUser {
         try {
             String response = membershipModel.getHttpClient().postDataToGybe("update/boat", boat);
             logger.debug("Update response: {}", response);
+            UpdateResponse updateResponse = membershipModel.getHttpClient()
+                    .getObjectMapper().readValue(response, UpdateResponse.class);
+            // Toggle the appropriate light based on the success field
+            if (updateResponse.isSuccess()) {
+                membershipModel.getMainMOdel().toggleRxSuccess();
+                logger.info(updateResponse.getMessage());
+            } else {
+                membershipModel.getMainMOdel().toggleRxFail();
+                logger.error(updateResponse.getMessage());
+            }
             return response;
         } catch (Exception e) {
+            logger.error("Failed to update boat  {}: {}",boat.getBoatId(), e.getMessage(), e);
             e.printStackTrace();
         }
         return null;

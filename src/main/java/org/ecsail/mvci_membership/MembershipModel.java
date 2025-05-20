@@ -13,6 +13,7 @@ import org.ecsail.mvci_main.MainModel;
 import org.ecsail.static_tools.HttpClientUtil;
 
 public class MembershipModel {
+    private final MainModel mainMOdel;
     private ObservableList<BoardPositionDTO> boardPositionDTOS;
     // Person information for membership
     private ObservableMap<PersonDTOFx, TableView<EmailDTOFx>> emailTableView = FXCollections.observableHashMap();
@@ -65,6 +66,7 @@ public class MembershipModel {
         this.httpClient = mainModel.getHttpClient();
         this.boardPositionDTOS = mainModel.getBoardPositionDTOS();
         this.selectedMembershipYear.set(selectedYear);
+        this.mainMOdel = mainModel;
     }
 
 
@@ -451,5 +453,9 @@ public class MembershipModel {
 
     public SimpleBooleanProperty dataIsLoadedProperty() {
         return dataIsLoaded;
+    }
+
+    public MainModel getMainMOdel() {
+        return mainMOdel;
     }
 }

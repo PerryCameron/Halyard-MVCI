@@ -1,7 +1,6 @@
 package org.ecsail.mvci_main;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.animation.Timeline;
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
@@ -21,10 +20,13 @@ public class MainModel {
     private final ObservableMap<String, Timeline> LightAnimationMap = FXCollections.observableHashMap();
     private final SimpleObjectProperty<Status.light> lightStatusProperty = new SimpleObjectProperty<>();
     private final ObjectProperty<MainMessage> returnMessage = new SimpleObjectProperty<>();
-//    private final ObjectMapper objectMapper = new ObjectMapper();
     private final BooleanProperty clientConnectError = new SimpleBooleanProperty(false);
     private final StringProperty errorMessage = new SimpleStringProperty("");
     private final HttpClientUtil httpClient = new HttpClientUtil(this);
+    private final BooleanProperty lightTxSuccess = new SimpleBooleanProperty(false);
+    private final BooleanProperty lightTxFail = new SimpleBooleanProperty(false);
+    private final BooleanProperty lightRxSuccess = new SimpleBooleanProperty(false);
+    private final BooleanProperty lightRxFail = new SimpleBooleanProperty(false);
     private Integer msId;
 
 
@@ -101,5 +103,40 @@ public class MainModel {
     public void toggleClientConnectError() {
         clientConnectError.set(true);
         clientConnectError.set(false);
+    }
+
+    public void toggleRxFail() {
+        lightRxFail.set(true);
+        lightRxFail.set(false);
+    }
+    public void toggleRxSuccess() {
+        lightRxSuccess.set(true);
+        lightRxSuccess.set(false);
+    }
+
+    public void toggleTxFail() {
+        lightTxFail.set(true);
+        lightTxFail.set(false);
+    }
+
+    public void toggleTxSuccess() {
+        lightTxSuccess.set(true);
+        lightTxSuccess.set(false);
+    }
+
+    public BooleanProperty lightTxSuccessProperty() {
+        return lightTxSuccess;
+    }
+
+    public BooleanProperty lightTxFailProperty() {
+        return lightTxFail;
+    }
+
+    public BooleanProperty lightRxSuccessProperty() {
+        return lightRxSuccess;
+    }
+
+    public BooleanProperty lightRxFailProperty() {
+        return lightRxFail;
     }
 }

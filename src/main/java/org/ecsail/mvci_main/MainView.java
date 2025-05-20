@@ -21,7 +21,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Builder;
 import javafx.util.Duration;
+
 import java.util.Optional;
+
 import org.ecsail.BaseApplication;
 import org.ecsail.interfaces.Status;
 import org.ecsail.static_tools.VersionUtil;
@@ -39,6 +41,7 @@ public class MainView implements Builder<Region> {
     private static final Logger logger = LoggerFactory.getLogger(MainView.class);
     private final MainModel mainModel;
     Consumer<MainMessage> action;
+
     public MainView(MainModel mainModel, Consumer<MainMessage> m) {
         this.mainModel = mainModel;
         action = m;
@@ -47,7 +50,7 @@ public class MainView implements Builder<Region> {
     @Override
     public Region build() {
         BorderPane borderPane = new BorderPane();
-        borderPane.setPrefSize(1028,830);
+        borderPane.setPrefSize(1028, 830);
         borderPane.setTop(setUpTopPane());
         borderPane.setBottom(setUpBottomPane());
         borderPane.setCenter(setUpCenterPane());
@@ -73,7 +76,7 @@ public class MainView implements Builder<Region> {
                     Optional<ButtonType> result = DialogueFx.errorAlertWithAction("There was a problem", mainModel.errorMessageProperty().get());
                     action.accept(MainMessage.SET_CONNECT_ERROR_FALSE);
                     result.ifPresent(button -> {
-                        if(button == ButtonType.OK)  {
+                        if (button == ButtonType.OK) {
                             action.accept(MainMessage.CLOSE_ALL_CONNECTIONS);
                         }
                     });
@@ -112,26 +115,94 @@ public class MainView implements Builder<Region> {
         return hBox;
     }
 
+    //    private Node statusLights() {
+//        HBox hBox = HBoxFx.hBoxOf(new Insets(0,15,0,0), Pos.CENTER_RIGHT, 3.0);
+//        Rectangle receive = RectangleFX.rectangleOf(14,14);
+//        Rectangle transmit = RectangleFX.rectangleOf(14,14);
+//        mainModel.getLightAnimationMap().put("receiveError", createTimeLine(Color.RED, receive,5000));
+//        mainModel.getLightAnimationMap().put("receiveSuccess", createTimeLine(Color.LIGHTGREEN, receive,5000));
+//        mainModel.getLightAnimationMap().put("transmitError", createTimeLine(Color.RED, transmit,100));
+//        mainModel.getLightAnimationMap().put("transmitSuccess", createTimeLine(Color.LIGHTGREEN, transmit,100));
+//        mainModel.lightStatusPropertyProperty()
+//                .addListener((observable, oldValue, newValue) -> updateStatusLights(newValue));
+//        HBox.setHgrow(hBox, Priority.ALWAYS);
+//        hBox.getChildren().addAll(transmit, receive);
+//        return hBox;
+//    }
+//
+//    private Timeline createTimeLine(Color color, Rectangle rect, double speed) {
+//        Timeline timeline = new Timeline(
+//                new KeyFrame(Duration.ZERO, new KeyValue(rect.fillProperty(), Color.GRAY)),
+//                new KeyFrame(Duration.millis(10), new KeyValue(rect.fillProperty(), color)),
+//                new KeyFrame(Duration.millis(speed), new KeyValue(rect.fillProperty(), Color.GRAY))
+//        );
+//        return timeline;
+//    }
+//
+//    private void updateStatusLights(Status.light status) {
+//        switch (status) {
+//            case TX_GREEN -> mainModel.getLightAnimationMap().get("transmitSuccess").playFromStart();
+//            case RX_GREEN -> mainModel.getLightAnimationMap().get("receiveSuccess").playFromStart();
+//            case TX_RED -> mainModel.getLightAnimationMap().get("transmitError").playFromStart();
+//            case RX_RED -> mainModel.getLightAnimationMap().get("receiveError").playFromStart();
+//        }
+//    }
+
     private Node statusLights() {
-        HBox hBox = HBoxFx.hBoxOf(new Insets(0,15,0,0), Pos.CENTER_RIGHT, 3.0);
-        Rectangle receive = RectangleFX.rectangleOf(14,14);
-        Rectangle transmit = RectangleFX.rectangleOf(14,14);
-        mainModel.getLightAnimationMap().put("receiveError", createTimeLine(Color.RED, receive,5000));
-        mainModel.getLightAnimationMap().put("receiveSuccess", createTimeLine(Color.LIGHTGREEN, receive,5000));
-        mainModel.getLightAnimationMap().put("transmitError", createTimeLine(Color.RED, transmit,100));
-        mainModel.getLightAnimationMap().put("transmitSuccess", createTimeLine(Color.LIGHTGREEN, transmit,100));
-        mainModel.lightStatusPropertyProperty()
-                .addListener((observable, oldValue, newValue) -> updateStatusLights(newValue));
+        HBox hBox = HBoxFx.hBoxOf(new Insets(0, 15, 0, 0), Pos.CENTER_RIGHT, 3.0);
+        Rectangle receive = RectangleFX.rectangleOf(14, 14);
+        Rectangle transmit = RectangleFX.rectangleOf(14, 14);
+
+        // Success animation: 5 blinks, 200ms apart (total 1000ms for 5 on-off cycles)
+        Timeline rxSuccessTimeline = createBlinkTimeline(Color.LIGHTGREEN, receive, 200, 5);
+        Timeline txSuccessTimeline = createBlinkTimeline(Color.LIGHTGREEN, transmit, 200, 5);
+
+        // Failure animation: 1 blink, 2 seconds long
+        Timeline rxFailTimeline = createBlinkTimeline(Color.RED, receive, 2000, 1);
+        Timeline txFailTimeline = createBlinkTimeline(Color.RED, transmit, 2000, 1);
+
+        // Listeners for Rx properties
+        mainModel.lightRxSuccessProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal) {
+                rxSuccessTimeline.playFromStart();
+            }
+        });
+
+        mainModel.lightRxFailProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal) {
+                rxFailTimeline.playFromStart();
+            }
+        });
+
+        // Listeners for Tx properties
+        mainModel.lightTxSuccessProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal) {
+                txSuccessTimeline.playFromStart();
+            }
+        });
+
+        mainModel.lightTxFailProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal) {
+                txFailTimeline.playFromStart();
+            }
+        });
+
         HBox.setHgrow(hBox, Priority.ALWAYS);
         hBox.getChildren().addAll(transmit, receive);
         return hBox;
     }
 
-    private Timeline createTimeLine(Color color, Rectangle rect, double speed) {
-        Timeline timeline = new Timeline(
-                new KeyFrame(Duration.ZERO, new KeyValue(rect.fillProperty(), Color.GRAY)),
-                new KeyFrame(Duration.millis(10), new KeyValue(rect.fillProperty(), color)),
-                new KeyFrame(Duration.millis(speed), new KeyValue(rect.fillProperty(), Color.GRAY))
+    private Timeline createBlinkTimeline(Color color, Rectangle rect, double duration, int cycles) {
+        Timeline timeline = new Timeline();
+        for (int i = 0; i < cycles; i++) {
+            timeline.getKeyFrames().addAll(
+                    new KeyFrame(Duration.millis(i * duration), new KeyValue(rect.fillProperty(), Color.GRAY)),
+                    new KeyFrame(Duration.millis(i * duration + duration / 2), new KeyValue(rect.fillProperty(), color))
+            );
+        }
+        // Ensure the light returns to gray at the end
+        timeline.getKeyFrames().add(
+                new KeyFrame(Duration.millis(cycles * duration), new KeyValue(rect.fillProperty(), Color.GRAY))
         );
         return timeline;
     }
@@ -164,10 +235,11 @@ public class MainView implements Builder<Region> {
 
     private Node setUpMenuBar() {
         MenuBar menuBar = new MenuBar();
-        if(isMac()) menuBar.setUseSystemMenuBar(true);
-        menuBar.getMenus().addAll(createFileMenu(),createEditMenu(),createDebugMenu(), createHelpMenu());
+        if (isMac()) menuBar.setUseSystemMenuBar(true);
+        menuBar.getMenus().addAll(createFileMenu(), createEditMenu(), createDebugMenu(), createHelpMenu());
         return menuBar;
     }
+
     private Menu createEditMenu() {
         Menu menu = new Menu("Edit");
         MenuItem undo = MenuFx.menuItemOf("Undo", x -> System.out.println("undo"), KeyCode.Z);
@@ -230,12 +302,5 @@ public class MainView implements Builder<Region> {
         }
     }
 
-    private void updateStatusLights(Status.light status) {
-        switch (status) {
-            case TX_GREEN -> mainModel.getLightAnimationMap().get("transmitSuccess").playFromStart();
-            case RX_GREEN -> mainModel.getLightAnimationMap().get("receiveSuccess").playFromStart();
-            case TX_RED -> mainModel.getLightAnimationMap().get("transmitError").playFromStart();
-            case RX_RED -> mainModel.getLightAnimationMap().get("receiveError").playFromStart();
-        }
-    }
+
 }

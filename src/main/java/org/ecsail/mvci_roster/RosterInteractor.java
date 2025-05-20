@@ -114,7 +114,7 @@ public RosterInteractor(RosterModel rm) {
                 endpoint.append("&searchParams=").append(URLEncoder.encode(param, StandardCharsets.UTF_8.name()));
             }
         }
-        System.out.println(endpoint);
+//        System.out.println(endpoint);
         // Fetch data using the constructed endpoint
         String jsonResponse = rosterModel.getHttpClient().fetchDataFromGybe(endpoint.toString());
 //        logger.debug("Roster response: {}", jsonResponse);

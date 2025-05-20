@@ -45,7 +45,6 @@ public class FileIO implements ConfigFilePaths {
 		if(f.exists() && !f.isDirectory()) {
 			return true;
 		}
-		System.out.println(file);
 		return false;
 	}
 
