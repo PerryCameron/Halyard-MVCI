@@ -3,11 +3,11 @@ package org.ecsail.dto;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 
-public class BoatOwnerDTO {
+public class BoatOwnerFx {
 	private IntegerProperty msId;
 	private IntegerProperty boatId;
 	
-	public BoatOwnerDTO(Integer msid, Integer boat_id) {
+	public BoatOwnerFx(Integer msid, Integer boat_id) {
 		super();
 		this.msId = new SimpleIntegerProperty(msid);
 		this.boatId = new SimpleIntegerProperty(boat_id);

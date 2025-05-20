@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.ecsail.dto.BoatDTOFx;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Boat {
+public class BoatDTO {
     @JsonProperty("boatId")
     private int boatId;
 
@@ -28,7 +28,7 @@ public class Boat {
     private String sailNumber;
 
     @JsonProperty("hasTrailer")
-    private int hasTrailer;
+    private boolean hasTrailer;
 
     @JsonProperty("length")
     private String length;
@@ -52,12 +52,12 @@ public class Boat {
     private String lwl;
 
     @JsonProperty("aux")
-    private int aux;
+    private boolean aux;
 
     // Getters and setters
 
 
-    public Boat(BoatDTOFx selectedBoat) {
+    public BoatDTO(BoatDTOFx selectedBoat) {
         this.boatId = selectedBoat.getBoatId();
         this.manufacturer = selectedBoat.getManufacturer();
         this.manufactureYear = selectedBoat.getManufactureYear();
@@ -65,7 +65,7 @@ public class Boat {
         this.model = selectedBoat.getModel();
         this.boatName = selectedBoat.getBoatName();
         this.sailNumber = selectedBoat.getSailNumber();
-        this.hasTrailer = selectedBoat.isHasTrailer() == true ? 1 : 0;
+        this.hasTrailer = selectedBoat.isHasTrailer();
         this.length = selectedBoat.getLoa();
         this.weight = selectedBoat.getDisplacement();
         this.keel = selectedBoat.getKeel();
@@ -73,10 +73,10 @@ public class Boat {
         this.draft = selectedBoat.getDraft();
         this.beam = selectedBoat.getBeam();
         this.lwl = selectedBoat.getLwl();
-        this.aux = selectedBoat.isAux() == true ? 1 : 0;
+        this.aux = selectedBoat.isAux();
     }
 
-    public Boat() {
+    public BoatDTO() {
     }
 
 
@@ -136,11 +136,11 @@ public class Boat {
         this.sailNumber = sailNumber;
     }
 
-    public int getHasTrailer() {
+    public boolean isHasTrailer() {
         return hasTrailer;
     }
 
-    public void setHasTrailer(int hasTrailer) {
+    public void setHasTrailer(boolean hasTrailer) {
         this.hasTrailer = hasTrailer;
     }
 
@@ -200,11 +200,11 @@ public class Boat {
         this.lwl = lwl;
     }
 
-    public int getAux() {
+    public boolean isAux() {
         return aux;
     }
 
-    public void setAux(int aux) {
+    public void setAux(boolean aux) {
         this.aux = aux;
     }
 }

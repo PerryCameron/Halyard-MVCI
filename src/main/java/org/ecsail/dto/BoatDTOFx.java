@@ -2,7 +2,7 @@ package org.ecsail.dto;
 
 import javafx.beans.property.*;
 import org.ecsail.annotation.ColumnName;
-import org.ecsail.pojo.Boat;
+import org.ecsail.pojo.BoatDTO;
 
 public class BoatDTOFx {
 	@ColumnName(value = "BOAT_ID")
@@ -84,7 +84,7 @@ public class BoatDTOFx {
 		this.aux = new SimpleBooleanProperty(false);
 	}
 
-    public BoatDTOFx(Boat boat) {
+    public BoatDTOFx(BoatDTO boat) {
 		this.boatId = new SimpleIntegerProperty(boat.getBoatId());
 		this.msId = new SimpleIntegerProperty(0);
 		this.manufacturer = new SimpleStringProperty(boat.getManufacturer());
@@ -93,7 +93,7 @@ public class BoatDTOFx {
 		this.model = new SimpleStringProperty(boat.getModel());
 		this.boatName = new SimpleStringProperty(boat.getBoatName());
 		this.sailNumber = new SimpleStringProperty(boat.getSailNumber());
-		this.hasTrailer = new SimpleBooleanProperty(boat.getHasTrailer() == 1);
+		this.hasTrailer = new SimpleBooleanProperty(boat.isHasTrailer());
 		this.loa = new SimpleStringProperty(boat.getLength());
 		this.displacement = new SimpleStringProperty(boat.getWeight());
 		this.keel = new SimpleStringProperty(boat.getKeel());

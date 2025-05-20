@@ -14,7 +14,7 @@ public interface BoatRepository {
     List<BoatListDTO> getAllBoats();
     List<BoatDTOFx> getBoatsByMsId(int msId);
     List<BoatDTOFx> getOnlySailboatsByMsId(int msId);
-    List<BoatOwnerDTO> getBoatOwnersByBoatId(int boatId);
+    List<BoatOwnerFx> getBoatOwnersByBoatId(int boatId);
     List<BoatPhotosDTO> getImagesByBoatId(int boat_id);
     int update(BoatDTOFx o);
     int update(BoatListDTO boatListDTO);
@@ -24,7 +24,7 @@ public interface BoatRepository {
     int insert(BoatDTOFx o);
     int insert(BoatPhotosDTO boatPhotosDTO);
     int delete(BoatPhotosDTO boatPhotosDTO);
-    int insertOwner(BoatOwnerDTO boatOwnerDTO);
+    int insertOwner(BoatOwnerFx boatOwnerDTO);
     int deleteBoatOwner(MembershipListDTO membershipListDTO, BoatListDTO boatListDTO);
 
 

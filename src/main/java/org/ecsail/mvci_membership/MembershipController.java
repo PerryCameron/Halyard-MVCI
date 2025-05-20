@@ -89,7 +89,10 @@ public class MembershipController extends Controller<MembershipMessage> {
                     case UPDATE_POSITION -> membershipInteractor.updatePosition();
                     case UPDATE_PERSON -> membershipInteractor.updatePerson();
 //                    case UPDATE_PAYMENT -> db.updatePayment();
-//                    case INSERT_BOAT -> db.insertBoat();
+                    case INSERT_BOAT -> {
+                        System.out.println("Insert boat");
+                        membershipInteractor.insertBoat();
+                    }
 //                    case INSERT_AWARD -> db.insertAward();
 //                    case INSERT_EMAIL -> db.insertEmail();
 //                    case INSERT_MEMBERSHIP_ID -> db.insertMembershipId();

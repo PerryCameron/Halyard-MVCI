@@ -2,12 +2,15 @@ package org.ecsail.mvci_membership;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import javafx.application.Platform;
+import org.ecsail.dto.BoatDTOFx;
+import org.ecsail.dto.BoatOwnerFx;
 import org.ecsail.dto.MembershipDTOFx;
 import org.ecsail.dto.SlipDTOFx;
 import org.ecsail.interfaces.SlipUser;
 import org.ecsail.pojo.*;
 import org.ecsail.static_tools.CopyPOJOtoFx;
 import org.ecsail.widgetfx.DialogueFx;
+import org.ecsail.wrappers.InsertBoatResponse;
 import org.ecsail.wrappers.UpdateResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -162,7 +165,7 @@ public class MembershipInteractor implements SlipUser {
         Note note = new Note(membershipModel.getSelectedNote());
         try {
             String response = membershipModel.getHttpClient().postDataToGybe("update/notes", note);
-            return processResponse(response);
+            return processUpdateResponse(response);
         } catch (Exception e) {
             logger.error("Failed to update email with pId {}: {}",
                     membershipModel.getSelectedPerson().pIdProperty().get(), e.getMessage(), e);
@@ -183,7 +186,7 @@ public class MembershipInteractor implements SlipUser {
         Officer officer = new Officer(membershipModel.getSelectedOfficer());
         try {
             String response = membershipModel.getHttpClient().postDataToGybe("update/position", officer);
-            return processResponse(response);
+            return processUpdateResponse(response);
         } catch (Exception e) {
             logger.error("Failed to update email with pId {}: {}",
                     membershipModel.getSelectedPerson().pIdProperty().get(), e.getMessage(), e);
@@ -204,7 +207,7 @@ public class MembershipInteractor implements SlipUser {
         Award award = new Award(membershipModel.getSelectedAward());
         try {
             String response = membershipModel.getHttpClient().postDataToGybe("update/award", award);
-            return processResponse(response);
+            return processUpdateResponse(response);
         } catch (Exception e) {
             logger.error("Failed to update email with pId {}: {}",
                     membershipModel.getSelectedPerson().pIdProperty().get(), e.getMessage(), e);
@@ -225,7 +228,7 @@ public class MembershipInteractor implements SlipUser {
         Email email = new Email(membershipModel.getSelectedEmail());
         try {
             String response = membershipModel.getHttpClient().postDataToGybe("update/email", email);
-            return processResponse(response);
+            return processUpdateResponse(response);
         } catch (Exception e) {
             logger.error("Failed to update email with pId {}: {}",
                     membershipModel.getSelectedPerson().pIdProperty().get(), e.getMessage(), e);
@@ -246,7 +249,7 @@ public class MembershipInteractor implements SlipUser {
         Phone phone = new Phone(membershipModel.getSelectedPhone());
         try {
             String response = membershipModel.getHttpClient().postDataToGybe("update/phone", phone);
-            return processResponse(response);
+            return processUpdateResponse(response);
         } catch (Exception e) {
             logger.error("Failed to update phone with pId {}: {}",
                     membershipModel.getSelectedPerson().pIdProperty().get(), e.getMessage(), e);
@@ -267,7 +270,7 @@ public class MembershipInteractor implements SlipUser {
         Person person = new Person(membershipModel.getSelectedPerson());
         try {
             String response = membershipModel.getHttpClient().postDataToGybe("update/person", person);
-            return processResponse(response);
+            return processUpdateResponse(response);
         } catch (Exception e) {
             logger.error("Failed to update person with pId {}: {}",
                     membershipModel.getSelectedPerson().pIdProperty().get(), e.getMessage(), e);
@@ -285,10 +288,10 @@ public class MembershipInteractor implements SlipUser {
      */
     public String updateBoat() {
         logger.debug("Updating boat with pId: {}", membershipModel.getSelectedBoat().boatIdProperty().get());
-        Boat boat = new Boat(membershipModel.getSelectedBoat());
+        BoatDTO boat = new BoatDTO(membershipModel.getSelectedBoat());
         try {
             String response = membershipModel.getHttpClient().postDataToGybe("update/boat", boat);
-            return processResponse(response);
+            return processUpdateResponse(response);
         } catch (Exception e) {
             logger.error("Failed to update boat  {}: {}",boat.getBoatId(), e.getMessage(), e);
             e.printStackTrace();
@@ -296,7 +299,33 @@ public class MembershipInteractor implements SlipUser {
         return null;
     }
 
-    private String processResponse(String response) throws JsonProcessingException {
+    /**
+     * Inserts a boat row by sending a POST request to the halyard/update/boat endpoint.
+     *
+     * @param // Boat the boat data to update
+     * @return the JSON response from the server
+     */
+    public void insertBoat() {
+        try {
+            BoatOwnerDTO boatOwnerDTO = new BoatOwnerDTO(membershipModel.membershipProperty().get().getMsId(), 0);
+            String response = membershipModel.getHttpClient().postDataToGybe("insert/boat", boatOwnerDTO);
+            InsertBoatResponse insertBoatResponse = membershipModel.getHttpClient().getObjectMapper()
+                    .readValue(response, InsertBoatResponse.class);
+            if(insertBoatResponse.isSuccess()) {
+                membershipModel.membershipProperty().get().getBoats().add(new BoatDTOFx(insertBoatResponse.getBoat()));
+            } else {
+                Platform.runLater(() -> {
+                    DialogueFx.errorAlert("Unable add boat: ", insertBoatResponse.getMessage());
+                });
+                logger.error(insertBoatResponse.getMessage());
+            }
+        } catch (Exception e) {
+//            logger.error("Failed to update boat  {}: {}", boatOwnerDTO.getBoatId(), e.getMessage(), e);
+            e.printStackTrace();
+        }
+    }
+
+    private String processUpdateResponse(String response) throws JsonProcessingException {
         logger.debug("Update response: {}", response);
         UpdateResponse updateResponse = membershipModel.getHttpClient()
                 .getObjectMapper().readValue(response, UpdateResponse.class);
