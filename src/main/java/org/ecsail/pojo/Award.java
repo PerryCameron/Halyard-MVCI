@@ -2,6 +2,7 @@ package org.ecsail.pojo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.ecsail.dto.AwardDTOFx;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Award {
@@ -18,6 +19,13 @@ public class Award {
     private String awardType;
 
     public Award() {
+    }
+
+    public Award(AwardDTOFx awardDTOFx) {
+        this.awardId = awardDTOFx.getAwardId();
+        this.pId = awardDTOFx.getpId();
+        this.awardYear = awardDTOFx.getAwardYear();
+        this.awardType = awardDTOFx.getAwardType();
     }
 
     public int getAwardId() {

@@ -2,6 +2,7 @@ package org.ecsail.pojo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.ecsail.dto.EmailDTOFx;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Email {
@@ -21,6 +22,14 @@ public class Email {
     private int emailListed;
 
     public Email() {
+    }
+
+    public Email(EmailDTOFx emailDTOFx) {
+        this.emailId = emailDTOFx.getEmailId();
+        this.pId = emailDTOFx.getpId();
+        this.primaryUse = emailDTOFx.getIsPrimaryUse() ? 1 : 0;
+        this.email = emailDTOFx.getEmail();
+        this.emailListed = emailDTOFx.getIsListed() ? 1 : 0;
     }
 
     public int getEmailId() {

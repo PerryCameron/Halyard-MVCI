@@ -36,7 +36,7 @@ public class EmailDTOFx {
 		this.listed = new SimpleBooleanProperty(email.getEmailListed() == 1);
 	}
 
-	public int getEmail_id() {
+	public int getEmailId() {
 		return email_id.get();
 	}
 

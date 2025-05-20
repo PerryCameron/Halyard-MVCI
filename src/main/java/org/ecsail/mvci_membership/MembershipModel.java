@@ -455,7 +455,7 @@ public class MembershipModel {
         return dataIsLoaded;
     }
 
-    public MainModel getMainMOdel() {
+    public MainModel getMainModel() {
         return mainMOdel;
     }
 }

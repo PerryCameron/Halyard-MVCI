@@ -81,11 +81,11 @@ public class MembershipController extends Controller<MembershipMessage> {
                 switch (type) {
 //                    case UPDATE_MEMBERSHIP_LIST -> db.updateMembershipList();
 //                    case UPDATE_MEMBERSHIP_ID -> db.updateMembershipId();
-//                    case UPDATE_AWARD -> db.updateAward();
-//                    case UPDATE_EMAIL -> db.updateEmail();
+                    case UPDATE_AWARD -> membershipInteractor.updateAward();
+                    case UPDATE_EMAIL -> membershipInteractor.updateEmail();
                     case UPDATE_BOAT -> membershipInteractor.updateBoat();
 //                    case UPDATE_NOTE -> db.updateNote();
-//                    case UPDATE_PHONE -> db.updatePhone();
+                    case UPDATE_PHONE -> membershipInteractor.updatePhone();
 //                    case UPDATE_OFFICER -> db.updateOfficer();
                     case UPDATE_PERSON -> membershipInteractor.updatePerson();
 //                    case UPDATE_PAYMENT -> db.updatePayment();

@@ -1,14 +1,13 @@
 package org.ecsail.mvci_membership;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import javafx.application.Platform;
 import org.ecsail.dto.MembershipDTOFx;
 import org.ecsail.dto.SlipDTOFx;
 import org.ecsail.interfaces.SlipUser;
-import org.ecsail.pojo.Boat;
-import org.ecsail.pojo.Membership;
-import org.ecsail.pojo.Person;
+import org.ecsail.pojo.*;
 import org.ecsail.static_tools.CopyPOJOtoFx;
+import org.ecsail.widgetfx.DialogueFx;
 import org.ecsail.wrappers.UpdateResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -152,6 +151,69 @@ public class MembershipInteractor implements SlipUser {
     }
 
     /**
+     * Updates a person's awards data by sending a POST request to the halyard/update/awards endpoint.
+     *
+     * @param // awardDTOFx the phone data to update
+     * @return the JSON response from the server
+     */
+    public String updateAward() {
+        logger.debug("Updating phone with pId: {}", membershipModel.getSelectedAward().getAwardId());
+        Award award = new Award(membershipModel.getSelectedAward());
+        try {
+            String response = membershipModel.getHttpClient().postDataToGybe("update/award", award);
+            return processResponse(response);
+        } catch (Exception e) {
+            logger.error("Failed to update email with pId {}: {}",
+                    membershipModel.getSelectedPerson().pIdProperty().get(), e.getMessage(), e);
+            e.printStackTrace();
+            membershipModel.getMainModel().toggleRxFail(); // Indicate failure
+            return null;
+        }
+    }
+
+    /**
+     * Updates a person's phone data by sending a POST request to the halyard/update/phone endpoint.
+     *
+     * @param // phoneDTOFx the phone data to update
+     * @return the JSON response from the server
+     */
+    public String updateEmail() {
+        logger.debug("Updating phone with pId: {}", membershipModel.getSelectedEmail().getEmailId());
+        Email email = new Email(membershipModel.getSelectedEmail());
+        try {
+            String response = membershipModel.getHttpClient().postDataToGybe("update/email", email);
+            return processResponse(response);
+        } catch (Exception e) {
+            logger.error("Failed to update email with pId {}: {}",
+                    membershipModel.getSelectedPerson().pIdProperty().get(), e.getMessage(), e);
+            e.printStackTrace();
+            membershipModel.getMainModel().toggleRxFail(); // Indicate failure
+            return null;
+        }
+    }
+
+    /**
+     * Updates a person's phone data by sending a POST request to the halyard/update/phone endpoint.
+     *
+     * @param // phoneDTOFx the phone data to update
+     * @return the JSON response from the server
+     */
+    public String updatePhone() {
+        logger.debug("Updating phone with pId: {}", membershipModel.getSelectedPerson().pIdProperty().get());
+        Phone phone = new Phone(membershipModel.getSelectedPhone());
+        try {
+            String response = membershipModel.getHttpClient().postDataToGybe("update/phone", phone);
+            return processResponse(response);
+        } catch (Exception e) {
+            logger.error("Failed to update phone with pId {}: {}",
+                    membershipModel.getSelectedPerson().pIdProperty().get(), e.getMessage(), e);
+            e.printStackTrace();
+            membershipModel.getMainModel().toggleRxFail(); // Indicate failure
+            return null;
+        }
+    }
+
+    /**
      * Updates a person's data by sending a POST request to the halyard/update/person endpoint.
      *
      * @param // personDTOFx the person data to update
@@ -162,24 +224,12 @@ public class MembershipInteractor implements SlipUser {
         Person person = new Person(membershipModel.getSelectedPerson());
         try {
             String response = membershipModel.getHttpClient().postDataToGybe("update/person", person);
-            logger.debug("Update response: {}", response);
-            // Parse the JSON response into UpdateResponse object
-            UpdateResponse updateResponse = membershipModel.getHttpClient()
-                    .getObjectMapper().readValue(response, UpdateResponse.class);
-            // Toggle the appropriate light based on the success field
-            if (updateResponse.isSuccess()) {
-                membershipModel.getMainMOdel().toggleRxSuccess();
-                logger.info(updateResponse.getMessage());
-            } else {
-                membershipModel.getMainMOdel().toggleRxFail();
-                logger.error(updateResponse.getMessage());
-            }
-            return response; // Return the raw response string as required
+            return processResponse(response);
         } catch (Exception e) {
             logger.error("Failed to update person with pId {}: {}",
                     membershipModel.getSelectedPerson().pIdProperty().get(), e.getMessage(), e);
             e.printStackTrace();
-            membershipModel.getMainMOdel().toggleRxFail(); // Indicate failure
+            membershipModel.getMainModel().toggleRxFail(); // Indicate failure
             return null;
         }
     }
@@ -195,22 +245,29 @@ public class MembershipInteractor implements SlipUser {
         Boat boat = new Boat(membershipModel.getSelectedBoat());
         try {
             String response = membershipModel.getHttpClient().postDataToGybe("update/boat", boat);
-            logger.debug("Update response: {}", response);
-            UpdateResponse updateResponse = membershipModel.getHttpClient()
-                    .getObjectMapper().readValue(response, UpdateResponse.class);
-            // Toggle the appropriate light based on the success field
-            if (updateResponse.isSuccess()) {
-                membershipModel.getMainMOdel().toggleRxSuccess();
-                logger.info(updateResponse.getMessage());
-            } else {
-                membershipModel.getMainMOdel().toggleRxFail();
-                logger.error(updateResponse.getMessage());
-            }
-            return response;
+            return processResponse(response);
         } catch (Exception e) {
             logger.error("Failed to update boat  {}: {}",boat.getBoatId(), e.getMessage(), e);
             e.printStackTrace();
         }
         return null;
+    }
+
+    private String processResponse(String response) throws JsonProcessingException {
+        logger.debug("Update response: {}", response);
+        UpdateResponse updateResponse = membershipModel.getHttpClient()
+                .getObjectMapper().readValue(response, UpdateResponse.class);
+        // Toggle the appropriate light based on the success field
+        if (updateResponse.isSuccess()) {
+            membershipModel.getMainModel().toggleRxSuccess();
+            logger.info(updateResponse.getMessage());
+        } else {
+            membershipModel.getMainModel().toggleRxFail();
+            Platform.runLater(() -> {
+                DialogueFx.errorAlert("Unable to perform update", updateResponse.getMessage());
+            });
+            logger.error(updateResponse.getMessage());
+        }
+        return response;
     }
 }

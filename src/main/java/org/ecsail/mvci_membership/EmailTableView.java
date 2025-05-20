@@ -47,7 +47,7 @@ public class EmailTableView implements Builder<TableView<EmailDTOFx>> {
     private TableColumn<EmailDTOFx,String> createColumn1() { //
         TableColumn<EmailDTOFx, String> col1 = TableColumnFx.editableStringTableColumn(EmailDTOFx::emailProperty,"Email");
         col1.setOnEditCommit(t -> {
-            int email_id = t.getTableView().getItems().get(t.getTablePosition().getRow()).getEmail_id();
+            int email_id = t.getTableView().getItems().get(t.getTablePosition().getRow()).getEmailId();
             if(StringTools.isValidEmail(t.getNewValue())) {
                 EmailDTOFx emailDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                 emailDTO.setEmail(t.getNewValue());
@@ -55,7 +55,7 @@ public class EmailTableView implements Builder<TableView<EmailDTOFx>> {
                 membershipView.sendMessage().accept(MembershipMessage.UPDATE_EMAIL);
             } else {
                 person.getEmail().stream()
-                        .filter(q -> q.getEmail_id() == email_id)
+                        .filter(q -> q.getEmailId() == email_id)
                         .forEach(s -> s.setEmail("Bad Email"));
             }
         });
