@@ -19,6 +19,9 @@ public class SlipStructureDTO {
         this.slip4 = slip4;
     }
 
+    public SlipStructureDTO() {
+    }
+
     public int getId() {
         return id;
     }

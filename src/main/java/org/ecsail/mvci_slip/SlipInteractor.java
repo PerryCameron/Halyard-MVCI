@@ -1,12 +1,17 @@
 package org.ecsail.mvci_slip;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import org.ecsail.dto.BoardPositionDTO;
 import org.ecsail.dto.SlipInfoDTO;
 import org.ecsail.dto.SlipStructureDTO;
 import org.ecsail.interfaces.ConfigFilePaths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 public class SlipInteractor implements ConfigFilePaths {
 
@@ -35,6 +40,38 @@ public class SlipInteractor implements ConfigFilePaths {
 //            e.printStackTrace();
 //        }
 //    }
+
+    public void getSlipInfo() throws Exception {
+        String endpoint = "slip/info";
+        String jsonResponse = slipModel.getHttpClient().fetchDataFromGybe(endpoint);
+        logger.debug("slip info response: {}", jsonResponse);
+        List<SlipInfoDTO> slipInfo = slipModel.getHttpClient().getObjectMapper().readValue(
+                jsonResponse,
+                new TypeReference<>() {
+                }
+        );
+        logger.info("Fetched {} positions", slipInfo.size());
+        Platform.runLater(() -> {
+            slipModel.getSlipInfoDTOS().addAll(slipInfo); // this is saying required type is MembershipListRadioDTO
+            logger.info("Radio choices model updated with {} choices", slipModel.getSlipInfoDTOS().size());
+        });
+    }
+
+    public void getSlipStructure() throws Exception {
+        String endpoint = "slip/structure";
+        String jsonResponse = slipModel.getHttpClient().fetchDataFromGybe(endpoint);
+        logger.debug("slip info response: {}", jsonResponse);
+        List<SlipStructureDTO> slipStructure = slipModel.getHttpClient().getObjectMapper().readValue(
+                jsonResponse,
+                new TypeReference<>() {
+                }
+        );
+        logger.info("Fetched {} positions", slipStructure.size());
+        Platform.runLater(() -> {
+            slipModel.getSlipStructureDTOS().addAll(slipStructure); // this is saying required type is MembershipListRadioDTO
+            logger.info("Radio choices model updated with {} choices", slipModel.getSlipStructureDTOS().size());
+        });
+    }
 
     private void updateSlipInfo(ObservableList<SlipInfoDTO> slipInfo) {
         Platform.runLater(() -> {

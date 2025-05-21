@@ -9,6 +9,7 @@ import javafx.scene.layout.HBox;
 import org.ecsail.dto.SlipInfoDTO;
 import org.ecsail.dto.SlipStructureDTO;
 import org.ecsail.mvci_main.MainModel;
+import org.ecsail.static_tools.HttpClientUtil;
 
 import java.util.ArrayList;
 
@@ -26,11 +27,12 @@ public class SlipModel {
     private final DoubleProperty dockSpacing = new SimpleDoubleProperty();
     private final BooleanProperty listsLoaded = new SimpleBooleanProperty(false);
     private final IntegerProperty selectedMsId = new SimpleIntegerProperty(0);
-
+    private final HttpClientUtil httpClient;
 
 
 
     public SlipModel(MainModel mainModel) {
+        this.httpClient = mainModel.getHttpClient();
         this.mainModel = mainModel;
     }
 
@@ -118,4 +120,7 @@ public class SlipModel {
         return slipStructureDTOS;
     }
 
+    public HttpClientUtil getHttpClient() {
+        return httpClient;
+    }
 }

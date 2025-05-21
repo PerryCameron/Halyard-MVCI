@@ -42,12 +42,16 @@ public class SlipController extends Controller<SlipMessage> {
     private void getSlipData() {
         mainController.setSpinnerOffset(50,50);
         mainController.showLoadingSpinner(true);
-        Task<Void> task = new Task<>() {
+        Task<Boolean> task = new Task<Boolean>() {
             @Override
-            protected Void call() {
-//                slipInteractor.getSlipInfo();
-//                slipInteractor.getSlipStructure();
-                return null;
+            protected Boolean call() throws Exception {
+                try {
+                    slipInteractor.getSlipInfo();
+                    slipInteractor.getSlipStructure();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            return true;
             }
         };
         task.setOnSucceeded(e -> {

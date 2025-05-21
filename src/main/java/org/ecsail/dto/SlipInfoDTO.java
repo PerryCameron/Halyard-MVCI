@@ -25,6 +25,9 @@ public class SlipInfoDTO {
         this.subleaserLastName = subleaserLastName;
     }
 
+    public SlipInfoDTO() {
+    }
+
     public int getOwnerId() {
         return ownerId;
     }
