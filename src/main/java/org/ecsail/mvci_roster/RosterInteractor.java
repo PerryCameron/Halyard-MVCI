@@ -6,7 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.ecsail.dto.*;
 import org.ecsail.mvci_roster.export.Xls_roster;
-import org.ecsail.static_tools.CopyPOJOtoFx;
+import org.ecsail.static_tools.POJOtoFxConverter;
 import org.ecsail.static_tools.StringTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -123,7 +123,7 @@ public RosterInteractor(RosterModel rm) {
                 new TypeReference<>() {
                 }
         );
-        return CopyPOJOtoFx.copyRoster(roster);
+        return POJOtoFxConverter.copyRoster(roster);
     }
 
     protected void exportRoster() {

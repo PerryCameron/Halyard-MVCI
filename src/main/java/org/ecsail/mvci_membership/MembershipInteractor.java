@@ -7,7 +7,7 @@ import org.ecsail.dto.MembershipDTOFx;
 import org.ecsail.dto.SlipDTOFx;
 import org.ecsail.interfaces.SlipUser;
 import org.ecsail.pojo.*;
-import org.ecsail.static_tools.CopyPOJOtoFx;
+import org.ecsail.static_tools.POJOtoFxConverter;
 import org.ecsail.widgetfx.DialogueFx;
 import org.ecsail.wrappers.InsertBoatResponse;
 import org.ecsail.wrappers.UpdateResponse;
@@ -132,11 +132,11 @@ public class MembershipInteractor implements SlipUser {
             membershipModel.membershipProperty().set(membershipDTOFx);
             membershipDTOFx.slipProperty().set(new SlipDTOFx(membership.getSlip()));
             setSlipStatus();
-            membershipDTOFx.getPeople().addAll(CopyPOJOtoFx.copyPeople(membership.getPeople()));
-            membershipDTOFx.getMembershipIds().addAll(CopyPOJOtoFx.copyMembershipIds(membership.getMembershipIds()));
-            membershipDTOFx.getInvoices().addAll(CopyPOJOtoFx.copyInvoices(membership.getInvoices()));
-            membershipDTOFx.getBoats().addAll(CopyPOJOtoFx.copyBoats(membership.getBoats()));
-            membershipDTOFx.getMemos().addAll(CopyPOJOtoFx.copyNotes(membership.getMemos()));
+            membershipDTOFx.getPeople().addAll(POJOtoFxConverter.copyPeople(membership.getPeople()));
+            membershipDTOFx.getMembershipIds().addAll(POJOtoFxConverter.copyMembershipIds(membership.getMembershipIds()));
+            membershipDTOFx.getInvoices().addAll(POJOtoFxConverter.copyInvoices(membership.getInvoices()));
+            membershipDTOFx.getBoats().addAll(POJOtoFxConverter.copyBoats(membership.getBoats()));
+            membershipDTOFx.getMemos().addAll(POJOtoFxConverter.copyNotes(membership.getMemos()));
         } catch (Exception e) {
             logger.error("Failed to convert membership to FX: {}", e.getMessage(), e);
         }

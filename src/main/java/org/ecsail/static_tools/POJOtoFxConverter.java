@@ -8,7 +8,7 @@ import org.ecsail.pojo.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class CopyPOJOtoFx {
+public class POJOtoFxConverter {
 
     /**
      * Converts a list of {@link RosterDTO} objects to an {@link ObservableList} of {@link RosterDTOFx}
@@ -143,19 +143,49 @@ public class CopyPOJOtoFx {
         );
     }
 
-    public static List<BoatDTOFx> copyBoats(List<BoatDTO> boats) {
-        List<BoatDTOFx> boatFxList = new ArrayList<>();
-        for(BoatDTO boat : boats) {
-            boatFxList.add(new BoatDTOFx(boat));
+    /**
+     * Converts a list of {@link BoatDTO} objects to an {@link ObservableList} of {@link BoatDTOFx}
+     * objects. The resulting list is suitable for JavaFX TableView binding and maintains the input order
+     * without sorting.
+     *
+     * @param boats the list of {@link BoatDTO} objects to convert, typically deserialized from JSON
+     * @return an {@link ObservableList} of {@link BoatDTOFx} objects, or an empty list if the input is null or empty
+     * @throws NullPointerException if any {@link BoatDTO} in the input list is null (filtered out internally)
+     */
+    public static ObservableList<BoatDTOFx> copyBoats(List<BoatDTO> boats) {
+        if (boats == null || boats.isEmpty()) {
+            return FXCollections.observableArrayList();
         }
-        return boatFxList;
-    } // improve this, no sorting needed, add javadoc
+        return FXCollections.observableArrayList(
+                boats.stream()
+                        .filter(Objects::nonNull)
+                        .map(BoatDTOFx::new)
+                        .collect(Collectors.toList())
+        );
+    }
 
-    public static List<NotesDTOFx> copyNotes(List<Note> memos) {
-        List<NotesDTOFx> memoFxList = new ArrayList<>();
-        for(Note memo : memos) {
-            memoFxList.add((new NotesDTOFx(memo)));
+    /**
+     * Converts a list of {@link Note} objects to an {@link ObservableList} of {@link NotesDTOFx}
+     * objects, sorted by memo date in descending order (newest first). The resulting list is suitable
+     * for JavaFX TableView binding.
+     *
+     * @param memos the list of {@link Note} objects to convert, typically deserialized from JSON
+     * @return an {@link ObservableList} of {@link NotesDTOFx} objects, sorted by memo date,
+     *         or an empty list if the input is null or empty
+     * @throws NullPointerException if any {@link Note} or its memo date in the input list is null
+     *         (filtered out internally)
+     */
+    public static ObservableList<NotesDTOFx> copyNotes(List<Note> memos) {
+        if (memos == null || memos.isEmpty()) {
+            return FXCollections.observableArrayList();
         }
-        return memoFxList;
+        return FXCollections.observableArrayList(
+                memos.stream()
+                        .filter(Objects::nonNull)
+                        .map(NotesDTOFx::new)
+                        .filter(note -> note.getMemoDate() != null) // Ensure memoDate is not null
+                        .sorted((a, b) -> b.getMemoDate().compareTo(a.getMemoDate())) // Descending order
+                        .collect(Collectors.toList())
+        );
     }
 }
