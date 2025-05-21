@@ -6,7 +6,6 @@ import okhttp3.Response;
 import org.ecsail.dto.LoginDTO;
 import org.ecsail.fileio.FileIO;
 import org.ecsail.interfaces.ConfigFilePaths;
-import org.ecsail.static_tools.HttpClientUtil;
 import org.ecsail.widgetfx.DialogueFx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,9 +26,10 @@ public class ConnectInteractor implements ConfigFilePaths {
         this.connectModel = connectModel;
     }
 
-    // supplies saved logins from users local hardrive
+    // supplies saved logins from users local hard drive
     public void supplyLogins() {
         List<LoginDTO> loginDTOS = new ArrayList<>();
+
         if (FileIO.hostFileExists(LOGIN_FILE)) {
             openLoginObjects(loginDTOS);
             logger.info("Added {} logins", loginDTOS.size());
@@ -52,12 +52,9 @@ public class ConnectInteractor implements ConfigFilePaths {
     public boolean connectToServer() {
         String username = connectModel.currentLoginProperty().userProperty().get();
         String password = connectModel.currentLoginProperty().passwdProperty().get();
-
-
         connectModel.updateServerUrl();
         logger.info("Attempting to login to server: {}", connectModel.getHttpClient().getServerUrl());
         logger.info("Username: {}", username);
-
         while (true) {
             try (Response response = connectModel.getHttpClient().login(username, password)) {
                 logger.info("Login response status: {}", response.code());
@@ -106,6 +103,7 @@ public class ConnectInteractor implements ConfigFilePaths {
                     }
                 }
 
+                assert response.body() != null;
                 Map<String, String> result = connectModel.getObjectMapper().readValue(
                         response.body().string(),
                         new TypeReference<>() {
@@ -124,7 +122,7 @@ public class ConnectInteractor implements ConfigFilePaths {
                     return false;
                 }
             } catch (IOException e) {
-                logger.error("No server response:", e.getMessage());
+                logger.error("No server response: {}", e.getMessage());
                 DialogueFx.errorAlert("Error", "No server response: " + e.getMessage());
                 return false;
             }
@@ -245,7 +243,11 @@ public class ConnectInteractor implements ConfigFilePaths {
     // using the object passed in
     public static void openLoginObjects(List<LoginDTO> logins) {
         File g = new File(LOGIN_FILE);
-            try {
+        if (!g.exists() || g.length() == 0) {
+            logger.warn("Login file does not exist or is empty: {}", LOGIN_FILE);
+            return;
+        }
+        try {
                 ObjectInputStream in = new ObjectInputStream(new FileInputStream(g));
                 Object obj = in.readObject();
                 ArrayList<?> ar = (ArrayList<?>) obj;
@@ -254,7 +256,7 @@ public class ConnectInteractor implements ConfigFilePaths {
                     logins.add((LoginDTO) x);
                 in.close();
             } catch (Exception e) {
-                logger.error("Error occurred during reading of {}", LOGIN_FILE);
+                logger.error("Error occurred during reading of {}", LOGIN_FILE, e);
 				logger.error(e.getMessage());
             }
     }
@@ -291,13 +293,6 @@ public class ConnectInteractor implements ConfigFilePaths {
                 .orElse(0) + 1;
     }
 
-    public void logError(String message) {
-        logger.error(message);
-    }
-
-    public void logInfo(String message) {
-        logger.info(message);
-    }
 
     public Stage getStage() {
         return connectModel.getConnectStage();
@@ -313,29 +308,7 @@ public class ConnectInteractor implements ConfigFilePaths {
         return connectModel;
     }
 
-    protected boolean getAuthenticationRequired() {
-        return connectModel.isAuthenticationRequired().get();
-    }
-
-    public void requiresAuthenticationOrDialogue() {
-        while (true) {
-            try {
-                connectModel.isAuthenticationRequired().set(requiresAuthentication());
-                break; // If successful, exit the loop
-            } catch (IOException e) {
-                logger.error("Failed to check authentication status", e);
-                boolean retry = DialogueFx.showServerUnreachableDialog();
-                if (!retry) {
-                    logger.info("User chose to close the application due to server being unreachable.");
-                    System.exit(0); // Exit the app
-                }
-                // If retry is true, loop continues and tries again
-                logger.info("Retrying server connection...");
-            }
-        }
-    }
-
     public String server() {
-        return connectModel.getHttpClient().getServerUrl().toString();
+        return connectModel.getHttpClient().getServerUrl();
     }
 }
