@@ -1,4 +1,4 @@
-package org.ecsail.mvci_membership;
+package org.ecsail.mvci_membership.components;
 
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -15,6 +15,9 @@ import javafx.util.Builder;
 import org.ecsail.dto.PersonDTOFx;
 import org.ecsail.dto.PhoneDTOFx;
 import org.ecsail.enums.PhoneType;
+import org.ecsail.mvci_membership.MembershipMessage;
+import org.ecsail.mvci_membership.MembershipModel;
+import org.ecsail.mvci_membership.MembershipView;
 import org.ecsail.widgetfx.TableColumnFx;
 import org.ecsail.widgetfx.TableViewFx;
 

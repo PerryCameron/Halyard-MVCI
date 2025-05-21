@@ -13,6 +13,7 @@ import javafx.scene.text.Text;
 import javafx.util.Builder;
 import org.ecsail.dto.PersonDTOFx;
 import org.ecsail.enums.MemberType;
+import org.ecsail.mvci_membership.components.*;
 import org.ecsail.widgetfx.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

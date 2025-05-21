@@ -1,4 +1,4 @@
-package org.ecsail.mvci_membership;
+package org.ecsail.mvci_membership.components;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

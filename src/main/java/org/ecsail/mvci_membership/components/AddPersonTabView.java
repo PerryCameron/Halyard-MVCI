@@ -1,4 +1,4 @@
-package org.ecsail.mvci_membership;
+package org.ecsail.mvci_membership.components;
 
 import javafx.beans.property.Property;
 import javafx.beans.value.ObservableValue;
@@ -14,6 +14,9 @@ import javafx.util.Builder;
 import org.ecsail.custom.CustomDatePicker;
 import org.ecsail.dto.PersonDTOFx;
 import org.ecsail.enums.MemberType;
+import org.ecsail.mvci_membership.MembershipMessage;
+import org.ecsail.mvci_membership.MembershipModel;
+import org.ecsail.mvci_membership.MembershipView;
 import org.ecsail.widgetfx.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +51,7 @@ public class AddPersonTabView extends Tab implements Builder<Tab> {
         return this;
     }
 
-    protected void clearPersonDTO() {
+    public void clearPersonDTO() {
         personDTO.setFirstName("");
         personDTO.setLastName("");
         personDTO.setNickName("");

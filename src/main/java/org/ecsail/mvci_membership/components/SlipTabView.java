@@ -1,4 +1,4 @@
-package org.ecsail.mvci_membership;
+package org.ecsail.mvci_membership.components;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -10,6 +10,9 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.util.Builder;
 import org.ecsail.interfaces.SlipUser;
+import org.ecsail.mvci_membership.MembershipMessage;
+import org.ecsail.mvci_membership.MembershipModel;
+import org.ecsail.mvci_membership.MembershipView;
 import org.ecsail.widgetfx.*;
 
 import java.util.Objects;

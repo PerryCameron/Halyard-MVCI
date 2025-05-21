@@ -1,4 +1,4 @@
-package org.ecsail.mvci_membership;
+package org.ecsail.mvci_membership.components;
 
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Pos;

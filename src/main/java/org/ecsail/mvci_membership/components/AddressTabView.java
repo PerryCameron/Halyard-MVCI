@@ -1,4 +1,4 @@
-package org.ecsail.mvci_membership;
+package org.ecsail.mvci_membership.components;
 
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -11,6 +11,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
+import org.ecsail.mvci_membership.MembershipMessage;
+import org.ecsail.mvci_membership.MembershipView;
 import org.ecsail.static_tools.StringTools;
 import org.ecsail.widgetfx.*;
 

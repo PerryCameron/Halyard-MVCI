@@ -1,4 +1,4 @@
-package org.ecsail.mvci_membership;
+package org.ecsail.mvci_membership.components;
 
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
@@ -11,6 +11,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import org.ecsail.dto.BoatDTOFx;
+import org.ecsail.mvci_membership.MembershipMessage;
+import org.ecsail.mvci_membership.MembershipModel;
+import org.ecsail.mvci_membership.MembershipView;
 import org.ecsail.widgetfx.*;
 
 import java.util.Arrays;

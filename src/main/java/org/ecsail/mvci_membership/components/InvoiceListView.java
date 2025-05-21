@@ -1,4 +1,4 @@
-package org.ecsail.mvci_membership;
+package org.ecsail.mvci_membership.components;
 
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
@@ -13,12 +13,14 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import org.ecsail.dto.InvoiceDTOFx;
+import org.ecsail.mvci_membership.MembershipMessage;
+import org.ecsail.mvci_membership.MembershipModel;
+import org.ecsail.mvci_membership.MembershipView;
 import org.ecsail.static_tools.CustomTools;
 import org.ecsail.widgetfx.*;
 
 import java.time.Year;
 import java.util.Arrays;
-import java.util.Comparator;
 
 import static org.ecsail.widgetfx.ListenerFx.addSingleFireObjectListener;
 

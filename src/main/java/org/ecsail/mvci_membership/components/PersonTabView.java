@@ -1,4 +1,4 @@
-package org.ecsail.mvci_membership;
+package org.ecsail.mvci_membership.components;
 
 import javafx.beans.property.Property;
 import javafx.beans.value.ObservableValue;
@@ -22,7 +22,9 @@ import org.ecsail.dto.PersonDTOFx;
 import org.ecsail.enums.MemberType;
 import org.ecsail.interfaces.ConfigFilePaths;
 import org.ecsail.interfaces.ObjectType;
-import org.ecsail.mvci_membership.components.AwardTableView;
+import org.ecsail.mvci_membership.MembershipMessage;
+import org.ecsail.mvci_membership.MembershipModel;
+import org.ecsail.mvci_membership.MembershipView;
 import org.ecsail.static_tools.DateTools;
 import org.ecsail.widgetfx.*;
 import org.slf4j.Logger;

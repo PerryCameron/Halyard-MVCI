@@ -1,4 +1,4 @@
-package org.ecsail.mvci_membership;
+package org.ecsail.mvci_membership.components;
 
 import javafx.geometry.Insets;
 import javafx.scene.Node;
@@ -6,6 +6,7 @@ import javafx.scene.control.Tab;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
+import org.ecsail.mvci_membership.MembershipView;
 import org.ecsail.widgetfx.HBoxFx;
 import org.ecsail.widgetfx.TabFx;
 import org.ecsail.widgetfx.VBoxFx;

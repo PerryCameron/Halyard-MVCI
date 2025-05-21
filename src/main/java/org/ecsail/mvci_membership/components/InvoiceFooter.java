@@ -1,4 +1,4 @@
-package org.ecsail.mvci_membership;
+package org.ecsail.mvci_membership.components;
 
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
@@ -21,6 +21,7 @@ import org.ecsail.dto.MembershipIdDTOFx;
 import org.ecsail.dto.PaymentDTO;
 import org.ecsail.enums.PaymentType;
 import org.ecsail.enums.Success;
+import org.ecsail.mvci_membership.MembershipMessage;
 import org.ecsail.static_tools.CustomTools;
 import org.ecsail.widgetfx.*;
 
