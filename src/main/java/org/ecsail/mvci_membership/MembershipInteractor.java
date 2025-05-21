@@ -3,7 +3,6 @@ package org.ecsail.mvci_membership;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import javafx.application.Platform;
 import org.ecsail.dto.BoatDTOFx;
-import org.ecsail.dto.BoatOwnerFx;
 import org.ecsail.dto.MembershipDTOFx;
 import org.ecsail.dto.SlipDTOFx;
 import org.ecsail.interfaces.SlipUser;
@@ -143,6 +142,7 @@ public class MembershipInteractor implements SlipUser {
         }
     }
 
+    // TODO This is a temp way to do this. I need to probably change the membership to JSON method to also give enough information to find the sublease person
     private void setSlipStatus() {
         // person owns a slip
         if(!membershipModel.membershipProperty().get().slipProperty().get().getSlipNumber().isEmpty())
@@ -183,7 +183,7 @@ public class MembershipInteractor implements SlipUser {
      */
     public String updatePosition() {
         logger.debug("Updating position with pId: {}", membershipModel.getSelectedOfficer().getOfficerId());
-        Officer officer = new Officer(membershipModel.getSelectedOfficer());
+        OfficerDTO officer = new OfficerDTO(membershipModel.getSelectedOfficer());
         try {
             String response = membershipModel.getHttpClient().postDataToGybe("update/position", officer);
             return processUpdateResponse(response);
@@ -312,7 +312,8 @@ public class MembershipInteractor implements SlipUser {
             InsertBoatResponse insertBoatResponse = membershipModel.getHttpClient().getObjectMapper()
                     .readValue(response, InsertBoatResponse.class);
             if(insertBoatResponse.isSuccess()) {
-                membershipModel.membershipProperty().get().getBoats().add(new BoatDTOFx(insertBoatResponse.getBoat()));
+                membershipModel.getBoatTableView().getItems().add(new BoatDTOFx(insertBoatResponse.getBoat()));
+                membershipModel.getBoatTableView().refresh();
             } else {
                 Platform.runLater(() -> {
                     DialogueFx.errorAlert("Unable add boat: ", insertBoatResponse.getMessage());
@@ -320,8 +321,66 @@ public class MembershipInteractor implements SlipUser {
                 logger.error(insertBoatResponse.getMessage());
             }
         } catch (Exception e) {
-//            logger.error("Failed to update boat  {}: {}", boatOwnerDTO.getBoatId(), e.getMessage(), e);
-            e.printStackTrace();
+            logger.error("Could not create new boat: {}",e.getMessage());
+            Platform.runLater(() -> {
+                DialogueFx.errorAlert("Unable add boat: ", e.getMessage());
+            });
+        }
+    }
+
+    public void deleteBoat() {
+        try {
+            // Validate inputs
+            if (membershipModel.getSelectedBoat() == null) {
+                logger.error("Failed to delete boat: No boat selected");
+                Platform.runLater(() -> DialogueFx.errorAlert("Delete Boat Failed", "No boat selected"));
+                return;
+            }
+            if (membershipModel.membershipProperty().get() == null) {
+                logger.error("Failed to delete boat: No membership selected");
+                Platform.runLater(() -> DialogueFx.errorAlert("Delete Boat Failed", "No membership selected"));
+                return;
+            }
+            Integer boatId = membershipModel.getSelectedBoat().getBoatId();
+            Integer msId = membershipModel.membershipProperty().get().getMsId();
+            BoatOwnerDTO boatOwnerDTO = new BoatOwnerDTO(msId, boatId);
+            // Send delete request to server
+            String response = membershipModel.getHttpClient().postDataToGybe("delete/boat", boatOwnerDTO);
+            if (response == null) {
+                logger.error("Failed to delete boat {}: Null response from server", boatId);
+                Platform.runLater(() -> DialogueFx.errorAlert("Delete Boat Failed", "Null response from server"));
+                return;
+            }
+            UpdateResponse updateResponse = membershipModel.getHttpClient().getObjectMapper()
+                    .readValue(response, UpdateResponse.class);
+            if (updateResponse == null) {
+                logger.error("Failed to delete boat {}: Invalid response from server", boatId);
+                Platform.runLater(() -> DialogueFx.errorAlert("Delete Boat Failed", "Invalid response from server"));
+                return;
+            }
+            if (updateResponse.isSuccess()) {
+                logger.info("Successfully deleted boat {}", boatId);
+                BoatDTOFx boatDTOFx = membershipModel.getBoatById(boatId);
+                if (boatDTOFx != null) {
+                    Platform.runLater(() -> {
+                        membershipModel.getBoatTableView().getItems().remove(boatDTOFx);
+                        // Refresh table only if necessary
+                        membershipModel.getBoatTableView().refresh();
+                    });
+                } else {
+                    // Log warning but don’t show error alert, as deletion succeeded
+                    logger.warn("Boat {} deleted on server but not found in membership list", boatId);
+                }
+            } else {
+                String errorMessage = updateResponse.getMessage() != null ? updateResponse.getMessage() : "Unknown error";
+                logger.error("Failed to delete boat {}: {}", boatId, errorMessage);
+                Platform.runLater(() -> DialogueFx.errorAlert("Delete Boat Failed", errorMessage));
+            }
+        } catch (Exception e) {
+            Integer boatId = membershipModel.getSelectedBoat() != null ?
+                    membershipModel.getSelectedBoat().getBoatId() : null;
+            logger.error("Failed to delete boat {}: {}", boatId, e.getMessage(), e);
+            Platform.runLater(() -> DialogueFx.errorAlert("Delete Boat Failed", e.getMessage()));
         }
     }
 

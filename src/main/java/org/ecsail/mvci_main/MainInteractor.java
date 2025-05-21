@@ -1,17 +1,26 @@
 package org.ecsail.mvci_main;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.scene.layout.Region;
+import org.ecsail.dto.BoardPositionDTO;
 import org.ecsail.dto.MembershipListDTO;
+import org.ecsail.dto.MembershipListRadioDTO;
 import org.ecsail.fileio.FileIO;
 import org.ecsail.interfaces.ConfigFilePaths;
 import org.ecsail.interfaces.Status;
+import org.ecsail.pojo.Membership;
+import org.ecsail.pojo.OfficerDTO;
 import org.ecsail.widgetfx.PaneFx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 public class MainInteractor implements ConfigFilePaths {
 
@@ -54,6 +63,7 @@ public class MainInteractor implements ConfigFilePaths {
 //        BoardPositionsRepository boardPositionsRepo = new BoardPositionsRepositoryImpl(connections.getDataSource());
 //        mainModel.setBoardPositionDTOS(FXCollections.observableList(boardPositionsRepo.getPositions()));
 //    }
+
     public MainModel getMainModel() {
         return mainModel;
     }
@@ -89,6 +99,22 @@ public class MainInteractor implements ConfigFilePaths {
 
     public void setConnectError(boolean b) {
         mainModel.setConnectError(b);
+    }
+
+    public void fetchPositions() throws Exception {
+        String endpoint = "positions";
+        String jsonResponse = mainModel.getHttpClient().fetchDataFromGybe(endpoint);
+        logger.debug("positions response: {}", jsonResponse);
+        List<BoardPositionDTO> choices = mainModel.getHttpClient().getObjectMapper().readValue(
+                jsonResponse,
+                new TypeReference<>() {
+                }
+        );
+        logger.info("Fetched {} positions", choices.size());
+        Platform.runLater(() -> {
+            mainModel.getBoardPositionDTOS().addAll(choices); // this is saying required type is MembershipListRadioDTO
+            logger.info("Radio choices model updated with {} choices", mainModel.getBoardPositionDTOS().size());
+        });
     }
 
 

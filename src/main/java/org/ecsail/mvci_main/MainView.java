@@ -25,7 +25,6 @@ import javafx.util.Duration;
 import java.util.Optional;
 
 import org.ecsail.BaseApplication;
-import org.ecsail.interfaces.Status;
 import org.ecsail.static_tools.VersionUtil;
 import org.ecsail.widgetfx.*;
 import org.slf4j.Logger;

@@ -2,14 +2,13 @@ package org.ecsail.mvci_main;
 
 
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.scene.Scene;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import org.ecsail.BaseApplication;
 import org.ecsail.dto.BoatListDTO;
-import org.ecsail.dto.MembershipListDTO;
-import org.ecsail.dto.RosterDTO;
 import org.ecsail.dto.RosterDTOFx;
 import org.ecsail.interfaces.Controller;
 import org.ecsail.interfaces.Status;
@@ -59,7 +58,19 @@ public class MainController extends Controller<MainMessage> implements Status {
         }
     }
 
-
+    public void getPositions() {
+        Task<Boolean> fetchPositionsTask = new Task<>() {
+            @Override
+            protected Boolean call() throws Exception {
+            mainInteractor.fetchPositions();
+            return true;
+            }
+        };
+//        fetchPositionsTask.setOnSucceeded(evt -> System.out.println("succeeded"));
+//        fetchPositionsTask.setOnFailed(evt -> System.out.println("failed"));
+        Thread thread = new Thread(fetchPositionsTask);
+        thread.start();
+    }
 
     private void showDebugLog() {
         Desktop desktop = Desktop.getDesktop(); // Gui_Main.class.getProtectionDomain().getCodeSource().getLocation().getPath()

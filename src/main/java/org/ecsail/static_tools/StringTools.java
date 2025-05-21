@@ -3,6 +3,7 @@ package org.ecsail.static_tools;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import org.ecsail.dto.BoardPositionDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -127,7 +128,7 @@ public class StringTools {
     public static String getMembershipDescription(String code) {
         switch (code) {
             case "FM" -> {
-                return  "Family";
+                return "Family";
             }
             case "RM" -> {
                 return "Regular";

@@ -80,9 +80,6 @@ public class MainModel {
         this.mainTabPane.set(mainTabPane);
     }
 
-//    public ObjectMapper getObjectMapper() {
-//        return objectMapper;
-//    }
 
     public HttpClientUtil getHttpClient() {
         return httpClient;

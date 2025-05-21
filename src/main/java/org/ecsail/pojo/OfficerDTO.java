@@ -2,10 +2,10 @@ package org.ecsail.pojo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.ecsail.dto.OfficerDTOFx;
+import org.ecsail.dto.OfficerFx;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class Officer {
+public class OfficerDTO {
     @JsonProperty("officerId")
     private int officerId;
 
@@ -21,10 +21,10 @@ public class Officer {
     @JsonProperty("fiscalYear")
     private int fiscalYear;
 
-    public Officer() {
+    public OfficerDTO() {
     }
 
-    public Officer(OfficerDTOFx officerDTOFx) {
+    public OfficerDTO(OfficerFx officerDTOFx) {
         this.officerId = officerDTOFx.getOfficerId();
         this.pId = officerDTOFx.getpId();
         this.boardYear = Integer.parseInt(officerDTOFx.getBoardYear());

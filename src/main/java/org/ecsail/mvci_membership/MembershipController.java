@@ -102,7 +102,7 @@ public class MembershipController extends Controller<MembershipMessage> {
 //                    case INSERT_PERSON -> db.insertPerson();
 //                    case INSERT_PHONE -> db.insertPhone();
 //                    case INSERT_PAYMENT -> db.insertPayment();
-//                    case DELETE_BOAT -> db.deleteBoat();
+                    case DELETE_BOAT -> membershipInteractor.deleteBoat();
 //                    case DELETE_AWARD -> db.deleteAward();
 //                    case DELETE_EMAIL -> db.deleteEmail();
 //                    case DELETE_MEMBERSHIP_ID -> db.deleteMembershipId();

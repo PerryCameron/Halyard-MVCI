@@ -22,7 +22,7 @@ public class PersonDTOFx {
 	private ObservableList<PhoneDTOFx> phones = FXCollections.observableArrayList();
 	private ObservableList<EmailDTOFx> email = FXCollections.observableArrayList();
 	private ObservableList<AwardDTOFx> awards = FXCollections.observableArrayList();
-	private ObservableList<OfficerDTOFx> officer = FXCollections.observableArrayList();
+	private ObservableList<OfficerFx> officer = FXCollections.observableArrayList();
 
 	public PersonDTOFx(Integer pid, Integer ms_id, Integer memberType, String firstName, String lastName,
 					   LocalDate birthday, String occupation,
@@ -111,11 +111,11 @@ public class PersonDTOFx {
 	}
 
 
-	public ObservableList<OfficerDTOFx> getOfficers() {
+	public ObservableList<OfficerFx> getOfficers() {
 		return officer;
 	}
 
-	public void setOfficer(ObservableList<OfficerDTOFx> officer) {
+	public void setOfficer(ObservableList<OfficerFx> officer) {
 		this.officer = officer;
 	}
 

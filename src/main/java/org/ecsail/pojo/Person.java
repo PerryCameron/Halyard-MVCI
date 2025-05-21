@@ -51,7 +51,7 @@ public class Person {
     private List<Award> awards;
 
     @JsonProperty("officers")
-    private List<Officer> officers;
+    private List<OfficerDTO> officers;
 
     public Person() {
     }
@@ -182,11 +182,11 @@ public class Person {
         this.awards = awards;
     }
 
-    public List<Officer> getOfficers() {
+    public List<OfficerDTO> getOfficers() {
         return officers;
     }
 
-    public void setOfficers(List<Officer> officers) {
+    public void setOfficers(List<OfficerDTO> officers) {
         this.officers = officers;
     }
 }

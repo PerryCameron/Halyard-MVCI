@@ -36,8 +36,8 @@ public class CopyPOJOtoFx {
                 }
             }
             if (person.getOfficers() != null) {
-                for (Officer officer : person.getOfficers()) {
-                    personDTOFx.getOfficers().add(new OfficerDTOFx(officer));
+                for (OfficerDTO officer : person.getOfficers()) {
+                    personDTOFx.getOfficers().add(new OfficerFx(officer));
                 }
             }
             peopleFxList.add(personDTOFx);

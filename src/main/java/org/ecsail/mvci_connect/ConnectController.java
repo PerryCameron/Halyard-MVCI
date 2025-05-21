@@ -61,6 +61,7 @@ public class ConnectController extends Controller<ConnectMessage> {
                 connectInteractor.closeLoginStage();
                 mainController.openWelcomeMVCI();
                 mainController.setStatus("Connected to " + connectInteractor.server());
+                mainController.getPositions();
             }
         });
         connectTask.setOnFailed(event -> {
