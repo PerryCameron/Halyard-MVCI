@@ -13,7 +13,7 @@ public class Award {
     private int pId;
 
     @JsonProperty("awardYear")
-    private String awardYear;
+    private String awardYear;   // TODO this should be integer
 
     @JsonProperty("awardType")
     private String awardType;

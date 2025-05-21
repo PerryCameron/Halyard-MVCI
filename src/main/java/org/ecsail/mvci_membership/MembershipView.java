@@ -50,7 +50,6 @@ public class MembershipView implements Builder<Region> {
                     borderPane.setCenter(creteDivider());
                     borderPane.setBottom(createExtrasTabPane());
                     addPeopleTabs();
-                    System.out.println("Data Loaded!");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -12,7 +12,7 @@ public class AwardDTOFx {
 	
 	private IntegerProperty awardId;
 	private IntegerProperty pId;
-	private StringProperty awardYear;
+	private StringProperty awardYear;  // TODO this should be integer
 	private StringProperty awardType;
 
 

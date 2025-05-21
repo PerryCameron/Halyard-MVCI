@@ -12,33 +12,33 @@ public class OfficerFx {
 
 	private IntegerProperty officerId;
 	private IntegerProperty pId;
-	private StringProperty boardYear;
+	private IntegerProperty boardYear;
 	private StringProperty officerType;
-	private StringProperty fiscalYear;
+	private IntegerProperty fiscalYear;  // TODO this should be integer
 	
-	public OfficerFx(Integer officerId, Integer pId, String boardYear,
-					 String officerType, String fiscalYear) {
+	public OfficerFx(Integer officerId, Integer pId, Integer boardYear,
+					 String officerType, Integer fiscalYear) {
 		this.officerId = new SimpleIntegerProperty(officerId);
 		this.pId = new SimpleIntegerProperty(pId);
-		this.boardYear = new SimpleStringProperty(boardYear);
+		this.boardYear = new SimpleIntegerProperty(boardYear);
 		this.officerType = new SimpleStringProperty(officerType);
-		this.fiscalYear = new SimpleStringProperty(fiscalYear);
+		this.fiscalYear = new SimpleIntegerProperty(fiscalYear);
 	}
 
     public OfficerFx(Integer pId) {
 		this.officerId = new SimpleIntegerProperty(0);
 		this.pId = new SimpleIntegerProperty(pId);
-		this.boardYear = new SimpleStringProperty("0");
+		this.boardYear = new SimpleIntegerProperty(0);
 		this.officerType = new SimpleStringProperty("BM");
-		this.fiscalYear = new SimpleStringProperty(Year.now().toString());
+		this.fiscalYear = new SimpleIntegerProperty(Year.now().getValue());
     }
 
 	public OfficerFx(OfficerDTO officer) {
 		this.officerId = new SimpleIntegerProperty(officer.getOfficerId());
 		this.pId = new SimpleIntegerProperty(officer.getpId());
-		this.boardYear = new SimpleStringProperty(String.valueOf(officer.getBoardYear()));
+		this.boardYear = new SimpleIntegerProperty(officer.getBoardYear());
 		this.officerType = new SimpleStringProperty(officer.getOfficerType());
-		this.fiscalYear = new SimpleStringProperty(String.valueOf(officer.getFiscalYear()));
+		this.fiscalYear = new SimpleIntegerProperty(officer.getFiscalYear());
 	}
 
     public final IntegerProperty officerIdProperty() {
@@ -71,15 +71,15 @@ public class OfficerFx {
 	}
 
 
-	public String getBoardYear() {
+	public Integer getBoardYear() {
 		return boardYear.get();
 	}
 
-	public StringProperty boardYearProperty() {
+	public IntegerProperty boardYearProperty() {
 		return boardYear;
 	}
 
-	public void setBoardYear(String boardYear) {
+	public void setBoardYear(Integer boardYear) {
 		this.boardYear.set(boardYear);
 	}
 
@@ -98,17 +98,17 @@ public class OfficerFx {
 	}
 	
 
-	public final StringProperty fiscalYearProperty() {
+	public final IntegerProperty fiscalYearProperty() {
 		return this.fiscalYear;
 	}
 	
 
-	public final String getFiscalYear() {
+	public final Integer getFiscalYear() {
 		return this.fiscalYearProperty().get();
 	}
 	
 
-	public final void setFiscalYear(final String fiscalYear) {
+	public final void setFiscalYear(final Integer fiscalYear) {
 		this.fiscalYearProperty().set(fiscalYear);
 	}
 

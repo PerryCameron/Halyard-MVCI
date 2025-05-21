@@ -27,9 +27,9 @@ public class OfficerDTO {
     public OfficerDTO(OfficerFx officerDTOFx) {
         this.officerId = officerDTOFx.getOfficerId();
         this.pId = officerDTOFx.getpId();
-        this.boardYear = Integer.parseInt(officerDTOFx.getBoardYear());
+        this.boardYear = officerDTOFx.getBoardYear();
         this.officerType = officerDTOFx.getOfficerType();
-        this.fiscalYear = Integer.parseInt(officerDTOFx.getFiscalYear());
+        this.fiscalYear = officerDTOFx.getFiscalYear();
     }
 
     public int getOfficerId() {
