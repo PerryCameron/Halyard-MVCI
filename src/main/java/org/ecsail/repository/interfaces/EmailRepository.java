@@ -1,8 +1,8 @@
 package org.ecsail.repository.interfaces;
 
-import org.ecsail.dto.EmailDTOFx;
-import org.ecsail.dto.Email_InformationDTO;
-import org.ecsail.dto.PersonFx;
+import org.ecsail.fx.EmailDTOFx;
+import org.ecsail.fx.Email_InformationDTO;
+import org.ecsail.fx.PersonFx;
 
 import java.util.List;
 

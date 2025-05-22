@@ -1,11 +1,11 @@
 package org.ecsail.widgetfx;
 
-import org.ecsail.dto.LoginDTO;
+import org.ecsail.pojo.Login;
 
 public class ObjectFx {
 
-    public static LoginDTO createLoginDTO() {
+    public static Login createLoginDTO() {
         // id, port, host, user, password, is Default
-        return  new LoginDTO(0,8080, "host", "usr", "pass", true);
+        return  new Login(0,8080, "host", "usr", "pass", true);
     }
 }

@@ -11,7 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
-import org.ecsail.dto.DbBoatSettingsDTO;
+import org.ecsail.fx.DbBoatSettingsDTO;
 import org.ecsail.enums.KeelType;
 
 public class Row extends HBox {

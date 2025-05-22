@@ -10,8 +10,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.ecsail.BaseApplication;
-import org.ecsail.dto.LoginDTO;
-import org.ecsail.dto.LoginDTOProperty;
+import org.ecsail.pojo.Login;
+import org.ecsail.fx.LoginDTOProperty;
 import org.ecsail.mvci_main.MainModel;
 import org.ecsail.static_tools.HttpClientUtil;
 
@@ -32,7 +32,7 @@ public class ConnectModel {
     private final StringProperty database = new SimpleStringProperty();
     private final StringProperty statusBarText = new SimpleStringProperty();
     private final LoginDTOProperty currentLogin = new LoginDTOProperty(); // not really a property, but has fields that are.
-    private final ArrayList<LoginDTO> loginDTOS = new ArrayList<>();
+    private final ArrayList<Login> loginDTOS = new ArrayList<>();
     private final HttpClientUtil httpClient;
     private final ObjectMapper objectMapper;
     private final BooleanProperty authenticationRequired = new SimpleBooleanProperty();
@@ -145,7 +145,7 @@ public class ConnectModel {
         return statusBarText;
     }
 
-    public ArrayList<LoginDTO> getLoginDTOS() {
+    public ArrayList<Login> getLoginDTOS() {
         return loginDTOS;
     }
 

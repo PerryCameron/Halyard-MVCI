@@ -3,7 +3,6 @@ package org.ecsail.static_tools;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
-import org.ecsail.dto.BoardPositionDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

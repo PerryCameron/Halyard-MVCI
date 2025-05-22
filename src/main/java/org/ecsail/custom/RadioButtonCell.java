@@ -3,7 +3,7 @@ package org.ecsail.custom;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableCell;
-import org.ecsail.dto.EmailDTOFx;
+import org.ecsail.fx.EmailDTOFx;
 
 public class RadioButtonCell extends TableCell<EmailDTOFx, Boolean> {
 

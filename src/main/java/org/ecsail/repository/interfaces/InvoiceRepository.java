@@ -1,6 +1,6 @@
 package org.ecsail.repository.interfaces;
 
-import org.ecsail.dto.*;
+import org.ecsail.fx.*;
 
 import java.util.List;
 import java.util.Set;

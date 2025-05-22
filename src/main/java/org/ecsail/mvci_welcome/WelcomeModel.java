@@ -5,7 +5,7 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.chart.XYChart;
-import org.ecsail.dto.StatsDTO;
+import org.ecsail.fx.StatsDTO;
 import org.ecsail.static_tools.HttpClientUtil;
 import org.ecsail.mvci_main.MainModel;
 

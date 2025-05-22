@@ -12,7 +12,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
-import org.ecsail.dto.InvoiceDTOFx;
+import org.ecsail.fx.InvoiceDTOFx;
 import org.ecsail.mvci_membership.MembershipMessage;
 import org.ecsail.mvci_membership.MembershipModel;
 import org.ecsail.mvci_membership.MembershipView;

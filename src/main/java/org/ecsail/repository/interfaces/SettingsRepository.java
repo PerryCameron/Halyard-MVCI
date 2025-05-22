@@ -2,10 +2,10 @@ package org.ecsail.repository.interfaces;
 
 
 
-import org.ecsail.dto.BoatListRadioDTO;
-import org.ecsail.dto.DbBoatSettingsDTO;
-import org.ecsail.dto.DbRosterSettingsDTO;
-import org.ecsail.dto.MembershipListRadioDTO;
+import org.ecsail.fx.BoatListRadioDTO;
+import org.ecsail.fx.DbBoatSettingsDTO;
+import org.ecsail.fx.DbRosterSettingsDTO;
+import org.ecsail.fx.MembershipListRadioDTO;
 
 import java.util.List;
 

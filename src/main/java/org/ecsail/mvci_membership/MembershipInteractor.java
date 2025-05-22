@@ -2,9 +2,9 @@ package org.ecsail.mvci_membership;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import javafx.application.Platform;
-import org.ecsail.dto.BoatDTOFx;
-import org.ecsail.dto.MembershipFx;
-import org.ecsail.dto.SlipDTOFx;
+import org.ecsail.fx.BoatDTOFx;
+import org.ecsail.fx.MembershipFx;
+import org.ecsail.fx.SlipDTOFx;
 import org.ecsail.interfaces.SlipUser;
 import org.ecsail.pdf.PDF_Envelope;
 import org.ecsail.pojo.*;
@@ -189,7 +189,7 @@ public class MembershipInteractor implements SlipUser {
      */
     public String updatePosition() {
         logger.debug("Updating position with pId: {}", membershipModel.getSelectedOfficer().getOfficerId());
-        OfficerDTO officer = new OfficerDTO(membershipModel.getSelectedOfficer());
+        Officer officer = new Officer(membershipModel.getSelectedOfficer());
         try {
             String response = membershipModel.getHttpClient().postDataToGybe("update/position", officer);
             return processUpdateResponse(response);
@@ -294,7 +294,7 @@ public class MembershipInteractor implements SlipUser {
      */
     public String updateBoat() {
         logger.debug("Updating boat with pId: {}", membershipModel.getSelectedBoat().boatIdProperty().get());
-        BoatDTO boat = new BoatDTO(membershipModel.getSelectedBoat());
+        Boat boat = new Boat(membershipModel.getSelectedBoat());
         try {
             String response = membershipModel.getHttpClient().postDataToGybe("update/boat", boat);
             return processUpdateResponse(response);
@@ -313,7 +313,7 @@ public class MembershipInteractor implements SlipUser {
      */
     public void insertBoat() {
         try {
-            BoatOwnerDTO boatOwnerDTO = new BoatOwnerDTO(membershipModel.membershipProperty().get().getMsId(), 0);
+            BoatOwner boatOwnerDTO = new BoatOwner(membershipModel.membershipProperty().get().getMsId(), 0);
             String response = membershipModel.getHttpClient().postDataToGybe("insert/boat", boatOwnerDTO);
             InsertBoatResponse insertBoatResponse = membershipModel.getHttpClient().getObjectMapper()
                     .readValue(response, InsertBoatResponse.class);
@@ -349,7 +349,7 @@ public class MembershipInteractor implements SlipUser {
             }
             Integer boatId = membershipModel.getSelectedBoat().getBoatId();
             Integer msId = membershipModel.membershipProperty().get().getMsId();
-            BoatOwnerDTO boatOwnerDTO = new BoatOwnerDTO(msId, boatId);
+            BoatOwner boatOwnerDTO = new BoatOwner(msId, boatId);
             // Send delete request to server
             String response = membershipModel.getHttpClient().postDataToGybe("delete/boat", boatOwnerDTO);
             if (response == null) {

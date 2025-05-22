@@ -55,7 +55,7 @@ public class Membership {
     private List<Person> people;
 
     @JsonProperty("boats")
-    private List<BoatDTO> boats;
+    private List<Boat> boats;
 
     @JsonProperty("invoices")
     private List<Invoice> invoices;
@@ -197,11 +197,11 @@ public class Membership {
         this.people = people;
     }
 
-    public List<BoatDTO> getBoats() {
+    public List<Boat> getBoats() {
         return boats;
     }
 
-    public void setBoats(List<BoatDTO> boats) {
+    public void setBoats(List<Boat> boats) {
         this.boats = boats;
     }
 

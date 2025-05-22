@@ -1,7 +1,7 @@
 package org.ecsail.repository.interfaces;
 
-import org.ecsail.dto.PersonFx;
-import org.ecsail.dto.PhoneFx;
+import org.ecsail.fx.PersonFx;
+import org.ecsail.fx.PhoneFx;
 
 import java.util.List;
 

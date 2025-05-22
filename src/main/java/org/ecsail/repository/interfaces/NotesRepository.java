@@ -2,9 +2,9 @@ package org.ecsail.repository.interfaces;
 
 
 
-import org.ecsail.dto.InvoiceWithMemberInfoDTO;
-import org.ecsail.dto.Memo2DTOFx;
-import org.ecsail.dto.NotesDTOFx;
+import org.ecsail.fx.InvoiceWithMemberInfoDTO;
+import org.ecsail.fx.Memo2DTOFx;
+import org.ecsail.fx.NotesDTOFx;
 
 import java.util.List;
 

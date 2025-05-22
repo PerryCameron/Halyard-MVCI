@@ -5,7 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableView;
 import javafx.scene.image.ImageView;
-import org.ecsail.dto.*;
+import org.ecsail.fx.*;
 import org.ecsail.mvci_main.MainModel;
 
 import java.util.ArrayList;

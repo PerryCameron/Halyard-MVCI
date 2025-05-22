@@ -1,13 +1,11 @@
 package org.ecsail.mvci_welcome;
 
 import javafx.collections.FXCollections;
-import javafx.scene.Node;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
-import org.ecsail.dto.StatsDTO;
+import org.ecsail.fx.StatsDTO;
 import org.ecsail.interfaces.ChartConstants;
-import org.ecsail.mvci_connect.ConnectInteractor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

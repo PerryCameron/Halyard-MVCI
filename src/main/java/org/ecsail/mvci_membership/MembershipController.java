@@ -2,7 +2,7 @@ package org.ecsail.mvci_membership;
 
 import javafx.concurrent.Task;
 import javafx.scene.layout.Region;
-import org.ecsail.dto.RosterFx;
+import org.ecsail.fx.RosterFx;
 import org.ecsail.interfaces.Controller;
 import org.ecsail.mvci_main.MainController;
 import static org.ecsail.mvci_membership.MembershipMessage.*;

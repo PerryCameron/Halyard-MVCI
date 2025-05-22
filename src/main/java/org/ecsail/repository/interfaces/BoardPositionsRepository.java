@@ -1,6 +1,6 @@
 package org.ecsail.repository.interfaces;
 
-import org.ecsail.dto.BoardPositionDTO;
+import org.ecsail.fx.BoardPositionDTO;
 
 import java.util.List;
 

@@ -6,7 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.scene.control.*;
 import javafx.scene.layout.StackPane;
-import org.ecsail.dto.*;
+import org.ecsail.fx.*;
 import org.ecsail.enums.Success;
 import org.ecsail.interfaces.SlipUser;
 import org.ecsail.mvci_main.MainModel;

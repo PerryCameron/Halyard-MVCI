@@ -10,7 +10,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
-import org.ecsail.dto.BoatDTOFx;
+import org.ecsail.fx.BoatDTOFx;
 import org.ecsail.mvci_membership.MembershipMessage;
 import org.ecsail.mvci_membership.MembershipModel;
 import org.ecsail.mvci_membership.MembershipView;

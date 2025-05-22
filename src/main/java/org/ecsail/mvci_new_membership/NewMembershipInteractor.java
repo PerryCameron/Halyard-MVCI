@@ -1,9 +1,9 @@
 package org.ecsail.mvci_new_membership;
 
 import javafx.application.Platform;
-import org.ecsail.dto.MembershipListDTO;
-import org.ecsail.dto.NotesDTOFx;
-import org.ecsail.dto.PersonFx;
+import org.ecsail.fx.MembershipListDTO;
+import org.ecsail.fx.NotesDTOFx;
+import org.ecsail.fx.PersonFx;
 import org.ecsail.interfaces.ConfigFilePaths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

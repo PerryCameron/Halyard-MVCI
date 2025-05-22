@@ -2,24 +2,17 @@ package org.ecsail.mvci_main;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.scene.layout.Region;
-import org.ecsail.dto.BoardPositionDTO;
-import org.ecsail.dto.MembershipListDTO;
-import org.ecsail.dto.MembershipListRadioDTO;
+import org.ecsail.fx.BoardPositionDTO;
+import org.ecsail.fx.MembershipListDTO;
 import org.ecsail.fileio.FileIO;
 import org.ecsail.interfaces.ConfigFilePaths;
 import org.ecsail.interfaces.Status;
-import org.ecsail.pojo.Membership;
-import org.ecsail.pojo.OfficerDTO;
 import org.ecsail.widgetfx.PaneFx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class MainInteractor implements ConfigFilePaths {

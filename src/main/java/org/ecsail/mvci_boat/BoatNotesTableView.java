@@ -4,7 +4,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.util.Builder;
-import org.ecsail.dto.NotesDTOFx;
+import org.ecsail.fx.NotesDTOFx;
 import org.ecsail.widgetfx.CallBackFX;
 import org.ecsail.widgetfx.ListenerFx;
 import org.ecsail.widgetfx.TableColumnFx;

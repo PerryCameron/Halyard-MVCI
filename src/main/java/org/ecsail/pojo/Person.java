@@ -2,7 +2,7 @@ package org.ecsail.pojo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.ecsail.dto.PersonFx;
+import org.ecsail.fx.PersonFx;
 
 import java.util.List;
 
@@ -51,7 +51,7 @@ public class Person {
     private List<Award> awards;
 
     @JsonProperty("officers")
-    private List<OfficerDTO> officers;
+    private List<Officer> officers;
 
     public Person() {
     }
@@ -182,11 +182,11 @@ public class Person {
         this.awards = awards;
     }
 
-    public List<OfficerDTO> getOfficers() {
+    public List<Officer> getOfficers() {
         return officers;
     }
 
-    public void setOfficers(List<OfficerDTO> officers) {
+    public void setOfficers(List<Officer> officers) {
         this.officers = officers;
     }
 }

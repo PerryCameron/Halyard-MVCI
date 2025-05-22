@@ -5,7 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import javafx.application.Platform;
 import javafx.concurrent.WorkerStateEvent;
 import okhttp3.Response;
-import org.ecsail.dto.StatsDTO;
+import org.ecsail.fx.StatsDTO;
 import org.ecsail.widgetfx.DialogueFx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

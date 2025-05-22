@@ -3,8 +3,8 @@ package org.ecsail.mvci_roster.export;
 
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.ecsail.dto.DbRosterSettingsDTO;
-import org.ecsail.dto.RosterFx;
+import org.ecsail.fx.DbRosterSettingsDTO;
+import org.ecsail.fx.RosterFx;
 import org.ecsail.interfaces.ConfigFilePaths;
 import org.ecsail.mvci_roster.RosterModel;
 import org.slf4j.Logger;

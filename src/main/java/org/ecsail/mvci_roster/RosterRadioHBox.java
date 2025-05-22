@@ -2,7 +2,7 @@ package org.ecsail.mvci_roster;
 
 import javafx.scene.control.RadioButton;
 import javafx.scene.layout.HBox;
-import org.ecsail.dto.MembershipListRadioDTO;
+import org.ecsail.fx.MembershipListRadioDTO;
 
 public class RosterRadioHBox extends HBox {
     private final MembershipListRadioDTO membershipListRadioDTO;

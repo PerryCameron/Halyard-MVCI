@@ -1,23 +1,10 @@
 package org.ecsail.mvci_membership;
 
-import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.scene.control.TableColumn;
-import org.ecsail.dto.*;
-import org.ecsail.enums.MemberType;
-import org.ecsail.enums.Success;
-import org.ecsail.interfaces.SlipUser;
 //import org.ecsail.repository.implementations.*;
-import org.ecsail.repository.interfaces.*;
-import org.ecsail.static_tools.DateTools;
-import org.ecsail.static_tools.HandlingTools;
-import org.ecsail.widgetfx.TableViewFx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
-import java.time.LocalDate;
-import java.util.*;
 
 public class DataBaseService {
     private final MembershipModel membershipModel;

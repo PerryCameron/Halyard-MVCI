@@ -6,8 +6,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import org.ecsail.dto.SlipInfoDTO;
-import org.ecsail.dto.SlipStructureDTO;
+import org.ecsail.fx.SlipInfoDTO;
+import org.ecsail.fx.SlipStructureDTO;
 import org.ecsail.mvci_main.MainModel;
 import org.ecsail.static_tools.HttpClientUtil;
 

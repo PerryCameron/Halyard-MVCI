@@ -17,7 +17,7 @@ import javafx.util.Builder;
 import javafx.util.converter.IntegerStringConverter;
 import org.ecsail.custom.CustomDatePicker;
 import org.ecsail.custom.CustomIntegerTableCell;
-import org.ecsail.dto.MembershipIdDTOFx;
+import org.ecsail.fx.MembershipIdDTOFx;
 import org.ecsail.enums.MembershipType;
 import org.ecsail.mvci_membership.MembershipMessage;
 import org.ecsail.mvci_membership.MembershipModel;

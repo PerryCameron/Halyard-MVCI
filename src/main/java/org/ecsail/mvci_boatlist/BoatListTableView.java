@@ -13,7 +13,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.Builder;
-import org.ecsail.dto.BoatListDTO;
+import org.ecsail.fx.BoatListDTO;
 import org.ecsail.widgetfx.TableColumnFx;
 import org.ecsail.widgetfx.TableViewFx;
 

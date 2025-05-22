@@ -1,6 +1,6 @@
 package org.ecsail.repository.interfaces;
 
-import org.ecsail.dto.MembershipIdDTOFx;
+import org.ecsail.fx.MembershipIdDTOFx;
 
 import java.util.List;
 

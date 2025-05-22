@@ -2,7 +2,7 @@ package org.ecsail.pojo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.ecsail.dto.EmailDTOFx;
+import org.ecsail.fx.EmailDTOFx;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Email {

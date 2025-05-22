@@ -2,7 +2,7 @@ package org.ecsail.static_tools;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.ecsail.dto.*;
+import org.ecsail.fx.*;
 import org.ecsail.pojo.*;
 
 import java.util.*;
@@ -11,14 +11,14 @@ import java.util.stream.Collectors;
 public class POJOtoFxConverter {
 
     /**
-     * Converts a list of {@link RosterDTO} objects to an {@link ObservableList} of {@link RosterFx}
+     * Converts a list of {@link Roster} objects to an {@link ObservableList} of {@link RosterFx}
      * objects, sorted by ID in ascending order. The resulting list is suitable for JavaFX TableView binding.
      *
-     * @param roster the list of {@link RosterDTO} objects to convert, typically deserialized from JSON
+     * @param roster the list of {@link Roster} objects to convert, typically deserialized from JSON
      * @return an {@link ObservableList} of {@link RosterFx} objects, sorted by ID, or an empty list if the input is null or empty
-     * @throws NullPointerException if any {@link RosterDTO} in the input list is null (filtered out internally)
+     * @throws NullPointerException if any {@link Roster} in the input list is null (filtered out internally)
      */
-    public static ObservableList<RosterFx> copyRoster(List<RosterDTO> roster) {
+    public static ObservableList<RosterFx> copyRoster(List<Roster> roster) {
         if (roster == null || roster.isEmpty()) {
             return FXCollections.observableArrayList();
         }
@@ -144,15 +144,15 @@ public class POJOtoFxConverter {
     }
 
     /**
-     * Converts a list of {@link BoatDTO} objects to an {@link ObservableList} of {@link BoatDTOFx}
+     * Converts a list of {@link Boat} objects to an {@link ObservableList} of {@link BoatDTOFx}
      * objects. The resulting list is suitable for JavaFX TableView binding and maintains the input order
      * without sorting.
      *
-     * @param boats the list of {@link BoatDTO} objects to convert, typically deserialized from JSON
+     * @param boats the list of {@link Boat} objects to convert, typically deserialized from JSON
      * @return an {@link ObservableList} of {@link BoatDTOFx} objects, or an empty list if the input is null or empty
-     * @throws NullPointerException if any {@link BoatDTO} in the input list is null (filtered out internally)
+     * @throws NullPointerException if any {@link Boat} in the input list is null (filtered out internally)
      */
-    public static ObservableList<BoatDTOFx> copyBoats(List<BoatDTO> boats) {
+    public static ObservableList<BoatDTOFx> copyBoats(List<Boat> boats) {
         if (boats == null || boats.isEmpty()) {
             return FXCollections.observableArrayList();
         }

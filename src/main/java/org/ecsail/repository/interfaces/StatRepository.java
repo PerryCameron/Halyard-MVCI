@@ -1,7 +1,7 @@
 package org.ecsail.repository.interfaces;
 
 
-import org.ecsail.dto.StatsDTO;
+import org.ecsail.fx.StatsDTO;
 
 import java.util.List;
 

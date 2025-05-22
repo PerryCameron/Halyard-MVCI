@@ -3,20 +3,14 @@ package org.ecsail.mvci_boatlist;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.ecsail.dto.BoatListDTO;
-import org.ecsail.dto.BoatListRadioDTO;
-import org.ecsail.dto.DbBoatSettingsDTO;
+import org.ecsail.fx.BoatListDTO;
 import org.ecsail.mvci_main.MainController;
-import org.ecsail.static_tools.HandlingTools;
 import org.ecsail.static_tools.StringTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class BoatListInteractor {

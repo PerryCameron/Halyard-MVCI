@@ -2,11 +2,9 @@ package org.ecsail.mvci_slip;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import javafx.application.Platform;
-import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.ecsail.dto.BoardPositionDTO;
-import org.ecsail.dto.SlipInfoDTO;
-import org.ecsail.dto.SlipStructureDTO;
+import org.ecsail.fx.SlipInfoDTO;
+import org.ecsail.fx.SlipStructureDTO;
 import org.ecsail.interfaces.ConfigFilePaths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

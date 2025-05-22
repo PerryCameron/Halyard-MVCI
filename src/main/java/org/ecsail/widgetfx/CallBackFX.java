@@ -4,7 +4,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
-import org.ecsail.dto.NotesDTOFx;
+import org.ecsail.fx.NotesDTOFx;
 
 import java.time.LocalDate;
 import java.util.function.Consumer;

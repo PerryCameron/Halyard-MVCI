@@ -2,7 +2,7 @@ package org.ecsail.mvci_boatlist;
 
 
 import javafx.scene.control.CheckBox;
-import org.ecsail.dto.DbBoatSettingsDTO;
+import org.ecsail.fx.DbBoatSettingsDTO;
 
 public class BoatListSettingsCheckBox extends CheckBox {
     private DbBoatSettingsDTO db;

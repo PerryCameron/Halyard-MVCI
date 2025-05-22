@@ -3,8 +3,8 @@ package org.ecsail.mvci_new_membership;
 
 import javafx.beans.property.*;
 import javafx.scene.layout.VBox;
-import org.ecsail.dto.MembershipListDTO;
-import org.ecsail.dto.PersonFx;
+import org.ecsail.fx.MembershipListDTO;
+import org.ecsail.fx.PersonFx;
 import org.ecsail.mvci_main.MainModel;
 
 public class NewMembershipModel {

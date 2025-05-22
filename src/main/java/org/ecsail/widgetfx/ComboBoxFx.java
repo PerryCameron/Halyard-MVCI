@@ -1,10 +1,7 @@
 package org.ecsail.widgetfx;
 
-import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
-import javafx.util.StringConverter;
-import org.ecsail.dto.LoginDTO;
 
 public class ComboBoxFx {
 

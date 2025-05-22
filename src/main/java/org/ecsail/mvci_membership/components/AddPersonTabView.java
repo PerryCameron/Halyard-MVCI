@@ -12,7 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Builder;
 import org.ecsail.custom.CustomDatePicker;
-import org.ecsail.dto.PersonFx;
+import org.ecsail.fx.PersonFx;
 import org.ecsail.enums.MemberType;
 import org.ecsail.mvci_membership.MembershipMessage;
 import org.ecsail.mvci_membership.MembershipModel;

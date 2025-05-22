@@ -1,8 +1,8 @@
 package org.ecsail.repository.interfaces;
 
-import org.ecsail.dto.OfficerFx;
-import org.ecsail.dto.OfficerWithNameDTO;
-import org.ecsail.dto.PersonFx;
+import org.ecsail.fx.OfficerFx;
+import org.ecsail.fx.OfficerWithNameDTO;
+import org.ecsail.fx.PersonFx;
 
 import java.util.List;
 

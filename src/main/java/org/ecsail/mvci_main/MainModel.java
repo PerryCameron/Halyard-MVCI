@@ -7,7 +7,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.scene.control.TabPane;
-import org.ecsail.dto.BoardPositionDTO;
+import org.ecsail.fx.BoardPositionDTO;
 import org.ecsail.interfaces.Status;
 import org.ecsail.static_tools.HttpClientUtil;
 

@@ -4,9 +4,9 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.TableView;
-import org.ecsail.dto.BoatListDTO;
-import org.ecsail.dto.BoatListRadioDTO;
-import org.ecsail.dto.DbBoatSettingsDTO;
+import org.ecsail.fx.BoatListDTO;
+import org.ecsail.fx.BoatListRadioDTO;
+import org.ecsail.fx.DbBoatSettingsDTO;
 import org.ecsail.mvci_main.MainModel;
 
 import java.util.ArrayList;

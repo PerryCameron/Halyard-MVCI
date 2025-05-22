@@ -3,7 +3,7 @@ package org.ecsail.enums;
 
 
 import javafx.collections.ObservableList;
-import org.ecsail.dto.BoardPositionDTO;
+import org.ecsail.fx.BoardPositionDTO;
 
 import java.util.ArrayList;
 

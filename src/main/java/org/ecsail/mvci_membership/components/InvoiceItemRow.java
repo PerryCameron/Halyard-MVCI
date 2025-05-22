@@ -7,10 +7,10 @@ import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import org.ecsail.dto.DbInvoiceDTO;
-import org.ecsail.dto.FeeDTO;
-import org.ecsail.dto.InvoiceDTOFx;
-import org.ecsail.dto.InvoiceItemDTO;
+import org.ecsail.fx.DbInvoiceDTO;
+import org.ecsail.fx.FeeDTO;
+import org.ecsail.fx.InvoiceDTOFx;
+import org.ecsail.fx.InvoiceItemDTO;
 import org.ecsail.static_tools.StringTools;
 import org.ecsail.widgetfx.VBoxFx;
 

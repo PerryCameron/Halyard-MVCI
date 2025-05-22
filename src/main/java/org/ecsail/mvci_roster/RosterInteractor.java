@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import org.ecsail.dto.*;
+import org.ecsail.fx.*;
 import org.ecsail.mvci_roster.export.Xls_roster;
 import org.ecsail.static_tools.POJOtoFxConverter;
 import org.ecsail.static_tools.StringTools;
@@ -118,7 +118,7 @@ public RosterInteractor(RosterModel rm) {
         // Fetch data using the constructed endpoint
         String jsonResponse = rosterModel.getHttpClient().fetchDataFromGybe(endpoint.toString());
 //        logger.debug("Roster response: {}", jsonResponse);
-        List<RosterDTO> roster = rosterModel.getHttpClient().getObjectMapper().readValue(
+        List<Roster> roster = rosterModel.getHttpClient().getObjectMapper().readValue(
                 jsonResponse,
                 new TypeReference<>() {
                 }

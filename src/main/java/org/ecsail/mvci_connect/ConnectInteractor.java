@@ -3,7 +3,7 @@ package org.ecsail.mvci_connect;
 import com.fasterxml.jackson.core.type.TypeReference;
 import javafx.stage.Stage;
 import okhttp3.Response;
-import org.ecsail.dto.LoginDTO;
+import org.ecsail.pojo.Login;
 import org.ecsail.fileio.FileIO;
 import org.ecsail.interfaces.ConfigFilePaths;
 import org.ecsail.widgetfx.DialogueFx;
@@ -28,19 +28,19 @@ public class ConnectInteractor implements ConfigFilePaths {
 
     // supplies saved logins from users local hard drive
     public void supplyLogins() {
-        List<LoginDTO> loginDTOS = new ArrayList<>();
+        List<Login> loginDTOS = new ArrayList<>();
 
         if (FileIO.hostFileExists(LOGIN_FILE)) {
             openLoginObjects(loginDTOS);
             logger.info("Added {} logins", loginDTOS.size());
         } else {
             logger.info("login file does not exist.");
-            loginDTOS.add(new LoginDTO(1, 8080, "localhost", "user", "password", true)); // Default for first-time use
+            loginDTOS.add(new Login(1, 8080, "localhost", "user", "password", true)); // Default for first-time use
         }
         connectModel.getLoginDTOS().addAll(loginDTOS);
         copyDefaultToCurrentLogin();
         updateComboBox();
-
+        printLoginObjects();
         // Set the server URL for HttpClientUtil
         connectModel.updateServerUrl();
     }
@@ -138,7 +138,7 @@ public class ConnectInteractor implements ConfigFilePaths {
             connectModel.currentLoginProperty().copyLogin(connectModel.getLoginDTOS().getFirst());
         } else {
             connectModel.getLoginDTOS().stream()
-                    .filter(LoginDTO::isDefault)
+                    .filter(Login::isDefault)
                     .findFirst()
                     .ifPresentOrElse(
                             defaultLogin -> connectModel.currentLoginProperty().copyLogin(defaultLogin),
@@ -150,7 +150,7 @@ public class ConnectInteractor implements ConfigFilePaths {
     // copies current loginDTO(bound to textFields) , to the correct loginDTO in the list
     public void copyCurrentLoginToMatchingLoginInList() {
         if (!connectModel.getLoginDTOS().isEmpty()) {
-            Optional<LoginDTO> matchingLoginDTO = connectModel.getLoginDTOS().stream()
+            Optional<Login> matchingLoginDTO = connectModel.getLoginDTOS().stream()
                     .filter(loginDTO -> loginDTO.getId() == connectModel.currentLoginProperty().getId()).findFirst();
             if(matchingLoginDTO.isPresent()) {
                 matchingLoginDTO.get().copyLoginDTOProperty(connectModel.currentLoginProperty());
@@ -166,7 +166,7 @@ public class ConnectInteractor implements ConfigFilePaths {
         connectModel.getLoginDTOS().forEach(loginDTO -> loginDTO.setDefault(false));
 
         // Find the selected login
-        Optional<LoginDTO> selectedLogin = connectModel.getLoginDTOS().stream()
+        Optional<Login> selectedLogin = connectModel.getLoginDTOS().stream()
                 .filter(loginDTO -> loginDTO.getHost().equals(connectModel.getComboBox().getValue()))
                 .findFirst();
 
@@ -184,13 +184,13 @@ public class ConnectInteractor implements ConfigFilePaths {
     protected void createNewLogin() {
         connectModel.getComboBox().getItems().add("");
         int index = findNextIndex();
-        connectModel.getLoginDTOS().add(new LoginDTO(index,8080,"","","",false));
+        connectModel.getLoginDTOS().add(new Login(index,8080,"","","",false));
         connectModel.currentLoginProperty().setAsNew(index);
         updateComboBox();
     }
 
     public void deleteLogin() {
-        Optional<LoginDTO> loginDTO = connectModel.getLoginDTOS().stream().filter(login -> login.getId() == connectModel.currentLoginProperty()
+        Optional<Login> loginDTO = connectModel.getLoginDTOS().stream().filter(login -> login.getId() == connectModel.currentLoginProperty()
                 .getId()).findFirst();
         if(loginDTO.isPresent()) {
             connectModel.getLoginDTOS().remove(loginDTO.get());
@@ -229,7 +229,7 @@ public class ConnectInteractor implements ConfigFilePaths {
         connectModel.getComboValues().clear();
 
         // Populate comboValues with host names
-        for (LoginDTO loginDTO : connectModel.getLoginDTOS()) {
+        for (Login loginDTO : connectModel.getLoginDTOS()) {
             connectModel.getComboValues().add(loginDTO.getHost());
         }
 
@@ -241,7 +241,7 @@ public class ConnectInteractor implements ConfigFilePaths {
     }
 
     // using the object passed in
-    public static void openLoginObjects(List<LoginDTO> logins) {
+    public static void openLoginObjects(List<Login> logins) {
         File g = new File(LOGIN_FILE);
         if (!g.exists() || g.length() == 0) {
             logger.warn("Login file does not exist or is empty: {}", LOGIN_FILE);
@@ -253,7 +253,7 @@ public class ConnectInteractor implements ConfigFilePaths {
                 ArrayList<?> ar = (ArrayList<?>) obj;
                 logins.clear();
                 for (Object x : ar)
-                    logins.add((LoginDTO) x);
+                    logins.add((Login) x);
                 in.close();
             } catch (Exception e) {
                 logger.error("Error occurred during reading of {}", LOGIN_FILE, e);
@@ -264,7 +264,7 @@ public class ConnectInteractor implements ConfigFilePaths {
     public void saveLoginObjects() {  // saves user file to disk
         copyCurrentLoginToMatchingLoginInList();
         File g = new File(LOGIN_FILE);
-        ArrayList<LoginDTO> unwrappedList = new ArrayList<>(connectModel.getLoginDTOS());
+        ArrayList<Login> unwrappedList = new ArrayList<>(connectModel.getLoginDTOS());
         try	{
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(g));
             out.writeObject(unwrappedList);
@@ -276,19 +276,21 @@ public class ConnectInteractor implements ConfigFilePaths {
         logger.info("{} saved", LOGIN_FILE);
     }
 
-//    public void printLoginObjects() {
-//        System.out.println("---Printing login objects");
-//        connectModel.getLoginDTOS().forEach(loginDTO -> {
-//            System.out.println(loginDTO);
-//        });
-//        System.out.println("---Printing current object");
-//        System.out.println(connectModel.currentLoginProperty().get());
-//        System.out.println("");
-//    }
+    public void printLoginObjects() {
+        System.out.println("---Printing login objects");
+        connectModel.getLoginDTOS().forEach(loginDTO -> {
+            System.out.println(loginDTO);
+        });
+        System.out.println("---Printing current object");
+        System.out.println(connectModel.currentLoginProperty().userProperty().getValue());
+        System.out.println(connectModel.currentLoginProperty().hostProperty().getValue());
+        System.out.println(connectModel.currentLoginProperty().passwdProperty().getValue());
+        System.out.println("");
+    }
 
     private int findNextIndex() {
         return connectModel.getLoginDTOS().stream()
-                .mapToInt(LoginDTO::getId)
+                .mapToInt(Login::getId)
                 .max()
                 .orElse(0) + 1;
     }

@@ -2,7 +2,7 @@ package org.ecsail.mvci_boat;
 
 import javafx.concurrent.Task;
 import javafx.scene.layout.Region;
-import org.ecsail.dto.BoatListDTO;
+import org.ecsail.fx.BoatListDTO;
 import org.ecsail.interfaces.Controller;
 import org.ecsail.mvci_main.MainController;
 

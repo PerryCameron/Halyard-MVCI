@@ -1,7 +1,6 @@
 package org.ecsail.static_tools;
 
-import org.ecsail.dto.LabelDTO;
-import org.ecsail.mvci_membership.MembershipView;
+import org.ecsail.fx.LabelDTO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

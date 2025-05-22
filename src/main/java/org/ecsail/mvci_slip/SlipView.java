@@ -11,8 +11,8 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.util.Builder;
-import org.ecsail.dto.SlipInfoDTO;
-import org.ecsail.dto.SlipStructureDTO;
+import org.ecsail.fx.SlipInfoDTO;
+import org.ecsail.fx.SlipStructureDTO;
 import org.ecsail.widgetfx.VBoxFx;
 
 import java.util.ArrayList;

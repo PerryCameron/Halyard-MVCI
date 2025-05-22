@@ -1,8 +1,8 @@
 package org.ecsail.repository.interfaces;
 
-import org.ecsail.dto.SlipDTOFx;
-import org.ecsail.dto.SlipInfoDTO;
-import org.ecsail.dto.SlipStructureDTO;
+import org.ecsail.fx.SlipDTOFx;
+import org.ecsail.fx.SlipInfoDTO;
+import org.ecsail.fx.SlipStructureDTO;
 
 import java.util.List;
 

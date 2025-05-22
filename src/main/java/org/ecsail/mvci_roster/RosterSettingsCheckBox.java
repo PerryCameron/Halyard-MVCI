@@ -1,7 +1,7 @@
 package org.ecsail.mvci_roster;
 
 import javafx.scene.control.CheckBox;
-import org.ecsail.dto.DbRosterSettingsDTO;
+import org.ecsail.fx.DbRosterSettingsDTO;
 
 public class RosterSettingsCheckBox extends CheckBox {
     private DbRosterSettingsDTO dbRosterSettingsDTO;

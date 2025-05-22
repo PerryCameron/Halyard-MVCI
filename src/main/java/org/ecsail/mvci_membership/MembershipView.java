@@ -11,7 +11,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.util.Builder;
-import org.ecsail.dto.PersonFx;
+import org.ecsail.fx.PersonFx;
 import org.ecsail.enums.MemberType;
 import org.ecsail.mvci_membership.components.*;
 import org.ecsail.widgetfx.*;

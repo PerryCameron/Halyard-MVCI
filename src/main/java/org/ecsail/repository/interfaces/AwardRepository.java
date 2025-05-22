@@ -1,7 +1,7 @@
 package org.ecsail.repository.interfaces;
 
-import org.ecsail.dto.AwardDTOFx;
-import org.ecsail.dto.PersonFx;
+import org.ecsail.fx.AwardDTOFx;
+import org.ecsail.fx.PersonFx;
 
 import java.util.List;
 

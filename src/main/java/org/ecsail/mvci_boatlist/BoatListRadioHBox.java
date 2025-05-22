@@ -2,7 +2,7 @@ package org.ecsail.mvci_boatlist;
 
 import javafx.scene.control.RadioButton;
 import javafx.scene.layout.HBox;
-import org.ecsail.dto.BoatListRadioDTO;
+import org.ecsail.fx.BoatListRadioDTO;
 
 public class BoatListRadioHBox extends HBox {
     private BoatListRadioDTO boatListRadioDTO;

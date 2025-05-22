@@ -1,6 +1,6 @@
 package org.ecsail.mvci_deposit;
 
-import org.ecsail.dto.MembershipListDTO;
+import org.ecsail.fx.MembershipListDTO;
 import org.ecsail.interfaces.ConfigFilePaths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

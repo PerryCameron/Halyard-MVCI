@@ -10,8 +10,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import org.ecsail.dto.InvoiceDTOFx;
-import org.ecsail.dto.InvoiceItemDTO;
+import org.ecsail.fx.InvoiceDTOFx;
+import org.ecsail.fx.InvoiceItemDTO;
 
 public class HBoxFx {
 
