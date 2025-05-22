@@ -32,7 +32,7 @@ public class MembershipModel {
     private final SimpleObjectProperty<RosterFx> membershipFromRosterList = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<MembershipFx> membership = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TableView<BoatDTOFx>> boatTableView = new SimpleObjectProperty<>();
-    private final SimpleObjectProperty<TableView<NotesDTOFx>> notesTableView = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<TableView<NotesFx>> notesTableView = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TableView<MembershipIdDTOFx>> idTableView = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TableView<InvoiceDTOFx>> invoiceListTableView = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TabPane> peopleTabPane = new SimpleObjectProperty<>();
@@ -45,7 +45,7 @@ public class MembershipModel {
     private final StringProperty membershipId = new SimpleStringProperty("");
     private final HttpClientUtil httpClient;
     private ObservableMap<String,Control> slipControls = FXCollections.observableHashMap();
-    private final SimpleObjectProperty<NotesDTOFx> selectedNote = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<NotesFx> selectedNote = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<AwardDTOFx> selectedAward = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<BoatDTOFx> selectedBoat = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<EmailDTOFx> selectedEmail = new SimpleObjectProperty<>();
@@ -226,15 +226,15 @@ public class MembershipModel {
         this.selectedAward.set(selectedAward);
     }
 
-    public NotesDTOFx getSelectedNote() {
+    public NotesFx getSelectedNote() {
         return selectedNote.get();
     }
 
-    public SimpleObjectProperty<NotesDTOFx> selectedNoteProperty() {
+    public SimpleObjectProperty<NotesFx> selectedNoteProperty() {
         return selectedNote;
     }
 
-    public void setSelectedNote(NotesDTOFx selectedNote) {
+    public void setSelectedNote(NotesFx selectedNote) {
         this.selectedNote.set(selectedNote);
     }
 
@@ -250,15 +250,15 @@ public class MembershipModel {
         this.idTableView.set(idTableView);
     }
 
-    public TableView<NotesDTOFx> getNotesTableView() {
+    public TableView<NotesFx> getNotesTableView() {
         return notesTableView.get();
     }
 
-    public SimpleObjectProperty<TableView<NotesDTOFx>> notesTableViewProperty() {
+    public SimpleObjectProperty<TableView<NotesFx>> notesTableViewProperty() {
         return notesTableView;
     }
 
-    public void setNotesTableView(TableView<NotesDTOFx> notesTableView) {
+    public void setNotesTableView(TableView<NotesFx> notesTableView) {
         this.notesTableView.set(notesTableView);
     }
 
@@ -466,4 +466,6 @@ public class MembershipModel {
     public MainModel getMainModel() {
         return mainModel;
     }
+
+
 }

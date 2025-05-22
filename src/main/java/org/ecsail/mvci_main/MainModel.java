@@ -28,6 +28,7 @@ public class MainModel {
     private final BooleanProperty lightTxFail = new SimpleBooleanProperty(false);
     private final BooleanProperty lightRxSuccess = new SimpleBooleanProperty(false);
     private final BooleanProperty lightRxFail = new SimpleBooleanProperty(false);
+    private final SimpleIntegerProperty deleteMembership = new SimpleIntegerProperty(0);
     private HalyardUser halyardUser = new HalyardUser();
     private Integer msId;
 
@@ -145,5 +146,9 @@ public class MainModel {
 
     public BooleanProperty lightRxFailProperty() {
         return lightRxFail;
+    }
+
+    public SimpleIntegerProperty deleteMembershipProperty() {
+        return deleteMembership;
     }
 }

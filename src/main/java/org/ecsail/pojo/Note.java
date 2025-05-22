@@ -2,7 +2,7 @@ package org.ecsail.pojo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.ecsail.fx.NotesDTOFx;
+import org.ecsail.fx.NotesFx;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Note {
@@ -30,7 +30,7 @@ public class Note {
     public Note() {
     }
 
-    public Note(NotesDTOFx notesDTOFx) {
+    public Note(NotesFx notesDTOFx) {
         this.memoId = notesDTOFx.getMemoId();
         this.msId = notesDTOFx.getMsId();
         this.memoDate = notesDTOFx.getMemoDate().toString();

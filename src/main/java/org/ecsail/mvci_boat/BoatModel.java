@@ -19,27 +19,27 @@ public class BoatModel {
     private final BooleanProperty dataLoaded = new SimpleBooleanProperty(false);
     private ArrayList<BoatPhotosDTO> images = new ArrayList<BoatPhotosDTO>();
     protected SimpleObjectProperty<BoatPhotosDTO> selectedImage = new SimpleObjectProperty<>();
-    protected SimpleObjectProperty<NotesDTOFx> selectedNote = new SimpleObjectProperty<>();
+    protected SimpleObjectProperty<NotesFx> selectedNote = new SimpleObjectProperty<>();
     protected SimpleObjectProperty<ImageView> imageView = new SimpleObjectProperty<>();
     private SimpleObjectProperty<TableView<MembershipListDTO>> boatOwnerTableView = new SimpleObjectProperty<>();
-    private SimpleObjectProperty<TableView<NotesDTOFx>> notesTableView = new SimpleObjectProperty<>();
+    private SimpleObjectProperty<TableView<NotesFx>> notesTableView = new SimpleObjectProperty<>();
 
-    private ObservableList<NotesDTOFx> notesDTOS = FXCollections.observableArrayList();
+    private ObservableList<NotesFx> notesDTOS = FXCollections.observableArrayList();
     protected SimpleObjectProperty<MembershipListDTO> selectedOwner = new SimpleObjectProperty<>();
     private BooleanProperty confirmed = new SimpleBooleanProperty(false);
     private IntegerProperty membershipId = new SimpleIntegerProperty();
     private StringProperty selectedPath = new SimpleStringProperty();
 
 
-    public TableView<NotesDTOFx> getNotesTableView() {
+    public TableView<NotesFx> getNotesTableView() {
         return notesTableView.get();
     }
 
-    public SimpleObjectProperty<TableView<NotesDTOFx>> notesTableViewProperty() {
+    public SimpleObjectProperty<TableView<NotesFx>> notesTableViewProperty() {
         return notesTableView;
     }
 
-    public void setNotesTableView(TableView<NotesDTOFx> notesTableView) {
+    public void setNotesTableView(TableView<NotesFx> notesTableView) {
         this.notesTableView.set(notesTableView);
     }
 
@@ -103,15 +103,15 @@ public class BoatModel {
         this.selectedOwner.set(selectedOwner);
     }
 
-    public NotesDTOFx getSelectedNote() {
+    public NotesFx getSelectedNote() {
         return selectedNote.get();
     }
 
-    public SimpleObjectProperty<NotesDTOFx> selectedNoteProperty() {
+    public SimpleObjectProperty<NotesFx> selectedNoteProperty() {
         return selectedNote;
     }
 
-    public void setSelectedNote(NotesDTOFx selectedNote) {
+    public void setSelectedNote(NotesFx selectedNote) {
         this.selectedNote.set(selectedNote);
     }
 
@@ -139,11 +139,11 @@ public class BoatModel {
         this.selectedImage.set(selectedImage);
     }
 
-    public ObservableList<NotesDTOFx> getNotesDTOS() {
+    public ObservableList<NotesFx> getNotesDTOS() {
         return notesDTOS;
     }
 
-    public void setNotesDTOS(ObservableList<NotesDTOFx> notesDTOS) {
+    public void setNotesDTOS(ObservableList<NotesFx> notesDTOS) {
         this.notesDTOS = notesDTOS;
     }
 

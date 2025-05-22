@@ -1,6 +1,7 @@
 package org.ecsail.mvci_membership;
 
 import javafx.concurrent.Task;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.Region;
 import org.ecsail.fx.RosterFx;
 import org.ecsail.interfaces.Controller;
@@ -129,9 +130,9 @@ public class MembershipController extends Controller<MembershipMessage> {
     private void runSpinner(MembershipMessage type, double x, double y) {
         mainController.setSpinnerOffset(x, y);
         mainController.showLoadingSpinner(true);
-        Task<Void> task = new Task<>() {
+        Task<MembershipMessage> task = new Task<>() {
             @Override
-            protected Void call() {
+            protected MembershipMessage call() {
                 switch (type) {
 //                    case SELECT_INVOICES -> db.selectInvoices(); <- this has more pieces not in use
 //                    case SELECT_IDS -> db.selectIds(); <- this has more pieces not in use
@@ -141,12 +142,21 @@ public class MembershipController extends Controller<MembershipMessage> {
 //                    case UPDATE_INVOICE_ONLY -> db.updateInvoiceOnly();
 //                    case SAVE_INVOICE -> db.saveInvoice();
 //                    case INSERT_INVOICE -> db.insertInvoice();
-                    case DELETE_MEMBERSHIP -> membershipInteractor.deleteMembership();
+                    case DELETE_MEMBERSHIP -> { return membershipInteractor.deleteMembership(); }
                 }
                 return null;
             }
         };
-        task.setOnSucceeded(e -> mainController.showLoadingSpinner(false));
+        task.setOnSucceeded(e -> {
+            mainController.showLoadingSpinner(false);
+            switch (task.getValue()) {
+                case DELETE_MEMBERSHIP -> {
+//                    membershipInteractor.removeMembershipFromList(mainController.getRosterController().getRosterTableView());
+                    mainController.closeTabByMsId(membershipInteractor.getMsId());
+                }
+                default -> {}
+            }
+        });
         new Thread(task).start();
     }
 
@@ -164,6 +174,9 @@ public class MembershipController extends Controller<MembershipMessage> {
         task.setOnSucceeded(e -> {
             mainController.showLoadingSpinner(false);
             membershipInteractor.setDataLoaded();
+        });
+        task.setOnFailed(e -> {
+            mainController.showLoadingSpinner(false);
         });
         new Thread(task).start();
     }

@@ -4,7 +4,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.util.Builder;
-import org.ecsail.fx.NotesDTOFx;
+import org.ecsail.fx.NotesFx;
 import org.ecsail.widgetfx.CallBackFX;
 import org.ecsail.widgetfx.ListenerFx;
 import org.ecsail.widgetfx.TableColumnFx;
@@ -13,7 +13,7 @@ import org.ecsail.widgetfx.TableViewFx;
 import java.time.LocalDate;
 import java.util.Arrays;
 
-public class BoatNotesTableView implements Builder<TableView<NotesDTOFx>> {
+public class BoatNotesTableView implements Builder<TableView<NotesFx>> {
     private final BoatModel boatModel;
     private final BoatView boatView;
     public BoatNotesTableView(BoatView bv) {
@@ -22,14 +22,14 @@ public class BoatNotesTableView implements Builder<TableView<NotesDTOFx>> {
     }
 
     @Override
-    public TableView<NotesDTOFx> build() {
-        TableView<NotesDTOFx> tableView = TableViewFx.tableViewOf(NotesDTOFx.class);
+    public TableView<NotesFx> build() {
+        TableView<NotesFx> tableView = TableViewFx.tableViewOf(NotesFx.class);
         boatModel.setNotesTableView(tableView);
         ChangeListener<Boolean> dataLoadedListener =
                 ListenerFx.addSingleFireBooleanListener(boatModel.dataLoadedProperty(),
                         () -> tableView.setItems(boatModel.getNotesDTOS()));
         boatModel.dataLoadedProperty().addListener(dataLoadedListener);
-        TableView.TableViewSelectionModel<NotesDTOFx> selectionModel = tableView.getSelectionModel();
+        TableView.TableViewSelectionModel<NotesFx> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) boatModel.setSelectedNote(newSelection);
         });
@@ -38,8 +38,8 @@ public class BoatNotesTableView implements Builder<TableView<NotesDTOFx>> {
         return tableView;
     }
 
-    private TableColumn<NotesDTOFx, LocalDate> createColumn1() {
-        TableColumn<NotesDTOFx, LocalDate> col = new TableColumn<>("Date");
+    private TableColumn<NotesFx, LocalDate> createColumn1() {
+        TableColumn<NotesFx, LocalDate> col = new TableColumn<>("Date");
         col.setCellValueFactory(cellData -> cellData.getValue().memoDateProperty());
         col.setCellFactory(CallBackFX.createDatePickerCellFactory(notesDTO -> {
             boatModel.setSelectedNote(notesDTO);
@@ -49,11 +49,11 @@ public class BoatNotesTableView implements Builder<TableView<NotesDTOFx>> {
         return col;
     }
 
-    private TableColumn<NotesDTOFx,String> createColumn2() {
-        TableColumn<NotesDTOFx, String> col = TableColumnFx.editableStringTableColumn(NotesDTOFx::memoProperty, "Note");
+    private TableColumn<NotesFx,String> createColumn2() {
+        TableColumn<NotesFx, String> col = TableColumnFx.editableStringTableColumn(NotesFx::memoProperty, "Note");
         col.setOnEditCommit(
                 t -> {
-                    NotesDTOFx note = t.getTableView().getItems().get(t.getTablePosition().getRow());
+                    NotesFx note = t.getTableView().getItems().get(t.getTablePosition().getRow());
                     note.setMemo(t.getNewValue());
                     boatModel.setSelectedNote(note);
                     boatView.sendMessage().accept(BoatMessage.UPDATE_NOTE);

@@ -149,4 +149,8 @@ public class MainInteractor implements ConfigFilePaths {
             }
         });
     }
+
+    public void closeTabByMsId(int msId) {
+        mainModel.deleteMembershipProperty().set(msId);
+    }
 }

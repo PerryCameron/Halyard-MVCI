@@ -60,6 +60,7 @@ public class MainView implements Builder<Region> {
         BaseApplication.primaryStage.setTitle("Halyard");
         setViewListener();
         setCommunicationErrorListener();
+        setMembershipDeleteListener();
         return borderPane;
     }
 
@@ -81,6 +82,14 @@ public class MainView implements Builder<Region> {
                     });
 
                 });
+            }
+        });
+    }
+
+    private void setMembershipDeleteListener() {
+        mainModel.deleteMembershipProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                closeTabByMsId((Integer) newValue);
             }
         });
     }
@@ -298,6 +307,17 @@ public class MainView implements Builder<Region> {
             newTab.setUserData(msId);
             mainModel.getMainTabPane().getTabs().add(newTab);
             mainModel.getMainTabPane().getSelectionModel().select(newTab);
+        }
+    }
+
+    public void closeTabByMsId(int msId) {
+        TabPane tabPane = mainModel.getMainTabPane();
+        for (Tab tab : tabPane.getTabs()) {
+            Object userData = tab.getUserData();
+            if (userData instanceof Integer && ((Integer) userData).intValue() == msId) {
+                tabPane.getTabs().remove(tab);
+                break;
+            }
         }
     }
 

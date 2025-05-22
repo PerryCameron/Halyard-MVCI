@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.TableView;
 import org.ecsail.fx.*;
 import org.ecsail.mvci_roster.export.Xls_roster;
 import org.ecsail.static_tools.POJOtoFxConverter;
@@ -199,12 +200,16 @@ public RosterInteractor(RosterModel rm) {
         rosterModel.numberOfRecordsProperty().set(String.valueOf(size));
     }
 
-    public void search() {
-    logger.info("making search");
-        logger.info("Search made: {}", rosterModel.getTextFieldString());
-    }
+//    public void search() {
+//    logger.info("making search");
+//        logger.info("Search made: {}", rosterModel.getTextFieldString());
+//    }
 
     public int getSelectedYear() {
         return rosterModel.getSelectedYear();
+    }
+
+    public TableView<RosterFx> getRosterTableView() {
+        return rosterModel.getRosterTableView();
     }
 }

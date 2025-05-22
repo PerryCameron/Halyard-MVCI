@@ -38,6 +38,7 @@ public class MainController extends Controller<MainMessage> implements Status {
     private final MainView mainView;
     private ConnectController connectController;
     private LoadingController loadingController;
+    private RosterController rosterController;
     private static final Logger logger = LoggerFactory.getLogger(MainController.class);
 
 
@@ -121,6 +122,10 @@ public class MainController extends Controller<MainMessage> implements Status {
         mainView.addNewTab("Boat " + b.getBoatId(), new BoatController(this, b).getView(), b.getBoatId());
     }
 
+    public void closeMembershipMVCI(RosterFx rosterDTOFx, int selectedYear) {
+
+    }
+
     public void openTab(String tabName) {
         switch (tabName) {
             case "People" -> System.out.println("Displaying people list");
@@ -164,12 +169,17 @@ public class MainController extends Controller<MainMessage> implements Status {
 
     private void openRosterTab(String tabName) {
         if (mainInteractor.tabIsNotOpen(-2))
-            mainView.addNewTab(tabName, new RosterController(this).getView(), -2);
+            this.rosterController = new RosterController(this);
+            mainView.addNewTab(tabName, rosterController.getView(), -2);
     }
 
     public void openWelcomeMVCI() {
         mainView.closeTabs();
         mainView.addNewTab("Welcome", new WelcomeController(this).getView(), -1);
+    }
+
+    public void closeTabByMsId(int msId) {
+        mainInteractor.closeTabByMsId(msId);
     }
 
     public void showLoadingSpinner(boolean isVisible) {
@@ -213,5 +223,13 @@ public class MainController extends Controller<MainMessage> implements Status {
     public void showLoginDialog() {
 //        connectController.getView();
         logger.warn("logged out");
+    }
+
+    public ConnectController getConnectController() {
+        return connectController;
+    }
+
+    public RosterController getRosterController() {
+        return rosterController;
     }
 }

@@ -2,6 +2,8 @@ package org.ecsail.pojo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.ecsail.fx.MembershipFx;
+
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -67,6 +69,23 @@ public class Membership {
     private List<Note> memos;
 
     public Membership() {
+    }
+
+    public Membership(MembershipFx membershipFx) {
+        this.mid = membershipFx.getMid();
+        this.fiscalYear = membershipFx.getFiscalYear();
+        this.msId = membershipFx.getMsId();
+        this.membershipId = membershipFx.getMembershipId();
+        this.renew = membershipFx.isRenew() ? 1 : 0;
+        this.memType = membershipFx.getMemType();
+        this.selected = membershipFx.isSelected() ? 1 : 0;
+        this.lateRenew = membershipFx.isLateRenew() ? 1 : 0;
+        this.pId = membershipFx.getpId();
+        this.joinDate = membershipFx.getJoinDate();
+        this.address = membershipFx.getAddress();
+        this.city = membershipFx.getCity();
+        this.state = membershipFx.getState();
+        this.zip = membershipFx.getZip();
     }
 
     public int getMid() {

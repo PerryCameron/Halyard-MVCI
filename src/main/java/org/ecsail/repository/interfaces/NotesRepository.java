@@ -4,19 +4,19 @@ package org.ecsail.repository.interfaces;
 
 import org.ecsail.fx.InvoiceWithMemberInfoDTO;
 import org.ecsail.fx.Memo2DTOFx;
-import org.ecsail.fx.NotesDTOFx;
+import org.ecsail.fx.NotesFx;
 
 import java.util.List;
 
 public interface NotesRepository {
 
-    List<NotesDTOFx> getMemosByMsId(int ms_id);
-    List<NotesDTOFx> getMemosByBoatId(int boat_id);
-    NotesDTOFx getMemoByInvoiceIdAndCategory(InvoiceWithMemberInfoDTO invoice, String category);
+    List<NotesFx> getMemosByMsId(int ms_id);
+    List<NotesFx> getMemosByBoatId(int boat_id);
+    NotesFx getMemoByInvoiceIdAndCategory(InvoiceWithMemberInfoDTO invoice, String category);
     List<Memo2DTOFx> getAllMemosForTabNotes(String year, String category);
-    int insertNote(NotesDTOFx notesDTO);
-    int update(NotesDTOFx notesDTO);
-    int delete(NotesDTOFx notesDTO);
+    int insertNote(NotesFx notesDTO);
+    int update(NotesFx notesDTO);
+    int delete(NotesFx notesDTO);
 
     int deleteNotes(int msId);
 }

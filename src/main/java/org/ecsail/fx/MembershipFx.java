@@ -27,7 +27,7 @@ public class MembershipFx {
     private List<BoatDTOFx> boats = FXCollections.observableArrayList();
     private List<InvoiceDTOFx> invoices = FXCollections.observableArrayList();
     private List<MembershipIdDTOFx> membershipIds = FXCollections.observableArrayList();
-    private List<NotesDTOFx> memos = FXCollections.observableArrayList();
+    private List<NotesFx> memos = FXCollections.observableArrayList();
 
     public MembershipFx(Integer mid, Integer fiscalYear, Integer msId, Integer membershipId,
                         Boolean  renew, String memType, Boolean  selected, Boolean lateRenew,
@@ -175,7 +175,7 @@ public class MembershipFx {
         return membershipIds;
     }
 
-    public List<NotesDTOFx> getMemos() {
+    public List<NotesFx> getMemos() {
         return memos;
     }
 
@@ -195,7 +195,95 @@ public class MembershipFx {
         this.membershipIds = membershipIds;
     }
 
-    public void setMemos(List<NotesDTOFx> memos) {
+    public void setMemos(List<NotesFx> memos) {
         this.memos = memos;
+    }
+
+    public void setMid(int mid) {
+        this.mid.set(mid);
+    }
+
+    public void setFiscalYear(int fiscalYear) {
+        this.fiscalYear.set(fiscalYear);
+    }
+
+    public void setMsId(int msId) {
+        this.msId.set(msId);
+    }
+
+    public void setMembershipId(int membershipId) {
+        this.membershipId.set(membershipId);
+    }
+
+    public boolean isRenew() {
+        return renew.get();
+    }
+
+    public SimpleBooleanProperty renewProperty() {
+        return renew;
+    }
+
+    public void setRenew(boolean renew) {
+        this.renew.set(renew);
+    }
+
+    public void setMemType(String memType) {
+        this.memType.set(memType);
+    }
+
+    public boolean isSelected() {
+        return selected.get();
+    }
+
+    public SimpleBooleanProperty selectedProperty() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected.set(selected);
+    }
+
+    public boolean isLateRenew() {
+        return lateRenew.get();
+    }
+
+    public SimpleBooleanProperty lateRenewProperty() {
+        return lateRenew;
+    }
+
+    public void setLateRenew(boolean lateRenew) {
+        this.lateRenew.set(lateRenew);
+    }
+
+    public void setpId(int pId) {
+        this.pId.set(pId);
+    }
+
+    public void setJoinDate(String joinDate) {
+        this.joinDate.set(joinDate);
+    }
+
+    public void setAddress(String address) {
+        this.address.set(address);
+    }
+
+    public void setCity(String city) {
+        this.city.set(city);
+    }
+
+    public void setState(String state) {
+        this.state.set(state);
+    }
+
+    public void setZip(String zip) {
+        this.zip.set(zip);
+    }
+
+    public SlipDTOFx getSlip() {
+        return slip.get();
+    }
+
+    public void setSlip(SlipDTOFx slip) {
+        this.slip.set(slip);
     }
 }

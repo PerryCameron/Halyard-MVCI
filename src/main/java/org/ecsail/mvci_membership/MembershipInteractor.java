@@ -2,9 +2,8 @@ package org.ecsail.mvci_membership;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import javafx.application.Platform;
-import org.ecsail.fx.BoatDTOFx;
-import org.ecsail.fx.MembershipFx;
-import org.ecsail.fx.SlipDTOFx;
+import javafx.scene.control.TableView;
+import org.ecsail.fx.*;
 import org.ecsail.interfaces.SlipUser;
 import org.ecsail.pdf.PDF_Envelope;
 import org.ecsail.pojo.*;
@@ -23,6 +22,7 @@ import java.nio.charset.StandardCharsets;
 public class MembershipInteractor implements SlipUser {
     private final MembershipModel membershipModel;
     private static final Logger logger = LoggerFactory.getLogger(MembershipInteractor.class);
+
     public MembershipInteractor(MembershipModel membershipModel) {
         this.membershipModel = membershipModel;
     }
@@ -57,45 +57,6 @@ public class MembershipInteractor implements SlipUser {
         }
     }
 
-    public void deleteMembership() {
-        logger.info("Deleting Membership MSID: " + membershipModel.membershipProperty().get().msIdProperty().get());
-        int success[] = membershipModel.getSuccess();
-//        try {
-//            if (dataBaseService.existsSlipWithMsId()) {
-//                Platform.runLater(() -> {
-//                    DialogueFx.errorAlert("Looks like we have a problem", "You must re-assign slip before deleting this membership");
-//                });
-//            } else {
-//                success[0] = dataBaseService.deleteBoatOwner(membershipModel.getMembership().getMsId());
-//                success[1] = dataBaseService.deleteNotes(membershipModel.getMembership().getMsId());
-//                int addIns[] = dataBaseService.deleteAllPaymentsAndInvoicesByMsId(membershipModel.getMembership().getMsId()); // invoiceRepo
-//                success[2] = addIns[0];
-//                success[3] = addIns[1];
-//                success[4] = addIns[2];
-//                success[5] = dataBaseService.deleteWaitList(membershipModel.getMembership().getMsId()); // slipRepo
-//                success[6] = dataBaseService.deleteFormMsIdHash(membershipModel.getMembership().getMsId()); // membershipRepo
-//                success[7] = dataBaseService.deleteMembershipId(membershipModel.getMembership().getMsId()); // membershipIdRepo
-//                List<PersonDTO> people = dataBaseService.getPeople(membershipModel.getMembership().getMsId()); // personRepo
-//                success[8] = people.size();
-//                for (PersonDTO p : people) {
-//                    success[10] += dataBaseService.deletePhones(p.getpId()); // phoneRepo
-//                    success[11] += dataBaseService.deleteEmail(p.getpId()); // emailRepo
-//                    success[12] += dataBaseService.deleteOfficer(p.getpId()); // officerRepo
-//                    success[13] += dataBaseService.deleteUserAuthRequest(p.getpId());
-//                    success[14] += dataBaseService.deleteAwards(p.getpId());
-//                    success[15] += dataBaseService.deletePerson(p.getpId()); // personRepo
-//                }
-//                success[9] = dataBaseService.deleteMembership(membershipModel.getMembership().getMsId());  //membershipRepo
-//
-//            }
-//            Platform.runLater(() -> {
-//                membershipModel.setReturnMessage(MembershipMessage.DELETE_MEMBERSHIP_FROM_DATABASE_SUCCEED);
-//            });
-//        } catch (Exception e) {
-//            membershipModel.setReturnMessage(MembershipMessage.DELETE_MEMBERSHIP_FROM_DATABASE_FAIL);
-//            logger.error(e.getMessage());
-//        }
-    }
 
     public Membership getMembershiptoPOJO() {
         Logger logger = LoggerFactory.getLogger(getClass());
@@ -144,6 +105,7 @@ public class MembershipInteractor implements SlipUser {
             membershipDTOFx.getBoats().addAll(POJOtoFxConverter.copyBoats(membership.getBoats()));
             membershipDTOFx.getMemos().addAll(POJOtoFxConverter.copyNotes(membership.getMemos()));
         } catch (Exception e) {
+            Platform.runLater(() -> DialogueFx.errorAlert("Conversion failure", "Failed to covert POJO to FX: " + e.getMessage()));
             logger.error("Failed to convert membership to FX: {}", e.getMessage(), e);
         }
     }
@@ -151,9 +113,9 @@ public class MembershipInteractor implements SlipUser {
     // TODO This is a temp way to do this. I need to probably change the membership to JSON method to also give enough information to find the sublease person
     private void setSlipStatus() {
         // person owns a slip
-        if(!membershipModel.membershipProperty().get().slipProperty().get().getSlipNumber().isEmpty())
+        if (!membershipModel.membershipProperty().get().slipProperty().get().getSlipNumber().isEmpty())
             membershipModel.setSlipRelationStatus(SlipUser.slip.owner);
-        // if(membershipModel.membershipProperty().get().slipProperty().get().subleased_toProperty().get() == 0)
+            // if(membershipModel.membershipProperty().get().slipProperty().get().subleased_toProperty().get() == 0)
         else
             membershipModel.setSlipRelationStatus(SlipUser.slip.noSlip);
         // we are not looking for subleases yet.
@@ -299,7 +261,7 @@ public class MembershipInteractor implements SlipUser {
             String response = membershipModel.getHttpClient().postDataToGybe("update/boat", boat);
             return processUpdateResponse(response);
         } catch (Exception e) {
-            logger.error("Failed to update boat  {}: {}",boat.getBoatId(), e.getMessage(), e);
+            logger.error("Failed to update boat  {}: {}", boat.getBoatId(), e.getMessage(), e);
             e.printStackTrace();
         }
         return null;
@@ -317,7 +279,7 @@ public class MembershipInteractor implements SlipUser {
             String response = membershipModel.getHttpClient().postDataToGybe("insert/boat", boatOwnerDTO);
             InsertBoatResponse insertBoatResponse = membershipModel.getHttpClient().getObjectMapper()
                     .readValue(response, InsertBoatResponse.class);
-            if(insertBoatResponse.isSuccess()) {
+            if (insertBoatResponse.isSuccess()) {
                 membershipModel.getBoatTableView().getItems().add(new BoatDTOFx(insertBoatResponse.getBoat()));
                 membershipModel.getBoatTableView().refresh();
             } else {
@@ -327,12 +289,49 @@ public class MembershipInteractor implements SlipUser {
                 logger.error(insertBoatResponse.getMessage());
             }
         } catch (Exception e) {
-            logger.error("Could not create new boat: {}",e.getMessage());
+            logger.error("Could not create new boat: {}", e.getMessage());
             Platform.runLater(() -> {
                 DialogueFx.errorAlert("Unable add boat: ", e.getMessage());
             });
         }
     }
+
+    public MembershipMessage deleteMembership() {
+        logger.info("Deleting Membership MSID: {}", membershipModel.membershipProperty().get().msIdProperty().get());
+        try {
+            String response = membershipModel.getHttpClient().postDataToGybe("delete/membership", new Membership(membershipModel.membershipProperty().get()));
+            if (response == null) {
+                logger.error("Failed to delete membership {}: Null response from server", membershipModel.membershipProperty().get().getMembershipId());
+                Platform.runLater(() -> DialogueFx.errorAlert("Delete Membership Failed", "Null response from server"));
+                return MembershipMessage.DELETE_MEMBERSHIP;
+            }
+            UpdateResponse updateResponse = membershipModel.getHttpClient().getObjectMapper()
+                    .readValue(response, UpdateResponse.class);
+            if (updateResponse == null) {
+                logger.error("Failed to delete membership {}: Invalid response from server", membershipModel.membershipProperty().get().getMembershipId());
+                Platform.runLater(() -> DialogueFx.errorAlert("Delete Membership Failed", "Invalid response from server"));
+                return MembershipMessage.DELETE_MEMBERSHIP;
+            }
+            if (updateResponse.isSuccess()) {
+                logger.info("Successfully deleted membership {}", membershipModel.membershipProperty().get().getMembershipId());
+                Platform.runLater(() -> {
+                    // close membership tab
+                    // remove from tableView List
+                });
+            } else {
+                String errorMessage = updateResponse.getMessage() != null ? updateResponse.getMessage() : "Unknown error";
+                logger.error("Failed to membership boat {}: {}", membershipModel.membershipProperty().get().getMembershipId(), errorMessage);
+                Platform.runLater(() -> DialogueFx.errorAlert("Delete Boat Failed", errorMessage));
+            }
+        } catch (Exception e) {
+            Integer boatId = membershipModel.getSelectedBoat() != null ?
+                    membershipModel.getSelectedBoat().getBoatId() : null;
+            logger.error("Failed to delete boat {}: {}", boatId, e.getMessage(), e);
+            Platform.runLater(() -> DialogueFx.errorAlert("Delete Boat Failed", e.getMessage()));
+        }
+        return MembershipMessage.DELETE_MEMBERSHIP;
+    }
+
 
     public void deleteBoat() {
         try {
@@ -406,5 +405,13 @@ public class MembershipInteractor implements SlipUser {
             logger.error(updateResponse.getMessage());
         }
         return response;
+    }
+
+    public void removeMembershipFromList(TableView<RosterFx> rosterTableView) {
+        rosterTableView.getItems().remove(membershipModel.membershipProperty().get());
+    }
+
+    public int getMsId() {
+        return membershipModel.membershipProperty().get().getMsId();
     }
 }

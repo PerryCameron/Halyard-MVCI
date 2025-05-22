@@ -40,7 +40,7 @@ public class MembershipListDTO {
 	private final IntegerProperty subLeaserProperty = new SimpleIntegerProperty();
 	private final IntegerProperty selectedYearProperty = new SimpleIntegerProperty();
 	private final ObservableList<BoatDTOFx> boatDTOS = FXCollections.observableArrayList();
-	private final ObservableList<NotesDTOFx> notesDTOS = FXCollections.observableArrayList();
+	private final ObservableList<NotesFx> notesDTOS = FXCollections.observableArrayList();
 	private final ObservableList<MembershipIdDTOFx> membershipIdDTOS = FXCollections.observableArrayList();
 	private final ObservableList<InvoiceDTOFx> invoiceDTOS = FXCollections.observableArrayList();
 
@@ -181,11 +181,11 @@ public class MembershipListDTO {
 		this.boatDTOS.setAll(boatDTOs != null ? boatDTOs : new ArrayList<>());
 	}
 
-	public List<NotesDTOFx> getNotesDTOs() {
+	public List<NotesFx> getNotesDTOs() {
 		return new ArrayList<>(notesDTOS);
 	}
 
-	public void setNotesDTOs(List<NotesDTOFx> notesDTOs) {
+	public void setNotesDTOs(List<NotesFx> notesDTOs) {
 		this.notesDTOS.setAll(notesDTOs != null ? notesDTOs : new ArrayList<>());
 	}
 
@@ -266,7 +266,7 @@ public class MembershipListDTO {
 		return boatDTOS;
 	}
 
-	public ObservableList<NotesDTOFx> getNotesDTOS() {
+	public ObservableList<NotesFx> getNotesDTOS() {
 		return notesDTOS;
 	}
 

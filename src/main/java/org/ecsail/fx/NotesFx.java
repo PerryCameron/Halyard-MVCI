@@ -5,7 +5,7 @@ import org.ecsail.pojo.Note;
 
 import java.time.LocalDate;
 
-public class NotesDTOFx {
+public class NotesFx {
 
     private final IntegerProperty memoId;
     private final IntegerProperty msId;
@@ -15,8 +15,8 @@ public class NotesDTOFx {
     private final StringProperty category;
     private final IntegerProperty boatId;
 
-    public NotesDTOFx(Integer memoId, Integer msId, LocalDate memoDate,
-                      String memo, Integer invoiceId, String category, int boatId) {
+    public NotesFx(Integer memoId, Integer msId, LocalDate memoDate,
+                   String memo, Integer invoiceId, String category, int boatId) {
         super();
         this.memoId = new SimpleIntegerProperty(memoId);
         this.msId = new SimpleIntegerProperty(msId);
@@ -27,7 +27,7 @@ public class NotesDTOFx {
         this.boatId = new SimpleIntegerProperty(boatId);
     }
 
-    public NotesDTOFx(int boatId, String type) {
+    public NotesFx(int boatId, String type) {
         super();
         this.memoId = new SimpleIntegerProperty(0);
         this.msId = new SimpleIntegerProperty(0);
@@ -38,7 +38,7 @@ public class NotesDTOFx {
         this.boatId = new SimpleIntegerProperty(boatId);
     }
 
-    public NotesDTOFx(String type, int msId) {
+    public NotesFx(String type, int msId) {
         super();
         this.memoId = new SimpleIntegerProperty(0);
         this.msId = new SimpleIntegerProperty(msId);
@@ -49,7 +49,7 @@ public class NotesDTOFx {
         this.boatId = new SimpleIntegerProperty(0);
     }
 
-    public NotesDTOFx(Note memo) {
+    public NotesFx(Note memo) {
         super();
         this.memoId = new SimpleIntegerProperty(memo.getMemoId());
         this.msId = new SimpleIntegerProperty(memo.getMsId());

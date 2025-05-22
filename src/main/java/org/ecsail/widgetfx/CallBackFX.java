@@ -4,7 +4,7 @@ import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
-import org.ecsail.fx.NotesDTOFx;
+import org.ecsail.fx.NotesFx;
 
 import java.time.LocalDate;
 import java.util.function.Consumer;
@@ -88,8 +88,8 @@ public class CallBackFX {
 //    }
 
 
-    public static Callback<TableColumn<NotesDTOFx, LocalDate>,
-            TableCell<NotesDTOFx, LocalDate>> createDatePickerCellFactory(Consumer<NotesDTOFx> notesDTOConsumer) {
+    public static Callback<TableColumn<NotesFx, LocalDate>,
+            TableCell<NotesFx, LocalDate>> createDatePickerCellFactory(Consumer<NotesFx> notesDTOConsumer) {
         return param -> new TableCell<>() {
             private final DatePicker datePicker = new DatePicker();
             private LocalDate currentItem = null;  // Add this line to store the current item
@@ -99,7 +99,7 @@ public class CallBackFX {
                     // Only process action event when datePicker has the focus
                     if (datePicker.isFocused()) {
                         commitEdit(datePicker.getValue());
-                        NotesDTOFx notesDTO = null;
+                        NotesFx notesDTO = null;
                         // Prevents exception on load for NotesTableView.class
                         if (this.getTableRow() != null) notesDTO = this.getTableRow().getItem();
                         // Also prevents exception on load but for BoatNotesTableView.class

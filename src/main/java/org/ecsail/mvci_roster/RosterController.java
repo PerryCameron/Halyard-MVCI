@@ -2,6 +2,7 @@ package org.ecsail.mvci_roster;
 
 import javafx.application.Platform;
 import javafx.concurrent.Task;
+import javafx.scene.control.TableView;
 import javafx.scene.layout.Region;
 import org.ecsail.fx.RosterFx;
 import org.ecsail.interfaces.Controller;
@@ -49,7 +50,7 @@ public class RosterController extends Controller<RosterMessage> {
     }
 
     private void search() {
-        rosterInteractor.search();
+//        rosterInteractor.search();
 //        Task<Void> task = new Task<>() {
 //            @Override
 //            protected Void call() {
@@ -61,9 +62,8 @@ public class RosterController extends Controller<RosterMessage> {
 //            }
 //        };
 //        new Thread(task).start();
-
-
-        updateRoster();
+//        updateRoster();
+        System.out.println("I broke search?");
     }
 
     private void updateRoster() {
@@ -113,6 +113,10 @@ public class RosterController extends Controller<RosterMessage> {
             rosterView.setRadioListener(); // set last, so it doesn't fire, when radios are created.
         });
         new Thread(task).start();
+    }
+
+    public TableView<RosterFx> getRosterTableView() {
+        return rosterInteractor.getRosterTableView();
     }
 
     @Override
