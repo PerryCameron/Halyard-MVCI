@@ -15,7 +15,7 @@ import javafx.scene.text.Text;
 import javafx.util.Builder;
 import javafx.util.Duration;
 import org.ecsail.dto.MembershipListRadioDTO;
-import org.ecsail.dto.RosterDTOFx;
+import org.ecsail.dto.RosterFx;
 import org.ecsail.mvci_roster.export.SaveFileChooser;
 import org.ecsail.static_tools.HalyardPaths;
 import org.ecsail.widgetfx.HBoxFx;
@@ -52,7 +52,7 @@ public class RosterView implements Builder<Region> {
 
     private Node setUpTableView() {
         VBox vBox = VBoxFx.vBoxOf(new Insets(5,5,0,10));
-        TableView<RosterDTOFx> tableView = new RosterTableView(this).build();
+        TableView<RosterFx> tableView = new RosterTableView(this).build();
         rosterModel.getRosterTableView().setItems(getRosterModel().getRosters());
         vBox.getChildren().add(tableView);
         return vBox;

@@ -3,7 +3,7 @@ package org.ecsail.mvci_new_membership;
 import javafx.application.Platform;
 import org.ecsail.dto.MembershipListDTO;
 import org.ecsail.dto.NotesDTOFx;
-import org.ecsail.dto.PersonDTOFx;
+import org.ecsail.dto.PersonFx;
 import org.ecsail.interfaces.ConfigFilePaths;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -80,7 +80,7 @@ public class NewMembershipInteractor implements ConfigFilePaths {
 
     public void createPrimaryMember() {
         try {
-            PersonDTOFx personDTO = new PersonDTOFx(newMembershipModel.getMembership().getMsId(), 1, true);
+            PersonFx personDTO = new PersonFx(newMembershipModel.getMembership().getMsId(), 1, true);
             personDTO.setBirthday(LocalDate.of(1900, 1, 1));
 //            PersonDTO person = personRepo.insertPerson(personDTO);
 //            if(person.getpId() != 0) {

@@ -6,7 +6,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import org.ecsail.pojo.Phone;
 
-public class PhoneDTOFx {
+public class PhoneFx {
 	
 	private IntegerProperty phoneId;
 	private IntegerProperty pId;
@@ -16,7 +16,7 @@ public class PhoneDTOFx {
 	private ObservableList<String> membershipTypes;
 
 	private ComboBox<String> combo_box;
-	public PhoneDTOFx(Integer phoneId, Integer pId, Boolean phoneListed, String phone, String phoneType) {
+	public PhoneFx(Integer phoneId, Integer pId, Boolean phoneListed, String phone, String phoneType) {
 		this.phoneId = new SimpleIntegerProperty(phoneId);
 		this.pId = new SimpleIntegerProperty(pId);
 		this.phoneListed = new SimpleBooleanProperty(phoneListed);
@@ -27,7 +27,7 @@ public class PhoneDTOFx {
 		combo_box.setValue("none");
 	}
 
-	public PhoneDTOFx(Integer pId) {
+	public PhoneFx(Integer pId) {
 		this.phoneId = new SimpleIntegerProperty(0);
 		this.pId = new SimpleIntegerProperty(pId);
 		this.phoneListed = new SimpleBooleanProperty(true);
@@ -35,7 +35,7 @@ public class PhoneDTOFx {
 		this.phoneType = new SimpleStringProperty("");
 	}
 
-	public PhoneDTOFx(Phone phone) {
+	public PhoneFx(Phone phone) {
 		this.phoneId = new SimpleIntegerProperty(phone.getPhoneId());
 		this.pId = new SimpleIntegerProperty(phone.getpId());
 		this.phoneListed = new SimpleBooleanProperty(phone.getPhoneListed() == 1);

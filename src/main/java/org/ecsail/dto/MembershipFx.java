@@ -7,7 +7,7 @@ import org.ecsail.pojo.Slip;
 
 import java.util.List;
 
-public class MembershipDTOFx {
+public class MembershipFx {
     private SimpleIntegerProperty mid;
     private SimpleIntegerProperty fiscalYear;
     private SimpleIntegerProperty msId;
@@ -23,16 +23,16 @@ public class MembershipDTOFx {
     private SimpleStringProperty state;
     private SimpleStringProperty zip;
     private ObjectProperty<SlipDTOFx> slip = new SimpleObjectProperty<>();
-    private List<PersonDTOFx> people = FXCollections.observableArrayList();
+    private List<PersonFx> people = FXCollections.observableArrayList();
     private List<BoatDTOFx> boats = FXCollections.observableArrayList();
     private List<InvoiceDTOFx> invoices = FXCollections.observableArrayList();
     private List<MembershipIdDTOFx> membershipIds = FXCollections.observableArrayList();
     private List<NotesDTOFx> memos = FXCollections.observableArrayList();
 
-    public MembershipDTOFx(Integer mid, Integer fiscalYear, Integer msId, Integer membershipId,
-                           Boolean  renew, String memType, Boolean  selected, Boolean lateRenew,
-                           Integer pId, String joinDate, String address, String city,
-                           String state, String zip, Slip slip) {
+    public MembershipFx(Integer mid, Integer fiscalYear, Integer msId, Integer membershipId,
+                        Boolean  renew, String memType, Boolean  selected, Boolean lateRenew,
+                        Integer pId, String joinDate, String address, String city,
+                        String state, String zip, Slip slip) {
         this.mid = new SimpleIntegerProperty(mid);
         this.fiscalYear = new SimpleIntegerProperty(fiscalYear);
         this.msId = new SimpleIntegerProperty(msId);
@@ -49,7 +49,7 @@ public class MembershipDTOFx {
         this.zip = new SimpleStringProperty(zip);
     }
 
-    public MembershipDTOFx(Membership membership) {
+    public MembershipFx(Membership membership) {
         this.mid = new SimpleIntegerProperty(membership.getMid());
         this.fiscalYear = new SimpleIntegerProperty(membership.getFiscalYear());
         this.msId = new SimpleIntegerProperty(membership.getMsId());
@@ -159,7 +159,7 @@ public class MembershipDTOFx {
         return slip;
     }
 
-    public List<PersonDTOFx> getPeople() {
+    public List<PersonFx> getPeople() {
         return people;
     }
 
@@ -179,7 +179,7 @@ public class MembershipDTOFx {
         return memos;
     }
 
-    public void setPeople(List<PersonDTOFx> people) {
+    public void setPeople(List<PersonFx> people) {
         this.people = people;
     }
 

@@ -3,9 +3,10 @@ package org.ecsail.mvci_membership;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import javafx.application.Platform;
 import org.ecsail.dto.BoatDTOFx;
-import org.ecsail.dto.MembershipDTOFx;
+import org.ecsail.dto.MembershipFx;
 import org.ecsail.dto.SlipDTOFx;
 import org.ecsail.interfaces.SlipUser;
+import org.ecsail.pdf.PDF_Envelope;
 import org.ecsail.pojo.*;
 import org.ecsail.static_tools.POJOtoFxConverter;
 import org.ecsail.widgetfx.DialogueFx;
@@ -41,15 +42,20 @@ public class MembershipInteractor implements SlipUser {
     }
 
     public void printEnvelope() {
-//        try {
-//            new PDF_Envelope(true, membershipModel, dataBaseService);
-//        } catch (IOException e1) {
-//            e1.printStackTrace();
-//        } catch (Exception e2) {
-//            e2.printStackTrace();
-//        }
+        try {
+            new PDF_Envelope(true, membershipModel);
+        } catch (IOException e1) {
+            Platform.runLater(() -> {
+                DialogueFx.errorAlert("Unable to print envelope: {}", e1.getMessage());
+            });
+            logger.error(e1.getMessage());
+        } catch (Exception e2) {
+            Platform.runLater(() -> {
+                DialogueFx.errorAlert("Unable to perform update", e2.getMessage());
+            });
+            logger.error(e2.getMessage());
+        }
     }
-
 
     public void deleteMembership() {
         logger.info("Deleting Membership MSID: " + membershipModel.membershipProperty().get().msIdProperty().get());
@@ -128,7 +134,7 @@ public class MembershipInteractor implements SlipUser {
 
     public void convertPOJOsToFXProperties(Membership membership) {
         try {
-            MembershipDTOFx membershipDTOFx = new MembershipDTOFx(membership);
+            MembershipFx membershipDTOFx = new MembershipFx(membership);
             membershipModel.membershipProperty().set(membershipDTOFx);
             membershipDTOFx.slipProperty().set(new SlipDTOFx(membership.getSlip()));
             setSlipStatus();

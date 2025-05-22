@@ -12,8 +12,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.util.Builder;
-import org.ecsail.dto.PersonDTOFx;
-import org.ecsail.dto.PhoneDTOFx;
+import org.ecsail.dto.PersonFx;
+import org.ecsail.dto.PhoneFx;
 import org.ecsail.enums.PhoneType;
 import org.ecsail.mvci_membership.MembershipMessage;
 import org.ecsail.mvci_membership.MembershipModel;
@@ -25,42 +25,42 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public class PhoneTableView implements Builder<TableView<PhoneDTOFx>> {
+public class PhoneTableView implements Builder<TableView<PhoneFx>> {
 
     private final MembershipView membershipView;
-    private final PersonDTOFx person;
+    private final PersonFx person;
     private final MembershipModel membershipModel;
 
-    public PhoneTableView(PersonDTOFx personDTO, MembershipView membershipView) {
+    public PhoneTableView(PersonFx personDTO, MembershipView membershipView) {
         this.person = personDTO;
         this.membershipView = membershipView;
         this.membershipModel = membershipView.getMembershipModel();
     }
 
     @Override
-    public TableView<PhoneDTOFx> build() {
-        TableView<PhoneDTOFx> tableView = TableViewFx.tableViewOf(PhoneDTOFx.class, 146);
+    public TableView<PhoneFx> build() {
+        TableView<PhoneFx> tableView = TableViewFx.tableViewOf(PhoneFx.class, 146);
         tableView.setItems(person.getPhones());
-        List<TableColumn<PhoneDTOFx, ?>> columns = new ArrayList<>();
+        List<TableColumn<PhoneFx, ?>> columns = new ArrayList<>();
         columns.add(createColumn1());
         columns.add(createColumn2());
         columns.add(createColumn3());
         tableView.getColumns().addAll(columns);
-        TableView.TableViewSelectionModel<PhoneDTOFx> selectionModel = tableView.getSelectionModel();
+        TableView.TableViewSelectionModel<PhoneFx> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) membershipModel.setSelectedPhone(newSelection);
         });
         return tableView;
     }
 
-    private TableColumn<PhoneDTOFx,String> createColumn1() {
-        TableColumn<PhoneDTOFx, String> col1 = TableColumnFx.editableStringTableColumn(PhoneDTOFx::phoneProperty,"Phone");
+    private TableColumn<PhoneFx,String> createColumn1() {
+        TableColumn<PhoneFx, String> col1 = TableColumnFx.editableStringTableColumn(PhoneFx::phoneProperty,"Phone");
         col1.setOnEditCommit(
                 new EventHandler<>() {
                     @Override
-                    public void handle(TableColumn.CellEditEvent<PhoneDTOFx, String> t) {
+                    public void handle(TableColumn.CellEditEvent<PhoneFx, String> t) {
                         String processedNumber = processNumber(t.getNewValue());
-                        PhoneDTOFx phoneDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
+                        PhoneFx phoneDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                         phoneDTO.setPhone(t.getNewValue());
                         membershipModel.setSelectedPhone(phoneDTO);
                         membershipView.sendMessage().accept(MembershipMessage.UPDATE_PHONE);
@@ -108,12 +108,12 @@ public class PhoneTableView implements Builder<TableView<PhoneDTOFx>> {
         return col1;
     }
 
-    private TableColumn<PhoneDTOFx,PhoneType> createColumn2() {
+    private TableColumn<PhoneFx,PhoneType> createColumn2() {
         // example for this column found at https://o7planning.org/en/11079/javafx-tableview-tutorial
         ObservableList<PhoneType> phoneTypeList = FXCollections.observableArrayList(PhoneType.values());
-        TableColumn<PhoneDTOFx, PhoneType> Col2 = new TableColumn<>("Type");
+        TableColumn<PhoneFx, PhoneType> Col2 = new TableColumn<>("Type");
         Col2.setCellValueFactory(param -> {
-            PhoneDTOFx thisPhone = param.getValue();
+            PhoneFx thisPhone = param.getValue();
             String phoneCode = thisPhone.getPhoneType();
             PhoneType phoneType = PhoneType.getByCode(phoneCode);
             return new SimpleObjectProperty<>(phoneType);
@@ -121,11 +121,11 @@ public class PhoneTableView implements Builder<TableView<PhoneDTOFx>> {
 
         Col2.setCellFactory(ComboBoxTableCell.forTableColumn(phoneTypeList));
 
-        Col2.setOnEditCommit((TableColumn.CellEditEvent<PhoneDTOFx, PhoneType> event) -> {
-            TablePosition<PhoneDTOFx, PhoneType> pos = event.getTablePosition();
+        Col2.setOnEditCommit((TableColumn.CellEditEvent<PhoneFx, PhoneType> event) -> {
+            TablePosition<PhoneFx, PhoneType> pos = event.getTablePosition();
             PhoneType newPhoneType = event.getNewValue();
             int row = pos.getRow();
-            PhoneDTOFx phoneDTO = event.getTableView().getItems().get(row);
+            PhoneFx phoneDTO = event.getTableView().getItems().get(row);
             phoneDTO.setPhoneType(newPhoneType.getCode()); // makes UI feel snappy
             membershipModel.setSelectedPhone(phoneDTO);
             membershipView.sendMessage().accept(MembershipMessage.UPDATE_PHONE);
@@ -134,10 +134,10 @@ public class PhoneTableView implements Builder<TableView<PhoneDTOFx>> {
         return Col2;
     }
 
-    private TableColumn<PhoneDTOFx,?> createColumn3() {
-        TableColumn<PhoneDTOFx, Boolean> Col3 = new TableColumn<>("Listed");
+    private TableColumn<PhoneFx,?> createColumn3() {
+        TableColumn<PhoneFx, Boolean> Col3 = new TableColumn<>("Listed");
         Col3.setCellValueFactory(param -> {
-            PhoneDTOFx phoneDTO = param.getValue();
+            PhoneFx phoneDTO = param.getValue();
             SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(phoneDTO.getPhoneListed());
             booleanProp.addListener((observable, oldValue, newValue) -> {
                 phoneDTO.setPhoneListed(newValue); // makes UI feel snappy
@@ -149,7 +149,7 @@ public class PhoneTableView implements Builder<TableView<PhoneDTOFx>> {
 
         //
         Col3.setCellFactory(p1 -> {
-            CheckBoxTableCell<PhoneDTOFx, Boolean> cell = new CheckBoxTableCell<>();
+            CheckBoxTableCell<PhoneFx, Boolean> cell = new CheckBoxTableCell<>();
             cell.setAlignment(Pos.CENTER);
             return cell;
         });

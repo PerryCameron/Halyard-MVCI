@@ -2,7 +2,7 @@ package org.ecsail.pojo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.ecsail.dto.PhoneDTOFx;
+import org.ecsail.dto.PhoneFx;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Phone {
@@ -24,7 +24,7 @@ public class Phone {
     public Phone() {
     }
 
-    public Phone(PhoneDTOFx phoneDTOFx) {
+    public Phone(PhoneFx phoneDTOFx) {
         this.phoneId = phoneDTOFx.getPhoneId();
         this.pId = phoneDTOFx.getpId();
         this.phone = phoneDTOFx.getPhone();

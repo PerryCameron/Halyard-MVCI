@@ -18,7 +18,7 @@ import javafx.util.Builder;
 import org.ecsail.connection.Mail;
 import org.ecsail.custom.CustomDatePicker;
 import org.ecsail.dto.EmailDTOFx;
-import org.ecsail.dto.PersonDTOFx;
+import org.ecsail.dto.PersonFx;
 import org.ecsail.enums.MemberType;
 import org.ecsail.interfaces.ConfigFilePaths;
 import org.ecsail.interfaces.ObjectType;
@@ -36,14 +36,14 @@ import java.util.*;
 import static org.ecsail.interfaces.ObjectType.Dto.*;
 
 public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths, ObjectType {
-    private final PersonDTOFx personDTO;
+    private final PersonFx personDTO;
     private final MembershipModel membershipModel;
     private final MembershipView membershipView;
     private final HashMap<String, HBox> personInfoHBoxMap = new HashMap<>();
     private Label ageLabel;
     private static final Logger logger = LoggerFactory.getLogger(PersonTabView.class);
 
-    public PersonTabView(MembershipView membershipView, PersonDTOFx personDTO) {
+    public PersonTabView(MembershipView membershipView, PersonFx personDTO) {
         this.personDTO = personDTO;
         this.membershipModel = membershipView.getMembershipModel();
         this.membershipView = membershipView;
@@ -591,7 +591,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         };
     }
 
-    public PersonDTOFx getPersonDTO() {
+    public PersonFx getPersonDTO() {
         return personDTO;
     }
 }

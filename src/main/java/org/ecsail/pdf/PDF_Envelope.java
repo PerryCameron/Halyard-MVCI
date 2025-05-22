@@ -14,8 +14,8 @@ import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.*;
 import com.itextpdf.layout.properties.HorizontalAlignment;
 import com.itextpdf.layout.properties.VerticalAlignment;
-import org.ecsail.dto.MembershipListDTO;
-import org.ecsail.mvci_membership.DataBaseService;
+import org.ecsail.dto.MembershipFx;
+import org.ecsail.dto.PersonFx;
 import org.ecsail.mvci_membership.MembershipModel;
 import org.ecsail.static_tools.ByteTools;
 import org.ecsail.static_tools.HalyardPaths;
@@ -26,32 +26,31 @@ import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.*;
 
 public class PDF_Envelope {
 	public static Logger logger = LoggerFactory.getLogger(PDF_Envelope.class);
 	private final Image ecscLogo = new Image(ImageDataFactory.create(ByteTools.toByteArray(Objects.requireNonNull(getClass().getResourceAsStream("/images/EagleCreekLogoForPDF.png")))));
-	private MembershipListDTO membershipListDTO;
-//	private final MembershipDTO membershipChair;
-	private final int year;
+
 	private int current_membership_id;
 	private final PdfFont font;
-	private final boolean isOneMembership;
-	private final DataBaseService dataBaseService;
+	private final MembershipFx membershipFx;
+	private Optional<PersonFx> primary;
 
-	public PDF_Envelope(boolean iom, MembershipModel model, DataBaseService dataBaseService) throws IOException {
-		System.out.println("Creating envelope");
+	public PDF_Envelope(boolean iom, MembershipModel model) throws IOException {
+		logger.info("Creating envelope");
 		if (model == null) {
 			System.out.println("MembershipModel is null");
 		}
-		if (dataBaseService == null) {
-			System.out.println("DataBaseService is null");
-		}
-		this.dataBaseService = dataBaseService;
-		this.year= LocalDate.now().getYear();
+		this.membershipFx = model.membershipProperty().get();
+		this.primary = membershipFx != null && membershipFx.getPeople() != null
+				? membershipFx.getPeople().stream()
+				.filter(person -> person != null && person.getMemberType() == 1)
+				.findFirst()
+				: Optional.empty();
+
+
 		HalyardPaths.checkPath(HalyardPaths.ECSC_HOME);
-		this.isOneMembership = iom;
 //		this.membershipChair = Objects.requireNonNull(dataBaseService).getCurrentMembershipChair();
 		this.current_membership_id = Objects.requireNonNull(model).membershipProperty().get().membershipIdProperty().get();
 
@@ -97,14 +96,14 @@ public class PDF_Envelope {
 		Document doc = new Document(pdf, new PageSize(envelope));
 		doc.setTopMargin(0);
 		doc.setLeftMargin(0.25f);
-		if(isOneMembership) {
+//		if(isOneMembership) {
 //			membershipListDTO = dataBaseService.getMembershipListByIdAndYear(current_membership_id, year);
 		doc.add(createReturnAddress());
 		doc.add(new Paragraph(new Text("\n\n\n\n\n")));
 		doc.add(createAddress());
-		} else {
-			buildAddress(doc);
-		}
+//		} else {
+//			buildAddress(doc);
+//		}
 		doc.close();
 	}
 
@@ -120,14 +119,14 @@ public class PDF_Envelope {
 		Document doc = new Document(pdf, new PageSize(envelope));
 		doc.setTopMargin(0);
 		doc.setLeftMargin(0.25f);
-		if(isOneMembership) {
+//		if(isOneMembership) {
 //			membershipListDTO = dataBaseService.getMembershipListByIdAndYear(current_membership_id, year);
 		doc.add(createReturnAddress());
 		doc.add(new Paragraph(new Text("\n\n\n\n\n\n\n\n\n")));
 		doc.add(createAddress());
-		} else {
-			buildAddress(doc);
-		}
+//		} else {
+//			buildAddress(doc);
+//		}
 		doc.close();
 	}
 
@@ -182,11 +181,11 @@ public class PDF_Envelope {
 		cell.setWidth(260);
 		cell.setBorder(Border.NO_BORDER);
 		mainTable.addCell(cell);
-		mainTable.addCell(newAddressCell(16,14,membershipListDTO.getFirstName()
-				+ " " + membershipListDTO.getLastName() + " #" + current_membership_id));
-		mainTable.addCell(newAddressCell(16,14,membershipListDTO.getAddress()));
-		mainTable.addCell(newAddressCell(16,14,membershipListDTO.getCity() + ", "
-				+ membershipListDTO.getState() + " " + membershipListDTO.getZip()));
+		mainTable.addCell(newAddressCell(16,14,primary.get().getFirstName()
+				+ " " + primary.get().getLastName() + " #" + current_membership_id));
+		mainTable.addCell(newAddressCell(16,14,membershipFx.getAddress()));
+		mainTable.addCell(newAddressCell(16,14,membershipFx.getCity() + ", "
+				+ membershipFx.getState() + " " + membershipFx.getZip()));
 		return mainTable;
 	}
 }

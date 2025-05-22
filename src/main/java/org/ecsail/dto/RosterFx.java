@@ -5,7 +5,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
-public class RosterDTOFx {
+public class RosterFx {
     private IntegerProperty id = new SimpleIntegerProperty();
     private IntegerProperty msId = new SimpleIntegerProperty();
     private StringProperty name = new SimpleStringProperty();
@@ -16,7 +16,7 @@ public class RosterDTOFx {
     private IntegerProperty  subleasedTo = new SimpleIntegerProperty();
 
 
-    public RosterDTOFx(int id, int msId, String name, String joinDate, String type, String slip, String city, int subleasedTo) {
+    public RosterFx(int id, int msId, String name, String joinDate, String type, String slip, String city, int subleasedTo) {
         this.id.set(id);
         this.msId.set(msId);
         this.name.set(name);
@@ -27,7 +27,7 @@ public class RosterDTOFx {
         this.subleasedTo.set(subleasedTo);
     }
 
-    public RosterDTOFx(RosterDTO rosterDTO) {
+    public RosterFx(RosterDTO rosterDTO) {
         this.id.set(rosterDTO.getId());
         this.msId.set(rosterDTO.getMsId());
         this.name.set(rosterDTO.getName());

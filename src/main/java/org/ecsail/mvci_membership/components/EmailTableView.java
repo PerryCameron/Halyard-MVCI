@@ -11,7 +11,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Builder;
 import org.ecsail.custom.RadioButtonCell;
 import org.ecsail.dto.EmailDTOFx;
-import org.ecsail.dto.PersonDTOFx;
+import org.ecsail.dto.PersonFx;
 import org.ecsail.mvci_membership.MembershipMessage;
 import org.ecsail.mvci_membership.MembershipModel;
 import org.ecsail.mvci_membership.MembershipView;
@@ -24,11 +24,11 @@ import java.util.List;
 
 public class EmailTableView implements Builder<TableView<EmailDTOFx>> {
 
-    private final PersonDTOFx person;
+    private final PersonFx person;
     private final MembershipView membershipView;
     private final MembershipModel membershipModel;
 
-    public EmailTableView(PersonDTOFx personDTO, MembershipView membershipView) {
+    public EmailTableView(PersonFx personDTO, MembershipView membershipView) {
         this.person = personDTO;
         this.membershipView = membershipView;
         this.membershipModel = membershipView.getMembershipModel();

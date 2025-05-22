@@ -2,7 +2,7 @@ package org.ecsail.pojo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.ecsail.dto.PersonDTOFx;
+import org.ecsail.dto.PersonFx;
 
 import java.util.List;
 
@@ -56,7 +56,7 @@ public class Person {
     public Person() {
     }
 
-    public Person(PersonDTOFx fx) {
+    public Person(PersonFx fx) {
         this.pId = fx.getpId();
         this.msId = fx.getMsId();
         this.memberType = fx.getMemberType();

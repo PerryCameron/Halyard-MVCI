@@ -12,7 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.util.Builder;
 import org.ecsail.custom.CustomDatePicker;
-import org.ecsail.dto.PersonDTOFx;
+import org.ecsail.dto.PersonFx;
 import org.ecsail.enums.MemberType;
 import org.ecsail.mvci_membership.MembershipMessage;
 import org.ecsail.mvci_membership.MembershipModel;
@@ -33,11 +33,11 @@ public class AddPersonTabView extends Tab implements Builder<Tab> {
     private final MembershipModel membershipModel;
     private ComboBox<MemberType> comboBox = new ComboBox<>();
     private static final Logger logger = LoggerFactory.getLogger(AddPersonTabView.class);
-    private final PersonDTOFx personDTO;
+    private final PersonFx personDTO;
     public AddPersonTabView(MembershipView membershipView) {
         this.membershipView = membershipView;
         this.membershipModel = membershipView.getMembershipModel();
-        this.personDTO = new PersonDTOFx(membershipModel.membershipProperty().get().membershipIdProperty().get());
+        this.personDTO = new PersonFx(membershipModel.membershipProperty().get().membershipIdProperty().get());
     }
 
     @Override
@@ -199,7 +199,7 @@ public class AddPersonTabView extends Tab implements Builder<Tab> {
         return hBox;
     }
 
-    public PersonDTOFx getPersonDTO() {
+    public PersonFx getPersonDTO() {
         return personDTO;
     }
 }

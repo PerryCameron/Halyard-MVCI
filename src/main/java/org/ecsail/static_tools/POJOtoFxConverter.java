@@ -11,49 +11,49 @@ import java.util.stream.Collectors;
 public class POJOtoFxConverter {
 
     /**
-     * Converts a list of {@link RosterDTO} objects to an {@link ObservableList} of {@link RosterDTOFx}
+     * Converts a list of {@link RosterDTO} objects to an {@link ObservableList} of {@link RosterFx}
      * objects, sorted by ID in ascending order. The resulting list is suitable for JavaFX TableView binding.
      *
      * @param roster the list of {@link RosterDTO} objects to convert, typically deserialized from JSON
-     * @return an {@link ObservableList} of {@link RosterDTOFx} objects, sorted by ID, or an empty list if the input is null or empty
+     * @return an {@link ObservableList} of {@link RosterFx} objects, sorted by ID, or an empty list if the input is null or empty
      * @throws NullPointerException if any {@link RosterDTO} in the input list is null (filtered out internally)
      */
-    public static ObservableList<RosterDTOFx> copyRoster(List<RosterDTO> roster) {
+    public static ObservableList<RosterFx> copyRoster(List<RosterDTO> roster) {
         if (roster == null || roster.isEmpty()) {
             return FXCollections.observableArrayList();
         }
-        List<RosterDTOFx> rosterFxList = roster.stream()
+        List<RosterFx> rosterFxList = roster.stream()
                 .filter(Objects::nonNull)
-                .map(RosterDTOFx::new)
-                .sorted(Comparator.comparingInt(RosterDTOFx::getId))
+                .map(RosterFx::new)
+                .sorted(Comparator.comparingInt(RosterFx::getId))
                 .collect(Collectors.toList());
         return FXCollections.observableArrayList(rosterFxList);
     }
 
     /**
-     * Converts a list of {@link Person} objects to an {@link ObservableList} of {@link PersonDTOFx}
+     * Converts a list of {@link Person} objects to an {@link ObservableList} of {@link PersonFx}
      * objects, including their nested collections (phones, emails, awards, officers). Awards are sorted
      * by award year, and officers are sorted by fiscal year, both in descending order (newest first).
      * The resulting list is suitable for JavaFX TableView binding.
      *
      * @param people the list of {@link Person} objects to convert, typically deserialized from JSON
-     * @return an {@link ObservableList} of {@link PersonDTOFx} objects with sorted nested collections,
+     * @return an {@link ObservableList} of {@link PersonFx} objects with sorted nested collections,
      *         or an empty list if the input is null or empty
      * @throws NullPointerException if any {@link Person} or nested collection element is null (filtered out internally)
      * @throws NumberFormatException if awardYear or fiscalYear strings cannot be parsed to integers (handled internally)
      */
-    public static ObservableList<PersonDTOFx> copyPeople(List<Person> people) {
+    public static ObservableList<PersonFx> copyPeople(List<Person> people) {
         if (people == null || people.isEmpty()) {
             return FXCollections.observableArrayList();
         }
         return FXCollections.observableArrayList(people.stream().filter(Objects::nonNull)
                         .map(person -> {
-                            PersonDTOFx personDTOFx = new PersonDTOFx(person);
+                            PersonFx personDTOFx = new PersonFx(person);
                             // Convert and add phones
                             if (person.getPhones() != null) {
                                 personDTOFx.getPhones().addAll(person.getPhones().stream()
                                         .filter(Objects::nonNull)
-                                        .map(PhoneDTOFx::new)
+                                        .map(PhoneFx::new)
                                         .collect(Collectors.toList())
                                 );
                             }

@@ -67,8 +67,8 @@ public RosterInteractor(RosterModel rm) {
         rosterModel.getRosters().clear();
     }
 
-    protected void sortRoster(List<RosterDTOFx> updatedRoster) {
-        updatedRoster.sort(Comparator.comparing(RosterDTOFx::getId));
+    protected void sortRoster(List<RosterFx> updatedRoster) {
+        updatedRoster.sort(Comparator.comparing(RosterFx::getId));
     }
 
     public void getRadioChoices() throws Exception {
@@ -103,7 +103,7 @@ public RosterInteractor(RosterModel rm) {
         });
     }
 
-    protected List<RosterDTOFx> updateRoster() throws Exception {
+    protected List<RosterFx> updateRoster() throws Exception {
         // Build the endpoint path and query parameters manually
         StringBuilder endpoint = new StringBuilder("roster");
         endpoint.append("?year=").append(rosterModel.getSelectedYear());
@@ -149,7 +149,7 @@ public RosterInteractor(RosterModel rm) {
     }
 
     private void fillWithSearchResults() {
-        ObservableList<RosterDTOFx> list = searchString(rosterModel.getTextFieldString());
+        ObservableList<RosterFx> list = searchString(rosterModel.getTextFieldString());
         Platform.runLater(() -> {
             rosterModel.getSearchedRosters().clear();
             rosterModel.getSearchedRosters().addAll(list);
@@ -158,7 +158,7 @@ public RosterInteractor(RosterModel rm) {
         });
     }
 
-    private ObservableList<RosterDTOFx> searchString(String searchTerm) {
+    private ObservableList<RosterFx> searchString(String searchTerm) {
         String searchTermToLowerCase = searchTerm.toLowerCase();
         return rosterModel.getRosters().stream()
                 .filter(membershipListDTO -> Arrays.stream(membershipListDTO.getClass().getDeclaredFields())
@@ -183,11 +183,11 @@ public RosterInteractor(RosterModel rm) {
         rosterModel.setListsLoaded(!rosterModel.isListsLoaded());
     }
 
-    public RosterDTOFx getMembership() {
+    public RosterFx getMembership() {
         return rosterModel.getSelectedMembershipList();
     }
 
-    public void setRoster(List<RosterDTOFx> updatedRoster) {
+    public void setRoster(List<RosterFx> updatedRoster) {
     // should already be in FX thread, but this is to make sure it doesn't stick.
         Platform.runLater(() -> {
             rosterModel.getRosters().addAll(updatedRoster);

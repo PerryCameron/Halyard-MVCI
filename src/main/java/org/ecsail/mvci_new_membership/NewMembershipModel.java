@@ -4,14 +4,14 @@ package org.ecsail.mvci_new_membership;
 import javafx.beans.property.*;
 import javafx.scene.layout.VBox;
 import org.ecsail.dto.MembershipListDTO;
-import org.ecsail.dto.PersonDTOFx;
+import org.ecsail.dto.PersonFx;
 import org.ecsail.mvci_main.MainModel;
 
 public class NewMembershipModel {
     private final MainModel mainModel;
     private final ObjectProperty<VBox> whiteVBox = new SimpleObjectProperty<>();
     private final ObjectProperty<MembershipListDTO> membership = new SimpleObjectProperty<>();
-    private final ObjectProperty<PersonDTOFx> primary = new SimpleObjectProperty<>();
+    private final ObjectProperty<PersonFx> primary = new SimpleObjectProperty<>();
     private final StringProperty tabMessage = new SimpleStringProperty("Creating New Membership");
     private final IntegerProperty membershipId = new SimpleIntegerProperty();
 
@@ -83,15 +83,15 @@ public class NewMembershipModel {
         this.membership.set(membership);
     }
 
-    public PersonDTOFx getPrimary() {
+    public PersonFx getPrimary() {
         return primary.get();
     }
 
-    public ObjectProperty<PersonDTOFx> primaryProperty() {
+    public ObjectProperty<PersonFx> primaryProperty() {
         return primary;
     }
 
-    public void setPrimary(PersonDTOFx primary) {
+    public void setPrimary(PersonFx primary) {
         this.primary.set(primary);
     }
 }

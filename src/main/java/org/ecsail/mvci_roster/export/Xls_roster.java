@@ -4,9 +4,7 @@ package org.ecsail.mvci_roster.export;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.ecsail.dto.DbRosterSettingsDTO;
-import org.ecsail.dto.MembershipListDTO;
-import org.ecsail.dto.RosterDTO;
-import org.ecsail.dto.RosterDTOFx;
+import org.ecsail.dto.RosterFx;
 import org.ecsail.interfaces.ConfigFilePaths;
 import org.ecsail.mvci_roster.RosterModel;
 import org.slf4j.Logger;
@@ -138,7 +136,7 @@ public class Xls_roster implements ConfigFilePaths {
 //		return fileName += " Roster.xlsx";
 //	}
 
-	private Object getField(RosterDTOFx m, DbRosterSettingsDTO dto) {
+	private Object getField(RosterFx m, DbRosterSettingsDTO dto) {
 		Object obj;
 		try {
 			Method method = m.getClass().getMethod(dto.getGetter());
@@ -153,7 +151,7 @@ public class Xls_roster implements ConfigFilePaths {
 		return obj;
 	}
 
-	private Row createRow(Sheet sheet, int rowNum, RosterDTOFx m) {
+	private Row createRow(Sheet sheet, int rowNum, RosterFx m) {
 		Row row = sheet.createRow(rowNum);
 		int cellNumber = 0;
 		for(DbRosterSettingsDTO dto: rosterModel.getRosterSettings()) {

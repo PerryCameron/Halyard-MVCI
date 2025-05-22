@@ -3,9 +3,7 @@ package org.ecsail.mvci_roster;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.scene.layout.Region;
-import org.ecsail.dto.MembershipListDTO;
-import org.ecsail.dto.RosterDTO;
-import org.ecsail.dto.RosterDTOFx;
+import org.ecsail.dto.RosterFx;
 import org.ecsail.interfaces.Controller;
 import org.ecsail.mvci_main.MainController;
 
@@ -72,9 +70,9 @@ public class RosterController extends Controller<RosterMessage> {
         mainController.setSpinnerOffset(-175, -25); // default JFX Thread
         mainController.showLoadingSpinner(true); // default JFX Thread
          // default JFX Thread
-        Task<List<RosterDTOFx>> task = new Task<>() {
+        Task<List<RosterFx>> task = new Task<>() {
             @Override
-            protected List<RosterDTOFx> call() {
+            protected List<RosterFx> call() {
                 try {
                     return rosterInteractor.updateRoster();
                 } catch (Exception e) {
@@ -84,7 +82,7 @@ public class RosterController extends Controller<RosterMessage> {
             }
         };
         task.setOnSucceeded(e -> {
-            List<RosterDTOFx> updatedRoster = task.getValue();
+            List<RosterFx> updatedRoster = task.getValue();
             rosterInteractor.sortRoster(updatedRoster);
             rosterInteractor.clearMainRoster(); // Clear the list first
             rosterInteractor.setNumberOfRecords(updatedRoster.size());

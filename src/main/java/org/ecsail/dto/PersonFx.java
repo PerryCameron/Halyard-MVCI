@@ -7,7 +7,7 @@ import org.ecsail.pojo.Person;
 
 import java.time.LocalDate;
 
-public class PersonDTOFx {
+public class PersonFx {
 	private IntegerProperty pId;
 	private IntegerProperty msId;
 	private IntegerProperty memberType; // 1 == primary 2 == secondary 3 == dependant
@@ -19,14 +19,14 @@ public class PersonDTOFx {
 	private BooleanProperty active;
 	private StringProperty nickName;
 	private IntegerProperty oldMsid;
-	private ObservableList<PhoneDTOFx> phones = FXCollections.observableArrayList();
+	private ObservableList<PhoneFx> phones = FXCollections.observableArrayList();
 	private ObservableList<EmailDTOFx> email = FXCollections.observableArrayList();
 	private ObservableList<AwardDTOFx> awards = FXCollections.observableArrayList();
 	private ObservableList<OfficerFx> officer = FXCollections.observableArrayList();
 
-	public PersonDTOFx(Integer pid, Integer ms_id, Integer memberType, String firstName, String lastName,
-					   LocalDate birthday, String occupation,
-					   String business, Boolean isActive, String nickName, Integer oldMsid) {
+	public PersonFx(Integer pid, Integer ms_id, Integer memberType, String firstName, String lastName,
+					LocalDate birthday, String occupation,
+					String business, Boolean isActive, String nickName, Integer oldMsid) {
 		this.pId = new SimpleIntegerProperty(pid);
 		this.msId = new SimpleIntegerProperty(ms_id);
 		this.memberType = new SimpleIntegerProperty(memberType);
@@ -40,7 +40,7 @@ public class PersonDTOFx {
 		this.oldMsid = new SimpleIntegerProperty(oldMsid);
 	}
 
-	public PersonDTOFx(Integer msId, Integer memberType, Boolean isActive) {
+	public PersonFx(Integer msId, Integer memberType, Boolean isActive) {
 		this.pId = new SimpleIntegerProperty(0);
 		this.msId = new SimpleIntegerProperty(msId);
 		this.memberType = new SimpleIntegerProperty(memberType);
@@ -54,7 +54,7 @@ public class PersonDTOFx {
 		this.oldMsid = new SimpleIntegerProperty(0);
 	}
 
-	public PersonDTOFx() {
+	public PersonFx() {
 		this.pId = new SimpleIntegerProperty(0);
 		this.msId = new SimpleIntegerProperty(0);
 		this.memberType = new SimpleIntegerProperty(0);
@@ -68,7 +68,7 @@ public class PersonDTOFx {
 		this.oldMsid = new SimpleIntegerProperty(0);
 	}
 
-	public PersonDTOFx(int msId) {
+	public PersonFx(int msId) {
 		this.pId = new SimpleIntegerProperty(0);
 		this.msId = new SimpleIntegerProperty(msId);
 		this.memberType = new SimpleIntegerProperty(0);
@@ -82,7 +82,7 @@ public class PersonDTOFx {
 		this.oldMsid = new SimpleIntegerProperty(0);
 	}
 
-	public PersonDTOFx(PersonDTOFx p) { // for cloning
+	public PersonFx(PersonFx p) { // for cloning
 		this.pId = new SimpleIntegerProperty(p.getpId());
 		this.msId = new SimpleIntegerProperty(p.getMsId());
 		this.memberType = new SimpleIntegerProperty(p.getMemberType());
@@ -96,7 +96,7 @@ public class PersonDTOFx {
 		this.oldMsid = new SimpleIntegerProperty(p.getOldMsid());
 	}
 
-	public PersonDTOFx(Person p) { // for cloning
+	public PersonFx(Person p) { // for cloning
 		this.pId = new SimpleIntegerProperty(p.getpId());
 		this.msId = new SimpleIntegerProperty(p.getMsId());
 		this.memberType = new SimpleIntegerProperty(p.getMemberType());
@@ -109,6 +109,8 @@ public class PersonDTOFx {
 		this.nickName = new SimpleStringProperty(p.getNickName());
 		this.oldMsid = new SimpleIntegerProperty(p.getOldMsid());
 	}
+
+
 
 
 	public ObservableList<OfficerFx> getOfficers() {
@@ -127,11 +129,11 @@ public class PersonDTOFx {
 		this.awards = awards;
 	}
 
-	public ObservableList<PhoneDTOFx> getPhones() {
+	public ObservableList<PhoneFx> getPhones() {
 		return phones;
 	}
 
-	public void setPhones(ObservableList<PhoneDTOFx> phones) {
+	public void setPhones(ObservableList<PhoneFx> phones) {
 		this.phones = phones;
 	}
 

@@ -11,7 +11,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.*;
 import javafx.scene.text.Text;
 import javafx.util.Builder;
-import org.ecsail.dto.PersonDTOFx;
+import org.ecsail.dto.PersonFx;
 import org.ecsail.enums.MemberType;
 import org.ecsail.mvci_membership.components.*;
 import org.ecsail.widgetfx.*;
@@ -121,7 +121,7 @@ public class MembershipView implements Builder<Region> {
 
     private void addPerson() {
         membershipModel.getPeople().add(membershipModel.getSelectedPerson());
-        Tab newTab = new PersonTabView(this, new PersonDTOFx(membershipModel.getSelectedPerson())).build();
+        Tab newTab = new PersonTabView(this, new PersonFx(membershipModel.getSelectedPerson())).build();
         membershipModel.getPeopleTabPane().getTabs().add(newTab);
         // Select the newly added tab
         membershipModel.getPeopleTabPane().getSelectionModel().select(newTab);
@@ -141,7 +141,7 @@ public class MembershipView implements Builder<Region> {
         action.accept(MembershipMessage.MOVE_SECONDARY_TO_PRIMARY);
     }
 
-    private PersonDTOFx getSecondaryMember() {
+    private PersonFx getSecondaryMember() {
         System.out.println("getSecondaryMember()  (PersonTabView)");
         return membershipModel.getPeople().stream()
                 .filter(p -> p.getMemberType() == MemberType.SECONDARY.getCode())
