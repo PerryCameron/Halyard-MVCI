@@ -93,7 +93,6 @@ public class RosterController extends Controller<RosterMessage> {
     }
 
     private void getRosterData() {
-        System.out.println("getRosterData()");
         mainController.setSpinnerOffset(50, 50);
         mainController.showLoadingSpinner(true);
         Task<Void> task = new Task<>() {

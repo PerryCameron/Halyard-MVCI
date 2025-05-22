@@ -104,17 +104,14 @@ public class ConnectInteractor implements ConfigFilePaths {
                         return false;
                     }
                 }
-
                 assert response.body() != null;
                 Map<String, String> result = connectModel.getObjectMapper().readValue(
                         response.body().string(),
                         new TypeReference<>() {
                         }
                 );
-
                 String status = result.get("status");
                 String message = result.get("message");
-
                 if ("success".equals(status)) {
                     logger.info("Login successful: {}", message);
                     return true;
@@ -320,7 +317,4 @@ public class ConnectInteractor implements ConfigFilePaths {
         return connectModel.currentLoginProperty();
     }
 
-//    public HalyardUser getHalyardUser() {
-//        return connectModel.geth
-//    }
 }

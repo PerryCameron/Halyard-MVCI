@@ -3,6 +3,7 @@ package org.ecsail.mvci_main;
 import com.fasterxml.jackson.core.type.TypeReference;
 import javafx.application.Platform;
 import javafx.scene.layout.Region;
+import org.ecsail.exceptions.GlobalDataFetchException;
 import org.ecsail.fx.BoardPositionDTO;
 import org.ecsail.fx.MembershipListDTO;
 import org.ecsail.fileio.FileIO;
@@ -10,6 +11,7 @@ import org.ecsail.interfaces.ConfigFilePaths;
 import org.ecsail.interfaces.Status;
 import org.ecsail.pojo.HalyardUser;
 import org.ecsail.widgetfx.PaneFx;
+import org.ecsail.wrappers.GlobalDataResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -95,42 +97,56 @@ public class MainInteractor implements ConfigFilePaths {
         mainModel.setConnectError(b);
     }
 
-    public void fetchPositions() throws Exception {
-        String endpoint = "positions";
-        String jsonResponse = mainModel.getHttpClient().fetchDataFromGybe(endpoint);
-        logger.debug("positions response: {}", jsonResponse);
-        List<BoardPositionDTO> choices = mainModel.getHttpClient().getObjectMapper().readValue(
-                jsonResponse,
-                new TypeReference<>() {
-                }
-        );
-        logger.info("Fetched {} positions", choices.size());
-        Platform.runLater(() -> {
-            mainModel.getBoardPositionDTOS().addAll(choices); // this is saying required type is MembershipListRadioDTO
-            logger.info("Radio choices model updated with {} choices", mainModel.getBoardPositionDTOS().size());
-        });
-    }
-
-    // fetches user information from database that correspond to the userName (email) of the person who logged in.
-    public void fetchHalyardUser(String email) throws Exception {
+    public GlobalDataResponse fetchGlobalData(String email) throws GlobalDataFetchException {
         try {
             // Construct endpoint with URL-encoded email
-            String endpoint = "halyard-user?email=" + URLEncoder.encode(email, StandardCharsets.UTF_8);
+            String endpoint = "global-data?email=" + URLEncoder.encode(email, StandardCharsets.UTF_8);
             String jsonResponse = mainModel.getHttpClient().fetchDataFromGybe(endpoint);
-            logger.debug("halyard-user response: {}", jsonResponse);
-            // Deserialize JSON to HalyardUserDTO
-            HalyardUser halyardUser = mainModel.getHttpClient().getObjectMapper().readValue(
+            logger.debug("global-data response: {}", jsonResponse);
+            // Deserialize JSON to GlobalDataResponse
+            GlobalDataResponse globalDataResponse = mainModel.getHttpClient().getObjectMapper().readValue(
                     jsonResponse,
-                    new TypeReference<>() {}
+                    new TypeReference<>() {
+                    }
             );
-            // Update mainModel on JavaFX Application Thread
-            Platform.runLater(() -> {
-                mainModel.setHalyardUser(halyardUser);
-                logger.info("User: {}", mainModel.getHalyardUser().getFullName());
-            });
+            if (globalDataResponse == null) {
+                throw new GlobalDataFetchException("Received null response from server");
+            }
+            if (globalDataResponse.isSuccess()) {
+                // Validate response fields
+                if (globalDataResponse.getUser() == null || globalDataResponse.getBoardPositions() == null) {
+                    throw new GlobalDataFetchException("Invalid response: user or board positions are null");
+                }
+                return globalDataResponse;
+            } else {
+                throw new GlobalDataFetchException("Failed to fetch global data: " + globalDataResponse.getMessage());
+            }
+        } catch (IOException e) {
+            logger.error("Failed to fetch global data for email: {}", email, e);
+            throw new GlobalDataFetchException("Failed to fetch global data for email: " + email, e);
         } catch (Exception e) {
-            logger.error("Failed to fetch user for email: {}", email, e);
-            throw new Exception("Failed to fetch user for email: " + email, e);
+            throw new RuntimeException(e);
         }
+    }
+
+    public void setGlobalData(GlobalDataResponse response) {
+        if (response == null) {
+            logger.error("Cannot set global data: response is null");
+            return;
+        }
+        Platform.runLater(() -> {
+            if (response.getUser() != null) {
+                mainModel.setHalyardUser(response.getUser());
+            } else {
+                logger.warn("No user data in global data response");
+            }
+            if (response.getBoardPositions() != null) {
+                mainModel.getBoardPositionDTOS().clear();
+                mainModel.getBoardPositionDTOS().addAll(response.getBoardPositions());
+                logger.debug("Updated board positions: {} items", response.getBoardPositions().size());
+            } else {
+                logger.warn("No board positions in global data response");
+            }
+        });
     }
 }

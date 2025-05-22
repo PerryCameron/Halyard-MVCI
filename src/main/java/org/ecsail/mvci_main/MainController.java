@@ -23,6 +23,9 @@ import org.ecsail.mvci_new_membership.NewMembershipController;
 import org.ecsail.mvci_roster.RosterController;
 import org.ecsail.mvci_slip.SlipController;
 import org.ecsail.mvci_welcome.WelcomeController;
+import org.ecsail.static_tools.StringTools;
+import org.ecsail.widgetfx.DialogueFx;
+import org.ecsail.wrappers.GlobalDataResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,18 +61,32 @@ public class MainController extends Controller<MainMessage> implements Status {
         }
     }
 
-    public void getPositions() {
-        Task<Boolean> fetchPositionsTask = new Task<>() {
+    public void getGlobalData() {
+        String email = connectController.getLogin().userProperty().get();
+        if (email == null || email.isBlank()) {
+            logger.error("Cannot fetch global data: email is empty");
+            DialogueFx.errorAlert("Error", "No user email provided");
+            return;
+        }
+        Task<GlobalDataResponse> fetchGlobalDataTask = new Task<>() {
             @Override
-            protected Boolean call() throws Exception {
-            mainInteractor.fetchPositions();
-            mainInteractor.fetchHalyardUser(connectController.getLogin().userProperty().get());
-            return true;
+            protected GlobalDataResponse call() throws Exception {
+                return mainInteractor.fetchGlobalData(email);
             }
         };
-//        fetchPositionsTask.setOnSucceeded(evt -> System.out.println("succeeded"));
-//        fetchPositionsTask.setOnFailed(evt -> System.out.println("failed"));
-        Thread thread = new Thread(fetchPositionsTask);
+        fetchGlobalDataTask.setOnSucceeded(e -> {
+            GlobalDataResponse response = fetchGlobalDataTask.getValue();
+            if (response != null) {
+                mainInteractor.setGlobalData(response);
+            }
+        });
+        fetchGlobalDataTask.setOnFailed(e -> {
+            Throwable exception = fetchGlobalDataTask.getException();
+            logger.error("Failed to fetch global data for email: {}, error: {}", email, exception.getMessage());
+            Platform.runLater(() -> DialogueFx.errorAlert("Error", "Failed to fetch global data: " + exception.getMessage()));
+        });
+        Thread thread = new Thread(fetchGlobalDataTask);
+        thread.setDaemon(true); // Ensure thread doesn't prevent app shutdown
         thread.start();
     }
 

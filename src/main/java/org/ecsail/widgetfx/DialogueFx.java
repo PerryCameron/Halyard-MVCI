@@ -158,7 +158,6 @@ public class DialogueFx {
         Stage alertStage = (Stage) alert.getDialogPane().getScene().getWindow();
         // Flag to ensure positioning runs only once
         final boolean[] hasPositioned = {false};
-        System.out.println("tieAlertwidth: " + stageWidth);
         // Position the dialog only once when about to show
         EventHandler<WindowEvent> positionHandler = e -> {
             if (!hasPositioned[0]) {

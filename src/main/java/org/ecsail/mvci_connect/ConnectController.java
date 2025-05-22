@@ -7,7 +7,6 @@ import okhttp3.Response;
 import org.ecsail.fx.LoginDTOProperty;
 import org.ecsail.interfaces.Controller;
 import org.ecsail.mvci_main.MainController;
-import org.ecsail.pojo.HalyardUser;
 import org.ecsail.widgetfx.DialogueFx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,7 +62,7 @@ public class ConnectController extends Controller<ConnectMessage> {
                 connectInteractor.closeLoginStage();
                 mainController.openWelcomeMVCI();
                 mainController.setStatus("Connected to " + connectInteractor.server());
-                mainController.getPositions();
+                mainController.getGlobalData();
             }
         });
         connectTask.setOnFailed(event -> {
@@ -98,9 +97,6 @@ public class ConnectController extends Controller<ConnectMessage> {
         thread.start();
     }
 
-//    public HalyardUser getHalyardUser() {
-//        return connectInteractor.getHalyardUser();
-//    }
     public LoginDTOProperty getLogin() {
         return connectInteractor.getLoginDTOProperty();
     }

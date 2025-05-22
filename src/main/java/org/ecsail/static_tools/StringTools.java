@@ -153,4 +153,8 @@ public class StringTools {
             }
         }
     }
+
+    public static boolean isBlank(String str) {
+        return str == null || str.trim().isEmpty();
+    }
 }
