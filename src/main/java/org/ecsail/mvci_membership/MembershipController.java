@@ -150,8 +150,8 @@ public class MembershipController extends Controller<MembershipMessage> {
         task.setOnSucceeded(e -> {
             mainController.showLoadingSpinner(false);
             switch (task.getValue()) {
-                case DELETE_MEMBERSHIP -> {
-//                    membershipInteractor.removeMembershipFromList(mainController.getRosterController().getRosterTableView());
+                case DELETE_MEMBERSHIP_FROM_DATABASE_SUCCEED -> {
+                    membershipInteractor.removeMembershipFromList(mainController.getRosterController().getRosterTableView());
                     mainController.closeTabByMsId(membershipInteractor.getMsId());
                 }
                 default -> {}

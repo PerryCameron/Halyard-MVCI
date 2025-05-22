@@ -115,11 +115,11 @@ public class MainController extends Controller<MainMessage> implements Status {
 
     public void openMembershipMVCI(RosterFx rosterDTOFx, int selectedYear) {
         if (mainInteractor.tabIsNotOpen(rosterDTOFx.getMsId()))
-            mainView.addNewTab("Mem " + rosterDTOFx.getId(), new MembershipController(this, rosterDTOFx, selectedYear).getView(), rosterDTOFx.getMsId());
+            mainView.addNewTab("Mem " + rosterDTOFx.getId(), new MembershipController(this, rosterDTOFx, selectedYear).getView(), rosterDTOFx.getMsId(),true);
     }
 
     public void openBoatMVCI(BoatListDTO b) {
-        mainView.addNewTab("Boat " + b.getBoatId(), new BoatController(this, b).getView(), b.getBoatId());
+        mainView.addNewTab("Boat " + b.getBoatId(), new BoatController(this, b).getView(), b.getBoatId(),true);
     }
 
     public void closeMembershipMVCI(RosterFx rosterDTOFx, int selectedYear) {
@@ -144,38 +144,38 @@ public class MainController extends Controller<MainMessage> implements Status {
 
     private void openBodTab(String tabName) {
         if (mainInteractor.tabIsNotOpen(-7))
-            mainView.addNewTab(tabName, new BodController(this).getView(), -7);
+            mainView.addNewTab(tabName, new BodController(this).getView(), -7, true);
     }
 
     private void openDepositsTab(String tabName) {
         if (mainInteractor.tabIsNotOpen(-6))
-            mainView.addNewTab(tabName, new DepositController(this).getView(), -6);
+            mainView.addNewTab(tabName, new DepositController(this).getView(), -6, true);
     }
 
     private void openNewMembershipTab(String tabName) {
         if (mainInteractor.tabIsNotOpen(-5))
-            mainView.addNewTab(tabName, new NewMembershipController(this).getView(), -5);
+            mainView.addNewTab(tabName, new NewMembershipController(this).getView(), -5, true);
     }
 
     private void openSlipsTab(String tabName) {
         if (mainInteractor.tabIsNotOpen(-4))
-            mainView.addNewTab(tabName, new SlipController(this).getView(), -4);
+            mainView.addNewTab(tabName, new SlipController(this).getView(), -4, true);
     }
 
     private void openBoatListTab(String tabName) {
         if (mainInteractor.tabIsNotOpen(-3))
-            mainView.addNewTab(tabName, new BoatListController(this).getView(), -3);
+            mainView.addNewTab(tabName, new BoatListController(this).getView(), -3, true);
     }
 
     private void openRosterTab(String tabName) {
         if (mainInteractor.tabIsNotOpen(-2))
             this.rosterController = new RosterController(this);
-            mainView.addNewTab(tabName, rosterController.getView(), -2);
+            mainView.addNewTab(tabName, rosterController.getView(), -2, false);
     }
 
     public void openWelcomeMVCI() {
         mainView.closeTabs();
-        mainView.addNewTab("Welcome", new WelcomeController(this).getView(), -1);
+        mainView.addNewTab("Welcome", new WelcomeController(this).getView(), -1, false);
     }
 
     public void closeTabByMsId(int msId) {

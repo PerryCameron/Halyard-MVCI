@@ -298,12 +298,13 @@ public class MainView implements Builder<Region> {
         mainModel.getMainTabPane().getTabs().clear();
     }
 
-    protected void addNewTab(String name, Region region, int msId) {
+    protected void addNewTab(String name, Region region, int msId, boolean closable) {
         if (PaneFx.tabIsOpen(msId, mainModel.getMainTabPane())) {
             mainModel.setMsId(msId);
             selectTab();
         } else {
             Tab newTab = new Tab(name, region);
+            newTab.setClosable(closable);
             newTab.setUserData(msId);
             mainModel.getMainTabPane().getTabs().add(newTab);
             mainModel.getMainTabPane().getSelectionModel().select(newTab);

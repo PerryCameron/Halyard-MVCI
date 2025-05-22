@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Optional;
 
 public class MembershipInteractor implements SlipUser {
     private final MembershipModel membershipModel;
@@ -303,33 +304,31 @@ public class MembershipInteractor implements SlipUser {
             if (response == null) {
                 logger.error("Failed to delete membership {}: Null response from server", membershipModel.membershipProperty().get().getMembershipId());
                 Platform.runLater(() -> DialogueFx.errorAlert("Delete Membership Failed", "Null response from server"));
-                return MembershipMessage.DELETE_MEMBERSHIP;
+                return MembershipMessage.DELETE_MEMBERSHIP_FROM_DATABASE_FAIL;
             }
             UpdateResponse updateResponse = membershipModel.getHttpClient().getObjectMapper()
                     .readValue(response, UpdateResponse.class);
             if (updateResponse == null) {
                 logger.error("Failed to delete membership {}: Invalid response from server", membershipModel.membershipProperty().get().getMembershipId());
                 Platform.runLater(() -> DialogueFx.errorAlert("Delete Membership Failed", "Invalid response from server"));
-                return MembershipMessage.DELETE_MEMBERSHIP;
+                return MembershipMessage.DELETE_MEMBERSHIP_FROM_DATABASE_FAIL;
             }
             if (updateResponse.isSuccess()) {
                 logger.info("Successfully deleted membership {}", membershipModel.membershipProperty().get().getMembershipId());
-                Platform.runLater(() -> {
-                    // close membership tab
-                    // remove from tableView List
-                });
+                return MembershipMessage.DELETE_MEMBERSHIP_FROM_DATABASE_SUCCEED;
             } else {
                 String errorMessage = updateResponse.getMessage() != null ? updateResponse.getMessage() : "Unknown error";
                 logger.error("Failed to membership boat {}: {}", membershipModel.membershipProperty().get().getMembershipId(), errorMessage);
                 Platform.runLater(() -> DialogueFx.errorAlert("Delete Boat Failed", errorMessage));
+                return MembershipMessage.DELETE_MEMBERSHIP_FROM_DATABASE_FAIL;
             }
         } catch (Exception e) {
             Integer boatId = membershipModel.getSelectedBoat() != null ?
                     membershipModel.getSelectedBoat().getBoatId() : null;
             logger.error("Failed to delete boat {}: {}", boatId, e.getMessage(), e);
             Platform.runLater(() -> DialogueFx.errorAlert("Delete Boat Failed", e.getMessage()));
+            return MembershipMessage.DELETE_MEMBERSHIP_FROM_DATABASE_FAIL;
         }
-        return MembershipMessage.DELETE_MEMBERSHIP;
     }
 
 
@@ -408,7 +407,13 @@ public class MembershipInteractor implements SlipUser {
     }
 
     public void removeMembershipFromList(TableView<RosterFx> rosterTableView) {
-        rosterTableView.getItems().remove(membershipModel.membershipProperty().get());
+        Optional<RosterFx> rosterFx = Optional.ofNullable(rosterTableView.getItems().stream()
+                .filter(roster -> roster.getMsId() == membershipModel.membershipProperty()
+                        .get().getMsId()).findFirst().orElse(null));
+        if(rosterFx.isPresent()) {
+            rosterTableView.getItems().remove(rosterFx.get());
+            logger.info("Removed membership {} from membership list", rosterFx.get().getId());
+        }
     }
 
     public int getMsId() {

@@ -50,6 +50,7 @@ public class DialogueFx {
         alert.setContentText(message);
         tieAlertToStage(alert, 600, 400);
         DialogPane dialogPane = alert.getDialogPane();
+        getTitleIcon(dialogPane);
         dialogPane.getStylesheets().add("css/dark/dialogue.css");
         dialogPane.getStyleClass().add("myDialog");
         return alert;
@@ -72,7 +73,7 @@ public class DialogueFx {
         Alert alert = new Alert(type);
         alert.setHeaderText(header);
         alert.setContentText(message);
-        tieAlertToStage(alert, 600, 400);
+//        tieAlertToStage(alert, 600, 400);
         DialogPane dialogPane = alert.getDialogPane();
         dialogPane.getStylesheets().add("css/dark/dialogue.css");
         dialogPane.getStyleClass().add("myDialog");
@@ -185,6 +186,7 @@ public class DialogueFx {
     public static boolean verifyAction(String[] string, Object o) {
         if(o != null) {
             Alert alert = DialogueFx.customAlert(string[0], string[1], Alert.AlertType.CONFIRMATION);
+            tieAlertToStage(alert, 400, 200);
             Optional<ButtonType> result = alert.showAndWait();
             if (result.isPresent() && result.get() == ButtonType.OK) return true;
         } else {
