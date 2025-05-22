@@ -4,8 +4,10 @@ import javafx.concurrent.Task;
 import javafx.scene.layout.Region;
 import javafx.stage.Stage;
 import okhttp3.Response;
+import org.ecsail.fx.LoginDTOProperty;
 import org.ecsail.interfaces.Controller;
 import org.ecsail.mvci_main.MainController;
+import org.ecsail.pojo.HalyardUser;
 import org.ecsail.widgetfx.DialogueFx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -94,6 +96,13 @@ public class ConnectController extends Controller<ConnectMessage> {
         });
         Thread thread = new Thread(connectTask);
         thread.start();
+    }
+
+//    public HalyardUser getHalyardUser() {
+//        return connectInteractor.getHalyardUser();
+//    }
+    public LoginDTOProperty getLogin() {
+        return connectInteractor.getLoginDTOProperty();
     }
 
     public Stage getStage() {

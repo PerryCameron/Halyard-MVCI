@@ -63,6 +63,7 @@ public class MainController extends Controller<MainMessage> implements Status {
             @Override
             protected Boolean call() throws Exception {
             mainInteractor.fetchPositions();
+            mainInteractor.fetchHalyardUser(connectController.getLogin().userProperty().get());
             return true;
             }
         };
@@ -194,6 +195,6 @@ public class MainController extends Controller<MainMessage> implements Status {
 
     public void showLoginDialog() {
 //        connectController.getView();
-        logger.warn("loggged out");
+        logger.warn("logged out");
     }
 }

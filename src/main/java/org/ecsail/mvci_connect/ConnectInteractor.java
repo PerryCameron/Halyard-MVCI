@@ -3,6 +3,8 @@ package org.ecsail.mvci_connect;
 import com.fasterxml.jackson.core.type.TypeReference;
 import javafx.stage.Stage;
 import okhttp3.Response;
+import org.ecsail.fx.LoginDTOProperty;
+import org.ecsail.pojo.HalyardUser;
 import org.ecsail.pojo.Login;
 import org.ecsail.fileio.FileIO;
 import org.ecsail.interfaces.ConfigFilePaths;
@@ -40,7 +42,7 @@ public class ConnectInteractor implements ConfigFilePaths {
         connectModel.getLoginDTOS().addAll(loginDTOS);
         copyDefaultToCurrentLogin();
         updateComboBox();
-        printLoginObjects();
+//        printLoginObjects();
         // Set the server URL for HttpClientUtil
         connectModel.updateServerUrl();
     }
@@ -276,17 +278,17 @@ public class ConnectInteractor implements ConfigFilePaths {
         logger.info("{} saved", LOGIN_FILE);
     }
 
-    public void printLoginObjects() {
-        System.out.println("---Printing login objects");
-        connectModel.getLoginDTOS().forEach(loginDTO -> {
-            System.out.println(loginDTO);
-        });
-        System.out.println("---Printing current object");
-        System.out.println(connectModel.currentLoginProperty().userProperty().getValue());
-        System.out.println(connectModel.currentLoginProperty().hostProperty().getValue());
-        System.out.println(connectModel.currentLoginProperty().passwdProperty().getValue());
-        System.out.println("");
-    }
+//    public void printLoginObjects() {
+//        System.out.println("---Printing login objects");
+//        connectModel.getLoginDTOS().forEach(loginDTO -> {
+//            System.out.println(loginDTO);
+//        });
+//        System.out.println("---Printing current object");
+//        System.out.println(connectModel.currentLoginProperty().userProperty().getValue());
+//        System.out.println(connectModel.currentLoginProperty().hostProperty().getValue());
+//        System.out.println(connectModel.currentLoginProperty().passwdProperty().getValue());
+//        System.out.println("");
+//    }
 
     private int findNextIndex() {
         return connectModel.getLoginDTOS().stream()
@@ -313,4 +315,12 @@ public class ConnectInteractor implements ConfigFilePaths {
     public String server() {
         return connectModel.getHttpClient().getServerUrl();
     }
+
+    public LoginDTOProperty getLoginDTOProperty() {
+        return connectModel.currentLoginProperty();
+    }
+
+//    public HalyardUser getHalyardUser() {
+//        return connectModel.geth
+//    }
 }

@@ -17,6 +17,7 @@ import com.itextpdf.layout.properties.VerticalAlignment;
 import org.ecsail.fx.MembershipFx;
 import org.ecsail.fx.PersonFx;
 import org.ecsail.mvci_membership.MembershipModel;
+import org.ecsail.pojo.HalyardUser;
 import org.ecsail.static_tools.ByteTools;
 import org.ecsail.static_tools.HalyardPaths;
 import org.slf4j.Logger;
@@ -36,8 +37,9 @@ public class PDF_Envelope {
 	private final PdfFont font;
 	private final MembershipFx membershipFx;
 	private Optional<PersonFx> primary;
+	private Optional<HalyardUser> halyardUser;
 
-	public PDF_Envelope(boolean iom, MembershipModel model) throws IOException {
+	public PDF_Envelope(MembershipModel model) throws IOException {
 		logger.info("Creating envelope");
 		if (model == null) {
 			System.out.println("MembershipModel is null");
@@ -48,10 +50,10 @@ public class PDF_Envelope {
 				.filter(person -> person != null && person.getMemberType() == 1)
 				.findFirst()
 				: Optional.empty();
+		this.halyardUser = Optional.ofNullable(model.getMainModel().getHalyardUser());
 
 
 		HalyardPaths.checkPath(HalyardPaths.ECSC_HOME);
-//		this.membershipChair = Objects.requireNonNull(dataBaseService).getCurrentMembershipChair();
 		this.current_membership_id = Objects.requireNonNull(model).membershipProperty().get().membershipIdProperty().get();
 
 		if(System.getProperty("os.name").equals("Windows 10"))
@@ -96,14 +98,9 @@ public class PDF_Envelope {
 		Document doc = new Document(pdf, new PageSize(envelope));
 		doc.setTopMargin(0);
 		doc.setLeftMargin(0.25f);
-//		if(isOneMembership) {
-//			membershipListDTO = dataBaseService.getMembershipListByIdAndYear(current_membership_id, year);
 		doc.add(createReturnAddress());
 		doc.add(new Paragraph(new Text("\n\n\n\n\n")));
 		doc.add(createAddress());
-//		} else {
-//			buildAddress(doc);
-//		}
 		doc.close();
 	}
 
@@ -119,28 +116,10 @@ public class PDF_Envelope {
 		Document doc = new Document(pdf, new PageSize(envelope));
 		doc.setTopMargin(0);
 		doc.setLeftMargin(0.25f);
-//		if(isOneMembership) {
-//			membershipListDTO = dataBaseService.getMembershipListByIdAndYear(current_membership_id, year);
 		doc.add(createReturnAddress());
 		doc.add(new Paragraph(new Text("\n\n\n\n\n\n\n\n\n")));
 		doc.add(createAddress());
-//		} else {
-//			buildAddress(doc);
-//		}
 		doc.close();
-	}
-
-	private void buildAddress(Document doc) {
-////		List<MembershipIdDTO> membershipIdDTOS = dataBaseService.getAllMembershipIdsByYear(year);
-//		membershipIdDTOS.sort(Comparator.comparing(MembershipIdDTO::getMembershipId));
-//		for(MembershipIdDTO id: membershipIdDTOS) {
-//			current_membership_id = id.getMembershipId();
-////			membershipListDTO = dataBaseService.getMembershipListByIdAndYear(current_membership_id, year);
-//			doc.add(createReturnAddress());
-//			doc.add(new Paragraph(new Text("\n\n\n\n\n")));
-//			doc.add(createAddress());
-//			doc.add(new AreaBreak(AreaBreakType.NEXT_PAGE));
-//		}
 	}
 
 	public Table createReturnAddress() {
@@ -155,8 +134,11 @@ public class PDF_Envelope {
 		cell.add(ecscLogo);
 		mainTable.addCell(cell);
 		mainTable.addCell(newAddressCell(10,10,"ECSC Membership"));
-//		mainTable.addCell(newAddressCell(10,10,membershipChair.getAddress()));
-//		mainTable.addCell(newAddressCell(10,10,membershipChair.getCityStateZip()));
+		halyardUser.ifPresent(user -> {
+			mainTable.addCell(newAddressCell(10,10, user.getAddress()));
+			mainTable.addCell(newAddressCell(10,10, user.getCityStateZip()));
+		});
+
 		return mainTable;
 	}
 

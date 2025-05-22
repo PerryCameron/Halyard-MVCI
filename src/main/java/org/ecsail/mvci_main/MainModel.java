@@ -9,6 +9,7 @@ import javafx.collections.ObservableMap;
 import javafx.scene.control.TabPane;
 import org.ecsail.fx.BoardPositionDTO;
 import org.ecsail.interfaces.Status;
+import org.ecsail.pojo.HalyardUser;
 import org.ecsail.static_tools.HttpClientUtil;
 
 
@@ -27,6 +28,7 @@ public class MainModel {
     private final BooleanProperty lightTxFail = new SimpleBooleanProperty(false);
     private final BooleanProperty lightRxSuccess = new SimpleBooleanProperty(false);
     private final BooleanProperty lightRxFail = new SimpleBooleanProperty(false);
+    private HalyardUser halyardUser = new HalyardUser();
     private Integer msId;
 
 
@@ -95,6 +97,14 @@ public class MainModel {
 
     public void setConnectError(boolean connectError) {
         this.clientConnectError.set(connectError);
+    }
+
+    public HalyardUser getHalyardUser() {
+        return halyardUser;
+    }
+
+    public void setHalyardUser(HalyardUser halyardUser) {
+        this.halyardUser = halyardUser;
     }
 
     public void toggleClientConnectError() {

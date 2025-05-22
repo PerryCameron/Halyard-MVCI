@@ -43,7 +43,7 @@ public class MembershipInteractor implements SlipUser {
 
     public void printEnvelope() {
         try {
-            new PDF_Envelope(true, membershipModel);
+            new PDF_Envelope(membershipModel);
         } catch (IOException e1) {
             Platform.runLater(() -> {
                 DialogueFx.errorAlert("Unable to print envelope: {}", e1.getMessage());

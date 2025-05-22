@@ -8,11 +8,14 @@ import org.ecsail.fx.MembershipListDTO;
 import org.ecsail.fileio.FileIO;
 import org.ecsail.interfaces.ConfigFilePaths;
 import org.ecsail.interfaces.Status;
+import org.ecsail.pojo.HalyardUser;
 import org.ecsail.widgetfx.PaneFx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class MainInteractor implements ConfigFilePaths {
@@ -30,9 +33,7 @@ public class MainInteractor implements ConfigFilePaths {
     }
 
     public void setStatus(String status) {
-        Platform.runLater(() -> {
-            mainModel.statusLabelProperty().set(status);
-        });
+        Platform.runLater(() -> mainModel.statusLabelProperty().set(status));
     }
 
     public void setComplete() {
@@ -110,17 +111,26 @@ public class MainInteractor implements ConfigFilePaths {
         });
     }
 
-
-//    public void setChangeStatus(Status.light status) {
-//        Platform.runLater(() -> {
-//            switch (status) {
-//                case RX_RED -> setBlink(Color.RED, "receive");
-//                case TX_RED -> setBlink(Color.RED, "transmit");
-//                case RX_GREEN -> setBlink(Color.GREEN, "receive");
-//                case TX_GREEN -> setBlink(Color.GREEN, "transmit");
-//            }
-//        });
-//    }
-
-
+    // fetches user information from database that correspond to the userName (email) of the person who logged in.
+    public void fetchHalyardUser(String email) throws Exception {
+        try {
+            // Construct endpoint with URL-encoded email
+            String endpoint = "halyard-user?email=" + URLEncoder.encode(email, StandardCharsets.UTF_8);
+            String jsonResponse = mainModel.getHttpClient().fetchDataFromGybe(endpoint);
+            logger.debug("halyard-user response: {}", jsonResponse);
+            // Deserialize JSON to HalyardUserDTO
+            HalyardUser halyardUser = mainModel.getHttpClient().getObjectMapper().readValue(
+                    jsonResponse,
+                    new TypeReference<>() {}
+            );
+            // Update mainModel on JavaFX Application Thread
+            Platform.runLater(() -> {
+                mainModel.setHalyardUser(halyardUser);
+                logger.info("User: {}", mainModel.getHalyardUser().getFullName());
+            });
+        } catch (Exception e) {
+            logger.error("Failed to fetch user for email: {}", email, e);
+            throw new Exception("Failed to fetch user for email: " + email, e);
+        }
+    }
 }

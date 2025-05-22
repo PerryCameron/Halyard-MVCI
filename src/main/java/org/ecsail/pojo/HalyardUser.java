@@ -6,12 +6,18 @@ public class HalyardUser {
     private String email;
     private String address;
     private String City;
-    private String Country;
     private String State;
     private String Zip;
-    private String phone;
 
     public HalyardUser() {
+    }
+
+    public String getCityStateZip() {
+        return City + ", " + State + " " + Zip;
+    }
+
+    public String getFullName() {
+        return firstName + " " + lastName;
     }
 
     public String getFirstName() {
@@ -54,14 +60,6 @@ public class HalyardUser {
         City = city;
     }
 
-    public String getCountry() {
-        return Country;
-    }
-
-    public void setCountry(String country) {
-        Country = country;
-    }
-
     public String getState() {
         return State;
     }
@@ -78,11 +76,4 @@ public class HalyardUser {
         Zip = zip;
     }
 
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
 }
