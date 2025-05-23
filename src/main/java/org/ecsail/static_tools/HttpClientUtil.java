@@ -5,7 +5,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import okhttp3.logging.HttpLoggingInterceptor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.*;
-import org.ecsail.mvci_main.MainModel;
+import org.ecsail.mvci.main.MainModel;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

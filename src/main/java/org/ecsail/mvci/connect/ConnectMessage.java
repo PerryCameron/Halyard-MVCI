@@ -1,0 +1,13 @@
+package org.ecsail.mvci.connect;
+
+public enum ConnectMessage {
+    SAVE_LOGINS,
+    SUPPLY_LOGINS,
+    COPY_CURRENT_TO_MATCHING,
+    SET_CURRENT_LOGIN_AS_DEFAULT,
+    UPDATE_CURRENT_LOGIN,
+    UPDATE_COMBO_BOX,
+    CREATE_NEW_LOGIN,
+    DELETE_CURRENT_LOGIN,
+    CONNECT_TO_SERVER
+}

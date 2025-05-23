@@ -2,9 +2,9 @@ package org.ecsail.static_tools;
 
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import org.ecsail.mvci_membership.components.InvoiceView;
-import org.ecsail.mvci_membership.MembershipMessage;
-import org.ecsail.mvci_membership.MembershipView;
+import org.ecsail.mvci.membership.components.InvoiceView;
+import org.ecsail.mvci.membership.MembershipMessage;
+import org.ecsail.mvci.membership.MembershipView;
 
 import java.util.regex.Pattern;
 

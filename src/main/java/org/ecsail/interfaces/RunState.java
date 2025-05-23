@@ -1,7 +1,7 @@
 package org.ecsail.interfaces;
 
 import javafx.beans.property.ObjectProperty;
-import org.ecsail.mvci_connect.ConnectView;
+import org.ecsail.mvci.connect.ConnectView;
 
 public interface RunState {
     enum Mode {

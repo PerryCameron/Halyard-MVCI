@@ -16,7 +16,7 @@ import com.itextpdf.layout.properties.HorizontalAlignment;
 import com.itextpdf.layout.properties.VerticalAlignment;
 import org.ecsail.fx.MembershipFx;
 import org.ecsail.fx.PersonFx;
-import org.ecsail.mvci_membership.MembershipModel;
+import org.ecsail.mvci.membership.MembershipModel;
 import org.ecsail.pojo.HalyardUser;
 import org.ecsail.static_tools.ByteTools;
 import org.ecsail.static_tools.HalyardPaths;

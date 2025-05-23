@@ -3,7 +3,7 @@ package org.ecsail;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.ecsail.mvci_main.MainController;
+import org.ecsail.mvci.main.MainController;
 import org.ecsail.static_tools.VersionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

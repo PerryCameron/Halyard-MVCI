@@ -1,6 +1,6 @@
 package org.ecsail.static_tools;
 
-import org.ecsail.mvci_main.MainModel;
+import org.ecsail.mvci.main.MainModel;
 import org.slf4j.Logger;
 
 import java.util.Arrays;
