@@ -82,8 +82,6 @@ public class RosterModel {
     public TableView<RosterFx> getRosterTableView() {
         return rosterTableView.get();
     }
-
-
     public String getTextFieldString() {
         return textFieldString.get();
     }
@@ -111,7 +109,6 @@ public class RosterModel {
     public boolean isListsLoaded() {
         return listsLoaded.get();
     }
-
     public SimpleObjectProperty<TableView<RosterFx>> rosterTableViewProperty() {
         return rosterTableView;
     }

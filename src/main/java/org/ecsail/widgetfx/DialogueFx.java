@@ -44,7 +44,6 @@ public class DialogueFx {
     }
 
     public static Alert customAlert(String header, String message, Alert.AlertType type) {
-        System.out.println("launching custom alert");
         Alert alert = new Alert(type);
         alert.setHeaderText(header);
         alert.setContentText(message);
@@ -92,7 +91,6 @@ public class DialogueFx {
         ButtonType logoutOthersButton = new ButtonType("Log Out from Other Devices");
         ButtonType tryAgainLaterButton = new ButtonType("Try Again Later", ButtonBar.ButtonData.CANCEL_CLOSE);
         alert.getButtonTypes().setAll(logoutOthersButton, tryAgainLaterButton);
-
         Optional<ButtonType> result = alert.showAndWait();
         return result.isPresent() && result.get() == logoutOthersButton;
     }
@@ -133,7 +131,6 @@ public class DialogueFx {
         alert.setHeaderText(null);
         alert.setContentText(message);
         tieAlertToStage(alert, 400, 200);
-
         DialogPane dialogPane = alert.getDialogPane();
         dialogPane.getStylesheets().add("css/dark/dialogue.css");
         dialogPane.getStyleClass().add("myDialog");
@@ -171,13 +168,10 @@ public class DialogueFx {
                 double primaryY = BaseApplication.primaryStage.getY();
                 double primaryWidth = BaseApplication.primaryStage.getWidth();
                 double primaryHeight = BaseApplication.primaryStage.getHeight();
-
-
                 alertStage.setX(primaryX + (primaryWidth / 2) - (stageWidth / 2));
                 alertStage.setY(primaryY + (primaryHeight / 2) - (stageHeight / 2));
             }
         };
-
         // Add handler and remove it after first show to prevent re-triggering
         alertStage.setOnShowing(positionHandler);
         alertStage.setOnShown(e -> alertStage.removeEventHandler(WindowEvent.WINDOW_SHOWING, positionHandler));

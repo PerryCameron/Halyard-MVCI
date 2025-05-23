@@ -51,19 +51,20 @@ public class RosterController extends Controller<RosterMessage> {
 
     private void search() {
 //        rosterInteractor.search();
-//        Task<Void> task = new Task<>() {
-//            @Override
-//            protected Void call() {
-//                rosterInteractor.fillTableView(); // not FX
-//                Platform.runLater(() -> {
-//                    rosterInteractor.changeState(); // JFX Thread
-//                });
-//                return null;
-//            }
-//        };
-//        new Thread(task).start();
-//        updateRoster();
-        System.out.println("I broke search?");
+        Task<Void> task = new Task<>() {
+            @Override
+            protected Void call() {
+                System.out.println("searched was called");
+                rosterInteractor.fillTableView(); // not FX
+                return null;
+            }
+        };
+        new Thread(task).start();
+        task.setOnSucceeded(event -> {
+            rosterInteractor.changeState(); // JFX Thread
+        });
+        updateRoster();
+        System.out.println("I broke search? <- yes :)");
     }
 
     private void updateRoster() {

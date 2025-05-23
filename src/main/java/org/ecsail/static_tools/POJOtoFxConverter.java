@@ -3,13 +3,16 @@ package org.ecsail.static_tools;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.ecsail.fx.*;
+import org.ecsail.mvci.roster.RosterInteractor;
 import org.ecsail.pojo.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class POJOtoFxConverter {
-
+    private static final Logger logger = LoggerFactory.getLogger(POJOtoFxConverter.class);
     /**
      * Converts a list of {@link Roster} objects to an {@link ObservableList} of {@link RosterFx}
      * objects, sorted by ID in ascending order. The resulting list is suitable for JavaFX TableView binding.
@@ -20,6 +23,7 @@ public class POJOtoFxConverter {
      */
     public static ObservableList<RosterFx> copyRoster(List<Roster> roster) {
         if (roster == null || roster.isEmpty()) {
+            logger.error("Roster is null or empty");
             return FXCollections.observableArrayList();
         }
         List<RosterFx> rosterFxList = roster.stream()

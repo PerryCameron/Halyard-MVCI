@@ -24,10 +24,10 @@ public class RosterInteractor {
     private static final Logger logger = LoggerFactory.getLogger(RosterInteractor.class);
     private final RosterModel rosterModel;
 
-public RosterInteractor(RosterModel rm) {
-    rosterModel = rm;
+    public RosterInteractor(RosterModel rm) {
+        rosterModel = rm;
 
-}
+    }
 
 //    protected List<MembershipListDTO> setSlipsForRoster(List<MembershipListDTO> roster) {
 //        List<MembershipListDTO> updatedRoster = new ArrayList<>(roster); // Create a new list to avoid modifying the input directly
@@ -47,16 +47,18 @@ public RosterInteractor(RosterModel rm) {
     }
 
     protected void setRosterToTableview() {
-            logger.info("Setting memberships to roster on change.........");
-            rosterModel.getRosterTableView().setItems(rosterModel.getRosters());
+        logger.info("Setting memberships to roster on change.........");
+        rosterModel.getRosterTableView().setItems(rosterModel.getRosters());
     }
 
     protected void changeState() {
-        logger.debug("Rosters is in search mode: {}", rosterModel.isSearchMode());
+        Platform.runLater(() -> {
+            logger.debug("Rosters is in search mode: {}", rosterModel.isSearchMode());
             if (rosterModel.isSearchMode())
                 rosterModel.setNumberOfRecords(String.valueOf(rosterModel.getSearchedRosters().size()));
             else
                 rosterModel.setNumberOfRecords(String.valueOf(rosterModel.getRosters().size()));
+        });
     }
 
     protected void clearSearchBox() {
@@ -115,16 +117,22 @@ public RosterInteractor(RosterModel rm) {
                 endpoint.append("&searchParams=").append(URLEncoder.encode(param, StandardCharsets.UTF_8.name()));
             }
         }
-//        System.out.println(endpoint);
+        System.out.println(endpoint);
         // Fetch data using the constructed endpoint
-        String jsonResponse = rosterModel.getHttpClient().fetchDataFromGybe(endpoint.toString());
-//        logger.debug("Roster response: {}", jsonResponse);
-        List<Roster> roster = rosterModel.getHttpClient().getObjectMapper().readValue(
-                jsonResponse,
-                new TypeReference<>() {
-                }
-        );
-        return POJOtoFxConverter.copyRoster(roster);
+        try {
+            String jsonResponse = rosterModel.getHttpClient().fetchDataFromGybe(endpoint.toString());
+            logger.debug("Roster response: {}", jsonResponse);
+            List<Roster> roster = rosterModel.getHttpClient().getObjectMapper().readValue(
+                    jsonResponse,
+                    new TypeReference<>() {
+                    }
+            );
+            ObservableList<RosterFx> rosterFx = POJOtoFxConverter.copyRoster(roster);
+            return rosterFx;
+        } catch (Exception e) {
+            logger.error("Could not perform search: {}", e.getMessage());
+            return List.of();
+        }
     }
 
     protected void exportRoster() {
@@ -136,13 +144,14 @@ public RosterInteractor(RosterModel rm) {
     }
 
     protected void fillTableView() {
+        // do we have search terms in the box?
         if (!rosterModel.getTextFieldString().isEmpty()) fillWithSearchResults();
         else fillWithResults(); // search box cleared
     }
 
     private void fillWithResults() { // this is where we stick
+        logger.debug("TableView is set to display normal results");
         Platform.runLater(() -> {
-            logger.debug("TableView is set to display normal results");
             rosterModel.getRosterTableView().setItems(rosterModel.getRosters());
             rosterModel.setIsSearchMode(false);
             rosterModel.getSearchedRosters().clear();
@@ -151,6 +160,7 @@ public RosterInteractor(RosterModel rm) {
 
     private void fillWithSearchResults() {
         ObservableList<RosterFx> list = searchString(rosterModel.getTextFieldString());
+        System.out.println("Search list is: " + list);
         Platform.runLater(() -> {
             rosterModel.getSearchedRosters().clear();
             rosterModel.getSearchedRosters().addAll(list);
@@ -189,7 +199,7 @@ public RosterInteractor(RosterModel rm) {
     }
 
     public void setRoster(List<RosterFx> updatedRoster) {
-    // should already be in FX thread, but this is to make sure it doesn't stick.
+        // should already be in FX thread, but this is to make sure it doesn't stick.
         Platform.runLater(() -> {
             rosterModel.getRosters().addAll(updatedRoster);
             rosterModel.getRosterTableView().refresh();
