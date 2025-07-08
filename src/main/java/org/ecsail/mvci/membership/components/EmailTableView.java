@@ -36,7 +36,7 @@ public class EmailTableView implements Builder<TableView<EmailDTOFx>> {
 
     @Override
     public TableView<EmailDTOFx> build() {
-        TableView<EmailDTOFx> tableView = TableViewFx.tableViewOf(EmailDTOFx.class, 146);
+        TableView<EmailDTOFx> tableView = TableViewFx.tableViewOf(146,true);
         tableView.setItems(person.getEmail());
         List<TableColumn<EmailDTOFx, ?>> columns = Arrays.asList(createColumn1(), createColumn2(), createColumn3());
         tableView.getColumns().setAll(columns);

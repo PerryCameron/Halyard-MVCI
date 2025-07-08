@@ -167,3 +167,13 @@
 #box-test {
     -fx-background-color: blue;
 }
+
+.text-area {
+    -fx-background-color: white;
+    -fx-control-inner-background: white;
+}
+
+/* Alternatively, target the content directly */
+.text-area .content {
+    -fx-background-color: white;
+}

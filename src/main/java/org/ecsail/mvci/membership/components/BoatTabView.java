@@ -67,7 +67,7 @@ public class BoatTabView implements Builder<Tab> {
     }
 
     private Node getTableView() {
-        TableView<BoatDTOFx> tableView = TableViewFx.tableViewOf(BoatDTOFx.class, 200);
+        TableView<BoatDTOFx> tableView = TableViewFx.tableViewOf(200,true);
         membershipView.getMembershipModel().setBoatTableView(tableView);
         tableView.setItems(FXCollections.observableArrayList(membershipModel.membershipProperty().get().getBoats()));
         tableView.getColumns().addAll(Arrays.asList(col1(),col2(),col3(),col4(),col5(),col7(),col8(),col9(),col10()));

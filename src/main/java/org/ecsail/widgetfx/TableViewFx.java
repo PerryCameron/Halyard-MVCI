@@ -8,8 +8,9 @@ import javafx.scene.layout.VBox;
 
 public class TableViewFx {
 
-    public static <T> TableView<T> tableViewOf(Class<T> objectClass, double prefHeight) {
+    public static <T> TableView<T> tableViewOf(double prefHeight, boolean hGrow) { // Parameter 'objectClass' is never used
         TableView<T> tableView = new TableView<>();
+        if(hGrow)
         HBox.setHgrow(tableView, Priority.ALWAYS);
         tableView.setPrefHeight(prefHeight);
         tableView.setFixedCellSize(30);
@@ -29,7 +30,7 @@ public class TableViewFx {
     }
 
     public static <T> void requestFocusOnTable(TableView<T> tableView) {
-        TableColumn<T, ?> firstColumn = tableView.getColumns().get(0);
+        TableColumn<T, ?> firstColumn = tableView.getColumns().getFirst();
         tableView.layout();
         tableView.requestFocus();
         tableView.getSelectionModel().select(0);

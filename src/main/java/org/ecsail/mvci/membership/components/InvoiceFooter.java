@@ -173,7 +173,7 @@ public class InvoiceFooter implements Builder<Region> {
     }
 
     private TableView<PaymentDTO> tableView() {
-        this.tableView = TableViewFx.tableViewOf(PaymentDTO.class, 115);
+        this.tableView = TableViewFx.tableViewOf(115,true);
         tableView.setItems(invoiceDTO.getPaymentDTOS());
         tableView.getColumns().addAll(Arrays.asList(column1(),column2(),column3(),column4()));
         return tableView;

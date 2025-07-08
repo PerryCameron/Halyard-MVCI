@@ -3,10 +3,7 @@ package org.ecsail.mvci.membership.components;
 import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -23,6 +20,10 @@ import java.util.Arrays;
 public class NotesTabView implements Builder<Tab> {
     private final MembershipView membershipView;
     private final MembershipModel membershipModel;
+    private Button addButton;
+    private Button deleteButton;
+    private Button editButton;
+    private Button saveButton;
 
     public NotesTabView(MembershipView membershipView) {
         this.membershipView = membershipView;
@@ -42,10 +43,22 @@ public class NotesTabView implements Builder<Tab> {
 
     private Node getButtonControls() {
         VBox vBox = VBoxFx.vBoxOf(5.0, new Insets(10, 5, 5, 10));
+        this.addButton = ButtonFx.buttonOf("Add", 60, this::insertNote);
+        this.deleteButton = ButtonFx.buttonOf("Delete", 60, this::deleteNote);
+        this.editButton = ButtonFx.buttonOf("Edit", 60, this::editNote);
+        this.saveButton = ButtonFx.buttonOf("Save", 60, this::saveNote);
         vBox.getChildren().addAll(
-                ButtonFx.buttonOf("Add", 60, this::insertNote),
-                ButtonFx.buttonOf("Delete", 60, this::deleteNote));
+                addButton,
+                deleteButton,
+                editButton);
         return vBox;
+    }
+
+    private void saveNote() {
+    }
+
+    private void editNote() {
+        membershipModel.getTextArea().setEditable(true);
     }
 
     private void insertNote() {
@@ -63,7 +76,7 @@ public class NotesTabView implements Builder<Tab> {
     }
 
     private Node addTable() {
-        TableView<NotesFx> tableView = TableViewFx.tableViewOf(NotesFx.class, 200);
+        TableView<NotesFx> tableView = TableViewFx.tableViewOf(150,false);
         tableView.setItems(FXCollections.observableArrayList(membershipView.getMembershipModel().membershipProperty().get().getMemos()));
         tableView.getColumns().addAll(Arrays.asList(col1(), col2()));
         TableView.TableViewSelectionModel<NotesFx> selectionModel = tableView.getSelectionModel();
@@ -81,7 +94,8 @@ public class NotesTabView implements Builder<Tab> {
         TextArea textArea = membershipModel.getTextArea();
         textArea.setPrefWidth(700);
         textArea.setWrapText(true);
-        textArea.setStyle("-fx-background-color: white; -fx-control-inner-background: white;");
+        textArea.setEditable(false);
+//        textArea.setStyle("-fx-background-color: white; -fx-control-inner-background: white;");
         return textArea;
     }
 

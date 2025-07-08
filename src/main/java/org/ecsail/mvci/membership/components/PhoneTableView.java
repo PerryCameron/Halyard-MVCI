@@ -39,7 +39,7 @@ public class PhoneTableView implements Builder<TableView<PhoneFx>> {
 
     @Override
     public TableView<PhoneFx> build() {
-        TableView<PhoneFx> tableView = TableViewFx.tableViewOf(PhoneFx.class, 146);
+        TableView<PhoneFx> tableView = TableViewFx.tableViewOf(146,true);
         tableView.setItems(person.getPhones());
         List<TableColumn<PhoneFx, ?>> columns = new ArrayList<>();
         columns.add(createColumn1());

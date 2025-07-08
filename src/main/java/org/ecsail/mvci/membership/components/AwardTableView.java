@@ -31,7 +31,7 @@ public class AwardTableView implements Builder<TableView<AwardDTOFx>> {
 
     @Override
     public TableView<AwardDTOFx> build() {
-        TableView<AwardDTOFx> tableView = TableViewFx.tableViewOf(AwardDTOFx.class, 146);
+        TableView<AwardDTOFx> tableView = TableViewFx.tableViewOf(146,true);
         tableView.setItems(person.getAwards());
         tableView.getColumns().addAll(Arrays.asList(createColumn1(), createColumn2()));
         TableView.TableViewSelectionModel<AwardDTOFx> selectionModel = tableView.getSelectionModel();

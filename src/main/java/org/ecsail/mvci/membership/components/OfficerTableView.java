@@ -36,7 +36,7 @@ public class OfficerTableView implements Builder<TableView<OfficerFx>> {
 
     @Override
     public TableView<OfficerFx> build() {
-        TableView<OfficerFx> tableView = TableViewFx.tableViewOf(OfficerFx.class, 146);
+        TableView<OfficerFx> tableView = TableViewFx.tableViewOf(146,true);
         tableView.setItems(person.getOfficers());
         tableView.getColumns().addAll(Arrays.asList(createColumn1(), createColumn2(), createColumn3()));
         TableView.TableViewSelectionModel<OfficerFx> selectionModel = tableView.getSelectionModel();
