@@ -6,6 +6,7 @@ import javafx.scene.Node;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -35,7 +36,7 @@ public class NotesTabView implements Builder<Tab> {
 
     private Node createTableAndButtonsBox() {
         HBox hBox = HBoxFx.hBoxOf(new Insets(5, 5, 5, 5), "box-background-light", true);
-        hBox.getChildren().addAll(addTable(), getButtonControls());
+        hBox.getChildren().addAll(addTable(), addTextArea(), getButtonControls());
         return hBox;
     }
 
@@ -64,28 +65,39 @@ public class NotesTabView implements Builder<Tab> {
     private Node addTable() {
         TableView<NotesFx> tableView = TableViewFx.tableViewOf(NotesFx.class, 200);
         tableView.setItems(FXCollections.observableArrayList(membershipView.getMembershipModel().membershipProperty().get().getMemos()));
-        tableView.getColumns().addAll(Arrays.asList(col1(), col2(), col3()));
+        tableView.getColumns().addAll(Arrays.asList(col1(), col2()));
         TableView.TableViewSelectionModel<NotesFx> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) membershipModel.setSelectedNote(newSelection);
+            if (newSelection != null) {
+                membershipModel.setSelectedNote(newSelection);
+                membershipModel.textAreaProperty().get().setText(newSelection.getMemo());
+            }
         });
         membershipView.getMembershipModel().setNotesTableView(tableView);
         return tableView;
     }
 
-    private TableColumn<NotesFx, String> col3() {
-        TableColumn<NotesFx, String> col3 = TableColumnFx.editableStringTableColumn(NotesFx::memoProperty, "Note");
-        col3.setPrefWidth(740);
-        col3.setOnEditCommit(t -> {
-            NotesFx notesDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
-            notesDTO.setMemo(t.getNewValue());
-            membershipModel.setSelectedNote(notesDTO);
-            System.out.println("Column 3 and note: " + notesDTO.getMemoId());
-            membershipView.sendMessage().accept(MembershipMessage.UPDATE_NOTE);
-        });
-        col3.setMaxWidth(1f * Integer.MAX_VALUE * 80);   // Note
-        return col3;
+    private Node addTextArea() {
+        TextArea textArea = membershipModel.getTextArea();
+        textArea.setPrefWidth(700);
+        textArea.setWrapText(true);
+        textArea.setStyle("-fx-background-color: white; -fx-control-inner-background: white;");
+        return textArea;
     }
+
+//    private TableColumn<NotesFx, String> col3() {
+//        TableColumn<NotesFx, String> col3 = TableColumnFx.editableStringTableColumn(NotesFx::memoProperty, "Note");
+//        col3.setPrefWidth(740);
+//        col3.setOnEditCommit(t -> {
+//            NotesFx notesDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
+//            notesDTO.setMemo(t.getNewValue());
+//            membershipModel.setSelectedNote(notesDTO);
+//            System.out.println("Column 3 and note: " + notesDTO.getMemoId());
+//            membershipView.sendMessage().accept(MembershipMessage.UPDATE_NOTE);
+//        });
+//        col3.setMaxWidth(1f * Integer.MAX_VALUE * 80);   // Note
+//        return col3;
+//    }
 
     private TableColumn<NotesFx, String> col2() {
         TableColumn<NotesFx, String> col2 = new TableColumn<>("Type");
@@ -101,7 +113,7 @@ public class NotesTabView implements Builder<Tab> {
             membershipModel.setSelectedNote(notesDTO);
             membershipView.sendMessage().accept(MembershipMessage.UPDATE_NOTE);
         }));
-        col1.setMaxWidth(1f * Integer.MAX_VALUE * 15);   // Date
+        col1.setMaxWidth(1f * Integer.MAX_VALUE * 95);   // Date
         return col1;
     }
 }

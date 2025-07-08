@@ -55,6 +55,7 @@ public class MembershipModel {
     private final SimpleObjectProperty<PhoneFx> selectedPhone = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<InvoiceDTOFx> selectedInvoice = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<PaymentDTO> selectedPayment = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<TextArea> textArea = new SimpleObjectProperty<>(new TextArea());
     private final StringProperty selectedString = new SimpleStringProperty("");
     private final SimpleIntegerProperty selectedInvoiceCreateYear = new SimpleIntegerProperty(0);
     private final SimpleIntegerProperty selectedMembershipYear = new SimpleIntegerProperty(0);
@@ -467,5 +468,11 @@ public class MembershipModel {
         return mainModel;
     }
 
+    public TextArea getTextArea() {
+        return textArea.get();
+    }
 
+    public SimpleObjectProperty<TextArea> textAreaProperty() {
+        return textArea;
+    }
 }
