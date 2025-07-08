@@ -138,6 +138,7 @@ public class MembershipInteractor implements SlipUser {
         } catch (Exception e) {
             logger.error("Failed to update email with pId {}: {}",
                     membershipModel.getSelectedPerson().pIdProperty().get(), e.getMessage(), e);
+            DialogueFx.errorAlert("Unable to update Note", e.getMessage());
             membershipModel.getMainModel().toggleRxFail(); // Indicate failure
             return MembershipMessage.FAIL;
         }

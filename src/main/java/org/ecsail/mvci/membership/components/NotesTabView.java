@@ -6,6 +6,7 @@ import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import org.ecsail.fx.NotesFx;
@@ -50,15 +51,24 @@ public class NotesTabView implements Builder<Tab> {
         vBox.getChildren().addAll(
                 addButton,
                 deleteButton,
-                editButton);
+                editButton,
+                saveButton);
+        ButtonFx.buttonVisible(saveButton, false);
         return vBox;
     }
 
     private void saveNote() {
+        membershipView.sendMessage().accept(MembershipMessage.UPDATE_NOTE);
+        membershipModel.getSelectedNote().setMemo(membershipModel.getTextArea().getText());
+        ButtonFx.buttonVisible(editButton, true);
+        ButtonFx.buttonVisible(saveButton, false);
     }
 
     private void editNote() {
         membershipModel.getTextArea().setEditable(true);
+        ButtonFx.buttonVisible(editButton, false);
+        ButtonFx.buttonVisible(saveButton, true);
+
     }
 
     private void insertNote() {
@@ -75,6 +85,14 @@ public class NotesTabView implements Builder<Tab> {
             membershipView.sendMessage().accept(MembershipMessage.DELETE_NOTE);
     }
 
+    private Node addTextArea() {
+        TextArea textArea = membershipModel.getTextArea();
+        HBox.setHgrow(textArea, Priority.ALWAYS);
+        textArea.setWrapText(true);
+        textArea.setEditable(false);
+        return textArea;
+    }
+
     private Node addTable() {
         TableView<NotesFx> tableView = TableViewFx.tableViewOf(150,false);
         tableView.setItems(FXCollections.observableArrayList(membershipView.getMembershipModel().membershipProperty().get().getMemos()));
@@ -86,32 +104,15 @@ public class NotesTabView implements Builder<Tab> {
                 membershipModel.textAreaProperty().get().setText(newSelection.getMemo());
             }
         });
+        // if there are notes in the List then select the first
+        if(!tableView.getItems().isEmpty()) {
+            membershipModel.setSelectedNote(tableView.getItems().getFirst());
+            membershipModel.textAreaProperty().get().setText(tableView.getItems().getFirst().getMemo());
+            tableView.getSelectionModel().select(tableView.getItems().getFirst());
+        }
         membershipView.getMembershipModel().setNotesTableView(tableView);
         return tableView;
     }
-
-    private Node addTextArea() {
-        TextArea textArea = membershipModel.getTextArea();
-        textArea.setPrefWidth(700);
-        textArea.setWrapText(true);
-        textArea.setEditable(false);
-//        textArea.setStyle("-fx-background-color: white; -fx-control-inner-background: white;");
-        return textArea;
-    }
-
-//    private TableColumn<NotesFx, String> col3() {
-//        TableColumn<NotesFx, String> col3 = TableColumnFx.editableStringTableColumn(NotesFx::memoProperty, "Note");
-//        col3.setPrefWidth(740);
-//        col3.setOnEditCommit(t -> {
-//            NotesFx notesDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
-//            notesDTO.setMemo(t.getNewValue());
-//            membershipModel.setSelectedNote(notesDTO);
-//            System.out.println("Column 3 and note: " + notesDTO.getMemoId());
-//            membershipView.sendMessage().accept(MembershipMessage.UPDATE_NOTE);
-//        });
-//        col3.setMaxWidth(1f * Integer.MAX_VALUE * 80);   // Note
-//        return col3;
-//    }
 
     private TableColumn<NotesFx, String> col2() {
         TableColumn<NotesFx, String> col2 = new TableColumn<>("Type");

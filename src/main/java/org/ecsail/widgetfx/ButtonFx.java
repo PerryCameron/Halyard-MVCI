@@ -32,4 +32,9 @@ public class ButtonFx {
         button.setToggleGroup(tg);
         return button;
     }
+
+    public static void buttonVisible(Button button, boolean value) {
+        button.setVisible(value);
+        button.setManaged(value);
+    }
 }
