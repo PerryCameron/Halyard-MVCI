@@ -55,19 +55,6 @@ public class DialogueFx {
         return alert;
     }
 
-//    public static Alert errorAlert(String header, String message) {
-//        System.out.println("errorAlert");
-//        Alert alert = new Alert(Alert.AlertType.ERROR);
-//        alert.setHeaderText(header);
-//        alert.setContentText(message);
-//        tieAlertToStage(alert, 400, 200);
-//        DialogPane dialogPane = alert.getDialogPane();
-//        dialogPane.getStylesheets().add("css/dark/dialogue.css");
-//        dialogPane.getStyleClass().add("myDialog");
-//        alert.showAndWait();
-//        return alert;
-//    }
-
     public static void customAlertWithShow(String header, String message, Alert.AlertType type) {
         Alert alert = new Alert(type);
         alert.setHeaderText(header);
@@ -190,7 +177,7 @@ public class DialogueFx {
         return false;
     }
 
-    private static void getTitleIcon(DialogPane dialogPane) {
+    public static void getTitleIcon(DialogPane dialogPane) {
         // Set custom icon for the title bar
         Stage alertStage = (Stage) dialogPane.getScene().getWindow();
         try {

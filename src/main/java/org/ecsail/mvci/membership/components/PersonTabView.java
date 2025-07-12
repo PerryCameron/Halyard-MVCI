@@ -165,7 +165,6 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     }
 
     private MembershipMessage mapStringToEnum(String input) {
-        System.out.println("map String To Enum");
         membershipModel.setSelectedPerson(personDTO);
         switch (input.split(" ")[0]) { // Split the string and get the first word
             case "Change" -> { return MembershipMessage.CHANGE_MEMBER_TYPE; }
@@ -294,12 +293,6 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         membershipModel.setSelectedPerson(personDTO);
         membershipView.sendMessage().accept(message);
     }
-
-//    private boolean membershipHasSecondaryPerson() {
-//        System.out.println("membershipHasSecondaryPerson() (PersonTabView)");
-//        return membershipModel.getPeople().stream()
-//                .anyMatch(p -> p.getMemberType() == MemberType.SECONDARY.getCode());
-//    }
 
     private boolean isMemberType(MemberType memberType) {
         return membershipModel.getSelectedPerson().getMemberType() == MemberType.getCode(memberType);
@@ -492,27 +485,16 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
         ImageView imageView = new ImageView(memberPhoto);
         imageView.setOnMouseExited(ex -> vBoxFrame.setStyle("-fx-background-color: #010e11;"));
         imageView.setOnMouseEntered(en -> vBoxFrame.setStyle("-fx-background-color: #201ac9;"));
-        imageView.setOnDragOver(event -> {
-            /* data is dragged over the target */
-            /* accept it only if it is not dragged from the same node
-             * and if it has a string data */
-            if (event.getGestureSource() != imageView &&
-                    event.getDragboard().hasFiles()) {
-                /* allow for both copying and moving, whatever user chooses */
-                //event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
-                event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+        imageView.setOnMouseClicked(event -> {
+            if (event.getClickCount() == 2) {
+                PictureAlert pictureAlert = new PictureAlert(imageView);
+                Alert alert = pictureAlert.build(); // Call build() to get the configured Alert
+                Optional<ButtonType> result = alert.showAndWait();
+                result.ifPresent(buttonType -> {
+                    // Handle the result if needed
+                    System.out.println("Button clicked: " + buttonType);
+                });
             }
-            event.consume();
-        });
-        imageView.setOnDragDropped(event -> {
-            Dragboard db = event.getDragboard();
-            boolean success = false;
-            if (db.hasFiles()) {
-                membershipView.sendMessage().accept(MembershipMessage.UPLOAD_MEMBER_PHOTO);
-                System.out.println(db.getFiles().get(0).getAbsolutePath());
-            }
-            event.setDropCompleted(success);
-            event.consume();
         });
         vBoxFrame.getChildren().add(imageView);
         vBoxPicture.getChildren().add(vBoxFrame);
