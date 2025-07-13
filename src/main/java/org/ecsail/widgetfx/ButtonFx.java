@@ -1,8 +1,12 @@
 package org.ecsail.widgetfx;
 
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class ButtonFx {
     public static Button bigButton(String text) {
@@ -36,5 +40,13 @@ public class ButtonFx {
     public static void buttonVisible(Button button, boolean value) {
         button.setVisible(value);
         button.setManaged(value);
+    }
+
+    public static Button utilityButton(String text, double width) {
+        Button button = new Button(text);
+        button.setPrefWidth(width);
+        button.setContentDisplay(ContentDisplay.LEFT); // Image and text side-by-side, left-aligned
+        button.setAlignment(Pos.CENTER_LEFT); // Align content to the left within the button
+        return button;
     }
 }

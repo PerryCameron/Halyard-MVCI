@@ -42,6 +42,7 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
     private final HashMap<String, HBox> personInfoHBoxMap = new HashMap<>();
     private Label ageLabel;
     private static final Logger logger = LoggerFactory.getLogger(PersonTabView.class);
+    private ImageView imageView;
 
     public PersonTabView(MembershipView membershipView, PersonFx personDTO) {
         this.personDTO = personDTO;
@@ -480,24 +481,21 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
 
     private Node createPictureFrame() {
         VBox vBoxPicture = VBoxFx.vBoxOf(new Insets(12, 10, 0, 7));
-        VBox vBoxFrame = VBoxFx.vBoxOf(new Insets(2, 2, 2, 2),"box-frame-dark");
+        vBoxPicture.setAlignment(Pos.CENTER);
         Image memberPhoto = new Image(Objects.requireNonNull(getClass().getResourceAsStream(DEFAULT_PHOTO)));
-        ImageView imageView = new ImageView(memberPhoto);
-        imageView.setOnMouseExited(ex -> vBoxFrame.setStyle("-fx-background-color: #010e11;"));
-        imageView.setOnMouseEntered(en -> vBoxFrame.setStyle("-fx-background-color: #201ac9;"));
+        this.imageView = new ImageView(memberPhoto);
         imageView.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {
-                PictureAlert pictureAlert = new PictureAlert(imageView);
+                PictureAlert pictureAlert = new PictureAlert(this, membershipView);
                 Alert alert = pictureAlert.build(); // Call build() to get the configured Alert
                 Optional<ButtonType> result = alert.showAndWait();
-                result.ifPresent(buttonType -> {
-                    // Handle the result if needed
-                    System.out.println("Button clicked: " + buttonType);
-                });
+//                result.ifPresent(buttonType -> {
+//                    // Handle the result if needed
+//                    System.out.println("Button clicked: " + buttonType);
+//                });
             }
         });
-        vBoxFrame.getChildren().add(imageView);
-        vBoxPicture.getChildren().add(vBoxFrame);
+        vBoxPicture.getChildren().add(imageView);
         return vBoxPicture;
     }
 
@@ -575,5 +573,9 @@ public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths,
 
     public PersonFx getPersonDTO() {
         return personDTO;
+    }
+
+    public ImageView getImageView() {
+        return imageView;
     }
 }
