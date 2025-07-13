@@ -59,14 +59,18 @@ public class PictureAlert implements Builder<Alert> {
         VBox vBox = VBoxFx.vBoxOf(10, Pos.CENTER);
         HBox hBox = HBoxFx.hBoxOf(10, Pos.CENTER);
         vBox.setAlignment(Pos.CENTER);
-        Button pasteButton = ButtonFx.utilityButton("Paste Clipboard Image");
+        Button pasteButton = ButtonFx.utilityButton("Paste Clipboard Image", this::pasteImage);
         Button closeButton = ButtonFx.utilityButton("Cancel", this::cleanAlertClose);
         Label label = new Label("Press Win + Shift + S to open the Snipping Tool in snip mode. \nClick and drag to select the area, then release.\n\nThe captured image is automatically copied to the clipboard.\n" +
                 "\n\n");
-        pasteButton.setOnAction(event -> personView.sendMessage().accept(PersonMessage.SAVE_IMAGE));
         hBox.getChildren().addAll(pasteButton, closeButton);
         vBox.getChildren().addAll(label, hBox);
         return vBox;
+    }
+
+    private void pasteImage() {
+        personView.sendMessage().accept(PersonMessage.SAVE_IMAGE);
+        cleanAlertClose();
     }
 
     private void cleanAlertClose() {
@@ -75,7 +79,6 @@ public class PictureAlert implements Builder<Alert> {
         alert.hide();
     }
 
-    ////////////////  TEMP adding in here /////////////////////////
 
 
 }

@@ -49,7 +49,7 @@ public class MainView implements Builder<Region> {
     @Override
     public Region build() {
         BorderPane borderPane = new BorderPane();
-        borderPane.setPrefSize(1028, 830);
+        borderPane.setPrefSize(1028, 900);
         borderPane.setTop(setUpTopPane());
         borderPane.setBottom(setUpBottomPane());
         borderPane.setCenter(setUpCenterPane());
