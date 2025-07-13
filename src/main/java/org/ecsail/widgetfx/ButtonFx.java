@@ -49,4 +49,29 @@ public class ButtonFx {
         button.setAlignment(Pos.CENTER_LEFT); // Align content to the left within the button
         return button;
     }
+
+    public static Button utilityButton(String text, double width, Runnable runnable) {
+        Button button = new Button(text);
+        button.setPrefWidth(width);
+        button.setContentDisplay(ContentDisplay.LEFT); // Image and text side-by-side, left-aligned
+        button.setAlignment(Pos.CENTER_LEFT); // Align content to the left within the button
+        button.setOnAction(event -> runnable.run());
+        return button;
+    }
+
+    public static Button utilityButton(String text) {
+        Button button = new Button(text);
+        button.setContentDisplay(ContentDisplay.LEFT); // Image and text side-by-side, left-aligned
+        button.setAlignment(Pos.CENTER_LEFT); // Align content to the left within the button
+        return button;
+    }
+
+    public static Button utilityButton(String text, Runnable runnable) {
+        Button button = new Button(text);
+        button.setContentDisplay(ContentDisplay.LEFT); // Image and text side-by-side, left-aligned
+        button.setAlignment(Pos.CENTER_LEFT); // Align content to the left within the button
+        button.setOnAction(event -> runnable.run());
+        return button;
+    }
+
 }

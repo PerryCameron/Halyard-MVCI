@@ -37,6 +37,14 @@ public class VBoxFx {
         return vBox;
     }
 
+    public static VBox vBoxOf(double spacing, Pos pos) {
+        VBox vBox = new VBox(spacing);
+        vBox.setAlignment(pos);
+        return vBox;
+    }
+
+
+
     public static VBox vBoxOf(Insets insets, String id) {
         VBox vBox = new VBox();
         vBox.setPadding(insets);

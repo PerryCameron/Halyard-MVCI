@@ -9,7 +9,7 @@ import org.ecsail.interfaces.ObjectType;
 // TODO erase this class when I am sure I don't need it anymore
 
 
-public class PersonTabView extends Tab implements Builder<Tab>, ConfigFilePaths, ObjectType {
+public class PersonTabViewMarkForDeletion extends Tab implements Builder<Tab>, ConfigFilePaths, ObjectType {
 //    private final PersonFx personDTO;
 //    private final MembershipModel membershipModel;
 //    private final MembershipView membershipView;

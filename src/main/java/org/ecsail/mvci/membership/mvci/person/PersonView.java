@@ -580,4 +580,8 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
     public PersonModel getPersonModel() {
         return personModel;
     }
+
+    public Consumer<PersonMessage> sendMessage() {
+        return action;
+    }
 }

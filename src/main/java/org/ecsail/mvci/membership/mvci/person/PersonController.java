@@ -23,7 +23,9 @@ public class PersonController extends TabController<PersonMessage> {
 
     @Override
     public void action(PersonMessage actionEnum) {
-
+        switch (actionEnum) {
+            case SAVE_IMAGE -> personInteractor.saveImage();
+        }
     }
 
     public int getTesting() {
