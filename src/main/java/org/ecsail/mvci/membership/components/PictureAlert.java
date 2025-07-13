@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 import javafx.util.Builder;
 import org.ecsail.mvci.membership.MembershipModel;
 import org.ecsail.mvci.membership.MembershipView;
+import org.ecsail.mvci.membership.mvci.person.PersonView;
 import org.ecsail.widgetfx.ButtonFx;
 import org.ecsail.widgetfx.DialogueFx;
 import org.imgscalr.Scalr;
@@ -26,14 +27,14 @@ import java.io.ByteArrayOutputStream;
 public class PictureAlert implements Builder<Alert> {
     private final MembershipView membershipView;
     private final MembershipModel membershipModel;
-    private final PersonTabView personTabView;
+    private final PersonView personView;
     private Alert alert;
     private DialogPane dialogPane;
     private static final Logger logger = LoggerFactory.getLogger(PictureAlert.class);
 
 
-    public PictureAlert(PersonTabView personTabView, MembershipView membershipView) {
-        this.personTabView = personTabView;
+    public PictureAlert(PersonView personView, MembershipView membershipView) {
+        this.personView = personView;
         this.membershipView = membershipView;
         this.membershipModel = membershipView.getMembershipModel();
         this.alert = new Alert(Alert.AlertType.NONE);
@@ -69,8 +70,8 @@ public class PictureAlert implements Builder<Alert> {
             saveImage();
         });
         sizeButton.setOnAction(event -> {
-            double width = personTabView.getImageView().getFitWidth();
-            double height = personTabView.getImageView().getFitHeight();
+            double width = personView.getPersonModel().getImageViewProperty().getFitWidth();
+            double height = personView.getPersonModel().getImageViewProperty().getFitHeight();
             double vwidth = vBox.getWidth();
             double vheight = vBox.getHeight();
             System.out.println(width + " " + height);
@@ -119,7 +120,7 @@ public class PictureAlert implements Builder<Alert> {
         saveImageTask.setOnSucceeded(event -> {
            // globalSparesRepo.updateSpare(partModel.selectedSpareProperty().get());
             System.out.println("setting image");
-            personTabView.getImageView().setImage(saveImageTask.getValue());
+            personView.getPersonModel().getImageViewProperty().setImage(saveImageTask.getValue());
         });
         saveImageTask.setOnFailed(event -> {
             Throwable e = saveImageTask.getException();
@@ -147,6 +148,4 @@ public class PictureAlert implements Builder<Alert> {
         ImageIO.write(image, "png", baos);
         return baos.toByteArray();
     }
-
-
 }

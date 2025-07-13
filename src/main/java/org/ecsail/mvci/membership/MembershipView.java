@@ -14,6 +14,8 @@ import javafx.util.Builder;
 import org.ecsail.fx.PersonFx;
 import org.ecsail.enums.MemberType;
 import org.ecsail.mvci.membership.components.*;
+import org.ecsail.mvci.membership.mvci.person.PersonController;
+import org.ecsail.mvci.membership.mvci.person.PersonView;
 import org.ecsail.widgetfx.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,7 +62,8 @@ public class MembershipView implements Builder<Region> {
 
     private void addPeopleTabs() {
         membershipModel.membershipProperty().get().getPeople().forEach(personDTO -> membershipModel.getPeopleTabPane().getTabs()
-                .add(new PersonTabView(this, personDTO).build()));
+              //  .add(new PersonTabView(this, personDTO).build()));
+                      .add(new PersonController(this, personDTO).getView()));
         membershipModel.getPeopleTabPane().getTabs().add(new AddPersonTabView(this).build());
     }
 
@@ -121,7 +124,8 @@ public class MembershipView implements Builder<Region> {
 
     private void addPerson() {
         membershipModel.getPeople().add(membershipModel.getSelectedPerson());
-        Tab newTab = new PersonTabView(this, new PersonFx(membershipModel.getSelectedPerson())).build();
+        //Tab newTab = new PersonTabView(this, new PersonFx(membershipModel.getSelectedPerson())).build();
+        Tab newTab = new PersonController(this, new PersonFx(membershipModel.getSelectedPerson())).getView();
         membershipModel.getPeopleTabPane().getTabs().add(newTab);
         // Select the newly added tab
         membershipModel.getPeopleTabPane().getSelectionModel().select(newTab);
@@ -189,8 +193,9 @@ public class MembershipView implements Builder<Region> {
                 membershipModel.setSelectedPerson(addPersonTabView.getPersonDTO());
                 logger.debug("Showing Add tab: {}", membershipModel.getSelectedPerson());
             } else {
-                PersonTabView personTabView = (PersonTabView) newTab.getUserData();// Get the associated PersonTabView object
-                membershipModel.setSelectedPerson(personTabView.getPersonDTO());
+                PersonView personView = (PersonView) newTab.getUserData(); // Cast to PersonView
+                membershipModel.setSelectedPerson(personView.getPersonDTO()); // Get PersonFx
+                System.out.println(newTab.getUserData());
                 logger.debug("Showing Person tab: {}", membershipModel.getSelectedPerson());
             }
         });
