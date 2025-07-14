@@ -46,7 +46,8 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
 
     @Override
     public Tab build() {
-        personModel.getMembershipModel().getStackPaneMap().put(personModel.getPersonDTO(), new StackPane());
+        //personModel.getMembershipModel().getStackPaneMap().put(personModel.getPersonDTO(), new StackPane());
+
         personModel.getTab().setText(getMemberType());
         personModel.getTab().setUserData(this);
         VBox vBox = VBoxFx.vBoxOf(new Insets(2, 2, 2, 2)); // makes outer border
@@ -124,24 +125,24 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
         switch (type) {
             case Officer -> {
                 VBox vBox = createButtonBox(createAddButton(Officer), createDeleteButton(Officer));
-                personModel.getMembershipModel().getOfficerTableView().put(personModel.getPersonDTO(), new OfficerTableView(personModel.getPersonDTO(), personModel.getMembershipView()).build());
-                hBox.getChildren().addAll(personModel.getMembershipModel().getOfficerTableView().get(personModel.getPersonDTO()), vBox);
+                personModel.officerTableViewProperty().set(new OfficerTableView(personModel.getPersonDTO(), personModel.getMembershipView()).build());
+                hBox.getChildren().addAll(personModel.officerTableViewProperty().get(), vBox);
             }
             case Award -> {
                 VBox vBox = createButtonBox(createAddButton(Award), createDeleteButton(Award));
-                personModel.getMembershipModel().getAwardTableView().put(personModel.getPersonDTO(), new AwardTableView(personModel.getPersonDTO(), personModel.getMembershipView()).build());
-                hBox.getChildren().addAll(personModel.getMembershipModel().getAwardTableView().get(personModel.getPersonDTO()), vBox);
+                personModel.awardTableViewProperty().set(new AwardTableView(personModel.getPersonDTO(), personModel.getMembershipView()).build());
+                hBox.getChildren().addAll(personModel.awardTableViewProperty().get(), vBox);
             }
             case Email -> {
                 TableView<EmailDTOFx> tableView = new EmailTableView(personModel.getPersonDTO(), personModel.getMembershipView()).build();
-                personModel.getMembershipModel().getEmailTableView().put(personModel.getPersonDTO(), tableView);
+                personModel.emailTableViewProperty().set(tableView);
                 VBox vBox = createButtonBox(createAddButton(Email), createDeleteButton(Email), createCopyButton(Email), createEmailButton());
-                hBox.getChildren().addAll(personModel.getMembershipModel().getEmailTableView().get(personModel.getPersonDTO()), vBox);
+                hBox.getChildren().addAll(personModel.emailTableViewProperty().get(), vBox);
             }
             case Phone -> {
                 VBox vBox = createButtonBox(createAddButton(Phone), createDeleteButton(Phone), createCopyButton(Phone));
-                personModel.getMembershipModel().getPhoneTableView().put(personModel.getPersonDTO(), new PhoneTableView(personModel.getPersonDTO(), personModel.getMembershipView()).build());
-                hBox.getChildren().addAll(personModel.getMembershipModel().getPhoneTableView().get(personModel.getPersonDTO()), vBox);
+                personModel.phoneTableViewProperty().set(new PhoneTableView(personModel.getPersonDTO(), personModel.getMembershipView()).build());
+                hBox.getChildren().addAll(personModel.phoneTableViewProperty().get(), vBox);
             }
             case Properties -> hBox.getChildren().addAll(getInfoBox(), getRadioBox());
         }
@@ -181,18 +182,17 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
     private Node bottomControlBox() {
         HBox hBox = HBoxFx.hBoxOf(new Insets(5, 5, 5, 5), 30);
         TextField textField = TextFieldFx.textFieldOf(120, "MSID");
-        personModel.getMembershipModel().getPersonTextField().put(personModel.getPersonDTO(), textField);
-        System.out.println("stackpanemap: " + personModel.getMembershipModel().getStackPaneMap());
+        //personModel.getMembershipModel().getPersonTextField().put(personModel.getPersonDTO(), textField);
         // what am I looking for here?
-        StackPane personStackPane = personModel.getMembershipModel().getStackPaneMap().get(personModel.getPersonDTO());
-        if (personStackPane != null) {
-            personStackPane.getChildren().addAll(createComboBox(), textField, createRegion());
+        //StackPane personStackPane = personModel.getMembershipModel().getStackPaneMap().get(personModel.getPersonDTO());
+        if (personModel.stackPaneProperty().get() != null) {
+            personModel.stackPaneProperty().get().getChildren().addAll(createComboBox(), textField, createRegion());
         } else {
             System.out.println("Stackpane is null for " + personModel.getPersonDTO());  // Grok the stackPane is null here, can you see why?
         }
 
         //personModel.getMembershipModel().getStackPaneMap().get(personModel.getPersonDTO()).getChildren().addAll(createComboBox(), textField, createRegion());
-        hBox.getChildren().addAll(personModel.getMembershipModel().getStackPaneMap().get(personModel.getPersonDTO()), createSubmit());
+        hBox.getChildren().addAll(personModel.stackPaneProperty().get(), createSubmit());
         return hBox;
     }
 
@@ -204,17 +204,17 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
     }
 
     private Node createComboBox() {
-        final ComboBox<String> comboBox = new ComboBox<>();
-        personModel.getMembershipModel().getPersonComboBox().put(personModel.getPersonDTO(), comboBox);
-        comboBox.setPrefWidth(120);
-        comboBox.getItems().clear();
+        //final ComboBox<String> comboBox = new ComboBox<>();
+        //personModel.getMembershipModel().getPersonComboBox().put(personModel.getPersonDTO(), comboBox);
+        personModel.comboBoxProperty().get().setPrefWidth(120);
+        personModel.comboBoxProperty().get().getItems().clear();
         switch (personModel.getPersonDTO().getMemberType()) {
-            case 1 -> comboBox.getItems().addAll("Secondary", "Dependent");
-            case 2 -> comboBox.getItems().addAll("Primary", "Dependent");
-            default -> comboBox.getItems().addAll("Primary", "Secondary");
+            case 1 -> personModel.comboBoxProperty().get().getItems().addAll("Secondary", "Dependent");
+            case 2 -> personModel.comboBoxProperty().get().getItems().addAll("Primary", "Dependent");
+            default -> personModel.comboBoxProperty().get().getItems().addAll("Primary", "Secondary");
         }
-        comboBox.getSelectionModel().selectFirst();
-        return comboBox;
+        personModel.comboBoxProperty().get().getSelectionModel().selectFirst();
+        return personModel.comboBoxProperty().get();
     }
 
     private Control radioButton(ToggleGroup tg, String name) {
@@ -223,7 +223,8 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
         radioButton.selectedProperty().addListener((obs, wasPreviouslySelected, isNowSelected) -> {
             if (isNowSelected) {
                 changeStackPane(mapStringToEnum(name));
-                personModel.getMembershipModel().getSelectedRadioForPerson().put(personModel.getPersonDTO(), radioButton);
+                //personModel.getMembershipModel().getSelectedRadioForPerson().put(personModel.getPersonDTO(), radioButton);
+                personModel.radioButtonProperty().set(radioButton);
             }
         });
         return radioButton;
@@ -231,7 +232,7 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
 
     private void changeStackPane(MembershipMessage action) {
         System.out.println("Change Stack Pane");
-        personModel.getMembershipModel().getStackPaneMap().get(personModel.getPersonDTO()).getChildren().forEach(child -> {
+        personModel.stackPaneProperty().get().getChildren().forEach(child -> {
             if (child instanceof ComboBox) {
                 child.setVisible(action == MembershipMessage.CHANGE_MEMBER_TYPE);
                 child.setManaged(action == MembershipMessage.CHANGE_MEMBER_TYPE);
@@ -259,8 +260,7 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
     private Control createSubmit() {
         Button button = ButtonFx.buttonOf("Submit", 60);
         button.setOnAction(event -> {
-            RadioButton rb = personModel.getMembershipModel().getSelectedRadioForPerson().get(personModel.getPersonDTO());
-            switch (rb.getText().split(" ")[0]) { // Split the string and get the first word
+            switch (personModel.radioButtonProperty().get().getText().split(" ")[0]) { // Split the string and get the first word
                 case "Change" -> changeMemberType();
                 case "Remove" -> {
                     if (userChoosesToRemovePerson()) removeMemberFromMembership();
@@ -312,7 +312,7 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
     }
 
     private void changeMemberType() {
-        String type = personModel.getMembershipModel().getPersonComboBox().get(personModel.getPersonDTO()).getValue();
+        String type = personModel.comboBoxProperty().get().getValue();
         if (isMemberType(MemberType.PRIMARY)) {
             changePrimaryToType(type);
         } else if (isMemberType(MemberType.SECONDARY)) {

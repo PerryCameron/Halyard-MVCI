@@ -1,12 +1,22 @@
 package org.ecsail.mvci.membership.mvci.person;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 import javafx.scene.input.Clipboard;
-import org.ecsail.mvci.membership.MembershipInteractor;
+import org.ecsail.fx.AwardDTOFx;
+import org.ecsail.fx.PersonFx;
+import org.ecsail.fx.PictureDTO;
+import org.ecsail.mvci.membership.MembershipMessage;
+import org.ecsail.pojo.Award;
+import org.ecsail.pojo.Note;
 import org.ecsail.widgetfx.DialogueFx;
+import org.ecsail.wrappers.InsertAwardResponse;
+import org.ecsail.wrappers.InsertPictureResponse;
+import org.ecsail.wrappers.UpdateResponse;
 import org.imgscalr.Scalr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,12 +50,14 @@ public class PersonInteractor {
                 try {
                     // Resize image to 357x265 pixels
                     BufferedImage resizedImage = resizeImage(bufferedImage, 192, 222);
-                    // Convert to PNG bytes (~100 KB)
-                    byte[] imageBytes = convertToPngBytes(resizedImage);
-                    // Update ImageView
-                    Image newImage = new Image(new ByteArrayInputStream(imageBytes));
-                    //                   globalSparesRepo.saveImageToDatabase(partModel.selectedSpareProperty().get().getSpareItem(), imageBytes);
-                    return newImage;
+                    // create object to send via HTTP, add PID and Convert to PNG bytes (~100 KB)
+                    PictureDTO pictureDTO = new PictureDTO(personModel.getPersonDTO().getpId(), convertToPngBytes(resizedImage));
+                    // add to our model to sent HTTP via interactor
+                    personModel.pictureProperty().set(pictureDTO);
+                    // write picture to database
+                    insertOrUpdatePicture();
+                    // send image so it can be added on success
+                    return new Image(new ByteArrayInputStream(pictureDTO.getPicture()));
                 } catch (Exception e) {
                     DialogueFx.errorAlert("Error", "Error saving image: " + e.getMessage());
                 }
@@ -53,8 +65,6 @@ public class PersonInteractor {
             }
         };
         saveImageTask.setOnSucceeded(event -> {
-            // globalSparesRepo.updateSpare(partModel.selectedSpareProperty().get());
-            System.out.println("setting image");
             personModel.getImageViewProperty().setImage(saveImageTask.getValue());
         });
         saveImageTask.setOnFailed(event -> {
@@ -82,5 +92,41 @@ public class PersonInteractor {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ImageIO.write(image, "png", baos);
         return baos.toByteArray();
+    }
+
+    public MembershipMessage insertOrUpdatePicture() {
+        try {
+            String response = personModel.getMembershipModel().getHttpClient().postDataToGybe("api/add-picture", personModel.getPicture());
+            InsertPictureResponse insertPictureResponse = personModel.getMembershipModel().getHttpClient().getObjectMapper()
+                    .readValue(response, InsertPictureResponse.class);
+            if (insertPictureResponse.isSuccess()) {
+                System.out.println("We succeeded");
+                return MembershipMessage.SUCCESS;
+            } else {
+                logger.error("Unable to insert award: {}", insertPictureResponse.getMessage());
+                return MembershipMessage.FAIL;
+            }
+        } catch (Exception e) {
+            logger.error("Failed to insert award for pId {}: {}", personModel.getPersonDTO().pIdProperty().get(), e.getMessage(), e);
+            return MembershipMessage.FAIL;
+        }
+    }
+
+
+    private MembershipMessage processUpdateResponse(String response) throws JsonProcessingException {
+        logger.debug("Update response: {}", response);
+        UpdateResponse updateResponse = personModel.getMembershipModel().getHttpClient()
+                .getObjectMapper().readValue(response, UpdateResponse.class);
+        // Toggle the appropriate light based on the success field
+        if (updateResponse.isSuccess()) {
+            logger.info(updateResponse.getMessage());
+            return MembershipMessage.SUCCESS;
+        } else {
+            Platform.runLater(() -> {
+                DialogueFx.errorAlert("Unable to perform update", updateResponse.getMessage());
+            });
+            logger.error(updateResponse.getMessage());
+            return MembershipMessage.FAIL;
+        }
     }
 }

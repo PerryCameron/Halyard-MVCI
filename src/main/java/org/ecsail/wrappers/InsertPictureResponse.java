@@ -1,22 +1,21 @@
 package org.ecsail.wrappers;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import org.ecsail.fx.PictureDTO;
 import org.ecsail.pojo.Award;
 
-public class InsertAwardResponse {
+public class InsertPictureResponse {
 
     private boolean success;
-    @JsonProperty("awardDTO")  // this is to match server
-    private Award award;
+    private PictureDTO pictureDTO;
     private String message;
 
-    public InsertAwardResponse(boolean success, String message) {
+    public InsertPictureResponse(boolean success, String message, PictureDTO pictureDTO) {
         this.success = success;
         this.message = message;
-        this.award = new Award();
+        this.pictureDTO = pictureDTO;
     }
 
-    public InsertAwardResponse() {
+    public InsertPictureResponse() {
     }
 
     // Getters and setters
@@ -27,14 +26,6 @@ public class InsertAwardResponse {
 
     public void setSuccess(boolean success) {
         this.success = success;
-    }
-
-    public Award getAward() {
-        return award;
-    }
-
-    public void setAward(Award award) {
-        this.award = award;
     }
 
     public String getMessage() {

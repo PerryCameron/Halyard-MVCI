@@ -3,10 +3,14 @@ package org.ecsail.mvci.membership.mvci.person;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
+import javafx.scene.control.TableView;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import org.ecsail.fx.PersonFx;
+import javafx.scene.layout.StackPane;
+import javafx.scene.control.*;
+import org.ecsail.fx.*;
 import org.ecsail.mvci.membership.MembershipModel;
 import org.ecsail.mvci.membership.MembershipView;
 
@@ -20,6 +24,16 @@ public class PersonModel {
     private final HashMap<String, HBox> personInfoHBoxMap = new HashMap<>();
     private Label ageLabel = new Label("Age: unknown");
     private final ObjectProperty<ImageView> imageViewProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<PictureDTO> picture = new SimpleObjectProperty<>();
+    private final ObjectProperty<TableView<AwardDTOFx>> awardTableViewProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<TableView<EmailDTOFx>> emailTableViewProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<TableView<OfficerFx>> officerTableViewProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<TableView<PhoneFx>> phoneTableViewProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<StackPane> stackPaneProperty = new SimpleObjectProperty<>(new StackPane());
+    private final ObjectProperty<RadioButton>  radioButtonProperty = new SimpleObjectProperty<>(new RadioButton());
+    private final ObjectProperty<ComboBox<String>> comboBoxProperty = new SimpleObjectProperty<>(new ComboBox<>());
+
+    private final ObjectProperty<HBox> awardHbox = new SimpleObjectProperty<>();
 
     public PersonModel(MembershipView membershipView, PersonFx personDTO) {
         this.membershipView = membershipView;
@@ -61,5 +75,41 @@ public class PersonModel {
 
     public Tab getTab() {
         return tab;
+    }
+
+    public PictureDTO getPicture() {
+        return picture.get();
+    }
+
+    public ObjectProperty<PictureDTO> pictureProperty() {
+        return picture;
+    }
+
+    public ObjectProperty<TableView<AwardDTOFx>> awardTableViewProperty() {
+        return awardTableViewProperty;
+    }
+
+    public ObjectProperty<TableView<EmailDTOFx>> emailTableViewProperty() {
+        return emailTableViewProperty;
+    }
+
+    public ObjectProperty<TableView<OfficerFx>> officerTableViewProperty() {
+        return officerTableViewProperty;
+    }
+
+    public ObjectProperty<TableView<PhoneFx>> phoneTableViewProperty() {
+        return phoneTableViewProperty;
+    }
+
+    public ObjectProperty<StackPane> stackPaneProperty() {
+        return stackPaneProperty;
+    }
+
+    public ObjectProperty<RadioButton>  radioButtonProperty() {
+        return radioButtonProperty;
+    }
+
+    public ObjectProperty<ComboBox<String>> comboBoxProperty() {
+        return comboBoxProperty;
     }
 }

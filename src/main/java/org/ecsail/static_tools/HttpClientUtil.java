@@ -274,6 +274,60 @@ public class HttpClientUtil {
                 }
                 signalError("Access Denied: You don’t have the required permissions to access this resource. " + response.code());
                 throw new AccessDeniedException("Access Denied: You don’t have the required permissions to access this resource.");
+            } else if (response.code() == 404) {
+                signalError("Endpoint not found: " + endpoint);
+                throw new Exception("Endpoint not found: " + endpoint);
+            } else if (contentType != null && contentType.contains("text/html")) {
+                signalError("Session invalid: Server redirected to login page. Please log in again.");
+                throw new Exception("Session invalid: Server redirected to login page. Please log in again.");
+            } else if (response.isSuccessful() && response.body() != null) {
+                return response.body().string();
+            } else {
+                signalError("Failed to post data: " + response.code());
+                throw new Exception("Failed to post data: " + response.code());
+            }
+        } catch (IOException e) {
+            signalError("Failed to post data: " + e.getMessage());
+            throw new Exception("Failed to post data: " + e.getMessage());
+        }
+    }
+
+    // doing a post request without data to Gybe
+    public String postToGybe(String endpoint) throws Exception {
+        requiresAuthentication();
+        if (csrfToken == null) {
+            fetchCsrfToken(); // Ensure CSRF token is fetched
+        }
+
+        RequestBody body = RequestBody.create("", MediaType.parse("application/json; charset=utf-8"));
+        Request request = new Request.Builder()
+                .url(serverUrl + "halyard/" + endpoint)
+                .post(body)
+                .header(csrfHeaderName, csrfToken) // Use dynamic header name
+                .build();
+
+        try (Response response = client.newCall(request).execute()) {
+            logger.info("Posting to /halyard/{}: Status {}", endpoint, response.code());
+            String contentType = response.header("Content-Type", "");
+            if (contentType != null && contentType.contains("text/html")) {
+                signalError("Session invalid: Server redirected to login page. Please log in again.");
+                throw new Exception("Session invalid: Server redirected to login page. Please log in again.");
+            }
+            if (response.code() == 403) {
+                String responseBody = response.body() != null ? response.body().string() : "";
+                if (responseBody.contains("Invalid CSRF token")) {
+                    logger.info("Invalid CSRF token, fetching new token");
+                    fetchCsrfToken();
+                    return postToGybe(endpoint); // Retry once
+                }
+                signalError("Access Denied: You don’t have the required permissions to access this resource. " + response.code());
+                throw new AccessDeniedException("Access Denied: You don’t have the required permissions to access this resource.");
+            } else if (response.code() == 404) {
+                signalError("Endpoint not found: " + endpoint);
+                throw new Exception("Endpoint not found: " + endpoint);
+            } else if (contentType != null && contentType.contains("text/html")) {
+                signalError("Session invalid: Server redirected to login page. Please log in again.");
+                throw new Exception("Session invalid: Server redirected to login page. Please log in again.");
             } else if (response.isSuccessful() && response.body() != null) {
                 return response.body().string();
             } else {

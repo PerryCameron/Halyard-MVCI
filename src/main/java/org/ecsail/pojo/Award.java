@@ -3,6 +3,9 @@ package org.ecsail.pojo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.ecsail.fx.AwardDTOFx;
+import org.ecsail.fx.PersonFx;
+
+import java.time.Year;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Award {
@@ -19,6 +22,13 @@ public class Award {
     private String awardType;
 
     public Award() {
+    }
+
+    public Award(PersonFx personFx) {
+        this.awardId = 0;
+        this.pId = personFx.getpId();
+        this.awardYear = Year.now().toString();
+        this.awardType = "SA";
     }
 
     public Award(AwardDTOFx awardDTOFx) {

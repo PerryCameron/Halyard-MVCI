@@ -176,7 +176,7 @@ public class MembershipInteractor implements SlipUser {
             String response = membershipModel.getHttpClient().postDataToGybe("update/award", award);
             return processUpdateResponse(response);
         } catch (Exception e) {
-            logger.error("Failed to update email with pId {}: {}",
+            logger.error("Failed to update award with pId {}: {}",
                     membershipModel.getSelectedPerson().pIdProperty().get(), e.getMessage(), e);
             return MembershipMessage.FAIL;
         }
@@ -272,24 +272,25 @@ public class MembershipInteractor implements SlipUser {
      * @throws Exception if an error occurs during the HTTP request or response processing.
      */
     public MembershipMessage insertAward() {
-        PersonFx personFx = membershipModel.getSelectedPerson();
-        try {
-            Award award = new Award(membershipModel.getSelectedAward());
-            String response = membershipModel.getHttpClient().postDataToGybe("insert/award", award);
-            InsertAwardResponse insertAwardResponse = membershipModel.getHttpClient().getObjectMapper()
-                    .readValue(response, InsertAwardResponse.class);
-            if (insertAwardResponse.isSuccess()) {
-                membershipModel.getAwardTableView().get(personFx).getItems().add(new AwardDTOFx(award));
-                membershipModel.getBoatTableView().refresh();
-                return MembershipMessage.SUCCESS;
-            } else {
-                logger.error("Unable to insert award: {}", insertAwardResponse.getMessage());
-                return MembershipMessage.FAIL;
-            }
-        } catch (Exception e) {
-            logger.error("Failed to insert award for pId {}: {}", personFx.pIdProperty().get(), e.getMessage(), e);
-            return MembershipMessage.FAIL;
-        }
+//        PersonFx personFx = membershipModel.getSelectedPerson();
+//        Award award = new Award(personFx);
+//        try {
+//            String response = membershipModel.getHttpClient().postDataToGybe("insert/award", award);
+//            InsertAwardResponse insertAwardResponse = membershipModel.getHttpClient().getObjectMapper()
+//                    .readValue(response, InsertAwardResponse.class);
+//            if (insertAwardResponse.isSuccess()) {
+//                membershipModel.getAwardTableView().get(personFx).getItems().add(new AwardDTOFx(insertAwardResponse.getAward()));
+//                membershipModel.getBoatTableView().refresh();
+//                return MembershipMessage.SUCCESS;
+//            } else {
+//                logger.error("Unable to insert award: {}", insertAwardResponse.getMessage());
+//                return MembershipMessage.FAIL;
+//            }
+//        } catch (Exception e) {
+//            logger.error("Failed to insert award for pId {}: {}", personFx.pIdProperty().get(), e.getMessage(), e);
+//            return MembershipMessage.FAIL;
+//        }
+        return MembershipMessage.FAIL; // TODO remove this it is temp
     }
 
     /**
@@ -454,6 +455,57 @@ public class MembershipInteractor implements SlipUser {
             logger.error("Failed to delete boat {}: {}", boatId, e.getMessage(), e);
             Platform.runLater(() -> DialogueFx.errorAlert("Delete Boat Failed", e.getMessage()));
         }
+    }
+
+    // TODO Move this to Person interactor
+    public void deleteAward() {
+//        PersonFx personFx = membershipModel.getSelectedPerson();
+//        Integer awardId = membershipModel.getSelectedAward().getAwardId();
+//        try {
+//            // Validate inputs
+//            if (membershipModel.getSelectedAward() == null) {
+//                logger.error("Failed to delete award: No award selected");
+//                Platform.runLater(() -> DialogueFx.errorAlert("Delete Award Failed", "No award selected"));
+//                return;
+//            }
+//            // Send delete request to server
+//            String response = membershipModel.getHttpClient().postDataToGybe("delete/award", membershipModel.getSelectedAward());
+//            if (response == null) {
+//                logger.error("Failed to delete award {}: Null response from server", awardId);
+//                Platform.runLater(() -> DialogueFx.errorAlert("Delete Boat Failed", "Null response from server"));
+//                return;
+//            }
+//            UpdateResponse updateResponse = membershipModel.getHttpClient().getObjectMapper()
+//                    .readValue(response, UpdateResponse.class);
+//            if (updateResponse == null) {
+//                logger.error("Failed to delete award {}: Invalid response from server", awardId);
+//                Platform.runLater(() -> DialogueFx.errorAlert("Delete Boat Failed", "Invalid response from server"));
+//                return;
+//            }
+//            if (updateResponse.isSuccess()) {
+//                logger.info("Successfully deleted award {}", awardId);
+//
+//                AwardDTOFx awardDTOFx = membershipModel.getSelectedAward();
+//                if (awardDTOFx != null) {
+//                    Platform.runLater(() -> {
+//                        TableView tableView = membershipModel.getAwardTableView().get(personFx);
+//                        tableView.getItems().remove(awardDTOFx);
+//                        // Refresh table only if necessary
+//                        tableView.refresh();
+//                    });
+//                } else {
+//                    // Log warning but don’t show error alert, as deletion succeeded
+//                    logger.warn("Boat {} deleted on server but not found in membership list", awardId);
+//                }
+//            } else {
+//                String errorMessage = updateResponse.getMessage() != null ? updateResponse.getMessage() : "Unknown error";
+//                logger.error("Failed to delete boat {}: {}", awardId, errorMessage);
+//                Platform.runLater(() -> DialogueFx.errorAlert("Delete Award Failed", errorMessage));
+//            }
+//        } catch (Exception e) {
+//            logger.error("Failed to delete award {}: {}", awardId, e.getMessage(), e);
+//            Platform.runLater(() -> DialogueFx.errorAlert("Delete Award Failed", e.getMessage()));
+//        }
     }
 
     /**
