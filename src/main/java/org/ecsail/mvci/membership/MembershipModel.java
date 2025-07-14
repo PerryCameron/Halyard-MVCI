@@ -5,7 +5,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.ObservableMap;
 import javafx.scene.control.*;
-import javafx.scene.layout.StackPane;
 import org.ecsail.fx.*;
 import org.ecsail.enums.Success;
 import org.ecsail.interfaces.SlipUser;
@@ -35,7 +34,6 @@ public class MembershipModel {
     private final HttpClientUtil httpClient;
     private ObservableMap<String,Control> slipControls = FXCollections.observableHashMap();
     private final SimpleObjectProperty<NotesFx> selectedNote = new SimpleObjectProperty<>();
-    // private final SimpleObjectProperty<AwardDTOFx> selectedAward = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<BoatDTOFx> selectedBoat = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<EmailDTOFx> selectedEmail = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<MembershipIdDTOFx> selectedMembershipId = new SimpleObjectProperty<>();
@@ -167,15 +165,6 @@ public class MembershipModel {
     }
     public void setSelectedBoat(BoatDTOFx selectedBoat) {
         this.selectedBoat.set(selectedBoat);
-    }
-    public AwardDTOFx getSelectedAward() {
-        return selectedAward.get();
-    }
-    public SimpleObjectProperty<AwardDTOFx> selectedAwardProperty() {
-        return selectedAward;
-    }
-    public void setSelectedAward(AwardDTOFx selectedAward) {
-        this.selectedAward.set(selectedAward);
     }
     public NotesFx getSelectedNote() {
         return selectedNote.get();

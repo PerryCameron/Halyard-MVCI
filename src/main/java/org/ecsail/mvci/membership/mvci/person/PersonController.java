@@ -27,6 +27,7 @@ public class PersonController extends TabController<PersonMessage> {
             case SAVE_IMAGE -> personInteractor.saveImage();
             case INSERT_AWARD -> personInteractor.insertAward();
             case UPDATE_AWARD -> personInteractor.updateAward();
+            case DELETE_AWARD -> personInteractor.deleteAward();
         }
     }
 

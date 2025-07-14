@@ -24,14 +24,12 @@ import java.util.Arrays;
 public class AwardTableView implements Builder<TableView<AwardDTOFx>> {
     private final PersonFx person;
     private final MembershipView membershipView;
-    private final MembershipModel membershipModel;
     private final PersonView personView;
 
     public AwardTableView(PersonView personView) {
         this.personView = personView;
         this.person = personView.getPersonModel().getPersonDTO();
         this.membershipView = personView.getPersonModel().getMembershipView();
-        this.membershipModel = membershipView.getMembershipModel();
     }
 
     @Override
@@ -41,7 +39,7 @@ public class AwardTableView implements Builder<TableView<AwardDTOFx>> {
         tableView.getColumns().addAll(Arrays.asList(createColumn1(), createColumn2()));
         TableView.TableViewSelectionModel<AwardDTOFx> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) membershipModel.setSelectedAward(newSelection);
+            if (newSelection != null) personView.getPersonModel().selectedAwardProperty().set(newSelection);
         });
         return tableView;
     }
@@ -51,7 +49,7 @@ public class AwardTableView implements Builder<TableView<AwardDTOFx>> {
         col1.setSortType(TableColumn.SortType.DESCENDING);
         col1.setOnEditCommit(
                 t -> {
-                    membershipModel.getSelectedAward().setAwardYear(t.getNewValue());
+                    personView.getPersonModel().selectedAwardProperty().get().setAwardYear(t.getNewValue());
                     membershipView.sendMessage().accept(MembershipMessage.UPDATE_AWARD);
                 }
         );
@@ -71,7 +69,7 @@ public class AwardTableView implements Builder<TableView<AwardDTOFx>> {
         col2.setCellFactory(ComboBoxTableCell.forTableColumn(awardsList));
         col2.setOnEditCommit((TableColumn.CellEditEvent<AwardDTOFx, Awards> event) -> {
             // update the GUI (do this first so UI seems snappy)
-            membershipModel.getSelectedAward().setAwardType(event.getNewValue().getCode());
+            personView.getPersonModel().selectedAwardProperty().get().setAwardType(event.getNewValue().getCode());
             // update the SQL
             personView.sendMessage().accept(PersonMessage.UPDATE_AWARD);
         });

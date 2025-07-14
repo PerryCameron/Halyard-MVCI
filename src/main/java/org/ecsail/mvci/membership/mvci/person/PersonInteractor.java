@@ -162,4 +162,52 @@ public class PersonInteractor {
             return MembershipMessage.FAIL;
         }
     }
+
+    public void deleteAward() {
+        try {
+            // Validate inputs
+            if (personModel.selectedAwardProperty().get() == null) {
+                logger.error("Failed to delete award: No award selected");
+                Platform.runLater(() -> DialogueFx.errorAlert("Delete Award Failed", "No award selected"));
+                return;
+            }
+            // Send delete request to server
+            String response = personModel.getMembershipModel().getHttpClient().postDataToGybe("delete/award", personModel.selectedAwardProperty().get());
+            if (response == null) {
+                logger.error("Failed to delete award {}: Null response from server", personModel.selectedAwardProperty().get().getAwardId());
+                Platform.runLater(() -> DialogueFx.errorAlert("Delete Boat Failed", "Null response from server"));
+                return;
+            }
+            UpdateResponse updateResponse = personModel.getMembershipModel().getHttpClient().getObjectMapper()
+                    .readValue(response, UpdateResponse.class);
+            if (updateResponse == null) {
+                logger.error("Failed to delete award {}: Invalid response from server", personModel.selectedAwardProperty().get().getAwardId());
+                Platform.runLater(() -> DialogueFx.errorAlert("Delete Boat Failed", "Invalid response from server"));
+                return;
+            }
+            if (updateResponse.isSuccess()) {
+                logger.info("Successfully deleted award {}", personModel.selectedAwardProperty().get().getAwardId());
+
+                AwardDTOFx awardDTOFx = personModel.selectedAwardProperty().get();
+                if (awardDTOFx != null) {
+                    Platform.runLater(() -> {
+                        personModel.awardTableViewProperty().get().getItems().remove(awardDTOFx);
+                        // Refresh table only if necessary
+                        personModel.awardTableViewProperty().get().refresh();
+                    });
+                } else {
+                    // Log warning but don’t show error alert, as deletion succeeded
+                    logger.warn("Boat {} deleted on server but not found in membership list", personModel.selectedAwardProperty().get().getAwardId());
+                }
+            } else {
+                String errorMessage = updateResponse.getMessage() != null ? updateResponse.getMessage() : "Unknown error";
+                logger.error("Failed to delete boat {}: {}", personModel.selectedAwardProperty().get().getAwardId(), errorMessage);
+                Platform.runLater(() -> DialogueFx.errorAlert("Delete Award Failed", errorMessage));
+            }
+        } catch (Exception e) {
+            logger.error("Failed to delete award {}: {}", personModel.selectedAwardProperty().get().getAwardId(), e.getMessage(), e);
+            Platform.runLater(() -> DialogueFx.errorAlert("Delete Award Failed", e.getMessage()));
+        }
+    }
+
 }

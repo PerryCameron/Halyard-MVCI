@@ -427,8 +427,8 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
                 "Are you sure you want to delete this award entry?",
                 "Missing Selection",
                 "You need to select an award entry first"};
-        if (DialogueFx.verifyAction(strings, personModel.getMembershipModel().getSelectedAward()))
-            personModel.getMembershipView().sendMessage().accept(MembershipMessage.DELETE_AWARD);
+        if (DialogueFx.verifyAction(strings, personModel.selectedAwardProperty().get()))
+            action.accept(PersonMessage.DELETE_AWARD);
     }
 
     private void deleteEmail() {
