@@ -176,23 +176,7 @@ public class MembershipInteractor implements SlipUser {
         }
     }
 
-    /**
-     * Updates a person's phone data by sending a POST request to the halyard/update/phone endpoint.
-     *
-     * @param // phoneDTOFx the phone data to update
-     * @return the JSON response from the server
-     */
-    public MembershipMessage updatePhone() {
-        logger.debug("Updating phone with pId: {}", membershipModel.getSelectedPerson().pIdProperty().get());
-        Phone phone = new Phone(membershipModel.getSelectedPhone());
-        try {
-            String response = membershipModel.getHttpClient().postDataToGybe("update/phone", phone);
-            return processUpdateResponse(response);
-        } catch (Exception e) {
-            logger.error("Failed to update phone with pId {}: {}", membershipModel.getSelectedPerson().pIdProperty().get(), e.getMessage(), e);
-            return MembershipMessage.FAIL;
-        }
-    }
+
 
     /**
      * Updates a person's data by sending a POST request to the halyard/update/person endpoint.

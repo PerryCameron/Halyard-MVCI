@@ -18,6 +18,9 @@ import org.ecsail.enums.PhoneType;
 import org.ecsail.mvci.membership.MembershipMessage;
 import org.ecsail.mvci.membership.MembershipModel;
 import org.ecsail.mvci.membership.MembershipView;
+import org.ecsail.mvci.membership.mvci.person.PersonMessage;
+import org.ecsail.mvci.membership.mvci.person.PersonModel;
+import org.ecsail.mvci.membership.mvci.person.PersonView;
 import org.ecsail.widgetfx.TableColumnFx;
 import org.ecsail.widgetfx.TableViewFx;
 
@@ -28,19 +31,19 @@ import java.util.regex.Pattern;
 public class PhoneTableView implements Builder<TableView<PhoneFx>> {
 
     private final MembershipView membershipView;
-    private final PersonFx person;
-    private final MembershipModel membershipModel;
+    private final PersonModel personModel;
+    private final PersonView personView;
 
-    public PhoneTableView(PersonFx personDTO, MembershipView membershipView) {
-        this.person = personDTO;
-        this.membershipView = membershipView;
-        this.membershipModel = membershipView.getMembershipModel();
+    public PhoneTableView(PersonView personView) {
+        this.personView = personView;
+        this.personModel = personView.getPersonModel();
+        this.membershipView = personView.getPersonModel().getMembershipView();
     }
 
     @Override
     public TableView<PhoneFx> build() {
         TableView<PhoneFx> tableView = TableViewFx.tableViewOf(146,true);
-        tableView.setItems(person.getPhones());
+        tableView.setItems(personModel.getPersonDTO().getPhones());
         List<TableColumn<PhoneFx, ?>> columns = new ArrayList<>();
         columns.add(createColumn1());
         columns.add(createColumn2());
@@ -48,7 +51,7 @@ public class PhoneTableView implements Builder<TableView<PhoneFx>> {
         tableView.getColumns().addAll(columns);
         TableView.TableViewSelectionModel<PhoneFx> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) membershipModel.setSelectedPhone(newSelection);
+            if (newSelection != null) personModel.selectedPhoneProperty().set(newSelection);
         });
         return tableView;
     }
@@ -62,9 +65,9 @@ public class PhoneTableView implements Builder<TableView<PhoneFx>> {
                         String processedNumber = processNumber(t.getNewValue());
                         PhoneFx phoneDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                         phoneDTO.setPhone(t.getNewValue());
-                        membershipModel.setSelectedPhone(phoneDTO);
-                        membershipView.sendMessage().accept(MembershipMessage.UPDATE_PHONE);
-                        person.getPhones().stream()
+                        personModel.selectedPhoneProperty().set(phoneDTO);
+                        personView.sendMessage().accept(PersonMessage.UPDATE_PHONE);
+                        personModel.getPersonDTO().getPhones().stream()
                                 .filter(p -> p.getPhoneId() == phoneDTO.getPhoneId())
                                 .forEach(s -> s.setPhone(processedNumber));
                     }
@@ -127,8 +130,8 @@ public class PhoneTableView implements Builder<TableView<PhoneFx>> {
             int row = pos.getRow();
             PhoneFx phoneDTO = event.getTableView().getItems().get(row);
             phoneDTO.setPhoneType(newPhoneType.getCode()); // makes UI feel snappy
-            membershipModel.setSelectedPhone(phoneDTO);
-            membershipView.sendMessage().accept(MembershipMessage.UPDATE_PHONE);
+            personModel.selectedPhoneProperty().set(phoneDTO);
+            personView.sendMessage().accept(PersonMessage.UPDATE_PHONE);
         });
         Col2.setMaxWidth( 1f * Integer.MAX_VALUE * 30 );  // Type
         return Col2;
@@ -141,8 +144,8 @@ public class PhoneTableView implements Builder<TableView<PhoneFx>> {
             SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(phoneDTO.getPhoneListed());
             booleanProp.addListener((observable, oldValue, newValue) -> {
                 phoneDTO.setPhoneListed(newValue); // makes UI feel snappy
-                membershipModel.setSelectedPhone(phoneDTO);
-                membershipView.sendMessage().accept(MembershipMessage.UPDATE_PHONE);
+                personModel.selectedPhoneProperty().set(phoneDTO);
+                personView.sendMessage().accept(PersonMessage.UPDATE_PHONE);
             });
             return booleanProp;
         });

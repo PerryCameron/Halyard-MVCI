@@ -38,7 +38,7 @@ public class PhoneFx {
 	public PhoneFx(Phone phone) {
 		this.phoneId = new SimpleIntegerProperty(phone.getPhoneId());
 		this.pId = new SimpleIntegerProperty(phone.getpId());
-		this.phoneListed = new SimpleBooleanProperty(phone.getPhoneListed() == 1);
+		this.phoneListed = new SimpleBooleanProperty(phone.isPhoneListed());
 		this.phone = new SimpleStringProperty(phone.getPhone());
 		this.phoneType = new SimpleStringProperty(phone.getPhoneType());
 	}

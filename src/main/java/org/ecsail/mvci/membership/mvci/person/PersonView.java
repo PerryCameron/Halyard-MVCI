@@ -46,8 +46,6 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
 
     @Override
     public Tab build() {
-        //personModel.getMembershipModel().getStackPaneMap().put(personModel.getPersonDTO(), new StackPane());
-
         personModel.getTab().setText(getMemberType());
         personModel.getTab().setUserData(this);
         VBox vBox = VBoxFx.vBoxOf(new Insets(2, 2, 2, 2)); // makes outer border
@@ -141,7 +139,7 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
             }
             case Phone -> {
                 VBox vBox = createButtonBox(createAddButton(Phone), createDeleteButton(Phone), createCopyButton(Phone));
-                personModel.phoneTableViewProperty().set(new PhoneTableView(personModel.getPersonDTO(), personModel.getMembershipView()).build());
+                personModel.phoneTableViewProperty().set(new PhoneTableView(this).build());
                 hBox.getChildren().addAll(personModel.phoneTableViewProperty().get(), vBox);
             }
             case Properties -> hBox.getChildren().addAll(getInfoBox(), getRadioBox());
@@ -381,7 +379,7 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
                 clipboard.setContent(content);
             });
             case Phone -> button.setOnAction(event -> {
-                content.putString(personModel.getMembershipModel().getSelectedPhone().getPhone());
+                content.putString(personModel.selectedPhoneProperty().get().getPhone());
                 clipboard.setContent(content);
             });
         }
@@ -457,15 +455,15 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
                 "Are you sure you want to delete this phone number?",
                 "Missing Selection",
                 "You need to select a phone first"};
-        if (DialogueFx.verifyAction(strings, personModel.getMembershipModel().getSelectedPhone()))
-            personModel.getMembershipView().sendMessage().accept(MembershipMessage.DELETE_PHONE);
+        if (DialogueFx.verifyAction(strings, personModel.selectedPhoneProperty().get()))
+            action.accept(PersonMessage.DELETE_PHONE);
     }
 
     private Button createAddButton(ObjectType.Dto type) {
         Button button = ButtonFx.buttonOf("Add", 60);
         switch (type) {
             case Phone -> button.setOnAction(event ->
-                    personModel.getMembershipView().sendMessage().accept(MembershipMessage.INSERT_PHONE));
+                    action.accept(PersonMessage.INSERT_PHONE));
             case Email -> button.setOnAction(event ->
                     personModel.getMembershipView().sendMessage().accept(MembershipMessage.INSERT_EMAIL));
             case Award -> button.setOnAction(event ->

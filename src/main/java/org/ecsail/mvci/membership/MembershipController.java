@@ -135,7 +135,7 @@ public class MembershipController extends Controller<MembershipMessage> {
                     case UPDATE_EMAIL -> { return membershipInteractor.updateEmail();}
                     case UPDATE_BOAT -> { return membershipInteractor.updateBoat();}
                     case UPDATE_NOTE -> { return membershipInteractor.updateNotes();}
-                    case UPDATE_PHONE -> { return membershipInteractor.updatePhone();}
+//                    case UPDATE_PHONE -> { return membershipInteractor.updatePhone();}
                     case UPDATE_POSITION -> { return membershipInteractor.updatePosition();}
                     case UPDATE_PERSON -> { return membershipInteractor.updatePerson();}
 //                    case SELECT_INVOICES -> db.selectInvoices(); <- this has more pieces not in use

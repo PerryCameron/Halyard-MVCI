@@ -1,10 +1,13 @@
 package org.ecsail.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.ecsail.fx.PersonFx;
 import org.ecsail.fx.PhoneFx;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true) // Ignore membershipTypes and other unknown fields
 public class Phone {
     @JsonProperty("phoneId")
     private int phoneId;
@@ -19,7 +22,7 @@ public class Phone {
     private String phoneType;
 
     @JsonProperty("phoneListed")
-    private int phoneListed;
+    private boolean phoneListed;
 
     public Phone() {
     }
@@ -29,7 +32,15 @@ public class Phone {
         this.pId = phoneDTOFx.getpId();
         this.phone = phoneDTOFx.getPhone();
         this.phoneType = phoneDTOFx.getPhoneType();
-        this.phoneListed = phoneDTOFx.getPhoneListed() ? 1 : 0;
+        this.phoneListed = phoneDTOFx.getPhoneListed();
+    }
+
+    public Phone(PersonFx person) {
+        this.phoneId = 0;
+        this.pId = person.getpId();
+        this.phone = "";
+        this.phoneType = "C";
+        this.phoneListed = true;
     }
 
     public int getPhoneId() {
@@ -64,11 +75,11 @@ public class Phone {
         this.phoneType = phoneType;
     }
 
-    public int getPhoneListed() {
+    public boolean isPhoneListed() {
         return phoneListed;
     }
 
-    public void setPhoneListed(int phoneListed) {
+    public void setPhoneListed(boolean phoneListed) {
         this.phoneListed = phoneListed;
     }
 }

@@ -39,7 +39,6 @@ public class MembershipModel {
     private final SimpleObjectProperty<MembershipIdDTOFx> selectedMembershipId = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<OfficerFx> selectedOfficer = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<PersonFx> selectedPerson = new SimpleObjectProperty<>();
-    private final SimpleObjectProperty<PhoneFx> selectedPhone = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<InvoiceDTOFx> selectedInvoice = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<PaymentDTO> selectedPayment = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TextArea> textArea = new SimpleObjectProperty<>(new TextArea());
@@ -120,15 +119,6 @@ public class MembershipModel {
     }
     public void setSelectedString(String selectedString) {
         this.selectedString.set(selectedString);
-    }
-    public PhoneFx getSelectedPhone() {
-        return selectedPhone.get();
-    }
-    public SimpleObjectProperty<PhoneFx> selectedPhoneProperty() {
-        return selectedPhone;
-    }
-    public void setSelectedPhone(PhoneFx selectedPhone) {
-        this.selectedPhone.set(selectedPhone);
     }
     public OfficerFx getSelectedOfficer() {
         return selectedOfficer.get();
