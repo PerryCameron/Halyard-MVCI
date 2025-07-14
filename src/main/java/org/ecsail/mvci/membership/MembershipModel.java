@@ -35,7 +35,7 @@ public class MembershipModel {
     private final HttpClientUtil httpClient;
     private ObservableMap<String,Control> slipControls = FXCollections.observableHashMap();
     private final SimpleObjectProperty<NotesFx> selectedNote = new SimpleObjectProperty<>();
-    private final SimpleObjectProperty<AwardDTOFx> selectedAward = new SimpleObjectProperty<>();
+    // private final SimpleObjectProperty<AwardDTOFx> selectedAward = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<BoatDTOFx> selectedBoat = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<EmailDTOFx> selectedEmail = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<MembershipIdDTOFx> selectedMembershipId = new SimpleObjectProperty<>();

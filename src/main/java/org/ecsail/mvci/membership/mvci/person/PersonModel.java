@@ -32,6 +32,7 @@ public class PersonModel {
     private final ObjectProperty<StackPane> stackPaneProperty = new SimpleObjectProperty<>(new StackPane());
     private final ObjectProperty<RadioButton>  radioButtonProperty = new SimpleObjectProperty<>(new RadioButton());
     private final ObjectProperty<ComboBox<String>> comboBoxProperty = new SimpleObjectProperty<>(new ComboBox<>());
+    private final ObjectProperty<AwardDTOFx> selectedAward = new SimpleObjectProperty<>();
 
     private final ObjectProperty<HBox> awardHbox = new SimpleObjectProperty<>();
 
@@ -111,5 +112,9 @@ public class PersonModel {
 
     public ObjectProperty<ComboBox<String>> comboBoxProperty() {
         return comboBoxProperty;
+    }
+
+    public ObjectProperty<AwardDTOFx> selectedAwardProperty() {
+        return selectedAward;
     }
 }

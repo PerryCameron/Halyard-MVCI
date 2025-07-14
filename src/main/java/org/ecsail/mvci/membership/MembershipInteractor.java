@@ -169,18 +169,18 @@ public class MembershipInteractor implements SlipUser {
      * @param // awardDTOFx the phone data to update
      * @return the JSON response from the server
      */
-    public MembershipMessage updateAward() {
-        logger.debug("Updating phone with pId: {}", membershipModel.getSelectedAward().getAwardId());
-        Award award = new Award(membershipModel.getSelectedAward());
-        try {
-            String response = membershipModel.getHttpClient().postDataToGybe("update/award", award);
-            return processUpdateResponse(response);
-        } catch (Exception e) {
-            logger.error("Failed to update award with pId {}: {}",
-                    membershipModel.getSelectedPerson().pIdProperty().get(), e.getMessage(), e);
-            return MembershipMessage.FAIL;
-        }
-    }
+//    public MembershipMessage updateAward() {
+//        logger.debug("Updating phone with pId: {}", membershipModel.getSelectedAward().getAwardId());
+//        Award award = new Award(membershipModel.getSelectedAward());
+//        try {
+//            String response = membershipModel.getHttpClient().postDataToGybe("update/award", award);
+//            return processUpdateResponse(response);
+//        } catch (Exception e) {
+//            logger.error("Failed to update award with pId {}: {}",
+//                    membershipModel.getSelectedPerson().pIdProperty().get(), e.getMessage(), e);
+//            return MembershipMessage.FAIL;
+//        }
+//    }
 
     /**
      * Updates a person's phone data by sending a POST request to the halyard/update/email endpoint.
@@ -258,40 +258,6 @@ public class MembershipInteractor implements SlipUser {
         }
     }
 
-    /**
-     * Inserts a new award for the selected person by sending a POST request to the 'insert/award' endpoint.
-     * <p>
-     * This method creates an {@link Award} object from the selected award in the membership model,
-     * sends it to the server, and processes the response. If the insertion is successful, the award is
-     * added to the person's award table view, and the boat table view is refreshed. If the insertion fails
-     * or an exception occurs, an error is logged, and a failure message is returned.
-     * </p>
-     *
-     * @return {@link MembershipMessage#SUCCESS} if the award is successfully inserted,
-     *         {@link MembershipMessage#FAIL} if the insertion fails or an exception occurs.
-     * @throws Exception if an error occurs during the HTTP request or response processing.
-     */
-    public MembershipMessage insertAward() {
-//        PersonFx personFx = membershipModel.getSelectedPerson();
-//        Award award = new Award(personFx);
-//        try {
-//            String response = membershipModel.getHttpClient().postDataToGybe("insert/award", award);
-//            InsertAwardResponse insertAwardResponse = membershipModel.getHttpClient().getObjectMapper()
-//                    .readValue(response, InsertAwardResponse.class);
-//            if (insertAwardResponse.isSuccess()) {
-//                membershipModel.getAwardTableView().get(personFx).getItems().add(new AwardDTOFx(insertAwardResponse.getAward()));
-//                membershipModel.getBoatTableView().refresh();
-//                return MembershipMessage.SUCCESS;
-//            } else {
-//                logger.error("Unable to insert award: {}", insertAwardResponse.getMessage());
-//                return MembershipMessage.FAIL;
-//            }
-//        } catch (Exception e) {
-//            logger.error("Failed to insert award for pId {}: {}", personFx.pIdProperty().get(), e.getMessage(), e);
-//            return MembershipMessage.FAIL;
-//        }
-        return MembershipMessage.FAIL; // TODO remove this it is temp
-    }
 
     /**
      * Inserts a boat row by sending a POST request to the halyard/update/boat endpoint.

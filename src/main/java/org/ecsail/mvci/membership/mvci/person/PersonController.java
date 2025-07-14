@@ -25,6 +25,8 @@ public class PersonController extends TabController<PersonMessage> {
     public void action(PersonMessage actionEnum) {
         switch (actionEnum) {
             case SAVE_IMAGE -> personInteractor.saveImage();
+            case INSERT_AWARD -> personInteractor.insertAward();
+            case UPDATE_AWARD -> personInteractor.updateAward();
         }
     }
 

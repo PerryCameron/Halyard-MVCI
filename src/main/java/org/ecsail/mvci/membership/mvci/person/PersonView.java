@@ -130,7 +130,7 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
             }
             case Award -> {
                 VBox vBox = createButtonBox(createAddButton(Award), createDeleteButton(Award));
-                personModel.awardTableViewProperty().set(new AwardTableView(personModel.getPersonDTO(), personModel.getMembershipView()).build());
+                personModel.awardTableViewProperty().set(new AwardTableView(this).build());
                 hBox.getChildren().addAll(personModel.awardTableViewProperty().get(), vBox);
             }
             case Email -> {
@@ -469,7 +469,7 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
             case Email -> button.setOnAction(event ->
                     personModel.getMembershipView().sendMessage().accept(MembershipMessage.INSERT_EMAIL));
             case Award -> button.setOnAction(event ->
-                    personModel.getMembershipView().sendMessage().accept(MembershipMessage.INSERT_AWARD));
+                    action.accept(PersonMessage.INSERT_AWARD));
             case Officer -> button.setOnAction(event ->
                     personModel.getMembershipView().sendMessage().accept(MembershipMessage.INSERT_OFFICER));
         }

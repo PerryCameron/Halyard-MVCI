@@ -13,6 +13,9 @@ import org.ecsail.enums.Awards;
 import org.ecsail.mvci.membership.MembershipMessage;
 import org.ecsail.mvci.membership.MembershipModel;
 import org.ecsail.mvci.membership.MembershipView;
+import org.ecsail.mvci.membership.mvci.person.PersonMessage;
+import org.ecsail.mvci.membership.mvci.person.PersonModel;
+import org.ecsail.mvci.membership.mvci.person.PersonView;
 import org.ecsail.widgetfx.TableColumnFx;
 import org.ecsail.widgetfx.TableViewFx;
 
@@ -22,10 +25,12 @@ public class AwardTableView implements Builder<TableView<AwardDTOFx>> {
     private final PersonFx person;
     private final MembershipView membershipView;
     private final MembershipModel membershipModel;
+    private final PersonView personView;
 
-    public AwardTableView(PersonFx personDTO, MembershipView membershipView) {
-        this.person = personDTO;
-        this.membershipView = membershipView;
+    public AwardTableView(PersonView personView) {
+        this.personView = personView;
+        this.person = personView.getPersonModel().getPersonDTO();
+        this.membershipView = personView.getPersonModel().getMembershipView();
         this.membershipModel = membershipView.getMembershipModel();
     }
 
@@ -68,7 +73,7 @@ public class AwardTableView implements Builder<TableView<AwardDTOFx>> {
             // update the GUI (do this first so UI seems snappy)
             membershipModel.getSelectedAward().setAwardType(event.getNewValue().getCode());
             // update the SQL
-            membershipView.sendMessage().accept(MembershipMessage.UPDATE_AWARD);
+            personView.sendMessage().accept(PersonMessage.UPDATE_AWARD);
         });
         col2.setMaxWidth(1f * Integer.MAX_VALUE * 50);  // Type
         return col2;

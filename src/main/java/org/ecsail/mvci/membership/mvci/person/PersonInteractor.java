@@ -12,7 +12,6 @@ import org.ecsail.fx.PersonFx;
 import org.ecsail.fx.PictureDTO;
 import org.ecsail.mvci.membership.MembershipMessage;
 import org.ecsail.pojo.Award;
-import org.ecsail.pojo.Note;
 import org.ecsail.widgetfx.DialogueFx;
 import org.ecsail.wrappers.InsertAwardResponse;
 import org.ecsail.wrappers.InsertPictureResponse;
@@ -126,6 +125,40 @@ public class PersonInteractor {
                 DialogueFx.errorAlert("Unable to perform update", updateResponse.getMessage());
             });
             logger.error(updateResponse.getMessage());
+            return MembershipMessage.FAIL;
+        }
+    }
+
+    public MembershipMessage insertAward() {
+        Award award = new Award(personModel.getPersonDTO());
+        try {
+            String response = personModel.getMembershipModel().getHttpClient().postDataToGybe("insert/award", award);
+            InsertAwardResponse insertAwardResponse = personModel.getMembershipModel().getHttpClient().getObjectMapper()
+                    .readValue(response, InsertAwardResponse.class);
+            if (insertAwardResponse.isSuccess()) {
+                personModel.awardTableViewProperty().get().getItems().add(new AwardDTOFx(insertAwardResponse.getAward()));
+                personModel.awardTableViewProperty().get().refresh(); //TODO check if this is needed
+                return MembershipMessage.SUCCESS;
+            } else {
+                logger.error("Unable to insert award: {}", insertAwardResponse.getMessage());
+                return MembershipMessage.FAIL;
+            }
+        } catch (Exception e) {
+            logger.error("Failed to insert award for pId {}: {}", personModel.getPersonDTO().pIdProperty().get(), e.getMessage(), e);
+            return MembershipMessage.FAIL;
+        }
+    }
+
+    public MembershipMessage updateAward() {
+        logger.debug("Updating phone with pId: {}", personModel.selectedAwardProperty().get().getAwardId());
+        Award award = new Award(personModel.selectedAwardProperty().get());
+        try {
+            String response = personModel.getMembershipModel().getHttpClient().postDataToGybe("update/award", award);
+            return processUpdateResponse(response);
+        } catch (Exception e) {
+            logger.error("Failed to update award with pId {}: {}",
+                    //personModel.getMembershipModel().getSelectedPerson().pIdProperty().get(), e.getMessage(), e);
+                    personModel.getPersonDTO().pIdProperty().get(), e.getMessage(),e);
             return MembershipMessage.FAIL;
         }
     }
