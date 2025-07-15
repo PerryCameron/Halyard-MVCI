@@ -217,16 +217,22 @@ public class PersonInteractor {
     }
 
     public MembershipMessage updateEmail() {
-        logger.debug("Updating email with pId: {}", personModel.selectedEmailProperty().get().getEmailId());
-        Phone phone = new Phone(personModel.selectedPhoneProperty().get());
-        try {
-            String response = personModel.getMembershipModel().getHttpClient().postDataToGybe("update/email", phone);
-            return processUpdateResponse(response);
-        } catch (Exception e) {
-            logger.error("Failed to update email with pId {}: {}",
-                    personModel.selectedEmailProperty().get().pIdProperty().get(), e.getMessage(), e);
-            return MembershipMessage.FAIL;
-        }
+//        System.out.println("got to 1");
+//
+//        try {
+//            logger.debug("Updating email with pId: {}", personModel.selectedEmailProperty().get().getEmailId());
+//            Email email = new Email(personModel.selectedEmailProperty().get());
+//            System.out.println("got to 2");
+//
+//            String response = personModel.getMembershipModel().getHttpClient().postDataToGybe("update/email", email);
+//            return processUpdateResponse(response);
+//        } catch (Exception e) {
+//            logger.error("Failed to update email with pId {}: {}",
+//                    personModel.selectedEmailProperty().get().pIdProperty().get(), e.getMessage(), e);
+//            return MembershipMessage.FAIL;
+//        }
+        System.out.println("called updateEmail: " + personModel.selectedEmailProperty().get().getEmailId());
+        return null;
     }
 
     public void deleteAward() {

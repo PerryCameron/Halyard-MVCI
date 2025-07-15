@@ -37,7 +37,7 @@ public class MembershipController extends Controller<MembershipMessage> {
             case UPDATE_MEMBERSHIP_LIST -> runTask(UPDATE_MEMBERSHIP_LIST);
             case UPDATE_MEMBERSHIP_ID -> runTask(UPDATE_MEMBERSHIP_ID);
             case UPDATE_AWARD -> runSpinner(UPDATE_AWARD,0,0,false);
-            case UPDATE_EMAIL -> runSpinner(UPDATE_EMAIL,0,0,false);
+//            case UPDATE_EMAIL -> runSpinner(UPDATE_EMAIL,0,0,false);
             case UPDATE_BOAT -> runSpinner(UPDATE_BOAT,0,0,false);
             case UPDATE_NOTE -> runSpinner(UPDATE_NOTE,0,0,false);
             case UPDATE_PHONE -> runSpinner(UPDATE_PHONE,0,0,false);

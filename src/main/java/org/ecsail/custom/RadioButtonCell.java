@@ -1,44 +1,68 @@
 package org.ecsail.custom;
 
-import javafx.beans.property.ObjectProperty;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TableCell;
+import javafx.beans.property.ObjectProperty;
+import javafx.scene.control.ToggleGroup;
+
 import org.ecsail.fx.EmailDTOFx;
+import org.ecsail.mvci.membership.mvci.person.PersonMessage;
+import org.ecsail.mvci.membership.mvci.person.PersonView;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RadioButtonCell extends TableCell<EmailDTOFx, Boolean> {
+    private static final Logger logger = LoggerFactory.getLogger(RadioButtonCell.class);
+    private final RadioButton radioButton;
+    private final ObjectProperty<EmailDTOFx> selectedEmail;
+    private final PersonView personView;
+    private boolean isUserAction = false; // Flag to track user-initiated actions
 
-    private final ObjectProperty<EmailDTOFx> emailDTOObjectProperty;
+    public RadioButtonCell(ObjectProperty<EmailDTOFx> selectedEmail, ToggleGroup toggleGroup, PersonView personView) {
+        this.selectedEmail = selectedEmail;
+        this.personView = personView;
+        radioButton = new RadioButton();
+        radioButton.setToggleGroup(toggleGroup);
+        // Detect user clicks on the radio button
+        radioButton.setOnMouseClicked(event -> {
+            isUserAction = true; // Mark as user action
+            // Ensure the radio button is selected before processing
+            if (radioButton.isSelected() && getTableRow() != null) {
+                processSelection();
+            }
+        });
+        // Listen for selection changes
+        radioButton.selectedProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal && getTableRow() != null && isUserAction) { // Only process user-initiated changes
+                processSelection();
+            }
+        });
+        // Reset isUserAction after processing to prevent re-triggering
+        radioButton.selectedProperty().addListener((obs, oldVal, newVal) -> {
+            isUserAction = false; // Reset after each selection change
+        });
+    }
 
-    public RadioButtonCell(ObjectProperty<EmailDTOFx> emailDTOObjectProperty) {
-        this.emailDTOObjectProperty = emailDTOObjectProperty;
+    private void processSelection() {
+        EmailDTOFx emailDTOFx = getTableRow().getItem();
+        if (emailDTOFx != null) {
+            emailDTOFx.setPrimaryUse(true);
+            logger.info("Switched: " + emailDTOFx.getEmail());
+            selectedEmail.set(emailDTOFx);
+            personView.sendMessage().accept(PersonMessage.UPDATE_EMAIL);
+        }
     }
 
     @Override
     protected void updateItem(Boolean item, boolean empty) {
         super.updateItem(item, empty);
-
-        if (!empty && item != null) {
-
-            RadioButton radioButton = new RadioButton();
+        logger.debug("updateItem called: empty={}, item={}", empty, item);
+        if (empty || item == null) {
+            setGraphic(null);
+        } else {
             radioButton.setSelected(item);
             setGraphic(radioButton);
-
-            radioButton.selectedProperty().addListener(
-                    (o, old, selected) -> {
-                        if (selected) {
-                            EmailDTOFx emailDTO = getTableRow().getItem();
-                            if (emailDTOObjectProperty.get() != null) {
-                                emailDTOObjectProperty.get().setPrimaryUse(false);
-//          TODO                      SqlUpdate.updateEmail("primary_use", emailDTOObjectProperty.get().getEmail_id(), false);
-                            }
-
-                            emailDTO.setPrimaryUse(true);
-//          TODO                  SqlUpdate.updateEmail("primary_use", emailDTO.getEmail_id(), true);
-                            emailDTOObjectProperty.set(emailDTO);
-                        }
-                    });
-        } else {
-            setGraphic(null);
         }
     }
 }
+
