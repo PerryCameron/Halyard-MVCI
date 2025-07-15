@@ -38,6 +38,7 @@ public class PersonController extends TabController<PersonMessage> {
                     case INSERT_PHONE -> personInteractor.insertPhone();
                     case UPDATE_PHONE -> personInteractor.updatePhone();
                     case DELETE_PHONE -> personInteractor.deletePhone();
+                    case UPDATE_EMAIL -> personInteractor.updateEmail();
                 }
                 return null;
             }

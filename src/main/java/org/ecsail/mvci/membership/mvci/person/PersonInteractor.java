@@ -12,6 +12,7 @@ import org.ecsail.fx.PhoneFx;
 import org.ecsail.fx.PictureDTO;
 import org.ecsail.mvci.membership.MembershipMessage;
 import org.ecsail.pojo.Award;
+import org.ecsail.pojo.Email;
 import org.ecsail.pojo.Phone;
 import org.ecsail.static_tools.HttpClientUtil;
 import org.ecsail.widgetfx.DialogueFx;
@@ -193,6 +194,19 @@ public class PersonInteractor {
             return processUpdateResponse(response);
         } catch (Exception e) {
             logger.error("Failed to update phone with pId {}: {}", personModel.getPersonDTO().pIdProperty().get(), e.getMessage(), e);
+            return MembershipMessage.FAIL;
+        }
+    }
+
+    public MembershipMessage updateEmail() {
+        logger.debug("Updating email with pId: {}", personModel.selectedEmailProperty().get().getEmailId());
+        Phone phone = new Phone(personModel.selectedPhoneProperty().get());
+        try {
+            String response = personModel.getMembershipModel().getHttpClient().postDataToGybe("update/email", phone);
+            return processUpdateResponse(response);
+        } catch (Exception e) {
+            logger.error("Failed to update email with pId {}: {}",
+                    personModel.selectedEmailProperty().get().pIdProperty().get(), e.getMessage(), e);
             return MembershipMessage.FAIL;
         }
     }

@@ -338,9 +338,7 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
             case "Primary" -> {
                 if (hasMemberType(MemberType.PRIMARY)) System.out.println("Swap primary and secondary");
             }
-            case "Dependent" -> {
-                System.out.println("make secondary a dependant");
-            }
+            case "Dependent" -> System.out.println("make secondary a dependant");
         }
     }
 
@@ -375,7 +373,7 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
         Button button = ButtonFx.buttonOf("Copy", 60);
         switch (type) {
             case Email -> button.setOnAction(event -> {
-                content.putString(personModel.getMembershipModel().getSelectedEmail().getEmail());
+                content.putString(personModel.selectedEmailProperty().get().getEmail());
                 clipboard.setContent(content);
             });
             case Phone -> button.setOnAction(event -> {
@@ -405,8 +403,7 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
                 "the People tab and reattached to this or another membership.";
         Alert alert = DialogueFx.customAlert(header, message, Alert.AlertType.CONFIRMATION);
         Optional<ButtonType> result = alert.showAndWait();
-        if (result.isPresent() && result.get() == ButtonType.OK) return true;
-        return false;
+        return result.isPresent() && result.get() == ButtonType.OK;
     }
 
     private void deletePerson() {
@@ -435,8 +432,8 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
                 "Are you sure you want to delete this email entry?",
                 "Missing Selection",
                 "You need to select an email entry first"};
-        if (DialogueFx.verifyAction(strings, personModel.getMembershipModel().getSelectedEmail()))
-            personModel.getMembershipView().sendMessage().accept(MembershipMessage.DELETE_EMAIL);
+        if (DialogueFx.verifyAction(strings, personModel.selectedEmailProperty().get()))
+            action.accept(PersonMessage.DELETE_EMAIL);
     }
 
     private void deleteOfficer() {
@@ -465,7 +462,7 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
             case Phone -> button.setOnAction(event ->
                     action.accept(PersonMessage.INSERT_PHONE));
             case Email -> button.setOnAction(event ->
-                    personModel.getMembershipView().sendMessage().accept(MembershipMessage.INSERT_EMAIL));
+                    action.accept(PersonMessage.INSERT_EMAIL));
             case Award -> button.setOnAction(event ->
                     action.accept(PersonMessage.INSERT_AWARD));
             case Officer -> button.setOnAction(event ->
@@ -477,8 +474,8 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
     private Button createEmailButton() {
         Button button = ButtonFx.buttonOf("Email", 60);
         button.setOnAction(event -> {
-            if (personModel.getMembershipModel().getSelectedEmail() != null) {// make sure something is selected
-                Mail.composeEmail(personModel.getMembershipModel().getSelectedEmail().getEmail(), "ECSC", "");
+            if (personModel.selectedEmailProperty().get() != null) {// make sure something is selected
+                Mail.composeEmail(personModel.selectedEmailProperty().get().getEmail(), "ECSC", "");
             }
         });
         return button;

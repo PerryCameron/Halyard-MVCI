@@ -29,9 +29,7 @@ public class MembershipInteractor implements SlipUser {
 
     protected void setDataLoaded() {
         logger.info("Data for MembershipView is now loaded");
-        Platform.runLater(() -> {
-            membershipModel.dataIsLoadedProperty().set(true);
-        });
+        Platform.runLater(() -> membershipModel.dataIsLoadedProperty().set(true));
     }
 
     public void uploadMemberPhoto() {
@@ -45,14 +43,10 @@ public class MembershipInteractor implements SlipUser {
         try {
             new PDF_Envelope(membershipModel);
         } catch (IOException e1) {
-            Platform.runLater(() -> {
-                DialogueFx.errorAlert("Unable to print envelope: {}", e1.getMessage());
-            });
+            Platform.runLater(() -> DialogueFx.errorAlert("Unable to print envelope: {}", e1.getMessage()));
             logger.error(e1.getMessage());
         } catch (Exception e2) {
-            Platform.runLater(() -> {
-                DialogueFx.errorAlert("Unable to perform update", e2.getMessage());
-            });
+            Platform.runLater(() -> DialogueFx.errorAlert("Unable to perform update", e2.getMessage()));
             logger.error(e2.getMessage());
         }
     }
@@ -62,7 +56,7 @@ public class MembershipInteractor implements SlipUser {
         StringBuilder endpoint = new StringBuilder("membership");
         try {
             endpoint.append("?year=").append(membershipModel.selectedMembershipYearProperty().getValue());
-            endpoint.append("&msId=").append(URLEncoder.encode(String.valueOf(membershipModel.getMembershipFromRosterList().getMsId()), StandardCharsets.UTF_8.name()));
+            endpoint.append("&msId=").append(URLEncoder.encode(String.valueOf(membershipModel.getMembershipFromRosterList().getMsId()), StandardCharsets.UTF_8));
             logger.debug("Constructed endpoint: {}", endpoint);
 
             String jsonResponse = membershipModel.getHttpClient().fetchDataFromGybe(endpoint.toString());
@@ -126,7 +120,6 @@ public class MembershipInteractor implements SlipUser {
     /**
      * Updates a membership's notes data by sending a POST request to the halyard/update/notes endpoint.
      *
-     * @param // NotesDTOFx the position data to update
      * @return the JSON response from the server
      */
     public MembershipMessage updateNotes() {
@@ -147,7 +140,6 @@ public class MembershipInteractor implements SlipUser {
     /**
      * Updates a person's position data by sending a POST request to the halyard/update/position endpoint.
      *
-     * @param // OfficerDTOFx the position data to update
      * @return the JSON response from the server
      */
     public MembershipMessage updatePosition() {
@@ -163,25 +155,10 @@ public class MembershipInteractor implements SlipUser {
         }
     }
 
-    public MembershipMessage updateEmail() {
-        logger.debug("Updating phone with pId: {}", membershipModel.getSelectedEmail().getEmailId());
-        Email email = new Email(membershipModel.getSelectedEmail());
-        try {
-            String response = membershipModel.getHttpClient().postDataToGybe("update/email", email);
-            return processUpdateResponse(response);
-        } catch (Exception e) {
-            logger.error("Failed to update email with pId {}: {}",
-                    membershipModel.getSelectedPerson().pIdProperty().get(), e.getMessage(), e);
-            return MembershipMessage.FAIL;
-        }
-    }
-
-
 
     /**
      * Updates a person's data by sending a POST request to the halyard/update/person endpoint.
      *
-     * @param // personDTOFx the person data to update
      * @return the JSON response from the server
      */
     public MembershipMessage updatePerson() {
@@ -235,17 +212,13 @@ public class MembershipInteractor implements SlipUser {
                 membershipModel.getBoatTableView().refresh();
                 return MembershipMessage.SUCCESS;
             } else {
-                Platform.runLater(() -> {
-                    DialogueFx.errorAlert("Unable add boat: ", insertBoatResponse.getMessage());
-                });
+                Platform.runLater(() -> DialogueFx.errorAlert("Unable add boat: ", insertBoatResponse.getMessage()));
                 logger.error(insertBoatResponse.getMessage());
                 return MembershipMessage.FAIL;
             }
         } catch (Exception e) {
             logger.error("Could not create new boat: {}", e.getMessage());
-            Platform.runLater(() -> {
-                DialogueFx.errorAlert("Unable add boat: ", e.getMessage());
-            });
+            Platform.runLater(() -> DialogueFx.errorAlert("Unable add boat: ", e.getMessage()));
             return MembershipMessage.FAIL;
         }
     }
@@ -271,9 +244,6 @@ public class MembershipInteractor implements SlipUser {
      * @return {@link MembershipMessage#DELETE_MEMBERSHIP_FROM_DATABASE_SUCCEED} if the membership is
      * successfully deleted, or {@link MembershipMessage#DELETE_MEMBERSHIP_FROM_DATABASE_FAIL}
      * if the deletion fails due to server issues or deserialization problems.
-     * @throws Exception if an unexpected error occurs during the server request or response processing,
-     *                   such as network issues, JSON deserialization errors, or server-side failures.
-     *                   The exception is caught, logged, and an error alert is displayed to the user.
      */
     public MembershipMessage deleteMembership() {
         logger.info("Deleting Membership MSID: {}", membershipModel.membershipProperty().get().msIdProperty().get());
@@ -322,9 +292,6 @@ public class MembershipInteractor implements SlipUser {
      * The method ensures thread safety by performing UI updates using {@link Platform#runLater(Runnable)}.
      * </p>
      *
-     * @throws Exception if an unexpected error occurs during the server request or response processing,
-     *                   such as network issues, JSON deserialization errors, or server-side failures.
-     *                   The exception is caught, logged, and an error alert is displayed to the user.
      */
     public void deleteBoat() {
         try {
@@ -408,9 +375,7 @@ public class MembershipInteractor implements SlipUser {
             logger.info(updateResponse.getMessage());
             return MembershipMessage.SUCCESS;
         } else {
-            Platform.runLater(() -> {
-                DialogueFx.errorAlert("Unable to perform update", updateResponse.getMessage());
-            });
+            Platform.runLater(() -> DialogueFx.errorAlert("Unable to perform update", updateResponse.getMessage()));
             logger.error(updateResponse.getMessage());
             return MembershipMessage.FAIL;
         }
@@ -426,9 +391,9 @@ public class MembershipInteractor implements SlipUser {
 
     // removes selected membership row from roster list
     public void removeMembershipFromList(TableView<RosterFx> rosterTableView) {
-        Optional<RosterFx> rosterFx = Optional.ofNullable(rosterTableView.getItems().stream()
+        Optional<RosterFx> rosterFx = rosterTableView.getItems().stream()
                 .filter(roster -> roster.getMsId() == membershipModel.membershipProperty()
-                        .get().getMsId()).findFirst().orElse(null));
+                        .get().getMsId()).findFirst();
         if (rosterFx.isPresent()) {
             rosterTableView.getItems().remove(rosterFx.get());
             logger.info("Removed membership {} from membership list", rosterFx.get().getId());

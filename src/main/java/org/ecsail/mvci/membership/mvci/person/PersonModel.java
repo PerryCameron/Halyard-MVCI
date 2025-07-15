@@ -34,6 +34,8 @@ public class PersonModel {
     private final ObjectProperty<ComboBox<String>> comboBoxProperty = new SimpleObjectProperty<>(new ComboBox<>());
     private final ObjectProperty<AwardDTOFx> selectedAward = new SimpleObjectProperty<>();
     private final ObjectProperty<PhoneFx> selectedPhone = new SimpleObjectProperty<>();
+    private final ObjectProperty<EmailDTOFx> selectedEmail = new SimpleObjectProperty<>();
+
 
     private final ObjectProperty<HBox> awardHbox = new SimpleObjectProperty<>();
 
@@ -121,5 +123,9 @@ public class PersonModel {
 
     public ObjectProperty<PhoneFx> selectedPhoneProperty() {
         return selectedPhone;
+    }
+
+    public ObjectProperty<EmailDTOFx> selectedEmailProperty() {
+        return selectedEmail;
     }
 }

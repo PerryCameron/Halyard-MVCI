@@ -15,7 +15,7 @@ import java.util.Objects;
 
 public class MembershipModel {
     private final MainModel mainModel;
-    private ObservableList<BoardPositionDTO> boardPositionDTOS;
+    private final ObservableList<BoardPositionDTO> boardPositionDTOS;
     private ObservableList<PersonFx> people = FXCollections.observableArrayList();
 
     private final SimpleObjectProperty<RosterFx> membershipFromRosterList = new SimpleObjectProperty<>();
@@ -35,7 +35,6 @@ public class MembershipModel {
     private ObservableMap<String,Control> slipControls = FXCollections.observableHashMap();
     private final SimpleObjectProperty<NotesFx> selectedNote = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<BoatDTOFx> selectedBoat = new SimpleObjectProperty<>();
-    private final SimpleObjectProperty<EmailDTOFx> selectedEmail = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<MembershipIdDTOFx> selectedMembershipId = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<OfficerFx> selectedOfficer = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<PersonFx> selectedPerson = new SimpleObjectProperty<>();
@@ -137,15 +136,6 @@ public class MembershipModel {
     }
     public void setSelectedMembershipId(MembershipIdDTOFx selectedMembershipId) {
         this.selectedMembershipId.set(selectedMembershipId);
-    }
-    public EmailDTOFx getSelectedEmail() {
-        return selectedEmail.get();
-    }
-    public SimpleObjectProperty<EmailDTOFx> selectedEmailProperty() {
-        return selectedEmail;
-    }
-    public void setSelectedEmail(EmailDTOFx selectedEmail) {
-        this.selectedEmail.set(selectedEmail);
     }
     public BoatDTOFx getSelectedBoat() {
         return selectedBoat.get();
