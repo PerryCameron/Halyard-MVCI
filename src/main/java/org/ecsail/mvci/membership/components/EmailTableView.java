@@ -15,23 +15,29 @@ import org.ecsail.fx.PersonFx;
 import org.ecsail.mvci.membership.MembershipMessage;
 import org.ecsail.mvci.membership.MembershipModel;
 import org.ecsail.mvci.membership.MembershipView;
+import org.ecsail.mvci.membership.mvci.person.PersonMessage;
+import org.ecsail.mvci.membership.mvci.person.PersonModel;
+import org.ecsail.mvci.membership.mvci.person.PersonView;
 import org.ecsail.static_tools.StringTools;
 import org.ecsail.widgetfx.TableColumnFx;
 import org.ecsail.widgetfx.TableViewFx;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class EmailTableView implements Builder<TableView<EmailDTOFx>> {
 
     private final PersonFx person;
     private final MembershipView membershipView;
-    private final MembershipModel membershipModel;
+    private final PersonModel personModel;
+    private final PersonView personView;
 
-    public EmailTableView(PersonFx personDTO, MembershipView membershipView) {
-        this.person = personDTO;
-        this.membershipView = membershipView;
-        this.membershipModel = membershipView.getMembershipModel();
+    public EmailTableView(PersonView personView) {
+        this.person = personView.getPersonModel().getPersonDTO();
+        this.personModel = personView.getPersonModel();
+        this.membershipView = personView.getPersonModel().getMembershipView();
+        this.personView = personView;
     }
 
     @Override
@@ -42,7 +48,7 @@ public class EmailTableView implements Builder<TableView<EmailDTOFx>> {
         tableView.getColumns().setAll(columns);
         TableView.TableViewSelectionModel<EmailDTOFx> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) membershipModel.setSelectedEmail(newSelection);
+            if (newSelection != null) personModel.selectedEmailProperty().set(newSelection);
         });
         return tableView;
     }
@@ -54,8 +60,8 @@ public class EmailTableView implements Builder<TableView<EmailDTOFx>> {
             if(StringTools.isValidEmail(t.getNewValue())) {
                 EmailDTOFx emailDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                 emailDTO.setEmail(t.getNewValue());
-                membershipModel.setSelectedEmail(emailDTO);
-                membershipView.sendMessage().accept(MembershipMessage.UPDATE_EMAIL);
+                personModel.selectedEmailProperty().set(emailDTO);
+                personView.sendMessage().accept(PersonMessage.UPDATE_EMAIL);
             } else {
                 person.getEmail().stream()
                         .filter(q -> q.getEmailId() == email_id)
@@ -70,12 +76,14 @@ public class EmailTableView implements Builder<TableView<EmailDTOFx>> {
         TableColumn<EmailDTOFx, Boolean> col2 = new TableColumn<>("Primary");
         col2.setStyle( "-fx-alignment: CENTER;");
         col2.setCellValueFactory(new PropertyValueFactory<>("isPrimaryUse"));
-        ObjectProperty<EmailDTOFx> previousEmailDTO = new SimpleObjectProperty<>();
-        previousEmailDTO.set(person.getEmail().stream().filter(EmailDTOFx::getIsPrimaryUse).findFirst().orElse(null));
-        // TODO make this fucking thing work
-        membershipModel.setSelectedEmail(previousEmailDTO.get()); // this may be wrong
-        membershipView.sendMessage().accept(MembershipMessage.EMAIL_IS_PRIMARY_USE);
-        col2.setCellFactory(c -> new RadioButtonCell(previousEmailDTO));
+        Optional<EmailDTOFx> primaryEmail = Optional.ofNullable(person.getEmail().stream().filter(EmailDTOFx::getIsPrimaryUse).findFirst().orElse(null));
+//        // TODO make this fucking thing work
+        personModel.selectedEmailProperty().set(primaryEmail.get());
+//
+        personView.sendMessage().accept(PersonMessage.UPDATE_EMAIL);
+////        membershipView.sendMessage().accept(MembershipMessage.EMAIL_IS_PRIMARY_USE);
+        if(primaryEmail.isPresent())
+        col2.setCellFactory(c -> new RadioButtonCell(personModel.selectedEmailProperty()));
         col2.setMaxWidth(1f * Integer.MAX_VALUE * 25);  // Type
         return col2;
     }
@@ -87,8 +95,8 @@ public class EmailTableView implements Builder<TableView<EmailDTOFx>> {
             SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(emailDTO.getIsListed());
             booleanProp.addListener((observable, oldValue, newValue) -> {
                 emailDTO.setListed(newValue);
-                membershipModel.setSelectedEmail(emailDTO);
-                membershipView.sendMessage().accept(MembershipMessage.UPDATE_EMAIL);
+                personModel.selectedEmailProperty().set(emailDTO);
+                personView.sendMessage().accept(PersonMessage.UPDATE_EMAIL);
             });
             return booleanProp;
         });

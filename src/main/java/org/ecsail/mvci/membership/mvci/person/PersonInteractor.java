@@ -8,6 +8,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 import javafx.scene.input.Clipboard;
 import org.ecsail.fx.AwardDTOFx;
+import org.ecsail.fx.EmailDTOFx;
 import org.ecsail.fx.PhoneFx;
 import org.ecsail.fx.PictureDTO;
 import org.ecsail.mvci.membership.MembershipMessage;
@@ -16,10 +17,7 @@ import org.ecsail.pojo.Email;
 import org.ecsail.pojo.Phone;
 import org.ecsail.static_tools.HttpClientUtil;
 import org.ecsail.widgetfx.DialogueFx;
-import org.ecsail.wrappers.InsertAwardResponse;
-import org.ecsail.wrappers.InsertPhoneResponse;
-import org.ecsail.wrappers.InsertPictureResponse;
-import org.ecsail.wrappers.UpdateResponse;
+import org.ecsail.wrappers.*;
 import org.imgscalr.Scalr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -170,6 +168,26 @@ public class PersonInteractor {
         } catch (Exception e) {
             logger.error("Failed to insert phone for phoneId: {} {}", personModel.selectedPhoneProperty().get().getPhoneId(), e.getMessage(), e); // line 172
             DialogueFx.errorAlert("Unable to create phone entry", e.getMessage());
+        }
+    }
+
+    public void insertEmail() {
+        Email email = new Email(personModel.getPersonDTO().getpId());
+        try {
+            String response = httpClientUtil.postDataToGybe("insert/email", email);
+            InsertEmailResponse insertEmailResponse = httpClientUtil.getObjectMapper()
+                    .readValue(response, InsertEmailResponse.class);
+            if (insertEmailResponse.isSuccess()) {
+                personModel.emailTableViewProperty().get().getItems().add(new EmailDTOFx(insertEmailResponse.getEmail()));
+                personModel.emailTableViewProperty().get().refresh();
+
+            } else {
+                logger.error("Unable to insert email: {}", insertEmailResponse.getMessage());
+                DialogueFx.errorAlert("Unable to create email entry", insertEmailResponse.getMessage());
+            }
+        } catch (Exception e) {
+            logger.error("Failed to insert email for phoneId: {} {}", personModel.selectedEmailProperty().get().getEmailId(), e.getMessage(), e); // line 172
+            DialogueFx.errorAlert("Unable to create email entry", e.getMessage());
         }
     }
 

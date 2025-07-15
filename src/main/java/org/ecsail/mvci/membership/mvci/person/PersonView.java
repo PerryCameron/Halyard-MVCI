@@ -132,7 +132,7 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
                 hBox.getChildren().addAll(personModel.awardTableViewProperty().get(), vBox);
             }
             case Email -> {
-                TableView<EmailDTOFx> tableView = new EmailTableView(personModel.getPersonDTO(), personModel.getMembershipView()).build();
+                TableView<EmailDTOFx> tableView = new EmailTableView(this).build();
                 personModel.emailTableViewProperty().set(tableView);
                 VBox vBox = createButtonBox(createAddButton(Email), createDeleteButton(Email), createCopyButton(Email), createEmailButton());
                 hBox.getChildren().addAll(personModel.emailTableViewProperty().get(), vBox);
@@ -466,7 +466,7 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
             case Award -> button.setOnAction(event ->
                     action.accept(PersonMessage.INSERT_AWARD));
             case Officer -> button.setOnAction(event ->
-                    personModel.getMembershipView().sendMessage().accept(MembershipMessage.INSERT_OFFICER));
+                    action.accept(PersonMessage.INSERT_POSITION));
         }
         return button;
     }
@@ -586,13 +586,11 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
 
     private Node labeledField(String label, Node node) {
         HBox hBox = HBoxFx.hBoxOf(new Insets(0, 0, 10, 0), Pos.CENTER_LEFT, 10.0);
-        // hBox.setStyle("-fx-background-color: #efcc17");
         Text text = new Text(label);
         text.setId("text-white");
         HBox hBoxLabel = HBoxFx.hBoxOf(Pos.CENTER_LEFT, 80.0);
         hBoxLabel.getChildren().add(text);
         HBox hBoxTextField = HBoxFx.hBoxOf(Pos.CENTER_LEFT, 150.0);
-        // hBoxTextField.setStyle("-fx-background-color: #5c1200");
         hBoxTextField.getChildren().add(node);
         hBox.getChildren().addAll(hBoxLabel, hBoxTextField);
         return hBox;

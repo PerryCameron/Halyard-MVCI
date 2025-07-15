@@ -31,9 +31,9 @@ public class EmailDTOFx {
 	public EmailDTOFx(Email email) {
 		this.email_id = new SimpleIntegerProperty(email.getEmailId());
 		this.pId = new SimpleIntegerProperty(email.getpId());
-		this.primaryUse = new SimpleBooleanProperty(email.getPrimaryUse() == 1);
+		this.primaryUse = new SimpleBooleanProperty(email.isPrimaryUse());
 		this.email = new SimpleStringProperty(email.getEmail());
-		this.listed = new SimpleBooleanProperty(email.getEmailListed() == 1);
+		this.listed = new SimpleBooleanProperty(email.isEmailListed());
 	}
 
 	public int getEmailId() {
