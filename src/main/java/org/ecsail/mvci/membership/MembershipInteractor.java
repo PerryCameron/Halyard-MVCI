@@ -417,11 +417,11 @@ public class MembershipInteractor implements SlipUser {
     }
 
     protected void signalSuccess() {
-        Platform.runLater(() -> membershipModel.getMainModel().toggleRxSuccess());
+        membershipModel.getMainModel().toggleRxSuccess();
     }
 
     public void signalFail() {
-        Platform.runLater(() -> membershipModel.getMainModel().toggleRxFail());
+        membershipModel.getMainModel().toggleRxFail();
     }
 
     // removes selected membership row from roster list

@@ -74,6 +74,8 @@ public class MembershipController extends Controller<MembershipMessage> {
             case UPLOAD_MEMBER_PHOTO -> runTask(UPLOAD_MEMBER_PHOTO);
             case SAVE_INVOICE -> runSpinner(SAVE_INVOICE,-430, 150, true);
             case PRINT_ENVELOPE -> runTask(PRINT_ENVELOPE);
+            case FAIL -> membershipInteractor.signalFail();
+            case SUCCESS -> membershipInteractor.signalSuccess();
         }
     }
 
@@ -129,13 +131,10 @@ public class MembershipController extends Controller<MembershipMessage> {
                 switch (type) {
                     case DELETE_BOAT -> membershipInteractor.deleteBoat();
                     case GET_DATA -> { return membershipInteractor.convertPOJOsToFXProperties(membershipInteractor.getMembershiptoPOJO()); }
-//                    case INSERT_AWARD -> { return membershipInteractor.insertAward(); }
                     case INSERT_BOAT -> { return membershipInteractor.insertBoat(); }
-//                    case UPDATE_AWARD -> { return membershipInteractor.updateAward();}
                     case UPDATE_EMAIL -> { return membershipInteractor.updateEmail();}
                     case UPDATE_BOAT -> { return membershipInteractor.updateBoat();}
                     case UPDATE_NOTE -> { return membershipInteractor.updateNotes();}
-//                    case UPDATE_PHONE -> { return membershipInteractor.updatePhone();}
                     case UPDATE_POSITION -> { return membershipInteractor.updatePosition();}
                     case UPDATE_PERSON -> { return membershipInteractor.updatePerson();}
 //                    case SELECT_INVOICES -> db.selectInvoices(); <- this has more pieces not in use

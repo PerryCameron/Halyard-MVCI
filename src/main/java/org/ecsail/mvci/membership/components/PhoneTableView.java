@@ -66,10 +66,10 @@ public class PhoneTableView implements Builder<TableView<PhoneFx>> {
                         PhoneFx phoneDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                         phoneDTO.setPhone(t.getNewValue());
                         personModel.selectedPhoneProperty().set(phoneDTO);
-                        personView.sendMessage().accept(PersonMessage.UPDATE_PHONE);
                         personModel.getPersonDTO().getPhones().stream()
                                 .filter(p -> p.getPhoneId() == phoneDTO.getPhoneId())
                                 .forEach(s -> s.setPhone(processedNumber));
+                        personView.sendMessage().accept(PersonMessage.UPDATE_PHONE);
                     }
 
                     private String processNumber(String newValue) {
@@ -96,12 +96,10 @@ public class PhoneTableView implements Builder<TableView<PhoneFx>> {
                             return "ill-formatted number";
                         }
                     }
-
                     private String addDashes(String newValue) {
                         StringBuilder resString = new StringBuilder(newValue);
                         return resString.insert(3, "-").insert(7, "-").toString();
                     }
-
                     private String keepOnlyNumbers(String newValue) {
                         return newValue.replaceAll("[^0-9]", "");
                     }

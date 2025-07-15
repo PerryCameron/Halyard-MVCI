@@ -152,28 +152,25 @@ public class PersonInteractor {
         }
     }
 
-    public MembershipMessage insertPhone() {
+    public void insertPhone() {
         Phone phone = new Phone(personModel.getPersonDTO());
         try {
             String response = httpClientUtil.postDataToGybe("insert/phone", phone);
-            logger.info("Raw server response: {}", response); // Add this for debugging
             InsertPhoneResponse insertPhoneResponse = httpClientUtil.getObjectMapper()
                     .readValue(response, InsertPhoneResponse.class);
             if (insertPhoneResponse.isSuccess()) {
-                System.out.println("We successfully put an insert into the database");
-                System.out.println(insertPhoneResponse.getMessage());
                 personModel.phoneTableViewProperty().get().getItems().add(new PhoneFx(insertPhoneResponse.getPhone()));
-                personModel.phoneTableViewProperty().get().refresh(); //TODO check if this is needed
-                return MembershipMessage.SUCCESS;
+                personModel.phoneTableViewProperty().get().refresh();
+
             } else {
                 logger.error("Unable to insert phone: {}", insertPhoneResponse.getMessage());
-                return MembershipMessage.FAIL;
+                DialogueFx.errorAlert("Unable to create phone entry", insertPhoneResponse.getMessage());
             }
         } catch (Exception e) {
             logger.error("Failed to insert phone for phoneId: {} {}", personModel.selectedPhoneProperty().get().getPhoneId(), e.getMessage(), e); // line 172
-            return MembershipMessage.FAIL;
+            DialogueFx.errorAlert("Unable to create phone entry", e.getMessage());
         }
-    } // the phone is being inserted
+    }
 
     public MembershipMessage updateAward() {
         logger.debug("Updating phone with pId: {}", personModel.selectedAwardProperty().get().getAwardId());
