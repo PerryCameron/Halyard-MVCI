@@ -10,7 +10,7 @@ import org.ecsail.mvci.membership.mvci.person.PersonMessage;
 import org.ecsail.mvci.membership.mvci.person.PersonView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+// your solution did not work, it caused it not to trigger when the selection was changed
 public class RadioButtonCell extends TableCell<EmailDTOFx, Boolean> {
     private static final Logger logger = LoggerFactory.getLogger(RadioButtonCell.class);
     private final RadioButton radioButton;
@@ -45,8 +45,9 @@ public class RadioButtonCell extends TableCell<EmailDTOFx, Boolean> {
 
     private void processSelection() {
         EmailDTOFx emailDTOFx = getTableRow().getItem();
-        if (emailDTOFx != null) {
+        if (emailDTOFx != null && selectedEmail.get().getEmailId() != emailDTOFx.getEmailId()) { // I added the second condition here and it works perfect
             emailDTOFx.setPrimaryUse(true);
+            // set lastEmail to current selection
             logger.info("Switched: " + emailDTOFx.getEmail());
             selectedEmail.set(emailDTOFx);
             personView.sendMessage().accept(PersonMessage.UPDATE_EMAIL);
