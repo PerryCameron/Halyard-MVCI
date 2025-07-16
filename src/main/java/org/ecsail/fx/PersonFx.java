@@ -20,7 +20,7 @@ public class PersonFx {
 	private StringProperty nickName;
 	private IntegerProperty oldMsid;
 	private ObservableList<PhoneFx> phones = FXCollections.observableArrayList();
-	private ObservableList<EmailDTOFx> email = FXCollections.observableArrayList();
+	private ObservableList<EmailFx> email = FXCollections.observableArrayList();
 	private ObservableList<AwardDTOFx> awards = FXCollections.observableArrayList();
 	private ObservableList<OfficerFx> officer = FXCollections.observableArrayList();
 
@@ -137,11 +137,11 @@ public class PersonFx {
 		this.phones = phones;
 	}
 
-	public ObservableList<EmailDTOFx> getEmail() {
+	public ObservableList<EmailFx> getEmail() {
 		return email;
 	}
 
-	public void setEmail(ObservableList<EmailDTOFx> email) {
+	public void setEmail(ObservableList<EmailFx> email) {
 		this.email = email;
 	}
 

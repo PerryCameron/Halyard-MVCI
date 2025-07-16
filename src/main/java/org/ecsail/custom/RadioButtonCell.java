@@ -5,20 +5,20 @@ import javafx.scene.control.TableCell;
 import javafx.beans.property.ObjectProperty;
 import javafx.scene.control.ToggleGroup;
 
-import org.ecsail.fx.EmailDTOFx;
+import org.ecsail.fx.EmailFx;
 import org.ecsail.mvci.membership.mvci.person.PersonMessage;
 import org.ecsail.mvci.membership.mvci.person.PersonView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 // your solution did not work, it caused it not to trigger when the selection was changed
-public class RadioButtonCell extends TableCell<EmailDTOFx, Boolean> {
+public class RadioButtonCell extends TableCell<EmailFx, Boolean> {
     private static final Logger logger = LoggerFactory.getLogger(RadioButtonCell.class);
     private final RadioButton radioButton;
-    private final ObjectProperty<EmailDTOFx> selectedEmail;
+    private final ObjectProperty<EmailFx> selectedEmail;
     private final PersonView personView;
     private boolean isUserAction = false; // Flag to track user-initiated actions
 
-    public RadioButtonCell(ObjectProperty<EmailDTOFx> selectedEmail, ToggleGroup toggleGroup, PersonView personView) {
+    public RadioButtonCell(ObjectProperty<EmailFx> selectedEmail, ToggleGroup toggleGroup, PersonView personView) {
         this.selectedEmail = selectedEmail;
         this.personView = personView;
         radioButton = new RadioButton();
@@ -44,7 +44,7 @@ public class RadioButtonCell extends TableCell<EmailDTOFx, Boolean> {
     }
 
     private void processSelection() {
-        EmailDTOFx emailDTOFx = getTableRow().getItem();
+        EmailFx emailDTOFx = getTableRow().getItem();
         if (emailDTOFx != null && selectedEmail.get().getEmailId() != emailDTOFx.getEmailId()) { // I added the second condition here and it works perfect
             emailDTOFx.setPrimaryUse(true);
             // set lastEmail to current selection

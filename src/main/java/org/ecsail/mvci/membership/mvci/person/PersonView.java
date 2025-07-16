@@ -17,7 +17,7 @@ import javafx.util.Builder;
 import org.ecsail.connection.Mail;
 import org.ecsail.custom.CustomDatePicker;
 import org.ecsail.enums.MemberType;
-import org.ecsail.fx.EmailDTOFx;
+import org.ecsail.fx.EmailFx;
 import org.ecsail.fx.PersonFx;
 import org.ecsail.interfaces.ConfigFilePaths;
 import org.ecsail.interfaces.ObjectType;
@@ -132,7 +132,7 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
                 hBox.getChildren().addAll(personModel.awardTableViewProperty().get(), vBox);
             }
             case Email -> {
-                TableView<EmailDTOFx> tableView = new EmailTableView(this).build();
+                TableView<EmailFx> tableView = new EmailTableView(this).build();
                 personModel.emailTableViewProperty().set(tableView);
                 VBox vBox = createButtonBox(createAddButton(Email), createDeleteButton(Email), createCopyButton(Email), createEmailButton());
                 hBox.getChildren().addAll(personModel.emailTableViewProperty().get(), vBox);

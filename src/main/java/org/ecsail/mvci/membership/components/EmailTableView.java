@@ -1,8 +1,6 @@
 package org.ecsail.mvci.membership.components;
 
-import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.geometry.Pos;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -11,15 +9,12 @@ import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.util.Builder;
 import org.ecsail.custom.RadioButtonCell;
-import org.ecsail.fx.EmailDTOFx;
+import org.ecsail.fx.EmailFx;
 import org.ecsail.fx.PersonFx;
-import org.ecsail.mvci.membership.MembershipMessage;
-import org.ecsail.mvci.membership.MembershipModel;
 import org.ecsail.mvci.membership.MembershipView;
 import org.ecsail.mvci.membership.mvci.person.PersonMessage;
 import org.ecsail.mvci.membership.mvci.person.PersonModel;
 import org.ecsail.mvci.membership.mvci.person.PersonView;
-import org.ecsail.pojo.Email;
 import org.ecsail.static_tools.StringTools;
 import org.ecsail.widgetfx.TableColumnFx;
 import org.ecsail.widgetfx.TableViewFx;
@@ -28,7 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class EmailTableView implements Builder<TableView<EmailDTOFx>> {
+public class EmailTableView implements Builder<TableView<EmailFx>> {
 
     private final PersonFx person;
     private final MembershipView membershipView;
@@ -43,22 +38,22 @@ public class EmailTableView implements Builder<TableView<EmailDTOFx>> {
     }
 
     @Override
-    public TableView<EmailDTOFx> build() {
-        TableView<EmailDTOFx> tableView = TableViewFx.tableViewOf(146,true);
+    public TableView<EmailFx> build() {
+        TableView<EmailFx> tableView = TableViewFx.tableViewOf(146,true);
         tableView.setItems(person.getEmail());
-        List<TableColumn<EmailDTOFx, ?>> columns = Arrays.asList(createColumn1(), createColumn2(), createColumn3());
+        List<TableColumn<EmailFx, ?>> columns = Arrays.asList(createColumn1(), createColumn2(), createColumn3());
         tableView.getColumns().setAll(columns);
-        TableView.TableViewSelectionModel<EmailDTOFx> selectionModel = tableView.getSelectionModel();
+        TableView.TableViewSelectionModel<EmailFx> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) personModel.selectedEmailProperty().set(newSelection);
         });
         return tableView;
     }
 
-    private TableColumn<EmailDTOFx, String> createColumn1() {
-        TableColumn<EmailDTOFx, String> col1 = TableColumnFx.editableStringTableColumn(EmailDTOFx::emailProperty, "Email");
+    private TableColumn<EmailFx, String> createColumn1() {
+        TableColumn<EmailFx, String> col1 = TableColumnFx.editableStringTableColumn(EmailFx::emailProperty, "Email");
         col1.setOnEditCommit(t -> {
-            EmailDTOFx emailDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
+            EmailFx emailDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
             String oldValue = emailDTO.getEmail();
             String newValue = t.getNewValue();
             int emailId = emailDTO.getEmailId();
@@ -79,8 +74,8 @@ public class EmailTableView implements Builder<TableView<EmailDTOFx>> {
         return col1;
     }
 
-    private TableColumn<EmailDTOFx, Boolean> createColumn2() {
-        TableColumn<EmailDTOFx, Boolean> col2 = new TableColumn<>("Primary");
+    private TableColumn<EmailFx, Boolean> createColumn2() {
+        TableColumn<EmailFx, Boolean> col2 = new TableColumn<>("Primary");
         col2.setStyle("-fx-alignment: CENTER;");
         col2.setCellValueFactory(new PropertyValueFactory<>("isPrimaryUse"));
         // Create a single ToggleGroup for all radio buttons in the column
@@ -92,8 +87,8 @@ public class EmailTableView implements Builder<TableView<EmailDTOFx>> {
                 personView
         ));
         // Set the initial selection based on the primary email
-        Optional<EmailDTOFx> primaryEmail = Optional.ofNullable(
-                person.getEmail().stream().filter(EmailDTOFx::getIsPrimaryUse).findFirst().orElse(null)
+        Optional<EmailFx> primaryEmail = Optional.ofNullable(
+                person.getEmail().stream().filter(EmailFx::getIsPrimaryUse).findFirst().orElse(null)
         );
         if (primaryEmail.isPresent()) {
             personModel.selectedEmailProperty().set(primaryEmail.get());
@@ -102,10 +97,10 @@ public class EmailTableView implements Builder<TableView<EmailDTOFx>> {
         return col2;
     }
 
-    private TableColumn<EmailDTOFx,Boolean> createColumn3() {
-        TableColumn<EmailDTOFx, Boolean> col3 = new TableColumn<>("Listed");
+    private TableColumn<EmailFx,Boolean> createColumn3() {
+        TableColumn<EmailFx, Boolean> col3 = new TableColumn<>("Listed");
         col3.setCellValueFactory(param -> {
-            EmailDTOFx emailDTO = param.getValue();
+            EmailFx emailDTO = param.getValue();
             SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(emailDTO.getIsListed());
             booleanProp.addListener((observable, oldValue, newValue) -> {
                 emailDTO.setListed(newValue);
@@ -116,7 +111,7 @@ public class EmailTableView implements Builder<TableView<EmailDTOFx>> {
             return booleanProp;
         });
         col3.setCellFactory(p12 -> {
-            CheckBoxTableCell<EmailDTOFx, Boolean> cell = new CheckBoxTableCell<>();
+            CheckBoxTableCell<EmailFx, Boolean> cell = new CheckBoxTableCell<>();
             cell.setAlignment(Pos.CENTER);
             return cell;
         });

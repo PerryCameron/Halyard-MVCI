@@ -1,6 +1,8 @@
 package org.ecsail.mvci.membership.mvci.person;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
@@ -26,7 +28,7 @@ public class PersonModel {
     private final ObjectProperty<ImageView> imageViewProperty = new SimpleObjectProperty<>();
     private final ObjectProperty<PictureDTO> picture = new SimpleObjectProperty<>();
     private final ObjectProperty<TableView<AwardDTOFx>> awardTableViewProperty = new SimpleObjectProperty<>();
-    private final ObjectProperty<TableView<EmailDTOFx>> emailTableViewProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<TableView<EmailFx>> emailTableViewProperty = new SimpleObjectProperty<>();
     private final ObjectProperty<TableView<OfficerFx>> officerTableViewProperty = new SimpleObjectProperty<>();
     private final ObjectProperty<TableView<PhoneFx>> phoneTableViewProperty = new SimpleObjectProperty<>();
     private final ObjectProperty<StackPane> stackPaneProperty = new SimpleObjectProperty<>(new StackPane());
@@ -34,7 +36,8 @@ public class PersonModel {
     private final ObjectProperty<ComboBox<String>> comboBoxProperty = new SimpleObjectProperty<>(new ComboBox<>());
     private final ObjectProperty<AwardDTOFx> selectedAward = new SimpleObjectProperty<>();
     private final ObjectProperty<PhoneFx> selectedPhone = new SimpleObjectProperty<>();
-    private final ObjectProperty<EmailDTOFx> selectedEmail = new SimpleObjectProperty<>();
+    private final ObjectProperty<EmailFx> selectedEmail = new SimpleObjectProperty<>();
+    private final BooleanProperty updateSuccess = new SimpleBooleanProperty();
 
 
     private final ObjectProperty<HBox> awardHbox = new SimpleObjectProperty<>();
@@ -93,7 +96,7 @@ public class PersonModel {
         return awardTableViewProperty;
     }
 
-    public ObjectProperty<TableView<EmailDTOFx>> emailTableViewProperty() {
+    public ObjectProperty<TableView<EmailFx>> emailTableViewProperty() {
         return emailTableViewProperty;
     }
 
@@ -125,7 +128,11 @@ public class PersonModel {
         return selectedPhone;
     }
 
-    public ObjectProperty<EmailDTOFx> selectedEmailProperty() {
+    public ObjectProperty<EmailFx> selectedEmailProperty() {
         return selectedEmail;
+    }
+
+    public BooleanProperty updateSuccessProperty() {
+        return updateSuccess;
     }
 }

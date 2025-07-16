@@ -2,7 +2,7 @@ package org.ecsail.pojo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.ecsail.fx.EmailDTOFx;
+import org.ecsail.fx.EmailFx;
 
 import java.util.Objects;
 
@@ -26,7 +26,7 @@ public class Email {
     public Email() {
     }
 
-    public Email(EmailDTOFx emailDTOFx) {
+    public Email(EmailFx emailDTOFx) {
         this.emailId = emailDTOFx.getEmailId();
         this.pId = emailDTOFx.getpId();
         this.primaryUse = emailDTOFx.getIsPrimaryUse();

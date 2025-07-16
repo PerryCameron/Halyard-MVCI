@@ -3,7 +3,7 @@ package org.ecsail.fx;
 import javafx.beans.property.*;
 import org.ecsail.pojo.Email;
 
-public class EmailDTOFx {
+public class EmailFx {
 	
 	private IntegerProperty email_id;
 	private IntegerProperty pId;
@@ -12,7 +12,7 @@ public class EmailDTOFx {
 	private BooleanProperty listed;
 
 	
-	public EmailDTOFx(Integer email_id, Integer pId, Boolean primaryUse, String email, Boolean listed) {
+	public EmailFx(Integer email_id, Integer pId, Boolean primaryUse, String email, Boolean listed) {
 		this.email_id = new SimpleIntegerProperty(email_id);
 		this.pId = new SimpleIntegerProperty(pId);
 		this.primaryUse = new SimpleBooleanProperty(primaryUse);
@@ -20,7 +20,7 @@ public class EmailDTOFx {
 		this.listed = new SimpleBooleanProperty(listed);
 	}
 
-    public EmailDTOFx(Integer pId) {
+    public EmailFx(Integer pId) {
 		this.email_id = new SimpleIntegerProperty(0);
 		this.pId = new SimpleIntegerProperty(pId);
 		this.primaryUse = new SimpleBooleanProperty(false);
@@ -28,7 +28,7 @@ public class EmailDTOFx {
 		this.listed = new SimpleBooleanProperty(true);
     }
 
-	public EmailDTOFx(Email email) {
+	public EmailFx(Email email) {
 		this.email_id = new SimpleIntegerProperty(email.getEmailId());
 		this.pId = new SimpleIntegerProperty(email.getpId());
 		this.primaryUse = new SimpleBooleanProperty(email.isPrimaryUse());

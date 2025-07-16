@@ -3,7 +3,6 @@ package org.ecsail.static_tools;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.ecsail.fx.*;
-import org.ecsail.mvci.roster.RosterInteractor;
 import org.ecsail.pojo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,7 +64,7 @@ public class POJOtoFxConverter {
                             if (person.getEmails() != null) {
                                 personDTOFx.getEmail().addAll(person.getEmails().stream()
                                         .filter(Objects::nonNull)
-                                        .map(EmailDTOFx::new)
+                                        .map(EmailFx::new)
                                         .collect(Collectors.toList())
                                 );
                             }

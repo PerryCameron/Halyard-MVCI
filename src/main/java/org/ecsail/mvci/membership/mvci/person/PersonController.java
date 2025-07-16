@@ -39,20 +39,20 @@ public class PersonController extends TabController<PersonMessage> {
                     case UPDATE_PHONE -> personInteractor.updatePhone();
                     case DELETE_PHONE -> personInteractor.deletePhone();
                     case INSERT_EMAIL -> personInteractor.insertEmail();
-                    case UPDATE_EMAIL -> {
-                        System.out.println("updating email");
-                        personInteractor.updateEmail();
-                    }
+                    case UPDATE_EMAIL -> personInteractor.updateEmail();
+                    case DELETE_EMAIL -> personInteractor.deleteEmail();
                 }
                 return null;
             }
         };
         task.setOnSucceeded(e -> {
-            membershipView.sendMessage().accept(MembershipMessage.SUCCESS);
+            if(personInteractor.actionSucceeded()) {
+                membershipView.sendMessage().accept(MembershipMessage.SUCCESS);
+                personInteractor.actionReset();
+            }
+            else membershipView.sendMessage().accept(MembershipMessage.FAIL);
         });
-        task.setOnFailed(e -> {
-            membershipView.sendMessage().accept(MembershipMessage.FAIL);
-        });
+        task.setOnFailed(e -> membershipView.sendMessage().accept(MembershipMessage.FAIL));
         new Thread(task).start();
     }   // In the interest of learning, what is the scenario which the task would be considered a failure. Is it if it triggers an exception?
 }

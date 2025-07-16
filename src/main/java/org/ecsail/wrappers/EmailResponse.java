@@ -1,22 +1,21 @@
 package org.ecsail.wrappers;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import org.ecsail.pojo.Phone;
+import org.ecsail.pojo.Email;
 
-public class InsertPhoneResponse {
+public class EmailResponse {
 
     private boolean success;
     //@JsonProperty("phoneDTO")  // this is to match server
-    private Phone phone;
+    private Email email;
     private String message;
 
-    public InsertPhoneResponse(boolean success, String message) {
+    public EmailResponse(boolean success, String message) {
         this.success = success;
         this.message = message;
-        this.phone = new Phone();
+        this.email = new Email();
     }
 
-    public InsertPhoneResponse() {
+    public EmailResponse() {
     }
 
     // Getters and setters
@@ -29,8 +28,8 @@ public class InsertPhoneResponse {
         this.success = success;
     }
 
-    public Phone getPhone() {
-        return phone;
+    public Email getEmail() {
+        return email;
     }
 
     public String getMessage() {

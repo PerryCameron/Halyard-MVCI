@@ -1,21 +1,21 @@
 package org.ecsail.wrappers;
 
-import org.ecsail.pojo.Email;
+import org.ecsail.pojo.Phone;
 
-public class InsertEmailResponse {
+public class PhoneResponse {
 
     private boolean success;
     //@JsonProperty("phoneDTO")  // this is to match server
-    private Email email;
+    private Phone phone;
     private String message;
 
-    public InsertEmailResponse(boolean success, String message) {
+    public PhoneResponse(boolean success, String message) {
         this.success = success;
         this.message = message;
-        this.email = new Email();
+        this.phone = new Phone();
     }
 
-    public InsertEmailResponse() {
+    public PhoneResponse() {
     }
 
     // Getters and setters
@@ -28,8 +28,8 @@ public class InsertEmailResponse {
         this.success = success;
     }
 
-    public Email getEmail() {
-        return email;
+    public Phone getPhone() {
+        return phone;
     }
 
     public String getMessage() {
