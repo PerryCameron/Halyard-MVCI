@@ -123,7 +123,7 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
         switch (type) {
             case Officer -> {
                 VBox vBox = createButtonBox(createAddButton(Officer), createDeleteButton(Officer));
-                personModel.officerTableViewProperty().set(new OfficerTableView(personModel.getPersonDTO(), personModel.getMembershipView()).build());
+                personModel.officerTableViewProperty().set(new OfficerTableView(this).build());
                 hBox.getChildren().addAll(personModel.officerTableViewProperty().get(), vBox);
             }
             case Award -> {
@@ -442,7 +442,7 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
                 "Missing Selection",
                 "You need to select an officer entry first"};
         if (DialogueFx.verifyAction(strings, personModel.getMembershipModel().getSelectedOfficer()))
-            personModel.getMembershipView().sendMessage().accept(MembershipMessage.DELETE_OFFICER);
+            action.accept(PersonMessage.DELETE_OFFICER);
     }
 
     private void deletePhone() {

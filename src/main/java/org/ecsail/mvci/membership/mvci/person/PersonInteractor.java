@@ -1,19 +1,16 @@
 package org.ecsail.mvci.membership.mvci.person;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 import javafx.scene.input.Clipboard;
-import org.ecsail.fx.AwardDTOFx;
-import org.ecsail.fx.EmailFx;
-import org.ecsail.fx.PhoneFx;
-import org.ecsail.fx.PictureDTO;
+import org.ecsail.fx.*;
 import org.ecsail.mvci.membership.MembershipMessage;
 import org.ecsail.pojo.Award;
 import org.ecsail.pojo.Email;
+import org.ecsail.pojo.Officer;
 import org.ecsail.pojo.Phone;
 import org.ecsail.static_tools.HttpClientUtil;
 import org.ecsail.widgetfx.DialogueFx;
@@ -113,19 +110,19 @@ public class PersonInteractor {
         }
     }
 
-    private MembershipMessage processUpdateResponse(String response) throws JsonProcessingException {
-        logger.debug("Update response: {}", response);
-        UpdateResponse updateResponse = httpClientUtil.getObjectMapper().readValue(response, UpdateResponse.class);
-        // Toggle the appropriate light based on the success field
-        if (updateResponse.isSuccess()) {
-            logger.info(updateResponse.getMessage());
-            return MembershipMessage.SUCCESS;
-        } else {
-            Platform.runLater(() -> DialogueFx.errorAlert("Unable to perform update", updateResponse.getMessage()));
-            logger.error(updateResponse.getMessage());
-            return MembershipMessage.FAIL;
-        }
-    }
+//    private MembershipMessage processUpdateResponse(String response) throws JsonProcessingException {
+//        logger.debug("Update response: {}", response);
+//        UpdateResponse updateResponse = httpClientUtil.getObjectMapper().readValue(response, UpdateResponse.class);
+//        // Toggle the appropriate light based on the success field
+//        if (updateResponse.isSuccess()) {
+//            logger.info(updateResponse.getMessage());
+//            return MembershipMessage.SUCCESS;
+//        } else {
+//            Platform.runLater(() -> DialogueFx.errorAlert("Unable to perform update", updateResponse.getMessage()));
+//            logger.error(updateResponse.getMessage());
+//            return MembershipMessage.FAIL;
+//        }
+//    }
 
     public MembershipMessage insertAward() {
         Award award = new Award(personModel.getPersonDTO());
@@ -188,6 +185,26 @@ public class PersonInteractor {
         }
     }
 
+    public void insertPosition() {
+        Officer officer = new Officer(personModel.getPersonDTO().getpId());
+        try {
+            String response = httpClientUtil.postDataToGybe("insert/position", officer);
+            PositionResponse positionResponse = httpClientUtil.getObjectMapper()
+                    .readValue(response, PositionResponse.class);
+            if (positionResponse.isSuccess()) {
+                personModel.officerTableViewProperty().get().getItems().add(new OfficerFx(officer));
+                personModel.emailTableViewProperty().get().refresh();
+                personModel.updateSuccessProperty().set(true); // to signal success and allow green lights to blink
+            } else {
+                logger.error("Unable to insert email: {}", positionResponse.getMessage());
+                DialogueFx.errorAlert("Unable to create email entry", positionResponse.getMessage());
+            }
+        } catch (Exception e) {
+            logger.error("Failed to insert email for phoneId: {} {}", personModel.selectedPositionProperty().get().getOfficerId(), e.getMessage(), e); // line 172
+            DialogueFx.errorAlert("Unable to create person entry", e.getMessage());
+        }
+    }
+
     public AwardResponse updateAward() {
         Award award = new Award(personModel.selectedAwardProperty().get());
         try {
@@ -222,14 +239,27 @@ public class PersonInteractor {
         Email email = new Email(personModel.selectedEmailProperty().get());
         try {
             String response = httpClientUtil.postDataToGybe("update/email", email);
-            EmailResponse emailResponse = httpClientUtil.getObjectMapper()
-                    .readValue(response, EmailResponse.class);
+            EmailResponse emailResponse = httpClientUtil.getObjectMapper().readValue(response, EmailResponse.class);
             if (!emailResponse.isSuccess()) Platform.runLater(() -> DialogueFx.errorAlert("Unable to update email", emailResponse.getMessage()));
             personModel.updateSuccessProperty().set(emailResponse.isSuccess());
             return emailResponse;
         } catch (Exception e) {
             logger.error("Failed to update email with pId {}: {}",
                     personModel.selectedEmailProperty().get().pIdProperty().get(), e.getMessage(), e);
+            return null;
+        }
+    }
+
+    public PositionResponse updatePosition() {
+        Officer officer = new Officer(personModel.selectedPositionProperty().get());
+        try {
+            String response = httpClientUtil.postDataToGybe("update/position", officer);
+            PositionResponse positionResponse = httpClientUtil.getObjectMapper().readValue(response, PositionResponse.class);
+            if (!positionResponse.isSuccess()) Platform.runLater(() -> DialogueFx.errorAlert("Unable to update position", positionResponse.getMessage()));
+            return positionResponse;
+        } catch (Exception e) {
+            logger.error("Failed to update position with ID {}: {}",
+                    personModel.selectedPositionProperty().get().getOfficerId(), e.getMessage(), e);
             return null;
         }
     }
@@ -382,6 +412,53 @@ public class PersonInteractor {
         }
     }
 
+    public void deletePosition() {
+        try {
+            // Validate inputs
+            if (personModel.selectedPositionProperty().get() == null) {
+                logger.error("Failed to delete position: No position selected");
+                Platform.runLater(() -> DialogueFx.errorAlert("Delete Position Failed", "No position selected"));
+                return;
+            }
+
+            // Send delete request to server
+            String response = httpClientUtil.postDataToGybe("delete/position", personModel.selectedPositionProperty().get());
+            if (response == null) {
+                logger.error("Failed to delete position: {} Null response from server", personModel.selectedPositionProperty().get().getOfficerId());
+                Platform.runLater(() -> DialogueFx.errorAlert("Delete Position Failed", "Null response from server"));
+                return;
+            }
+            UpdateResponse updateResponse = httpClientUtil.getObjectMapper().readValue(response, UpdateResponse.class);
+            if (updateResponse == null) {
+                logger.error("Failed to delete position with ID: {} Invalid response from server", personModel.selectedPositionProperty().get().getOfficerId());
+                Platform.runLater(() -> DialogueFx.errorAlert("Delete Position Failed", "Invalid response from server"));
+                return;
+            }
+            if (updateResponse.isSuccess()) {
+                logger.info("Successfully deleted position {}", personModel.selectedPositionProperty().get().getOfficerId());
+                OfficerFx officerFx = personModel.selectedPositionProperty().get();
+                if (officerFx != null) {
+                    Platform.runLater(() -> {
+                        personModel.officerTableViewProperty().get().getItems().remove(officerFx);
+                        // Refresh table only if necessary
+                        personModel.officerTableViewProperty().get().refresh();
+                        personModel.updateSuccessProperty().set(true);
+                    });
+                } else {
+                    // Log warning but don’t show error alert, as deletion succeeded
+                    logger.warn("Position {} deleted on server but not found in membership list", personModel.selectedPositionProperty().get().getOfficerId());
+                }
+            } else {
+                String errorMessage = updateResponse.getMessage() != null ? updateResponse.getMessage() : "Unknown error";
+                logger.error("Unable to delete positon {}: {}", personModel.selectedPositionProperty().get().getOfficerId(), errorMessage);
+                Platform.runLater(() -> DialogueFx.errorAlert("Delete Position Failed", errorMessage));
+            }
+        } catch (Exception e) {
+            logger.error("Failed to delete position {}: {}", personModel.selectedPositionProperty().get().getOfficerId(), e.getMessage(), e);
+            Platform.runLater(() -> DialogueFx.errorAlert("Delete positon Failed", e.getMessage()));
+        }
+    }
+
     public boolean actionSucceeded() {
         return personModel.updateSuccessProperty().get();
     }
@@ -389,4 +466,7 @@ public class PersonInteractor {
     public void actionReset() {
         personModel.updateSuccessProperty().set(false);
     }
+
+
+
 }

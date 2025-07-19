@@ -137,23 +137,7 @@ public class MembershipInteractor implements SlipUser {
         }
     }
 
-    /**
-     * Updates a person's position data by sending a POST request to the halyard/update/position endpoint.
-     *
-     * @return the JSON response from the server
-     */
-    public MembershipMessage updatePosition() {
-        logger.debug("Updating position with pId: {}", membershipModel.getSelectedOfficer().getOfficerId());
-        Officer officer = new Officer(membershipModel.getSelectedOfficer());
-        try {
-            String response = membershipModel.getHttpClient().postDataToGybe("update/position", officer);
-            return processUpdateResponse(response);
-        } catch (Exception e) {
-            logger.error("Failed to update email with pId {}: {}",
-                    membershipModel.getSelectedPerson().pIdProperty().get(), e.getMessage(), e);
-            return MembershipMessage.FAIL;
-        }
-    }
+
 
 
     /**

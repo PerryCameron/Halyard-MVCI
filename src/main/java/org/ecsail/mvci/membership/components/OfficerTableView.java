@@ -15,6 +15,8 @@ import org.ecsail.enums.Officer;
 import org.ecsail.mvci.membership.MembershipMessage;
 import org.ecsail.mvci.membership.MembershipModel;
 import org.ecsail.mvci.membership.MembershipView;
+import org.ecsail.mvci.membership.mvci.person.PersonMessage;
+import org.ecsail.mvci.membership.mvci.person.PersonView;
 import org.ecsail.widgetfx.TableColumnFx;
 import org.ecsail.widgetfx.TableViewFx;
 
@@ -26,12 +28,12 @@ import java.util.stream.Collectors;
 public class OfficerTableView implements Builder<TableView<OfficerFx>> {
     private final PersonFx person;
     private final MembershipModel membershipModel;
-    private final MembershipView membershipView;
+    private final PersonView personView;
 
-    public OfficerTableView(PersonFx personDTO, MembershipView membershipView) {
-        this.person = personDTO;
-        this.membershipModel = membershipView.getMembershipModel();
-        this.membershipView = membershipView;
+    public OfficerTableView(PersonView personView) {
+        this.personView = personView;
+        this.person = personView.getPersonDTO();
+        this.membershipModel = personView.getPersonModel().getMembershipModel();
     }
 
     @Override
@@ -54,7 +56,7 @@ public class OfficerTableView implements Builder<TableView<OfficerFx>> {
                     OfficerFx officerDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                     officerDTO.setFiscalYear(t.getNewValue());
                     membershipModel.setSelectedOfficer(officerDTO);
-                    membershipView.sendMessage().accept(MembershipMessage.UPDATE_POSITION);
+                    personView.sendMessage().accept(PersonMessage.UPDATE_POSITION);
                 }
         );
         col1.setMaxWidth(1f * Integer.MAX_VALUE * 20);   // Phone
@@ -76,10 +78,9 @@ public class OfficerTableView implements Builder<TableView<OfficerFx>> {
         col2.setOnEditCommit((TableColumn.CellEditEvent<OfficerFx, String> event) -> {
             TablePosition<OfficerFx, String> pos = event.getTablePosition();
             OfficerFx officerDTO = event.getTableView().getItems().get(pos.getRow());
-//            officerDTO.setOfficerType(event.getNewValue());
             officerDTO.setOfficerType(Officer.getByName(event.getNewValue(), boardPositions));
             membershipModel.setSelectedOfficer(officerDTO);
-            membershipView.sendMessage().accept(MembershipMessage.UPDATE_POSITION);
+            personView.sendMessage().accept(PersonMessage.UPDATE_POSITION);
         });
         col2.setMaxWidth(1f * Integer.MAX_VALUE * 50);  // Type
         return col2;
@@ -92,7 +93,7 @@ public class OfficerTableView implements Builder<TableView<OfficerFx>> {
                     OfficerFx officerDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                     officerDTO.setBoardYear(t.getNewValue());
                     membershipModel.setSelectedOfficer(officerDTO);
-                    membershipView.sendMessage().accept(MembershipMessage.UPDATE_POSITION);                }
+                    personView.sendMessage().accept(PersonMessage.UPDATE_POSITION);                }
         );
         col1.setMaxWidth(1f * Integer.MAX_VALUE * 20);   // Phone
         return col1;

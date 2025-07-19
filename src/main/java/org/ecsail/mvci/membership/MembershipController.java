@@ -36,33 +36,33 @@ public class MembershipController extends Controller<MembershipMessage> {
             case UPDATE_INVOICE_ONLY -> runSpinner(UPDATE_INVOICE_ONLY,-430, 150, true);
             case UPDATE_MEMBERSHIP_LIST -> runTask(UPDATE_MEMBERSHIP_LIST);
             case UPDATE_MEMBERSHIP_ID -> runTask(UPDATE_MEMBERSHIP_ID);
-            case UPDATE_AWARD -> runSpinner(UPDATE_AWARD,0,0,false);
+//            case UPDATE_AWARD -> runSpinner(UPDATE_AWARD,0,0,false);
 //            case UPDATE_EMAIL -> runSpinner(UPDATE_EMAIL,0,0,false);
             case UPDATE_BOAT -> runSpinner(UPDATE_BOAT,0,0,false);
             case UPDATE_NOTE -> runSpinner(UPDATE_NOTE,0,0,false);
-            case UPDATE_PHONE -> runSpinner(UPDATE_PHONE,0,0,false);
-            case UPDATE_POSITION -> runSpinner(UPDATE_POSITION,0,0,false);
+//            case UPDATE_PHONE -> runSpinner(UPDATE_PHONE,0,0,false);
+//            case UPDATE_POSITION -> runSpinner(UPDATE_POSITION,0,0,false);
             case UPDATE_PERSON -> runSpinner(UPDATE_PERSON,0,0,false);
             case UPDATE_PAYMENT -> runTask(UPDATE_PAYMENT);
             case INSERT_BOAT -> runSpinner(INSERT_BOAT,0,0,false);
-            case INSERT_AWARD -> runSpinner(INSERT_AWARD,0,0,false);
-            case INSERT_EMAIL -> runTask(INSERT_EMAIL);
+//            case INSERT_AWARD -> runSpinner(INSERT_AWARD,0,0,false);
+//            case INSERT_EMAIL -> runTask(INSERT_EMAIL);
             case INSERT_MEMBERSHIP_ID -> runTask(INSERT_MEMBERSHIP_ID);
             case INSERT_NOTE -> runTask(INSERT_NOTE);
             case INSERT_INVOICE_NOTE -> runTask(INSERT_INVOICE_NOTE);
-            case INSERT_OFFICER -> runTask(INSERT_OFFICER);
+//            case INSERT_OFFICER -> runTask(INSERT_OFFICER);
             case INSERT_PERSON -> runTask(INSERT_PERSON);
-            case INSERT_PHONE -> runTask(INSERT_PHONE);
+//            case INSERT_PHONE -> runTask(INSERT_PHONE);
             case INSERT_INVOICE -> runSpinner(INSERT_INVOICE,-430, 150, true);
             case INSERT_PAYMENT -> runTask(INSERT_PAYMENT);
             case DELETE_BOAT -> runSpinner(DELETE_BOAT,0,0,false);
-            case DELETE_AWARD -> runTask(DELETE_AWARD);
-            case DELETE_EMAIL -> runTask(DELETE_EMAIL);
+//            case DELETE_AWARD -> runTask(DELETE_AWARD);
+//            case DELETE_EMAIL -> runTask(DELETE_EMAIL);
             case DELETE_MEMBERSHIP_ID -> runTask(DELETE_MEMBERSHIP_ID);
             case DELETE_MEMBERSHIP -> runSpinner(DELETE_MEMBERSHIP,50, 50, true);
             case DELETE_NOTE -> runTask(DELETE_NOTE);
-            case DELETE_OFFICER -> runTask(DELETE_OFFICER);
-            case DELETE_PHONE -> runTask(DELETE_PHONE);
+//            case DELETE_OFFICER -> runTask(DELETE_OFFICER);
+//            case DELETE_PHONE -> runTask(DELETE_PHONE);
             case DELETE_INVOICE -> runTask(DELETE_INVOICE);
             case DELETE_PAYMENT -> runTask(DELETE_PAYMENT);
             case CHANGE_MEMBER_TYPE -> runTask(CHANGE_MEMBER_TYPE);
@@ -135,7 +135,7 @@ public class MembershipController extends Controller<MembershipMessage> {
 
                     case UPDATE_BOAT -> { return membershipInteractor.updateBoat();}
                     case UPDATE_NOTE -> { return membershipInteractor.updateNotes();}
-                    case UPDATE_POSITION -> { return membershipInteractor.updatePosition();}
+//                    case UPDATE_POSITION -> { return membershipInteractor.updatePosition();}
                     case UPDATE_PERSON -> { return membershipInteractor.updatePerson();}
 //                    case SELECT_INVOICES -> db.selectInvoices(); <- this has more pieces not in use
 //                    case SELECT_IDS -> db.selectIds(); <- this has more pieces not in use

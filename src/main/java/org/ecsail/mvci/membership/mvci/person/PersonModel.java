@@ -37,6 +37,7 @@ public class PersonModel {
     private final ObjectProperty<AwardDTOFx> selectedAward = new SimpleObjectProperty<>();
     private final ObjectProperty<PhoneFx> selectedPhone = new SimpleObjectProperty<>();
     private final ObjectProperty<EmailFx> selectedEmail = new SimpleObjectProperty<>();
+    private final ObjectProperty<OfficerFx> selectedPosition = new SimpleObjectProperty<>();
     private final BooleanProperty updateSuccess = new SimpleBooleanProperty();
 
 
@@ -130,6 +131,10 @@ public class PersonModel {
 
     public ObjectProperty<EmailFx> selectedEmailProperty() {
         return selectedEmail;
+    }
+
+    public ObjectProperty<OfficerFx> selectedPositionProperty() {
+        return selectedPosition;
     }
 
     public BooleanProperty updateSuccessProperty() {

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.ecsail.fx.OfficerFx;
 
+import java.time.Year;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Officer {
     @JsonProperty("officerId")
@@ -30,6 +32,14 @@ public class Officer {
         this.boardYear = officerDTOFx.getBoardYear();
         this.officerType = officerDTOFx.getOfficerType();
         this.fiscalYear = officerDTOFx.getFiscalYear();
+    }
+
+    public Officer(int pId) {
+        this.officerId = 0;
+        this.pId = pId;
+        this.boardYear = Year.now().getValue();
+        this.officerType = "BM";
+        this.fiscalYear = Year.now().getValue();
     }
 
     public int getOfficerId() {
