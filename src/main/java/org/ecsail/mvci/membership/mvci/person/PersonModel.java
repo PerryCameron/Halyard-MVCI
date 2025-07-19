@@ -1,9 +1,6 @@
 package org.ecsail.mvci.membership.mvci.person;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Tab;
@@ -38,8 +35,7 @@ public class PersonModel {
     private final ObjectProperty<PhoneFx> selectedPhone = new SimpleObjectProperty<>();
     private final ObjectProperty<EmailFx> selectedEmail = new SimpleObjectProperty<>();
     private final ObjectProperty<OfficerFx> selectedPosition = new SimpleObjectProperty<>();
-    private final BooleanProperty updateSuccess = new SimpleBooleanProperty();
-
+    private final StringProperty errorMessage = new SimpleStringProperty();
 
     private final ObjectProperty<HBox> awardHbox = new SimpleObjectProperty<>();
 
@@ -137,7 +133,7 @@ public class PersonModel {
         return selectedPosition;
     }
 
-    public BooleanProperty updateSuccessProperty() {
-        return updateSuccess;
+    public StringProperty errorMessageProperty() {
+        return errorMessage;
     }
 }

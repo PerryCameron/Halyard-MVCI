@@ -35,11 +35,10 @@ public class PersonInteractor {
         this.httpClientUtil = personModel.getMembershipModel().getHttpClient();
     }
 
-    public void saveImage() {
+    public PersonMessage saveImage() {
         Clipboard clipboard = Clipboard.getSystemClipboard();
         if (!clipboard.hasImage()) {
-            DialogueFx.errorAlert("Error", "No image found in clipboard. Use Windows + Shift + S to capture an image.");
-            return;
+            return setFailMessage("Error", 0, "No image found in clipboard. Use Windows + Shift + S to capture an image.");
         }
         Image fxImage = clipboard.getImage();
         // Convert clipboard image to BufferedImage
@@ -72,6 +71,7 @@ public class PersonInteractor {
         });
         // Start the task on a background thread
         saveImageTask.run();
+        return null;  // TODO fix this
     }
 
     private BufferedImage resizeImage(BufferedImage original, int targetWidth, int targetHeight) {
@@ -101,30 +101,16 @@ public class PersonInteractor {
                 System.out.println("We succeeded");
                 return MembershipMessage.SUCCESS;
             } else {
-                logger.error("Unable to insert award: {}", insertPictureResponse.getMessage());
+                logger.error("Unable to insert picture: {}", insertPictureResponse.getMessage());
                 return MembershipMessage.FAIL;
             }
         } catch (Exception e) {
-            logger.error("Failed to insert award for pId {}: {}", personModel.getPersonDTO().pIdProperty().get(), e.getMessage(), e);
+            logger.error("Failed to insert picture for pId {}: {}", personModel.getPersonDTO().pIdProperty().get(), e.getMessage(), e);
             return MembershipMessage.FAIL;
         }
     }
 
-//    private MembershipMessage processUpdateResponse(String response) throws JsonProcessingException {
-//        logger.debug("Update response: {}", response);
-//        UpdateResponse updateResponse = httpClientUtil.getObjectMapper().readValue(response, UpdateResponse.class);
-//        // Toggle the appropriate light based on the success field
-//        if (updateResponse.isSuccess()) {
-//            logger.info(updateResponse.getMessage());
-//            return MembershipMessage.SUCCESS;
-//        } else {
-//            Platform.runLater(() -> DialogueFx.errorAlert("Unable to perform update", updateResponse.getMessage()));
-//            logger.error(updateResponse.getMessage());
-//            return MembershipMessage.FAIL;
-//        }
-//    }
-
-    public MembershipMessage insertAward() {
+    public PersonMessage insertAward() {
         Award award = new Award(personModel.getPersonDTO());
         try {
             String response = httpClientUtil.postDataToGybe("insert/award", award);
@@ -132,19 +118,17 @@ public class PersonInteractor {
                     .readValue(response, AwardResponse.class);
             if (insertAwardResponse.isSuccess()) {
                 personModel.awardTableViewProperty().get().getItems().add(new AwardDTOFx(insertAwardResponse.getAward()));
-                personModel.awardTableViewProperty().get().refresh(); //TODO check if this is needed
-                return MembershipMessage.SUCCESS;
+                personModel.awardTableViewProperty().get().refresh();
+                return PersonMessage.SUCCESS;
             } else {
-                logger.error("Unable to insert award: {}", insertAwardResponse.getMessage());
-                return MembershipMessage.FAIL;
+                return setFailMessage("Unable to insert award", 0, insertAwardResponse.getMessage());
             }
         } catch (Exception e) {
-            logger.error("Failed to insert award for pId {}: {}", personModel.getPersonDTO().pIdProperty().get(), e.getMessage(), e);
-            return MembershipMessage.FAIL;
+            return setFailMessage("Failed to insert award", 0, e.getMessage());
         }
     }
 
-    public void insertPhone() {
+    public PersonMessage insertPhone() {
         Phone phone = new Phone(personModel.getPersonDTO());
         try {
             String response = httpClientUtil.postDataToGybe("insert/phone", phone);
@@ -153,19 +137,17 @@ public class PersonInteractor {
             if (insertPhoneResponse.isSuccess()) {
                 personModel.phoneTableViewProperty().get().getItems().add(new PhoneFx(insertPhoneResponse.getPhone()));
                 personModel.phoneTableViewProperty().get().refresh();
-
+                return PersonMessage.SUCCESS;
             } else {
-                logger.error("Unable to insert phone: {}", insertPhoneResponse.getMessage());
-                DialogueFx.errorAlert("Unable to create phone entry", insertPhoneResponse.getMessage());
+                return setFailMessage("Unable to insert phone", 0, insertPhoneResponse.getMessage());
             }
         } catch (Exception e) {
-            logger.error("Failed to insert phone for phoneId: {} {}", personModel.selectedPhoneProperty().get().getPhoneId(), e.getMessage(), e); // line 172
-            DialogueFx.errorAlert("Unable to create phone entry", e.getMessage());
+            return setFailMessage("Failed to insert phone", personModel.selectedPhoneProperty().get().getPhoneId(), e.getMessage());
         }
     }
 
     // this is complete
-    public void insertEmail() {
+    public PersonMessage insertEmail() {
         Email email = new Email(personModel.getPersonDTO().getpId());
         try {
             String response = httpClientUtil.postDataToGybe("insert/email", email);
@@ -174,18 +156,16 @@ public class PersonInteractor {
             if (emailResponse.isSuccess()) {
                 personModel.emailTableViewProperty().get().getItems().add(new EmailFx(emailResponse.getEmail()));
                 personModel.emailTableViewProperty().get().refresh();
-                personModel.updateSuccessProperty().set(true); // to signal success and allow green lights to blink
+                return PersonMessage.SUCCESS;
             } else {
-                logger.error("Unable to insert email: {}", emailResponse.getMessage());
-                DialogueFx.errorAlert("Unable to create email entry", emailResponse.getMessage());
+                return setFailMessage("Unable to create email entry", 0, emailResponse.getMessage());
             }
         } catch (Exception e) {
-            logger.error("Failed to insert email for phoneId: {} {}", personModel.selectedEmailProperty().get().getEmailId(), e.getMessage(), e); // line 172
-            DialogueFx.errorAlert("Unable to create email entry", e.getMessage());
+            return setFailMessage("Failed to insert email", 0, e.getMessage());
         }
     }
 
-    public void insertPosition() {
+    public PersonMessage insertPosition() {
         Officer officer = new Officer(personModel.getPersonDTO().getpId());
         try {
             String response = httpClientUtil.postDataToGybe("insert/position", officer);
@@ -194,246 +174,181 @@ public class PersonInteractor {
             if (positionResponse.isSuccess()) {
                 personModel.officerTableViewProperty().get().getItems().add(new OfficerFx(officer));
                 personModel.emailTableViewProperty().get().refresh();
-                personModel.updateSuccessProperty().set(true); // to signal success and allow green lights to blink
+                return PersonMessage.SUCCESS;
             } else {
-                logger.error("Unable to insert email: {}", positionResponse.getMessage());
-                DialogueFx.errorAlert("Unable to create email entry", positionResponse.getMessage());
+                return setFailMessage("Failed to insert position"
+                        ,personModel.selectedPositionProperty().get().getOfficerId()
+                        ,positionResponse.getMessage());
             }
         } catch (Exception e) {
-            logger.error("Failed to insert email for phoneId: {} {}", personModel.selectedPositionProperty().get().getOfficerId(), e.getMessage(), e); // line 172
-            DialogueFx.errorAlert("Unable to create person entry", e.getMessage());
+            return setFailMessage("Failed to insert position"
+                    ,personModel.selectedPositionProperty().get().getOfficerId()
+                    ,e.getMessage());
         }
     }
 
-    public AwardResponse updateAward() {
+    public PersonMessage setFailMessage(String title, int id, String message) {
+        personModel.errorMessageProperty().set(title + ":" + id + ":" + message);
+        return PersonMessage.FAIL;
+    }
+
+    public PersonMessage updateAward() {
         Award award = new Award(personModel.selectedAwardProperty().get());
         try {
             String response = httpClientUtil.postDataToGybe("update/award", award);
             AwardResponse awardResponse = httpClientUtil.getObjectMapper().readValue(response, AwardResponse.class);
             if (!awardResponse.isSuccess()) DialogueFx.errorAlert("Unable to update award", awardResponse.getMessage());
-            personModel.updateSuccessProperty().set(awardResponse.isSuccess());
-            return awardResponse;
+            return PersonMessage.SUCCESS;
         } catch (Exception e) {
-            logger.error("Failed to update award with pId {}: {}", personModel.getPersonDTO().pIdProperty().get(), e.getMessage(),e);
-            return null;
+            return setFailMessage("Failed to update award", award.getAwardId(), e.getMessage());
         }
     }
 
-    public PhoneResponse updatePhone() {
+    public PersonMessage updatePhone() {
         Phone phone = new Phone(personModel.selectedPhoneProperty().get());
         try {
             String response = httpClientUtil.postDataToGybe("update/phone", phone);
             PhoneResponse phoneResponse = httpClientUtil.getObjectMapper().readValue(response, PhoneResponse.class);
-            if (!phoneResponse.isSuccess()) Platform.runLater(() -> DialogueFx.errorAlert("Unable to update email", phoneResponse.getMessage()));
-            personModel.updateSuccessProperty().set(phoneResponse.isSuccess());
-            return phoneResponse;
+            if(phoneResponse.isSuccess()) {
+                return PersonMessage.SUCCESS;
+            } else {
+                return setFailMessage("Failed to update phone", phone.getPhoneId(), phoneResponse.getMessage());
+            }
         } catch (Exception e) {
-            logger.error("Failed to update phone with pId {}: {}",
-                    personModel.getPersonDTO().pIdProperty().get(), e.getMessage(), e);
-            return null;
+            return setFailMessage("Failed to update phone", phone.getPhoneId(), e.getMessage());
         }
     }
 
-    // this is complete
-    public EmailResponse updateEmail() {
+    public PersonMessage updateEmail() {
         Email email = new Email(personModel.selectedEmailProperty().get());
         try {
             String response = httpClientUtil.postDataToGybe("update/email", email);
             EmailResponse emailResponse = httpClientUtil.getObjectMapper().readValue(response, EmailResponse.class);
             if (!emailResponse.isSuccess()) Platform.runLater(() -> DialogueFx.errorAlert("Unable to update email", emailResponse.getMessage()));
-            personModel.updateSuccessProperty().set(emailResponse.isSuccess());
-            return emailResponse;
+            return PersonMessage.SUCCESS;
         } catch (Exception e) {
-            logger.error("Failed to update email with pId {}: {}",
-                    personModel.selectedEmailProperty().get().pIdProperty().get(), e.getMessage(), e);
-            return null;
+            return setFailMessage("Failed to update email", email.getEmailId(), e.getMessage());
         }
     }
 
-    public PositionResponse updatePosition() {
+    public PersonMessage updatePosition() {
         Officer officer = new Officer(personModel.selectedPositionProperty().get());
         try {
             String response = httpClientUtil.postDataToGybe("update/position", officer);
             PositionResponse positionResponse = httpClientUtil.getObjectMapper().readValue(response, PositionResponse.class);
             if (!positionResponse.isSuccess()) Platform.runLater(() -> DialogueFx.errorAlert("Unable to update position", positionResponse.getMessage()));
-            return positionResponse;
+            return PersonMessage.SUCCESS;
         } catch (Exception e) {
-            logger.error("Failed to update position with ID {}: {}",
-                    personModel.selectedPositionProperty().get().getOfficerId(), e.getMessage(), e);
-            return null;
+            return setFailMessage("Failed to update position", officer.getOfficerId(), e.getMessage());
         }
     }
 
-    public void deleteAward() {
+    public PersonMessage deleteAward() {
         try {
-            // Validate inputs
-            if (personModel.selectedAwardProperty().get() == null) {
-                logger.error("Failed to delete award: No award selected");
-                Platform.runLater(() -> DialogueFx.errorAlert("Delete Award Failed", "No award selected"));
-                return;
-            }
-            // Send delete request to server
+            if (personModel.selectedAwardProperty().get() == null)
+                return setFailMessage("Failed to delete award", 0, "No award selected");
             String response = httpClientUtil.postDataToGybe("delete/award", personModel.selectedAwardProperty().get());
-            if (response == null) {
-                logger.error("Failed to delete award {}: Null response from server", personModel.selectedAwardProperty().get().getAwardId());
-                Platform.runLater(() -> DialogueFx.errorAlert("Delete Award Failed", "Null response from server"));
-                return;
-            }
-            UpdateResponse updateResponse = httpClientUtil.getObjectMapper()
-                    .readValue(response, UpdateResponse.class);
-            if (updateResponse == null) {
-                logger.error("Failed to delete award {}: Invalid response from server", personModel.selectedAwardProperty().get().getAwardId());
-                Platform.runLater(() -> DialogueFx.errorAlert("Delete Award Failed", "Invalid response from server"));
-                return;
-            }
+            if (response == null)
+                return setFailMessage("Failed to delete award", personModel.selectedAwardProperty().get().getAwardId(), "Null response from server");
+            UpdateResponse updateResponse = httpClientUtil.getObjectMapper().readValue(response, UpdateResponse.class);
+            if (updateResponse == null)
+                return setFailMessage("Failed to delete award", personModel.selectedAwardProperty().get().getAwardId(), "Invalid response from server");
             if (updateResponse.isSuccess()) {
                 logger.info("Successfully deleted award {}", personModel.selectedAwardProperty().get().getAwardId());
-
                 AwardDTOFx awardDTOFx = personModel.selectedAwardProperty().get();
                 if (awardDTOFx != null) {
                     Platform.runLater(() -> {
                         personModel.awardTableViewProperty().get().getItems().remove(awardDTOFx);
-                        // Refresh table only if necessary
                         personModel.awardTableViewProperty().get().refresh();
-                        personModel.updateSuccessProperty().set(true);
                     });
+                    return PersonMessage.SUCCESS;
                 } else {
-                    // Log warning but don’t show error alert, as deletion succeeded
-                    logger.warn("Award {} deleted on server but not found in membership list", personModel.selectedAwardProperty().get().getAwardId());
+                    return setFailMessage("Failed to delete award: ", personModel.selectedAwardProperty().get().getAwardId(), "Null response from server");
                 }
             } else {
                 String errorMessage = updateResponse.getMessage() != null ? updateResponse.getMessage() : "Unknown error";
-                logger.error("Failed to delete boat {}: {}", personModel.selectedAwardProperty().get().getAwardId(), errorMessage);
-                Platform.runLater(() -> DialogueFx.errorAlert("Delete Award Failed", errorMessage));
+                return setFailMessage("Failed to delete award", personModel.selectedAwardProperty().get().getAwardId(), errorMessage);
             }
         } catch (Exception e) {
-            logger.error("Failed to delete award {}: {}", personModel.selectedAwardProperty().get().getAwardId(), e.getMessage(), e);
-            Platform.runLater(() -> DialogueFx.errorAlert("Delete Award Failed", e.getMessage()));
+            return setFailMessage("Failed to delete award", personModel.selectedAwardProperty().get().getAwardId(), e.getMessage());
         }
     }
 
-    public void deletePhone() {
+    public PersonMessage deletePhone() {
         try {
             // Validate inputs
-            if (personModel.selectedPhoneProperty().get() == null) {
-                logger.error("Failed to delete phone: No phone selected");
-                Platform.runLater(() -> DialogueFx.errorAlert("Delete Phone Failed", "No phone selected"));
-                return;
-            }
-            // Send delete request to server
+            if (personModel.selectedPhoneProperty().get() == null)
+                return setFailMessage("Failed to delete phone", 0, "No valid phone selected");
             String response = httpClientUtil.postDataToGybe("delete/phone", personModel.selectedPhoneProperty().get());
-            if (response == null) {
-                logger.error("Failed to delete phone: {} Null response from server", personModel.selectedPhoneProperty().get().getPhoneId());
-                Platform.runLater(() -> DialogueFx.errorAlert("Delete Phone Failed", "Null response from server"));
-                return;
-            }
-            UpdateResponse updateResponse = httpClientUtil.getObjectMapper()
-                    .readValue(response, UpdateResponse.class);
-            if (updateResponse == null) {
-                logger.error("Failed to delete phone with ID: {} Invalid response from server", personModel.selectedPhoneProperty().get().getPhoneId());
-                Platform.runLater(() -> DialogueFx.errorAlert("Delete Phone Failed", "Invalid response from server"));
-                return;
-            }
+            if (response == null)
+                return setFailMessage("Failed to delete phone", 0, "Null response from server");
+            UpdateResponse updateResponse = httpClientUtil.getObjectMapper().readValue(response, UpdateResponse.class);
+            if (updateResponse == null)
+                return setFailMessage("Failed to delete phone", 0, "Invalid response from server");
             if (updateResponse.isSuccess()) {
                 logger.info("Successfully deleted phone {}", personModel.selectedPhoneProperty().get().getPhoneId());
                 PhoneFx phoneFx = personModel.selectedPhoneProperty().get();
                 if (phoneFx != null) {
                     Platform.runLater(() -> {
                         personModel.phoneTableViewProperty().get().getItems().remove(phoneFx);
-                        // Refresh table only if necessary
                         personModel.phoneTableViewProperty().get().refresh();
-                        personModel.updateSuccessProperty().set(true);
                     });
+                    return PersonMessage.SUCCESS;
                 } else {
-                    // Log warning but don’t show error alert, as deletion succeeded
-                    logger.warn("Phone {} deleted on server but not found in membership list", personModel.selectedPhoneProperty().get().getPhoneId());
+                    return setFailMessage("Phone", personModel.selectedPhoneProperty().get().getPhoneId() , "deleted on server but not found in membership list");
                 }
             } else {
                 String errorMessage = updateResponse.getMessage() != null ? updateResponse.getMessage() : "Unknown error";
-                logger.error("Failed to delete phone {}: {}", personModel.selectedPhoneProperty().get().getPhoneId(), errorMessage);
-                Platform.runLater(() -> DialogueFx.errorAlert("Delete Phone Failed", errorMessage));
+                return setFailMessage("Failed to delete phone", personModel.selectedPhoneProperty().get().getPhoneId(), errorMessage);
             }
         } catch (Exception e) {
-            logger.error("Failed to delete phone {}: {}", personModel.selectedPhoneProperty().get().getPhoneId(), e.getMessage(), e);
-            Platform.runLater(() -> DialogueFx.errorAlert("Delete Phone Failed", e.getMessage()));
+            return setFailMessage("Failed to delete phone", personModel.selectedPhoneProperty().get().getPhoneId(), e.getMessage());
         }
     }
 
-    public void deleteEmail() {
+    public PersonMessage deleteEmail() {
         try {
-            // Validate inputs
-            if (personModel.selectedEmailProperty().get() == null) {
-                logger.error("Failed to delete email: No email selected");
-                Platform.runLater(() -> DialogueFx.errorAlert("Delete Email Failed", "No email selected"));
-                return;
-            }
-
-            if (personModel.selectedEmailProperty().get().primaryUseProperty().get()) {
-                logger.error("This is the primary email for a member: primary emails can not be deleted");
-                Platform.runLater(() -> DialogueFx.errorAlert("Delete Email Failed", "This is a primary email for a member\n\nYou must select or add another email and change it to primary before deleting this email"));
-                return;
-            }
-
-            // Send delete request to server
+            if (personModel.selectedEmailProperty().get() == null)
+                return setFailMessage("Failed to delete email", 0, "No email selected");
+            if (personModel.selectedEmailProperty().get().primaryUseProperty().get())
+                return setFailMessage("Failed to delete email", 0, "primary emails can not be deleted");
             String response = httpClientUtil.postDataToGybe("delete/email", personModel.selectedEmailProperty().get());
-            if (response == null) {
-                logger.error("Failed to delete email: {} Null response from server", personModel.selectedEmailProperty().get().getEmailId());
-                Platform.runLater(() -> DialogueFx.errorAlert("Delete Email Failed", "Null response from server"));
-                return;
-            }
+            if (response == null)
+                return setFailMessage("Failed to delete email", personModel.selectedEmailProperty().get().getEmailId(), "Null response from server");
             UpdateResponse updateResponse = httpClientUtil.getObjectMapper().readValue(response, UpdateResponse.class);
-            if (updateResponse == null) {
-                logger.error("Failed to delete email with ID: {} Invalid response from server", personModel.selectedEmailProperty().get().getEmailId());
-                Platform.runLater(() -> DialogueFx.errorAlert("Delete Email Failed", "Invalid response from server"));
-                return;
-            }
+            if (updateResponse == null)
+                return setFailMessage("Failed to delete email", personModel.selectedEmailProperty().get().getEmailId(), "Invalid response from server");
             if (updateResponse.isSuccess()) {
                 logger.info("Successfully deleted email {}", personModel.selectedEmailProperty().get().getEmailId());
                 EmailFx emailFx = personModel.selectedEmailProperty().get();
                 if (emailFx != null) {
                     Platform.runLater(() -> {
                         personModel.emailTableViewProperty().get().getItems().remove(emailFx);
-                        // Refresh table only if necessary
                         personModel.emailTableViewProperty().get().refresh();
-                        personModel.updateSuccessProperty().set(true);
                     });
-                } else {
-                    // Log warning but don’t show error alert, as deletion succeeded
-                    logger.warn("Email {} deleted on server but not found in membership list", personModel.selectedEmailProperty().get().getEmailId());
-                }
+                    return PersonMessage.SUCCESS;
+                } else
+                    return setFailMessage("Email",personModel.selectedEmailProperty().get().getEmailId() , "deleted on server but not found in membership list");
             } else {
                 String errorMessage = updateResponse.getMessage() != null ? updateResponse.getMessage() : "Unknown error";
-                logger.error("Unable to delete email {}: {}", personModel.selectedEmailProperty().get().getEmailId(), errorMessage);
-                Platform.runLater(() -> DialogueFx.errorAlert("Delete Email Failed", errorMessage));
+                return setFailMessage("Unable to delete email", personModel.selectedEmailProperty().get().getEmailId(), errorMessage);
             }
         } catch (Exception e) {
-            logger.error("Failed to delete email {}: {}", personModel.selectedEmailProperty().get().getEmailId(), e.getMessage(), e);
-            Platform.runLater(() -> DialogueFx.errorAlert("Delete Email Failed", e.getMessage()));
+            return setFailMessage("Unable to delete email", personModel.selectedEmailProperty().get().getEmailId(), e.getMessage());
         }
     }
 
-    public void deletePosition() {
+    public PersonMessage deletePosition() {
         try {
-            // Validate inputs
-            if (personModel.selectedPositionProperty().get() == null) {
-                logger.error("Failed to delete position: No position selected");
-                Platform.runLater(() -> DialogueFx.errorAlert("Delete Position Failed", "No position selected"));
-                return;
-            }
-
+            if (personModel.selectedPositionProperty().get() == null)
+                return setFailMessage("Failed to delete position", 0, "No valid position selected");
             // Send delete request to server
             String response = httpClientUtil.postDataToGybe("delete/position", personModel.selectedPositionProperty().get());
-            if (response == null) {
-                logger.error("Failed to delete position: {} Null response from server", personModel.selectedPositionProperty().get().getOfficerId());
-                Platform.runLater(() -> DialogueFx.errorAlert("Delete Position Failed", "Null response from server"));
-                return;
-            }
+            if (response == null)
+                return setFailMessage("Failed to delete position", 0, "Null response from server");
             UpdateResponse updateResponse = httpClientUtil.getObjectMapper().readValue(response, UpdateResponse.class);
-            if (updateResponse == null) {
-                logger.error("Failed to delete position with ID: {} Invalid response from server", personModel.selectedPositionProperty().get().getOfficerId());
-                Platform.runLater(() -> DialogueFx.errorAlert("Delete Position Failed", "Invalid response from server"));
-                return;
-            }
+            if (updateResponse == null)
+                return setFailMessage("Failed to delete position", 0, "Invalid response from server");
             if (updateResponse.isSuccess()) {
                 logger.info("Successfully deleted position {}", personModel.selectedPositionProperty().get().getOfficerId());
                 OfficerFx officerFx = personModel.selectedPositionProperty().get();
@@ -442,31 +357,24 @@ public class PersonInteractor {
                         personModel.officerTableViewProperty().get().getItems().remove(officerFx);
                         // Refresh table only if necessary
                         personModel.officerTableViewProperty().get().refresh();
-                        personModel.updateSuccessProperty().set(true);
                     });
-                } else {
-                    // Log warning but don’t show error alert, as deletion succeeded
-                    logger.warn("Position {} deleted on server but not found in membership list", personModel.selectedPositionProperty().get().getOfficerId());
-                }
+                    return PersonMessage.SUCCESS;
+                } else
+                    return setFailMessage("Position", personModel.selectedPositionProperty().get().getOfficerId(), "deleted on server but not found in membership list");
             } else {
                 String errorMessage = updateResponse.getMessage() != null ? updateResponse.getMessage() : "Unknown error";
-                logger.error("Unable to delete positon {}: {}", personModel.selectedPositionProperty().get().getOfficerId(), errorMessage);
-                Platform.runLater(() -> DialogueFx.errorAlert("Delete Position Failed", errorMessage));
+                return setFailMessage("Unable to delete positon", personModel.selectedPositionProperty().get().getOfficerId(), errorMessage);
             }
         } catch (Exception e) {
-            logger.error("Failed to delete position {}: {}", personModel.selectedPositionProperty().get().getOfficerId(), e.getMessage(), e);
-            Platform.runLater(() -> DialogueFx.errorAlert("Delete positon Failed", e.getMessage()));
+            return setFailMessage("Unable to delete positon", personModel.selectedPositionProperty().get().getOfficerId(), e.getMessage());
         }
     }
 
-    public boolean actionSucceeded() {
-        return personModel.updateSuccessProperty().get();
+    public String[] getErrorMessage() {
+        return personModel.errorMessageProperty().get().split(":");
     }
 
-    public void actionReset() {
-        personModel.updateSuccessProperty().set(false);
+    public void logError(String message) {
+        logger.error(message);
     }
-
-
-
 }

@@ -1,11 +1,13 @@
 package org.ecsail.mvci.membership.mvci.person;
 
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.scene.control.Tab;
 import org.ecsail.fx.PersonFx;
 import org.ecsail.interfaces.TabController;
 import org.ecsail.mvci.membership.MembershipMessage;
 import org.ecsail.mvci.membership.MembershipView;
+import org.ecsail.widgetfx.DialogueFx;
 
 public class PersonController extends TabController<PersonMessage> {
 
@@ -27,35 +29,45 @@ public class PersonController extends TabController<PersonMessage> {
 
     @Override
     public void action(PersonMessage actionEnum) {
-        Task<Void> task = new Task<>() {
+        Task<PersonMessage> task = new Task<>() {
             @Override
-            protected Void call() {
+            protected PersonMessage call() {
                 switch (actionEnum) {
-                    case SAVE_IMAGE -> personInteractor.saveImage();
-                    case INSERT_AWARD -> personInteractor.insertAward();
-                    case UPDATE_AWARD -> personInteractor.updateAward();
-                    case DELETE_AWARD -> personInteractor.deleteAward();
-                    case INSERT_PHONE -> personInteractor.insertPhone();
-                    case UPDATE_PHONE -> personInteractor.updatePhone();
-                    case DELETE_PHONE -> personInteractor.deletePhone();
-                    case INSERT_EMAIL -> personInteractor.insertEmail();
-                    case UPDATE_EMAIL -> personInteractor.updateEmail();
-                    case DELETE_EMAIL -> personInteractor.deleteEmail();
-                    case INSERT_POSITION -> personInteractor.insertPosition();
-                    case UPDATE_POSITION -> personInteractor.updatePosition();
-                    case DELETE_POSITION -> personInteractor.deletePosition();
+                    case SAVE_IMAGE -> { return personInteractor.saveImage(); }
+                    case INSERT_AWARD -> { return personInteractor.insertAward(); }
+                    case UPDATE_AWARD -> { return personInteractor.updateAward(); }
+                    case DELETE_AWARD -> { return personInteractor.deleteAward(); }
+                    case INSERT_PHONE -> { return personInteractor.insertPhone(); }
+                    case UPDATE_PHONE -> { return personInteractor.updatePhone(); }
+                    case DELETE_PHONE -> { return personInteractor.deletePhone(); }
+                    case INSERT_EMAIL -> { return personInteractor.insertEmail(); }
+                    case UPDATE_EMAIL -> { return personInteractor.updateEmail(); }
+                    case DELETE_EMAIL -> { return personInteractor.deleteEmail(); }
+                    case INSERT_POSITION -> { return personInteractor.insertPosition(); }
+                    case UPDATE_POSITION -> { return personInteractor.updatePosition(); }
+                    case DELETE_POSITION -> { return personInteractor.deletePosition(); }
+                    default -> { return PersonMessage.NULL; }
                 }
-                return null;
             }
         };
         task.setOnSucceeded(e -> {
-            if(personInteractor.actionSucceeded()) {
+            System.out.println(task.getValue());
+            if (task.getValue() == PersonMessage.SUCCESS) {
                 membershipView.sendMessage().accept(MembershipMessage.SUCCESS);
-                personInteractor.actionReset();
+            } else {
+                membershipView.sendMessage().accept(MembershipMessage.FAIL);
             }
-            else membershipView.sendMessage().accept(MembershipMessage.FAIL);
         });
-        task.setOnFailed(e -> membershipView.sendMessage().accept(MembershipMessage.FAIL));
+        task.setOnFailed(e -> {
+            String[] message = personInteractor.getErrorMessage();
+            if (message[1].equals("0")) {
+                personInteractor.logError(message[0] + ": " + message[2]);
+            } else {
+                personInteractor.logError(message[0] + " with ID: " + message[1] + message[2]);
+            }
+            DialogueFx.errorAlert(message[0], message[2]);
+            membershipView.sendMessage().accept(MembershipMessage.FAIL);
+        });
         new Thread(task).start();
-    }   // In the interest of learning, what is the scenario which the task would be considered a failure. Is it if it triggers an exception?
+    }
 }

@@ -43,7 +43,7 @@ public class OfficerTableView implements Builder<TableView<OfficerFx>> {
         tableView.getColumns().addAll(Arrays.asList(createColumn1(), createColumn2(), createColumn3()));
         TableView.TableViewSelectionModel<OfficerFx> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) membershipModel.setSelectedOfficer(newSelection);
+            if (newSelection != null) personView.getPersonModel().selectedPositionProperty().set(newSelection);
         });
         return tableView;
     }
@@ -55,7 +55,7 @@ public class OfficerTableView implements Builder<TableView<OfficerFx>> {
                 t -> {
                     OfficerFx officerDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                     officerDTO.setFiscalYear(t.getNewValue());
-                    membershipModel.setSelectedOfficer(officerDTO);
+                    personView.getPersonModel().selectedPositionProperty().set(officerDTO);
                     personView.sendMessage().accept(PersonMessage.UPDATE_POSITION);
                 }
         );
@@ -79,7 +79,7 @@ public class OfficerTableView implements Builder<TableView<OfficerFx>> {
             TablePosition<OfficerFx, String> pos = event.getTablePosition();
             OfficerFx officerDTO = event.getTableView().getItems().get(pos.getRow());
             officerDTO.setOfficerType(Officer.getByName(event.getNewValue(), boardPositions));
-            membershipModel.setSelectedOfficer(officerDTO);
+            personView.getPersonModel().selectedPositionProperty().set(officerDTO);
             personView.sendMessage().accept(PersonMessage.UPDATE_POSITION);
         });
         col2.setMaxWidth(1f * Integer.MAX_VALUE * 50);  // Type
@@ -92,7 +92,7 @@ public class OfficerTableView implements Builder<TableView<OfficerFx>> {
                 t -> {
                     OfficerFx officerDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                     officerDTO.setBoardYear(t.getNewValue());
-                    membershipModel.setSelectedOfficer(officerDTO);
+                    personView.getPersonModel().selectedPositionProperty().set(officerDTO);
                     personView.sendMessage().accept(PersonMessage.UPDATE_POSITION);                }
         );
         col1.setMaxWidth(1f * Integer.MAX_VALUE * 20);   // Phone

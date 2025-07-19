@@ -441,8 +441,8 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
                 "Are you sure you want to delete this officer entry?",
                 "Missing Selection",
                 "You need to select an officer entry first"};
-        if (DialogueFx.verifyAction(strings, personModel.getMembershipModel().getSelectedOfficer()))
-            action.accept(PersonMessage.DELETE_OFFICER);
+        if (DialogueFx.verifyAction(strings, personModel.selectedPositionProperty().get()))
+            action.accept(PersonMessage.DELETE_POSITION);
     }
 
     private void deletePhone() {
