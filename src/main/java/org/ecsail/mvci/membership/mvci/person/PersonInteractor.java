@@ -189,17 +189,15 @@ public class PersonInteractor {
     }
 
     public AwardResponse updateAward() {
-        logger.debug("Updating phone with pId: {}", personModel.selectedAwardProperty().get().getAwardId());
         Award award = new Award(personModel.selectedAwardProperty().get());
         try {
             String response = httpClientUtil.postDataToGybe("update/award", award);
-            AwardResponse awardResponse = httpClientUtil.getObjectMapper()
-                    .readValue(response, AwardResponse.class);
-            if (!awardResponse.isSuccess()) DialogueFx.errorAlert("Unable to update email", awardResponse.getMessage());
+            AwardResponse awardResponse = httpClientUtil.getObjectMapper().readValue(response, AwardResponse.class);
+            if (!awardResponse.isSuccess()) DialogueFx.errorAlert("Unable to update award", awardResponse.getMessage());
+            personModel.updateSuccessProperty().set(awardResponse.isSuccess());
             return awardResponse;
         } catch (Exception e) {
-            logger.error("Failed to update award with pId {}: {}",
-                    personModel.getPersonDTO().pIdProperty().get(), e.getMessage(),e);
+            logger.error("Failed to update award with pId {}: {}", personModel.getPersonDTO().pIdProperty().get(), e.getMessage(),e);
             return null;
         }
     }

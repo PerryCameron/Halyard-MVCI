@@ -23,13 +23,11 @@ import java.util.Arrays;
 
 public class AwardTableView implements Builder<TableView<AwardDTOFx>> {
     private final PersonFx person;
-    private final MembershipView membershipView;
     private final PersonView personView;
 
     public AwardTableView(PersonView personView) {
         this.personView = personView;
         this.person = personView.getPersonModel().getPersonDTO();
-        this.membershipView = personView.getPersonModel().getMembershipView();
     }
 
     @Override
@@ -50,7 +48,7 @@ public class AwardTableView implements Builder<TableView<AwardDTOFx>> {
         col1.setOnEditCommit(
                 t -> {
                     personView.getPersonModel().selectedAwardProperty().get().setAwardYear(t.getNewValue());
-                    membershipView.sendMessage().accept(MembershipMessage.UPDATE_AWARD);
+                    personView.sendMessage().accept(PersonMessage.UPDATE_AWARD);
                 }
         );
         col1.setMaxWidth(1f * Integer.MAX_VALUE * 20);   // Phone

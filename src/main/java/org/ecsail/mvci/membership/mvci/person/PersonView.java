@@ -229,7 +229,6 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
     }
 
     private void changeStackPane(MembershipMessage action) {
-        System.out.println("Change Stack Pane");
         personModel.stackPaneProperty().get().getChildren().forEach(child -> {
             if (child instanceof ComboBox) {
                 child.setVisible(action == MembershipMessage.CHANGE_MEMBER_TYPE);
