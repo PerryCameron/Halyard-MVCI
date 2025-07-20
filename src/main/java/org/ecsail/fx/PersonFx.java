@@ -105,7 +105,7 @@ public class PersonFx {
 		this.birthday = new SimpleObjectProperty<>(p.getBirthday() != null ? LocalDate.parse(p.getBirthday()) : null);
 		this.occupation = new SimpleStringProperty(p.getOccupation());
 		this.business = new SimpleStringProperty(p.getBusiness());
-		this.active = new SimpleBooleanProperty(p.getActive() == 1);
+		this.active = new SimpleBooleanProperty(p.isActive());
 		this.nickName = new SimpleStringProperty(p.getNickName());
 		this.oldMsid = new SimpleIntegerProperty(p.getOldMsid());
 	}

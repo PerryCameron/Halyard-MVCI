@@ -45,6 +45,7 @@ public class PersonController extends TabController<PersonMessage> {
                     case INSERT_POSITION -> { return personInteractor.insertPosition(); }
                     case UPDATE_POSITION -> { return personInteractor.updatePosition(); }
                     case DELETE_POSITION -> { return personInteractor.deletePosition(); }
+                    case UPDATE_PERSON -> { return personInteractor.updatePerson(); }
                     default -> { return PersonMessage.NULL; }
                 }
             }

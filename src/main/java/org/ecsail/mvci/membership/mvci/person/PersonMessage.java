@@ -16,5 +16,5 @@ public enum PersonMessage {
     DELETE_POSITION,
     FAIL,
     NULL,
-    SUCCESS
+    UPDATE_PERSON, SUCCESS
 }

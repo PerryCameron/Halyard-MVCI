@@ -1,5 +1,6 @@
 package org.ecsail.pojo;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.ecsail.fx.PersonFx;
@@ -7,6 +8,7 @@ import org.ecsail.fx.PersonFx;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Person {
     @JsonProperty("pId")
     private int pId;
@@ -33,7 +35,7 @@ public class Person {
     private String business;
 
     @JsonProperty("active")
-    private int active;
+    private boolean active;
 
     @JsonProperty("nickName")
     private String nickName;
@@ -65,7 +67,7 @@ public class Person {
         this.occupation = fx.getOccupation();
         this.business = fx.getBusiness();
         this.birthday = fx.getBirthday().toString();
-        this.active = fx.isActive() ? 1 : 0;
+        this.active = fx.isActive();
         this.nickName = fx.getNickName();
         this.oldMsid = fx.getOldMsid();
     }
@@ -134,11 +136,11 @@ public class Person {
         this.business = business;
     }
 
-    public int getActive() {
+    public boolean isActive() {
         return active;
     }
 
-    public void setActive(int active) {
+    public void setActive(boolean active) {
         this.active = active;
     }
 

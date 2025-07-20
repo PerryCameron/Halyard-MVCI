@@ -116,7 +116,6 @@ public class MembershipInteractor implements SlipUser {
         // we are not looking for subleases yet.
     }
 
-
     /**
      * Updates a membership's notes data by sending a POST request to the halyard/update/notes endpoint.
      *
@@ -140,25 +139,7 @@ public class MembershipInteractor implements SlipUser {
 
 
 
-    /**
-     * Updates a person's data by sending a POST request to the halyard/update/person endpoint.
-     *
-     * @return the JSON response from the server
-     */
-    public MembershipMessage updatePerson() {
-        logger.debug("Updating person with pId: {}", membershipModel.getSelectedPerson().pIdProperty().get());
-        Person person = new Person(membershipModel.getSelectedPerson());
-        try {
-            String response = membershipModel.getHttpClient().postDataToGybe("update/person", person);
-            processUpdateResponse(response);
-        } catch (Exception e) {
-            logger.error("Failed to update person with pId {}: {}",
-                    membershipModel.getSelectedPerson().pIdProperty().get(), e.getMessage(), e);
-            e.printStackTrace();
-            return MembershipMessage.FAIL;
-        }
-        return MembershipMessage.FAIL;
-    }
+
 
     /**
      * Updates a boat's data by sending a POST request to the halyard/update/boat endpoint.

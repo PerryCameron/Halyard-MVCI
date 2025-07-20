@@ -8,10 +8,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.Clipboard;
 import org.ecsail.fx.*;
 import org.ecsail.mvci.membership.MembershipMessage;
-import org.ecsail.pojo.Award;
-import org.ecsail.pojo.Email;
-import org.ecsail.pojo.Officer;
-import org.ecsail.pojo.Phone;
+import org.ecsail.pojo.*;
 import org.ecsail.static_tools.HttpClientUtil;
 import org.ecsail.widgetfx.DialogueFx;
 import org.ecsail.wrappers.*;
@@ -98,7 +95,6 @@ public class PersonInteractor {
             InsertPictureResponse insertPictureResponse = httpClientUtil.getObjectMapper()
                     .readValue(response, InsertPictureResponse.class);
             if (insertPictureResponse.isSuccess()) {
-                System.out.println("We succeeded");
                 return MembershipMessage.SUCCESS;
             } else {
                 logger.error("Unable to insert picture: {}", insertPictureResponse.getMessage());
@@ -117,7 +113,6 @@ public class PersonInteractor {
             AwardResponse insertAwardResponse = httpClientUtil.getObjectMapper()
                     .readValue(response, AwardResponse.class);
             if (insertAwardResponse.isSuccess()) {
-                System.out.println(insertAwardResponse.getAward());
                 personModel.awardTableViewProperty().get().getItems().add(new AwardFx(insertAwardResponse.getAward()));
                 personModel.awardTableViewProperty().get().refresh();
                 return PersonMessage.SUCCESS;
@@ -147,7 +142,6 @@ public class PersonInteractor {
         }
     }
 
-    // this is complete
     public PersonMessage insertEmail() {
         Email email = new Email(personModel.getPersonDTO().getpId());
         try {
@@ -252,6 +246,19 @@ public class PersonInteractor {
         }
     }
 
+    public PersonMessage updatePerson() {
+        Person person = new Person(personModel.getPersonDTO());
+        try {
+            String response = httpClientUtil.postDataToGybe("update/person", person);
+            System.out.println(response);
+            PersonResponse personResponse = httpClientUtil.getObjectMapper().readValue(response, PersonResponse.class);
+            if(personResponse.isSuccess()) return PersonMessage.SUCCESS;
+            else return setFailMessage("Failed to update person", person.getpId(), personResponse.getMessage());
+        } catch (Exception e) {
+            return setFailMessage("aFailed to update person", person.getpId(), e.getMessage());
+        }
+    }
+
     public PersonMessage deleteAward() {
         try {
             if (personModel.selectedAwardProperty().get() == null)
@@ -325,7 +332,6 @@ public class PersonInteractor {
             if (response == null)
                 return setFailMessage("Failed to delete email", personModel.selectedEmailProperty().get().getEmailId(), "Null response from server");
             UpdateResponse updateResponse = httpClientUtil.getObjectMapper().readValue(response, UpdateResponse.class);
-
             if (updateResponse == null)
                 return setFailMessage("Failed to delete email", personModel.selectedEmailProperty().get().getEmailId(), "Invalid response from server");
             if (updateResponse.isSuccess()) {

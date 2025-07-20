@@ -564,7 +564,7 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
                 updatePersonDTO(label, datePicker.getValue().toString());
                 personModel.getAgeLabel().setText("Age: " + DateTools.calculateAge(datePicker.getValue()));
                 personModel.getMembershipModel().setSelectedPerson(personModel.getPersonDTO());
-                personModel.getMembershipView().sendMessage().accept(MembershipMessage.UPDATE_PERSON);
+                action.accept(PersonMessage.UPDATE_PERSON);
             }
         });
         return labeledField(label, datePicker);
@@ -577,7 +577,7 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
                     updatePersonDTO(label, textField.getText());
                     if (oldValue) {
                         personModel.getMembershipModel().setSelectedPerson(personModel.getPersonDTO());
-                        personModel.getMembershipView().sendMessage().accept(MembershipMessage.UPDATE_PERSON);
+                        action.accept(PersonMessage.UPDATE_PERSON);
                     }
                 });
         return labeledField(label, textField);
