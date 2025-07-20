@@ -53,9 +53,7 @@ public class OfficerTableView implements Builder<TableView<OfficerFx>> {
         col1.setSortType(TableColumn.SortType.DESCENDING);
         col1.setOnEditCommit(
                 t -> {
-                    OfficerFx officerDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
-                    officerDTO.setFiscalYear(t.getNewValue());
-                    personView.getPersonModel().selectedPositionProperty().set(officerDTO);
+                    personView.getPersonModel().selectedPositionProperty().get().setBoardYear(t.getNewValue());
                     personView.sendMessage().accept(PersonMessage.UPDATE_POSITION);
                 }
         );

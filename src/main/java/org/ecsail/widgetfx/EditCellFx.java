@@ -60,6 +60,24 @@ public class EditCellFx<S, T> extends TableCell<S, T> {
     public static <S> EditCellFx<S, String> createStringEditCell() {
         return new EditCellFx<>(IDENTITY_CONVERTER);
     }
+
+    public static <S> EditCellFx<S, Integer> createIntegerEditCell() {
+        return new EditCellFx<>(new StringConverter<Integer>() {
+            @Override
+            public String toString(Integer object) {
+                return object == null ? "" : object.toString();
+            }
+
+            @Override
+            public Integer fromString(String string) {
+                try {
+                    return string == null || string.isEmpty() ? null : Integer.valueOf(string);
+                } catch (NumberFormatException e) {
+                    return null; // or handle invalid input differently
+                }
+            }
+        });
+    }
     
 
     // set the text of the text field and display the graphic

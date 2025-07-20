@@ -18,18 +18,19 @@ public class TableColumnFx {
         return col;
     }
 
+    public static <T> TableColumn<T, Integer> editableIntegerTableColumn(Function<T, IntegerProperty> property, String label) {
+        TableColumn<T, Integer> col = new TableColumn<>(label);
+        col.setCellValueFactory(cellData -> property.apply(cellData.getValue()).asObject());
+        col.setCellFactory(column -> EditCellFx.createIntegerEditCell());
+        return col;
+    }
+
     public static <T> TableColumn<T, String> stringTableColumn(Function<T, StringProperty> property, String label) {
         TableColumn<T, String> col = new TableColumn<>(label);
         col.setCellValueFactory(cellData -> property.apply(cellData.getValue()));
         return col;
     }
 
-    public static <T> TableColumn<T, Integer> editableIntegerTableColumn(Function<T, IntegerProperty> property, String label) {
-        TableColumn<T, Integer> col = new TableColumn<>(label);
-        col.setCellValueFactory(cellData -> property.apply(cellData.getValue()).asObject());
-        col.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
-        return col;
-    }
 
     public static <T> TableColumn<T, Integer> integerTableColumn(Function<T, IntegerProperty> property, String label) {
         TableColumn<T, Integer> col = new TableColumn<>(label);
