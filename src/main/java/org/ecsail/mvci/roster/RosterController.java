@@ -9,6 +9,7 @@ import org.ecsail.interfaces.Controller;
 import org.ecsail.mvci.main.MainController;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 public class RosterController extends Controller<RosterMessage> {
     MainController mainController;
@@ -46,11 +47,11 @@ public class RosterController extends Controller<RosterMessage> {
                 return null;
             }
         };
-        new Thread(task).start();
+        //new Thread(task).start();
+        getExecutor().submit(task);
     }
 
     private void search() {
-//        rosterInteractor.search();
         Task<Void> task = new Task<>() {
             @Override
             protected Void call() {
@@ -59,12 +60,13 @@ public class RosterController extends Controller<RosterMessage> {
                 return null;
             }
         };
-        new Thread(task).start();
+
         task.setOnSucceeded(event -> {
             rosterInteractor.changeState(); // JFX Thread
         });
         updateRoster();
-        System.out.println("I broke search? <- yes :)");
+        // new Thread(task).start();
+        getExecutor().submit(task);
     }
 
     private void updateRoster() {
@@ -90,7 +92,8 @@ public class RosterController extends Controller<RosterMessage> {
             mainController.showLoadingSpinner(false);
             rosterInteractor.setRoster(updatedRoster);
         });
-        new Thread(task).start();
+        //new Thread(task).start();
+        getExecutor().submit(task);
     }
 
     private void getRosterData() {
@@ -106,18 +109,23 @@ public class RosterController extends Controller<RosterMessage> {
         };
         task.setOnSucceeded(e -> {
             mainController.showLoadingSpinner(false);
-            Platform.runLater(() -> {
+            Platform.runLater(() -> {  // normally this isn't needed but helps keep from getting stuck
                 rosterInteractor.setListsLoaded();
                 rosterInteractor.setRosterToTableview();// JFX Thread
                 rosterInteractor.changeState(); // JFX Thread
             });
             rosterView.setRadioListener(); // set last, so it doesn't fire, when radios are created.
         });
-        new Thread(task).start();
+        //new Thread(task).start();
+        getExecutor().submit(task);
     }
 
     public TableView<RosterFx> getRosterTableView() {
         return rosterInteractor.getRosterTableView();
+    }
+
+    private ExecutorService getExecutor() {
+        return mainController.getExecutorService();
     }
 
     @Override

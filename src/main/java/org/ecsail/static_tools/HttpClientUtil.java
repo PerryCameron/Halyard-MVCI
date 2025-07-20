@@ -23,8 +23,6 @@ public class HttpClientUtil {
     private String csrfToken; // Store CSRF token
     private String csrfHeaderName; // Store CSRF header name (e.g., X-CSRF-TOKEN) // ADD THIS
 
-
-
     public HttpClientUtil(MainModel mainModel) {
         this.mainModel = mainModel;
 
@@ -164,7 +162,6 @@ public class HttpClientUtil {
         }
 
         return response;
-//        return client.newCall(request).execute();
     }
 
     public Response logoutOthers() throws IOException {

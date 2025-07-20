@@ -11,6 +11,8 @@ import org.ecsail.widgetfx.DialogueFx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.ExecutorService;
+
 public class ConnectController extends Controller<ConnectMessage> {
     private static final Logger logger = LoggerFactory.getLogger(ConnectController.class);
     MainController mainController;
@@ -87,14 +89,17 @@ public class ConnectController extends Controller<ConnectMessage> {
                     };
                     logoutTask.setOnSucceeded(evt -> connectToServer()); // Retry login
                     logoutTask.setOnFailed(evt -> DialogueFx.errorAlert("Error", "Failed to log out other sessions.")); // this needs to change
-                    new Thread(logoutTask).start();
+                    getExecutor().submit(logoutTask);
                 }
             } else {
                 DialogueFx.errorAlert("Error", e.getMessage());
             }
         });
-        Thread thread = new Thread(connectTask);
-        thread.start();
+        getExecutor().submit(connectTask);
+    }
+
+    private ExecutorService getExecutor() {
+        return mainController.getExecutorService();
     }
 
     public LoginDTOProperty getLogin() {

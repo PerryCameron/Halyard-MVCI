@@ -86,9 +86,10 @@ public class MainController extends Controller<MainMessage> implements Status {
             logger.error("Failed to fetch global data for email: {}, error: {}", email, exception.getMessage());
             Platform.runLater(() -> DialogueFx.errorAlert("Error", "Failed to fetch global data: " + exception.getMessage()));
         });
-        Thread thread = new Thread(fetchGlobalDataTask);
-        thread.setDaemon(true); // Ensure thread doesn't prevent app shutdown
-        thread.start();
+//        Thread thread = new Thread(fetchGlobalDataTask);
+//        thread.setDaemon(true); // Ensure thread doesn't prevent app shutdown
+//        thread.start();
+        getExecutorService().submit(fetchGlobalDataTask);
     }
 
     private void showDebugLog() {

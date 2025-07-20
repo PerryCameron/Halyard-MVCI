@@ -9,6 +9,8 @@ import org.ecsail.widgetfx.DialogueFx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.ExecutorService;
+
 public class WelcomeController extends Controller<WelcomeMessage> {
     private static final Logger logger = LoggerFactory.getLogger(WelcomeController.class);
     WelcomeView welcomeView;
@@ -54,7 +56,7 @@ public class WelcomeController extends Controller<WelcomeMessage> {
                 DialogueFx.errorAlert("Error", "Failed to fetch statistics: " + errorMessage);
             }
         });
-        new Thread(task).start();
+        getExecutor().submit(task);
     }
 
     private void redirectToLogin() {
@@ -79,10 +81,12 @@ public class WelcomeController extends Controller<WelcomeMessage> {
                 logger.error("Failed to update stats", ex);
             }
         });
-
         task.setOnFailed(e -> welcomeInteractor.taskOnFailed(e));
+        getExecutor().submit(task);
+    }
 
-        new Thread(task).start();
+    private ExecutorService getExecutor() {
+        return mainController.getExecutorService();
     }
 
     public Region getView() {

@@ -24,7 +24,6 @@ public class WelcomeInteractor {
 
     public WelcomeInteractor(WelcomeModel welcomeModel) {
         this.welcomeModel = welcomeModel;
-
     }
 
     public void fetchStatistics() throws Exception {
