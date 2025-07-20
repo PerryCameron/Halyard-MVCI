@@ -310,12 +310,13 @@ public class PersonInteractor {
         try {
             if (personModel.selectedEmailProperty().get() == null)
                 return setFailMessage("Failed to delete email", 0, "No email selected");
-            if (personModel.selectedEmailProperty().get().primaryUseProperty().get())
+            if (personModel.selectedEmailProperty().get().primaryUseProperty().get() == true)
                 return setFailMessage("Failed to delete email", 0, "primary emails can not be deleted");
             String response = httpClientUtil.postDataToGybe("delete/email", personModel.selectedEmailProperty().get());
             if (response == null)
                 return setFailMessage("Failed to delete email", personModel.selectedEmailProperty().get().getEmailId(), "Null response from server");
             UpdateResponse updateResponse = httpClientUtil.getObjectMapper().readValue(response, UpdateResponse.class);
+
             if (updateResponse == null)
                 return setFailMessage("Failed to delete email", personModel.selectedEmailProperty().get().getEmailId(), "Invalid response from server");
             if (updateResponse.isSuccess()) {
@@ -355,7 +356,6 @@ public class PersonInteractor {
                 if (officerFx != null) {
                     Platform.runLater(() -> {
                         personModel.officerTableViewProperty().get().getItems().remove(officerFx);
-                        // Refresh table only if necessary
                         personModel.officerTableViewProperty().get().refresh();
                     });
                     return PersonMessage.SUCCESS;
@@ -363,10 +363,10 @@ public class PersonInteractor {
                     return setFailMessage("Position", personModel.selectedPositionProperty().get().getOfficerId(), "deleted on server but not found in membership list");
             } else {
                 String errorMessage = updateResponse.getMessage() != null ? updateResponse.getMessage() : "Unknown error";
-                return setFailMessage("Unable to delete positon", personModel.selectedPositionProperty().get().getOfficerId(), errorMessage);
+                return setFailMessage("Unable to delete position", personModel.selectedPositionProperty().get().getOfficerId(), errorMessage);
             }
         } catch (Exception e) {
-            return setFailMessage("Unable to delete positon", personModel.selectedPositionProperty().get().getOfficerId(), e.getMessage());
+            return setFailMessage("Unable to delete position", personModel.selectedPositionProperty().get().getOfficerId(), e.getMessage());
         }
     }
 
@@ -376,5 +376,9 @@ public class PersonInteractor {
 
     public void logError(String message) {
         logger.error(message);
+    }
+
+    public void logServerSideError() {
+        logger.error("Task failed on server side");
     }
 }

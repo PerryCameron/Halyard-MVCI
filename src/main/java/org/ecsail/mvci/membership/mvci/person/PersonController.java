@@ -1,6 +1,5 @@
 package org.ecsail.mvci.membership.mvci.person;
 
-import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.scene.control.Tab;
 import org.ecsail.fx.PersonFx;
@@ -51,23 +50,27 @@ public class PersonController extends TabController<PersonMessage> {
             }
         };
         task.setOnSucceeded(e -> {
-            System.out.println(task.getValue());
             if (task.getValue() == PersonMessage.SUCCESS) {
                 membershipView.sendMessage().accept(MembershipMessage.SUCCESS);
             } else {
-                membershipView.sendMessage().accept(MembershipMessage.FAIL);
+                logFailure();
             }
         });
         task.setOnFailed(e -> {
-            String[] message = personInteractor.getErrorMessage();
-            if (message[1].equals("0")) {
-                personInteractor.logError(message[0] + ": " + message[2]);
-            } else {
-                personInteractor.logError(message[0] + " with ID: " + message[1] + message[2]);
-            }
-            DialogueFx.errorAlert(message[0], message[2]);
-            membershipView.sendMessage().accept(MembershipMessage.FAIL);
+            logFailure();
         });
         new Thread(task).start();
     }
+
+    private void logFailure() {
+        String[] message = personInteractor.getErrorMessage();
+        if (message[1].equals("0")) {
+            personInteractor.logError(message[0] + ": " + message[2]);
+        } else {
+            personInteractor.logError(message[0] + " with ID: " + message[1] + message[2]);
+        }
+        DialogueFx.errorAlert(message[0], message[2]);
+        membershipView.sendMessage().accept(MembershipMessage.FAIL);
+    }
+
 }
