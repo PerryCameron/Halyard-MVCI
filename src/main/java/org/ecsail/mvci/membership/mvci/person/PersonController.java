@@ -64,8 +64,7 @@ public class PersonController extends TabController<PersonMessage> {
         task.setOnFailed(e -> {
             logFailure();
         });
-        //executor.submit(task);
-        task.run();
+        executor.submit(task);
     }
 
     private void logFailure() {

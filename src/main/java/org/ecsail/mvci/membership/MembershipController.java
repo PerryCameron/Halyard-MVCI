@@ -23,6 +23,7 @@ public class MembershipController extends Controller<MembershipMessage> {
         MembershipModel membershipModel = new MembershipModel(rosterDTOFxDTO, selectedYear,  mainController.getMainModel());
         this.membershipInteractor = new MembershipInteractor(membershipModel);
         action(GET_DATA);
+        setExecutorService();
         membershipView = new MembershipView(membershipModel, this::action);
     }
 
@@ -156,6 +157,10 @@ public class MembershipController extends Controller<MembershipMessage> {
 
     public ExecutorService getExecutorService() {
         return mainController.getExecutorService();
+    }
+
+    public void setExecutorService() {
+        membershipInteractor.setExecutorService(mainController.getExecutorService());
     }
 
     @Override

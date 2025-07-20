@@ -371,6 +371,6 @@ public class MembershipInteractor implements SlipUser {
     }
 
     public void setExecutorService(ExecutorService executorService) {
-        setExecutorService(executorService);
+        membershipModel.setExecutorService(executorService);
     }
 }
