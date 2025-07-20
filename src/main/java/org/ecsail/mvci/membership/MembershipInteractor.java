@@ -18,6 +18,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
 
 public class MembershipInteractor implements SlipUser {
     private final MembershipModel membershipModel;
@@ -367,5 +368,9 @@ public class MembershipInteractor implements SlipUser {
 
     public int getMsId() {
         return membershipModel.membershipProperty().get().getMsId();
+    }
+
+    public void setExecutorService(ExecutorService executorService) {
+        setExecutorService(executorService);
     }
 }

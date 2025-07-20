@@ -12,6 +12,7 @@ import org.ecsail.mvci.main.MainModel;
 import org.ecsail.static_tools.HttpClientUtil;
 
 import java.util.Objects;
+import java.util.concurrent.ExecutorService;
 
 public class MembershipModel {
     private final MainModel mainModel;
@@ -46,6 +47,7 @@ public class MembershipModel {
     private final SimpleObjectProperty<Success> invoiceSaved = new SimpleObjectProperty<>(Success.NULL);
     private final SimpleBooleanProperty envelopeIsCatalogue = new SimpleBooleanProperty(false);
     private int[] success = new int[16];
+    private ExecutorService executorService = null;
 
 
     public MembershipModel(RosterFx rosterDTOFx, int selectedYear, MainModel mainModel) {
@@ -276,5 +278,13 @@ public class MembershipModel {
     }
     public SimpleObjectProperty<TextArea> textAreaProperty() {
         return textArea;
+    }
+
+    public ExecutorService getExecutorService() {
+        return executorService;
+    }
+
+    public void setExecutorService(ExecutorService executorService) {
+        this.executorService = executorService;
     }
 }

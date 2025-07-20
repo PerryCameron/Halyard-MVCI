@@ -8,17 +8,21 @@ import org.ecsail.mvci.membership.MembershipMessage;
 import org.ecsail.mvci.membership.MembershipView;
 import org.ecsail.widgetfx.DialogueFx;
 
+import java.util.concurrent.ExecutorService;
+
 public class PersonController extends TabController<PersonMessage> {
 
     private final PersonInteractor personInteractor;
     private final PersonView personView;
     private final MembershipView membershipView;
+    private final ExecutorService executor;
 
     public PersonController(MembershipView membershipView, PersonFx personDTO) {
         PersonModel personModel = new PersonModel(membershipView, personDTO);
         personInteractor = new PersonInteractor(personModel);
         personView = new PersonView(personModel, this::action);
         this.membershipView = membershipView;
+        this.executor = membershipView.getMembershipModel().getExecutorService();
     }
 
     @Override
@@ -60,7 +64,8 @@ public class PersonController extends TabController<PersonMessage> {
         task.setOnFailed(e -> {
             logFailure();
         });
-        new Thread(task).start();
+        //executor.submit(task);
+        task.run();
     }
 
     private void logFailure() {

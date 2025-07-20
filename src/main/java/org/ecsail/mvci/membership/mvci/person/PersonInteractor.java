@@ -164,7 +164,6 @@ public class PersonInteractor {
         Officer officer = new Officer(personModel.getPersonDTO().getpId());
         try {
             String response = httpClientUtil.postDataToGybe("insert/position", officer);
-            System.out.println(response);
             PositionResponse positionResponse = httpClientUtil.getObjectMapper()
                     .readValue(response, PositionResponse.class);
             if (positionResponse.isSuccess()) {

@@ -8,6 +8,8 @@ import org.ecsail.mvci.main.MainController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.concurrent.ExecutorService;
+
 import static org.ecsail.mvci.membership.MembershipMessage.*;
 
 public class MembershipController extends Controller<MembershipMessage> {
@@ -149,7 +151,11 @@ public class MembershipController extends Controller<MembershipMessage> {
             logger.error("Failed to perform task");
             if (runSpinner) mainController.showLoadingSpinner(false);
         });
-        new Thread(task).start();
+        getExecutorService().submit(task);
+    }
+
+    public ExecutorService getExecutorService() {
+        return mainController.getExecutorService();
     }
 
     @Override

@@ -12,6 +12,9 @@ import org.ecsail.interfaces.Status;
 import org.ecsail.pojo.HalyardUser;
 import org.ecsail.static_tools.HttpClientUtil;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 
 public class MainModel {
 
@@ -30,6 +33,7 @@ public class MainModel {
     private final BooleanProperty lightRxFail = new SimpleBooleanProperty(false);
     private final SimpleIntegerProperty deleteMembership = new SimpleIntegerProperty(0);
     private HalyardUser halyardUser = new HalyardUser();
+    private final ExecutorService executor = Executors.newSingleThreadExecutor();
     private Integer msId;
 
 
@@ -150,5 +154,8 @@ public class MainModel {
 
     public SimpleIntegerProperty deleteMembershipProperty() {
         return deleteMembership;
+    }
+    public ExecutorService getExecutor() {
+        return executor;
     }
 }

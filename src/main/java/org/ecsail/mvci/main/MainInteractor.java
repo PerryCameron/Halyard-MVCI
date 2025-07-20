@@ -16,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.ExecutorService;
 
 public class MainInteractor implements ConfigFilePaths {
 
@@ -149,5 +150,9 @@ public class MainInteractor implements ConfigFilePaths {
 
     public void closeTabByMsId(int msId) {
         mainModel.deleteMembershipProperty().set(msId);
+    }
+
+    public ExecutorService getExecutorService() {
+        return mainModel.getExecutor();
     }
 }

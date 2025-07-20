@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
 
 public class MainController extends Controller<MainMessage> implements Status {
 
@@ -175,6 +176,10 @@ public class MainController extends Controller<MainMessage> implements Status {
     public void openWelcomeMVCI() {
         mainView.closeTabs();
         mainView.addNewTab("Welcome", new WelcomeController(this).getView(), -1, false);
+    }
+
+    public ExecutorService getExecutorService() {
+        return mainInteractor.getExecutorService();
     }
 
     public void closeTabByMsId(int msId) {
