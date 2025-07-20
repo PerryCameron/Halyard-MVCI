@@ -72,7 +72,7 @@ public class POJOtoFxConverter {
                             if (person.getAwards() != null) {
                                 personDTOFx.getAwards().addAll(person.getAwards().stream()
                                         .filter(Objects::nonNull)
-                                        .map(AwardDTOFx::new)
+                                        .map(AwardFx::new)
                                         .sorted((a, b) -> {
                                             try {
                                                 int yearA = Integer.parseInt(a.getAwardYear()); // TODO may be better to change this field to integer

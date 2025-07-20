@@ -8,7 +8,7 @@ import org.ecsail.pojo.Award;
 
 import java.time.Year;
 
-public class AwardDTOFx {
+public class AwardFx {
 	
 	private IntegerProperty awardId;
 	private IntegerProperty pId;
@@ -17,21 +17,21 @@ public class AwardDTOFx {
 
 
 	
-	public AwardDTOFx(Integer awardId, Integer pId, String awardYear, String awardType) {
+	public AwardFx(Integer awardId, Integer pId, String awardYear, String awardType) {
 		this.awardId = new SimpleIntegerProperty(awardId);
 		this.pId = new SimpleIntegerProperty(pId);
 		this.awardYear = new SimpleStringProperty(awardYear);
 		this.awardType = new SimpleStringProperty(awardType);
 	}
 
-    public AwardDTOFx(int pId) {
+    public AwardFx(int pId) {
 		this.awardId = new SimpleIntegerProperty(0);
 		this.pId = new SimpleIntegerProperty(pId);
 		this.awardYear = new SimpleStringProperty(Year.now().toString());
 		this.awardType = new SimpleStringProperty("");
     }
 
-	public AwardDTOFx(Award award) {
+	public AwardFx(Award award) {
 		this.awardId = new SimpleIntegerProperty(award.getAwardId());
 		this.pId = new SimpleIntegerProperty(award.getpId());
 		this.awardYear = new SimpleStringProperty(award.getAwardYear());
@@ -114,10 +114,13 @@ public class AwardDTOFx {
 	}
 
 
-
 	@Override
 	public String toString() {
-		return "Object_Award [awardId=" + awardId + "]";
+		return "AwardFx{" +
+				"awardId=" + awardId +
+				", pId=" + pId +
+				", awardYear=" + awardYear +
+				", awardType=" + awardType +
+				'}';
 	}
-
 }

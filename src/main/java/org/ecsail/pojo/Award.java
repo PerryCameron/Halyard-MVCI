@@ -2,7 +2,7 @@ package org.ecsail.pojo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.ecsail.fx.AwardDTOFx;
+import org.ecsail.fx.AwardFx;
 import org.ecsail.fx.PersonFx;
 
 import java.time.Year;
@@ -31,7 +31,7 @@ public class Award {
         this.awardType = "SA";
     }
 
-    public Award(AwardDTOFx awardDTOFx) {
+    public Award(AwardFx awardDTOFx) {
         this.awardId = awardDTOFx.getAwardId();
         this.pId = awardDTOFx.getpId();
         this.awardYear = awardDTOFx.getAwardYear();
@@ -68,5 +68,15 @@ public class Award {
 
     public void setAwardType(String awardType) {
         this.awardType = awardType;
+    }
+
+    @Override
+    public String toString() {
+        return "Award{" +
+                "awardId=" + awardId +
+                ", pId=" + pId +
+                ", awardYear='" + awardYear + '\'' +
+                ", awardType='" + awardType + '\'' +
+                '}';
     }
 }

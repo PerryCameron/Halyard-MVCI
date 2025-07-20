@@ -117,7 +117,8 @@ public class PersonInteractor {
             AwardResponse insertAwardResponse = httpClientUtil.getObjectMapper()
                     .readValue(response, AwardResponse.class);
             if (insertAwardResponse.isSuccess()) {
-                personModel.awardTableViewProperty().get().getItems().add(new AwardDTOFx(insertAwardResponse.getAward()));
+                System.out.println(insertAwardResponse.getAward());
+                personModel.awardTableViewProperty().get().getItems().add(new AwardFx(insertAwardResponse.getAward()));
                 personModel.awardTableViewProperty().get().refresh();
                 return PersonMessage.SUCCESS;
             } else {
@@ -142,7 +143,7 @@ public class PersonInteractor {
                 return setFailMessage("Unable to insert phone", 0, insertPhoneResponse.getMessage());
             }
         } catch (Exception e) {
-            return setFailMessage("Failed to insert phone", personModel.selectedPhoneProperty().get().getPhoneId(), e.getMessage());
+            return setFailMessage("Failed to insert phone", 0, e.getMessage());
         }
     }
 
@@ -169,6 +170,7 @@ public class PersonInteractor {
         Officer officer = new Officer(personModel.getPersonDTO().getpId());
         try {
             String response = httpClientUtil.postDataToGybe("insert/position", officer);
+            System.out.println(response);
             PositionResponse positionResponse = httpClientUtil.getObjectMapper()
                     .readValue(response, PositionResponse.class);
             if (positionResponse.isSuccess()) {
@@ -176,13 +178,14 @@ public class PersonInteractor {
                 personModel.emailTableViewProperty().get().refresh();
                 return PersonMessage.SUCCESS;
             } else {
+                System.out.println("This is the path I went down");
                 return setFailMessage("Failed to insert position"
-                        ,personModel.selectedPositionProperty().get().getOfficerId()
+                        ,0
                         ,positionResponse.getMessage());
             }
         } catch (Exception e) {
             return setFailMessage("Failed to insert position"
-                    ,personModel.selectedPositionProperty().get().getOfficerId()
+                    ,0
                     ,e.getMessage());
         }
     }
@@ -197,8 +200,11 @@ public class PersonInteractor {
         try {
             String response = httpClientUtil.postDataToGybe("update/award", award);
             AwardResponse awardResponse = httpClientUtil.getObjectMapper().readValue(response, AwardResponse.class);
-            if (!awardResponse.isSuccess()) DialogueFx.errorAlert("Unable to update award", awardResponse.getMessage());
-            return PersonMessage.SUCCESS;
+            if (awardResponse.isSuccess()) {
+                return PersonMessage.SUCCESS;
+            } else {
+                return setFailMessage("Unable to update award", 0, awardResponse.getMessage());
+            }
         } catch (Exception e) {
             return setFailMessage("Failed to update award", award.getAwardId(), e.getMessage());
         }
@@ -224,8 +230,11 @@ public class PersonInteractor {
         try {
             String response = httpClientUtil.postDataToGybe("update/email", email);
             EmailResponse emailResponse = httpClientUtil.getObjectMapper().readValue(response, EmailResponse.class);
-            if (!emailResponse.isSuccess()) Platform.runLater(() -> DialogueFx.errorAlert("Unable to update email", emailResponse.getMessage()));
-            return PersonMessage.SUCCESS;
+            if (emailResponse.isSuccess()) {
+                return PersonMessage.SUCCESS;
+            } else {
+                return setFailMessage("Failed to update email", email.getEmailId(), emailResponse.getMessage());
+            }
         } catch (Exception e) {
             return setFailMessage("Failed to update email", email.getEmailId(), e.getMessage());
         }
@@ -236,8 +245,8 @@ public class PersonInteractor {
         try {
             String response = httpClientUtil.postDataToGybe("update/position", officer);
             PositionResponse positionResponse = httpClientUtil.getObjectMapper().readValue(response, PositionResponse.class);
-            if (!positionResponse.isSuccess()) Platform.runLater(() -> DialogueFx.errorAlert("Unable to update position", positionResponse.getMessage()));
-            return PersonMessage.SUCCESS;
+            if (positionResponse.isSuccess()) return PersonMessage.SUCCESS;
+            else return setFailMessage("Failed to update position", officer.getOfficerId(), positionResponse.getMessage());
         } catch (Exception e) {
             return setFailMessage("Failed to update position", officer.getOfficerId(), e.getMessage());
         }
@@ -255,7 +264,7 @@ public class PersonInteractor {
                 return setFailMessage("Failed to delete award", personModel.selectedAwardProperty().get().getAwardId(), "Invalid response from server");
             if (updateResponse.isSuccess()) {
                 logger.info("Successfully deleted award {}", personModel.selectedAwardProperty().get().getAwardId());
-                AwardDTOFx awardDTOFx = personModel.selectedAwardProperty().get();
+                AwardFx awardDTOFx = personModel.selectedAwardProperty().get();
                 if (awardDTOFx != null) {
                     Platform.runLater(() -> {
                         personModel.awardTableViewProperty().get().getItems().remove(awardDTOFx);
@@ -310,7 +319,7 @@ public class PersonInteractor {
         try {
             if (personModel.selectedEmailProperty().get() == null)
                 return setFailMessage("Failed to delete email", 0, "No email selected");
-            if (personModel.selectedEmailProperty().get().primaryUseProperty().get() == true)
+            if (personModel.selectedEmailProperty().get().primaryUseProperty().get())
                 return setFailMessage("Failed to delete email", 0, "primary emails can not be deleted");
             String response = httpClientUtil.postDataToGybe("delete/email", personModel.selectedEmailProperty().get());
             if (response == null)

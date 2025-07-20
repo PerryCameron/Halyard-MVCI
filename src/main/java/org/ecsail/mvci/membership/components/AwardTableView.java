@@ -7,21 +7,17 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.util.Builder;
-import org.ecsail.fx.AwardDTOFx;
+import org.ecsail.fx.AwardFx;
 import org.ecsail.fx.PersonFx;
 import org.ecsail.enums.Awards;
-import org.ecsail.mvci.membership.MembershipMessage;
-import org.ecsail.mvci.membership.MembershipModel;
-import org.ecsail.mvci.membership.MembershipView;
 import org.ecsail.mvci.membership.mvci.person.PersonMessage;
-import org.ecsail.mvci.membership.mvci.person.PersonModel;
 import org.ecsail.mvci.membership.mvci.person.PersonView;
 import org.ecsail.widgetfx.TableColumnFx;
 import org.ecsail.widgetfx.TableViewFx;
 
 import java.util.Arrays;
 
-public class AwardTableView implements Builder<TableView<AwardDTOFx>> {
+public class AwardTableView implements Builder<TableView<AwardFx>> {
     private final PersonFx person;
     private final PersonView personView;
 
@@ -31,19 +27,19 @@ public class AwardTableView implements Builder<TableView<AwardDTOFx>> {
     }
 
     @Override
-    public TableView<AwardDTOFx> build() {
-        TableView<AwardDTOFx> tableView = TableViewFx.tableViewOf(146,true);
+    public TableView<AwardFx> build() {
+        TableView<AwardFx> tableView = TableViewFx.tableViewOf(146,true);
         tableView.setItems(person.getAwards());
         tableView.getColumns().addAll(Arrays.asList(createColumn1(), createColumn2()));
-        TableView.TableViewSelectionModel<AwardDTOFx> selectionModel = tableView.getSelectionModel();
+        TableView.TableViewSelectionModel<AwardFx> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) personView.getPersonModel().selectedAwardProperty().set(newSelection);
         });
         return tableView;
     }
 
-    private TableColumn<AwardDTOFx, String> createColumn1() {
-        TableColumn<AwardDTOFx, String> col1 = TableColumnFx.editableStringTableColumn(AwardDTOFx::awardYearProperty, "Year");
+    private TableColumn<AwardFx, String> createColumn1() {
+        TableColumn<AwardFx, String> col1 = TableColumnFx.editableStringTableColumn(AwardFx::awardYearProperty, "Year");
         col1.setSortType(TableColumn.SortType.DESCENDING);
         col1.setOnEditCommit(
                 t -> {
@@ -55,17 +51,17 @@ public class AwardTableView implements Builder<TableView<AwardDTOFx>> {
         return col1;
     }
 
-    private TableColumn<AwardDTOFx,Awards> createColumn2() {
+    private TableColumn<AwardFx,Awards> createColumn2() {
         ObservableList<Awards> awardsList = FXCollections.observableArrayList(Awards.values());
-        final TableColumn<AwardDTOFx, Awards> col2 = new TableColumn<>("Award Type");
+        final TableColumn<AwardFx, Awards> col2 = new TableColumn<>("Award Type");
         col2.setCellValueFactory(param -> {
-            AwardDTOFx thisAward = param.getValue();
+            AwardFx thisAward = param.getValue();
             String awardCode = thisAward.getAwardType();
             Awards type = Awards.getByCode(awardCode);
             return new SimpleObjectProperty<>(type);
         });
         col2.setCellFactory(ComboBoxTableCell.forTableColumn(awardsList));
-        col2.setOnEditCommit((TableColumn.CellEditEvent<AwardDTOFx, Awards> event) -> {
+        col2.setOnEditCommit((TableColumn.CellEditEvent<AwardFx, Awards> event) -> {
             // update the GUI (do this first so UI seems snappy)
             personView.getPersonModel().selectedAwardProperty().get().setAwardType(event.getNewValue().getCode());
             // update the SQL

@@ -24,14 +24,14 @@ public class PersonModel {
     private Label ageLabel = new Label("Age: unknown");
     private final ObjectProperty<ImageView> imageViewProperty = new SimpleObjectProperty<>();
     private final ObjectProperty<PictureDTO> picture = new SimpleObjectProperty<>();
-    private final ObjectProperty<TableView<AwardDTOFx>> awardTableViewProperty = new SimpleObjectProperty<>();
+    private final ObjectProperty<TableView<AwardFx>> awardTableViewProperty = new SimpleObjectProperty<>();
     private final ObjectProperty<TableView<EmailFx>> emailTableViewProperty = new SimpleObjectProperty<>();
     private final ObjectProperty<TableView<OfficerFx>> officerTableViewProperty = new SimpleObjectProperty<>();
     private final ObjectProperty<TableView<PhoneFx>> phoneTableViewProperty = new SimpleObjectProperty<>();
     private final ObjectProperty<StackPane> stackPaneProperty = new SimpleObjectProperty<>(new StackPane());
     private final ObjectProperty<RadioButton>  radioButtonProperty = new SimpleObjectProperty<>(new RadioButton());
     private final ObjectProperty<ComboBox<String>> comboBoxProperty = new SimpleObjectProperty<>(new ComboBox<>());
-    private final ObjectProperty<AwardDTOFx> selectedAward = new SimpleObjectProperty<>();
+    private final ObjectProperty<AwardFx> selectedAward = new SimpleObjectProperty<>();
     private final ObjectProperty<PhoneFx> selectedPhone = new SimpleObjectProperty<>();
     private final ObjectProperty<EmailFx> selectedEmail = new SimpleObjectProperty<>();
     private final ObjectProperty<OfficerFx> selectedPosition = new SimpleObjectProperty<>();
@@ -89,7 +89,7 @@ public class PersonModel {
         return picture;
     }
 
-    public ObjectProperty<TableView<AwardDTOFx>> awardTableViewProperty() {
+    public ObjectProperty<TableView<AwardFx>> awardTableViewProperty() {
         return awardTableViewProperty;
     }
 
@@ -117,7 +117,7 @@ public class PersonModel {
         return comboBoxProperty;
     }
 
-    public ObjectProperty<AwardDTOFx> selectedAwardProperty() {
+    public ObjectProperty<AwardFx> selectedAwardProperty() {
         return selectedAward;
     }
 

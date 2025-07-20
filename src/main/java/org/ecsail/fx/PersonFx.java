@@ -21,7 +21,7 @@ public class PersonFx {
 	private IntegerProperty oldMsid;
 	private ObservableList<PhoneFx> phones = FXCollections.observableArrayList();
 	private ObservableList<EmailFx> email = FXCollections.observableArrayList();
-	private ObservableList<AwardDTOFx> awards = FXCollections.observableArrayList();
+	private ObservableList<AwardFx> awards = FXCollections.observableArrayList();
 	private ObservableList<OfficerFx> officer = FXCollections.observableArrayList();
 
 	public PersonFx(Integer pid, Integer ms_id, Integer memberType, String firstName, String lastName,
@@ -121,11 +121,11 @@ public class PersonFx {
 		this.officer = officer;
 	}
 
-	public ObservableList<AwardDTOFx> getAwards() {
+	public ObservableList<AwardFx> getAwards() {
 		return awards;
 	}
 
-	public void setAwards(ObservableList<AwardDTOFx> awards) {
+	public void setAwards(ObservableList<AwardFx> awards) {
 		this.awards = awards;
 	}
 
