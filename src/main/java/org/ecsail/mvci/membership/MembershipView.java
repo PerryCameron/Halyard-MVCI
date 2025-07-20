@@ -62,7 +62,6 @@ public class MembershipView implements Builder<Region> {
 
     private void addPeopleTabs() {
         membershipModel.membershipProperty().get().getPeople().forEach(personDTO -> membershipModel.getPeopleTabPane().getTabs()
-              //  .add(new PersonTabView(this, personDTO).build()));
                       .add(new PersonController(this, personDTO).getView()));
         membershipModel.getPeopleTabPane().getTabs().add(new AddPersonTabView(this).build());
     }

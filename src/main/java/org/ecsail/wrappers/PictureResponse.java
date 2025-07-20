@@ -1,21 +1,20 @@
 package org.ecsail.wrappers;
 
 import org.ecsail.fx.PictureDTO;
-import org.ecsail.pojo.Award;
 
-public class InsertPictureResponse {
+public class PictureResponse {
 
     private boolean success;
     private PictureDTO pictureDTO;
     private String message;
 
-    public InsertPictureResponse(boolean success, String message, PictureDTO pictureDTO) {
+    public PictureResponse(boolean success, String message, PictureDTO pictureDTO) {
         this.success = success;
         this.message = message;
         this.pictureDTO = pictureDTO;
     }
 
-    public InsertPictureResponse() {
+    public PictureResponse() {
     }
 
     // Getters and setters
@@ -34,6 +33,14 @@ public class InsertPictureResponse {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public PictureDTO getPictureDTO() {
+        return pictureDTO;
+    }
+
+    public void setPictureDTO(PictureDTO pictureDTO) {
+        this.pictureDTO = pictureDTO;
     }
 }
 

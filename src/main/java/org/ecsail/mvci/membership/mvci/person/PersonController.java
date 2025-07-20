@@ -2,13 +2,17 @@ package org.ecsail.mvci.membership.mvci.person;
 
 import javafx.concurrent.Task;
 import javafx.scene.control.Tab;
+import javafx.scene.image.Image;
 import org.ecsail.fx.PersonFx;
 import org.ecsail.interfaces.TabController;
 import org.ecsail.mvci.membership.MembershipMessage;
 import org.ecsail.mvci.membership.MembershipView;
 import org.ecsail.widgetfx.DialogueFx;
 
+
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
+import java.util.function.Supplier;
 
 public class PersonController extends TabController<PersonMessage> {
 
@@ -32,26 +36,44 @@ public class PersonController extends TabController<PersonMessage> {
 
     @Override
     public void action(PersonMessage actionEnum) {
+                switch (actionEnum) {
+                    case SAVE_IMAGE -> saveImageCustomTask();
+                    case GET_IMAGE -> getImageCustomTask();
+                    case INSERT_AWARD -> runInTask(personInteractor::insertAward);
+                    case UPDATE_AWARD -> runInTask(personInteractor::updateAward);
+                    case DELETE_AWARD -> runInTask(personInteractor::deleteAward);
+                    case INSERT_PHONE -> runInTask(personInteractor::insertPhone);
+                    case UPDATE_PHONE -> runInTask(personInteractor::updatePhone);
+                    case DELETE_PHONE -> runInTask(personInteractor::deletePhone);
+                    case INSERT_EMAIL -> runInTask(personInteractor::insertEmail);
+                    case UPDATE_EMAIL -> runInTask(personInteractor::updateEmail);
+                    case DELETE_EMAIL -> runInTask(personInteractor::deleteEmail);
+                    case INSERT_POSITION -> runInTask(personInteractor::insertPosition);
+                    case UPDATE_POSITION -> runInTask(personInteractor::updatePosition);
+                    case DELETE_POSITION -> runInTask(personInteractor::deletePosition);
+                    case UPDATE_PERSON -> runInTask(personInteractor::updatePerson);
+
+                }
+    }
+
+    private void getImageCustomTask() {
+        personInteractor.getImage(executor);
+    }
+
+    private void saveImageCustomTask() {
+        // get clipboard image on JavaFX thread
+        Optional<Image> image = personInteractor.getClipBoardImage();
+        // Call a method running on another thread
+        image.ifPresent(img -> {
+            personInteractor.saveImage(img, executor);
+        });
+    }
+
+    public void runInTask(Supplier<PersonMessage> method) {  // I want to put in a method as a parameter
         Task<PersonMessage> task = new Task<>() {
             @Override
             protected PersonMessage call() {
-                switch (actionEnum) {
-                    case SAVE_IMAGE -> { return personInteractor.saveImage(); }
-                    case INSERT_AWARD -> { return personInteractor.insertAward(); }
-                    case UPDATE_AWARD -> { return personInteractor.updateAward(); }
-                    case DELETE_AWARD -> { return personInteractor.deleteAward(); }
-                    case INSERT_PHONE -> { return personInteractor.insertPhone(); }
-                    case UPDATE_PHONE -> { return personInteractor.updatePhone(); }
-                    case DELETE_PHONE -> { return personInteractor.deletePhone(); }
-                    case INSERT_EMAIL -> { return personInteractor.insertEmail(); }
-                    case UPDATE_EMAIL -> { return personInteractor.updateEmail(); }
-                    case DELETE_EMAIL -> { return personInteractor.deleteEmail(); }
-                    case INSERT_POSITION -> { return personInteractor.insertPosition(); }
-                    case UPDATE_POSITION -> { return personInteractor.updatePosition(); }
-                    case DELETE_POSITION -> { return personInteractor.deletePosition(); }
-                    case UPDATE_PERSON -> { return personInteractor.updatePerson(); }
-                    default -> { return PersonMessage.NULL; }
-                }
+                return method.get();
             }
         };
         task.setOnSucceeded(e -> {
@@ -61,9 +83,7 @@ public class PersonController extends TabController<PersonMessage> {
                 logFailure();
             }
         });
-        task.setOnFailed(e -> {
-            logFailure();
-        });
+        task.setOnFailed(e -> logFailure());
         executor.submit(task);
     }
 

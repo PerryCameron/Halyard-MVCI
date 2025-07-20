@@ -57,6 +57,7 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
         borderPane.setBottom(createBottomStacks());
         vBox.getChildren().add(borderPane);
         personModel.getTab().setContent(vBox);
+        if(personModel.getPersonDTO().memberTypeProperty().get() == 1) action.accept(PersonMessage.GET_IMAGE);
         return personModel.getTab();
     }
 
@@ -295,8 +296,6 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
     }
 
     private void removePersonFromMembership(MembershipMessage message) {
-        System.out.println("removePersonFromMembership(); (PersonTabView)");
-//        logger.info("Removing " + personModel.getPersonDTO().getFullName());
         personModel.getPersonDTO().setOldMsid(personModel.getPersonDTO().getMsId());
         personModel.getPersonDTO().setMsId(0);
         personModel.getPersonDTO().setMemberType(0);
@@ -491,17 +490,14 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
         vBoxPicture.setPrefHeight(275);
         vBoxPicture.setMinHeight(275);
         vBoxPicture.setAlignment(Pos.CENTER);
-
         // Load the image
         Image memberPhoto = new Image(Objects.requireNonNull(getClass().getResourceAsStream(DEFAULT_PHOTO)));
         ImageView imageView = new ImageView(memberPhoto);
         personModel.imageViewPropertyProperty().set(imageView);
-
         // Size the ImageView with maximum bounds, preserving aspect ratio
         imageView.setFitWidth(192); // Maximum width
         imageView.setFitHeight(222); // Maximum height
         imageView.setPreserveRatio(true); // Maintain aspect ratio
-
         // Create a StackPane to hold the ImageView and apply the border
         StackPane framePane = new StackPane();
         framePane.setStyle(
@@ -511,13 +507,10 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
                         "-fx-background-color: #ffffff; " +
                         "-fx-padding: 5;" // Space between image and border
         );
-
         // Prevent StackPane from expanding beyond the ImageView's size
         framePane.setMaxSize(Region.USE_PREF_SIZE, Region.USE_PREF_SIZE);
-
         // Add the ImageView to the StackPane
         framePane.getChildren().add(imageView);
-
         // Dynamically size the StackPane to fit the ImageView's actual bounds
         imageView.boundsInLocalProperty().addListener((observable, oldValue, newValue) -> {
             double width = newValue.getWidth();
@@ -527,7 +520,6 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
             framePane.setPrefSize(width + 2 * borderWidth, height + 2 * borderWidth);
             framePane.setMaxSize(width + 2 * borderWidth, height + 2 * borderWidth);
         });
-
         // Set the mouse click handler on the ImageView
         imageView.setOnMouseClicked(event -> {
             if (event.getClickCount() == 2) {
@@ -536,7 +528,6 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
                 alert.showAndWait();
             }
         });
-
         // Add the StackPane to the VBox
         vBoxPicture.getChildren().add(framePane);
         return vBoxPicture;

@@ -7,7 +7,6 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.image.Image;
 import javafx.scene.input.Clipboard;
 import org.ecsail.fx.*;
-import org.ecsail.mvci.membership.MembershipMessage;
 import org.ecsail.pojo.*;
 import org.ecsail.static_tools.HttpClientUtil;
 import org.ecsail.widgetfx.DialogueFx;
@@ -20,6 +19,8 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.util.Optional;
+import java.util.concurrent.ExecutorService;
 
 public class PersonInteractor {
     private final PersonModel personModel;
@@ -32,18 +33,22 @@ public class PersonInteractor {
         this.httpClientUtil = personModel.getMembershipModel().getHttpClient();
     }
 
-    public PersonMessage saveImage() {
+    public Optional<Image> getClipBoardImage() {
         Clipboard clipboard = Clipboard.getSystemClipboard();
         if (!clipboard.hasImage()) {
-            return setFailMessage("Error", 0, "No image found in clipboard. Use Windows + Shift + S to capture an image.");
+            DialogueFx.errorAlert("Error", "No image found in clipboard. Use Windows + Shift + S to capture an image.");
+            return Optional.empty();
         }
-        Image fxImage = clipboard.getImage();
-        // Convert clipboard image to BufferedImage
-        BufferedImage bufferedImage = SwingFXUtils.fromFXImage(fxImage, null);
-        Task<Image> saveImageTask = new Task<>() {
+        return Optional.ofNullable(clipboard.getImage());
+    }
+
+    public void saveImage(Image fxImage, ExecutorService executor) {
+        Task<Image> task = new Task<>() {
             @Override
             protected Image call() {
                 try {
+                    // Convert clipboard image to BufferedImage
+                    BufferedImage bufferedImage = SwingFXUtils.fromFXImage(fxImage, null);
                     // Resize image to 357x265 pixels
                     BufferedImage resizedImage = resizeImage(bufferedImage, 192, 222);
                     // create object to send via HTTP, add PID and Convert to PNG bytes (~100 KB)
@@ -51,24 +56,56 @@ public class PersonInteractor {
                     // add to our model to sent HTTP via interactor
                     personModel.pictureProperty().set(pictureDTO);
                     // write picture to database
-                    insertOrUpdatePicture();
-                    // send image so it can be added on success
-                    return new Image(new ByteArrayInputStream(pictureDTO.getPicture()));
+                    if (insertOrUpdatePicture() == PersonMessage.SUCCESS) {
+                        // send image so it can be added on success
+                        return new Image(new ByteArrayInputStream(pictureDTO.getPicture()));
+                    }
                 } catch (Exception e) {
-                    DialogueFx.errorAlert("Error", "Error saving image: " + e.getMessage());
+                    logger.error(e.getMessage(), e);
+                    DialogueFx.errorAlert("Error", e.getMessage());
+                    return null;
                 }
                 return null;
             }
         };
-        saveImageTask.setOnSucceeded(event -> personModel.getImageViewProperty().setImage(saveImageTask.getValue()));
-        saveImageTask.setOnFailed(event -> {
-            Throwable e = saveImageTask.getException();
-            logger.error("Failed to save image: {}", e.getMessage(), e);
-            DialogueFx.errorAlert("Error", "Failed to save image: " + e.getMessage());
+        task.setOnSucceeded(event -> {
+            if (task.getValue() != null) {
+                personModel.getImageViewProperty().setImage(task.getValue());
+            }
         });
-        // Start the task on a background thread
-        saveImageTask.run();
-        return null;  // TODO fix this
+        executor.execute(task);
+    }
+
+    public void getImage(ExecutorService executor) {
+        Task<Image> task = new Task<>() {
+            @Override
+            protected Image call() {
+                try {
+                    Person person = new Person(personModel.getPersonDTO());
+                    try {
+                        String response = httpClientUtil.postDataToGybe("get-picture", person);
+                        System.out.println(response);
+                        PictureResponse pictureResponse = httpClientUtil.getObjectMapper().readValue(response, PictureResponse.class);
+                        if (pictureResponse.isSuccess()) return new Image(new ByteArrayInputStream(pictureResponse.getPictureDTO().getPicture()));
+                        else
+                            return null;
+                    } catch (Exception e) {
+                        logger.error(e.getMessage(), e);
+                    }
+                } catch (Exception e) {
+                    logger.error(e.getMessage(), e);
+                    DialogueFx.errorAlert("Error", e.getMessage());
+                    return null;
+                }
+                return null;
+            }
+        };
+        task.setOnSucceeded(event -> {
+            if (task.getValue() != null) {
+                personModel.getImageViewProperty().setImage(task.getValue());
+            }
+        });
+        executor.execute(task);
     }
 
     private BufferedImage resizeImage(BufferedImage original, int targetWidth, int targetHeight) {
@@ -82,27 +119,26 @@ public class PersonInteractor {
                 targetWidth, targetHeight);
     }
 
-    // run on non-FX thread
     private byte[] convertToPngBytes(BufferedImage image) throws Exception {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ImageIO.write(image, "png", baos);
         return baos.toByteArray();
     }
 
-    public MembershipMessage insertOrUpdatePicture() {
+    public PersonMessage insertOrUpdatePicture() {
         try {
-            String response = httpClientUtil.postDataToGybe("api/add-picture", personModel.getPicture());
-            InsertPictureResponse insertPictureResponse = httpClientUtil.getObjectMapper()
-                    .readValue(response, InsertPictureResponse.class);
-            if (insertPictureResponse.isSuccess()) {
-                return MembershipMessage.SUCCESS;
+            String response = httpClientUtil.postDataToGybe("add-picture", personModel.getPicture());
+            PictureResponse pictureResponse = httpClientUtil.getObjectMapper()
+                    .readValue(response, PictureResponse.class);
+            if (pictureResponse.isSuccess()) {
+                return PersonMessage.SUCCESS;
             } else {
-                logger.error("Unable to insert picture: {}", insertPictureResponse.getMessage());
-                return MembershipMessage.FAIL;
+                logger.error("Unable to insert picture: {}", pictureResponse.getMessage());
+                return PersonMessage.FAIL;
             }
         } catch (Exception e) {
             logger.error("Failed to insert picture for pId {}: {}", personModel.getPersonDTO().pIdProperty().get(), e.getMessage(), e);
-            return MembershipMessage.FAIL;
+            return PersonMessage.FAIL;
         }
     }
 
@@ -173,18 +209,19 @@ public class PersonInteractor {
             } else {
                 System.out.println("This is the path I went down");
                 return setFailMessage("Failed to insert position"
-                        ,0
-                        ,positionResponse.getMessage());
+                        , 0
+                        , positionResponse.getMessage());
             }
         } catch (Exception e) {
             return setFailMessage("Failed to insert position"
-                    ,0
-                    ,e.getMessage());
+                    , 0
+                    , e.getMessage());
         }
     }
 
     public PersonMessage setFailMessage(String title, int id, String message) {
         personModel.errorMessageProperty().set(title + ":" + id + ":" + message);
+        System.out.println(title + ":" + id + ":" + message);
         return PersonMessage.FAIL;
     }
 
@@ -208,7 +245,7 @@ public class PersonInteractor {
         try {
             String response = httpClientUtil.postDataToGybe("update/phone", phone);
             PhoneResponse phoneResponse = httpClientUtil.getObjectMapper().readValue(response, PhoneResponse.class);
-            if(phoneResponse.isSuccess()) {
+            if (phoneResponse.isSuccess()) {
                 return PersonMessage.SUCCESS;
             } else {
                 return setFailMessage("Failed to update phone", phone.getPhoneId(), phoneResponse.getMessage());
@@ -239,7 +276,8 @@ public class PersonInteractor {
             String response = httpClientUtil.postDataToGybe("update/position", officer);
             PositionResponse positionResponse = httpClientUtil.getObjectMapper().readValue(response, PositionResponse.class);
             if (positionResponse.isSuccess()) return PersonMessage.SUCCESS;
-            else return setFailMessage("Failed to update position", officer.getOfficerId(), positionResponse.getMessage());
+            else
+                return setFailMessage("Failed to update position", officer.getOfficerId(), positionResponse.getMessage());
         } catch (Exception e) {
             return setFailMessage("Failed to update position", officer.getOfficerId(), e.getMessage());
         }
@@ -251,7 +289,7 @@ public class PersonInteractor {
             String response = httpClientUtil.postDataToGybe("update/person", person);
             System.out.println(response);
             PersonResponse personResponse = httpClientUtil.getObjectMapper().readValue(response, PersonResponse.class);
-            if(personResponse.isSuccess()) return PersonMessage.SUCCESS;
+            if (personResponse.isSuccess()) return PersonMessage.SUCCESS;
             else return setFailMessage("Failed to update person", person.getpId(), personResponse.getMessage());
         } catch (Exception e) {
             return setFailMessage("aFailed to update person", person.getpId(), e.getMessage());
@@ -310,7 +348,7 @@ public class PersonInteractor {
                     });
                     return PersonMessage.SUCCESS;
                 } else {
-                    return setFailMessage("Phone", personModel.selectedPhoneProperty().get().getPhoneId() , "deleted on server but not found in membership list");
+                    return setFailMessage("Phone", personModel.selectedPhoneProperty().get().getPhoneId(), "deleted on server but not found in membership list");
                 }
             } else {
                 String errorMessage = updateResponse.getMessage() != null ? updateResponse.getMessage() : "Unknown error";
@@ -343,7 +381,7 @@ public class PersonInteractor {
                     });
                     return PersonMessage.SUCCESS;
                 } else
-                    return setFailMessage("Email",personModel.selectedEmailProperty().get().getEmailId() , "deleted on server but not found in membership list");
+                    return setFailMessage("Email", personModel.selectedEmailProperty().get().getEmailId(), "deleted on server but not found in membership list");
             } else {
                 String errorMessage = updateResponse.getMessage() != null ? updateResponse.getMessage() : "Unknown error";
                 return setFailMessage("Unable to delete email", personModel.selectedEmailProperty().get().getEmailId(), errorMessage);
@@ -395,4 +433,6 @@ public class PersonInteractor {
     public void logServerSideError() {
         logger.error("Task failed on server side");
     }
+
+
 }
