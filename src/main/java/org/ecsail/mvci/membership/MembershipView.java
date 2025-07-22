@@ -64,6 +64,11 @@ public class MembershipView implements Builder<Region> {
         membershipModel.membershipProperty().get().getPeople().forEach(personDTO -> membershipModel.getPeopleTabPane().getTabs()
                       .add(new PersonController(this, personDTO).getView()));
         membershipModel.getPeopleTabPane().getTabs().add(new AddPersonTabView(this).build());
+//        membershipModel.getPeopleTabPane().getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+//            if (newValue != null) {
+//                System.out.println(newValue.getUserData());
+//            }
+//        });
     }
 
     private Node creteDivider() {

@@ -2,6 +2,7 @@ package org.ecsail.mvci.membership.mvci.person;
 
 
 import javafx.beans.property.Property;
+import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -57,6 +58,12 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
         borderPane.setBottom(createBottomStacks());
         vBox.getChildren().add(borderPane);
         personModel.getTab().setContent(vBox);
+        personModel.getTab().selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                if(!personModel.imageLoadedProperty().get())
+                action.accept(PersonMessage.GET_IMAGE);
+            }
+        });
         if(personModel.getPersonDTO().memberTypeProperty().get() == 1) action.accept(PersonMessage.GET_IMAGE);
         return personModel.getTab();
     }

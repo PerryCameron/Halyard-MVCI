@@ -36,6 +36,7 @@ public class PersonModel {
     private final ObjectProperty<EmailFx> selectedEmail = new SimpleObjectProperty<>();
     private final ObjectProperty<OfficerFx> selectedPosition = new SimpleObjectProperty<>();
     private final StringProperty errorMessage = new SimpleStringProperty();
+    private final BooleanProperty imageLoaded = new SimpleBooleanProperty(false);
 
     private final ObjectProperty<HBox> awardHbox = new SimpleObjectProperty<>();
 
@@ -135,5 +136,9 @@ public class PersonModel {
 
     public StringProperty errorMessageProperty() {
         return errorMessage;
+    }
+
+    public BooleanProperty imageLoadedProperty() {
+        return imageLoaded;
     }
 }

@@ -84,7 +84,6 @@ public class PersonInteractor {
                     Person person = new Person(personModel.getPersonDTO());
                     try {
                         String response = httpClientUtil.postDataToGybe("get-picture", person);
-                        System.out.println(response);
                         PictureResponse pictureResponse = httpClientUtil.getObjectMapper().readValue(response, PictureResponse.class);
                         if (pictureResponse.isSuccess()) return new Image(new ByteArrayInputStream(pictureResponse.getPictureDTO().getPicture()));
                         else
@@ -103,6 +102,7 @@ public class PersonInteractor {
         task.setOnSucceeded(event -> {
             if (task.getValue() != null) {
                 personModel.getImageViewProperty().setImage(task.getValue());
+                personModel.imageLoadedProperty().set(true);
             }
         });
         executor.execute(task);
@@ -111,7 +111,6 @@ public class PersonInteractor {
     private BufferedImage resizeImage(BufferedImage original, int targetWidth, int targetHeight) {
         // Skip resizing if original is smaller
         if (original.getWidth() <= targetWidth && original.getHeight() <= targetHeight) {
-            System.out.println("No resize is needed");
             return original;
         }
         // Resize with Imgscalr, preserving aspect ratio
