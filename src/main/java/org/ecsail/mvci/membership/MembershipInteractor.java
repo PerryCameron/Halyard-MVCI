@@ -131,22 +131,16 @@ public class MembershipInteractor implements SlipUser {
         Note note = new Note(membershipModel.getSelectedNote());
         try {
             String response = membershipModel.getHttpClient().postDataToGybe("update/notes", note);
-            return processUpdateResponse(response);
+            NoteResponse noteResponse = httpClientUtil.getObjectMapper().readValue(response, NoteResponse.class);
+            if(noteResponse.isSuccess())
+                return MembershipMessage.SUCCESS;
+            else return setFailMessage("Note update failure", 0, noteResponse.getMessage());
         } catch (Exception e) {
-            logger.error("Failed to update email with pId {}: {}",
-                    membershipModel.getSelectedPerson().pIdProperty().get(), e.getMessage(), e);
-            DialogueFx.errorAlert("Unable to update Note", e.getMessage());
-            membershipModel.getMainModel().toggleRxFail(); // Indicate failure
-            return MembershipMessage.FAIL;
+            logger.error("Failed to update note: {}", e.getMessage());
+            return setFailMessage("Failed to update note", 0, e.getMessage());
         }
     }
 
-    /**
-     * Updates a boat's data by sending a POST request to the halyard/update/boat endpoint.
-     *
-     * @param // Boat the boat data to update
-     * @return the JSON response from the server
-     */
     public MembershipMessage updateBoat() {
         logger.debug("Updating boat with pId: {}", membershipModel.getSelectedBoat().boatIdProperty().get());
         Boat boat = new Boat(membershipModel.getSelectedBoat());
