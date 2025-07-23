@@ -3,20 +3,20 @@ package org.ecsail.wrappers;
 import org.ecsail.pojo.Boat;
 import org.ecsail.pojo.BoatOwner;
 
-public class InsertBoatResponse {
+public class BoatResponse {
 
     private boolean success;
     private Boat boat;
     private BoatOwner boatOwner;
     private String message;
 
-    public InsertBoatResponse(boolean success, String message) {
+    public BoatResponse(boolean success, String message) {
         this.success = success;
         this.message = message;
         this.boat = new Boat();
     }
 
-    public InsertBoatResponse() {
+    public BoatResponse() {
     }
 
     // Getters and setters

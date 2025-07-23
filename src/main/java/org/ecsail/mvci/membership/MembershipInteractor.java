@@ -5,8 +5,10 @@ import javafx.application.Platform;
 import javafx.scene.control.TableView;
 import org.ecsail.fx.*;
 import org.ecsail.interfaces.SlipUser;
+import org.ecsail.mvci.membership.mvci.person.PersonMessage;
 import org.ecsail.pdf.PDF_Envelope;
 import org.ecsail.pojo.*;
+import org.ecsail.static_tools.HttpClientUtil;
 import org.ecsail.static_tools.POJOtoFxConverter;
 import org.ecsail.widgetfx.DialogueFx;
 import org.ecsail.wrappers.*;
@@ -23,9 +25,11 @@ import java.util.concurrent.ExecutorService;
 public class MembershipInteractor implements SlipUser {
     private final MembershipModel membershipModel;
     private static final Logger logger = LoggerFactory.getLogger(MembershipInteractor.class);
+    private final HttpClientUtil httpClientUtil;
 
     public MembershipInteractor(MembershipModel membershipModel) {
         this.membershipModel = membershipModel;
+        this.httpClientUtil = membershipModel.getHttpClient();
     }
 
     protected void setDataLoaded() {
@@ -137,11 +141,6 @@ public class MembershipInteractor implements SlipUser {
         }
     }
 
-
-
-
-
-
     /**
      * Updates a boat's data by sending a POST request to the halyard/update/boat endpoint.
      *
@@ -153,10 +152,15 @@ public class MembershipInteractor implements SlipUser {
         Boat boat = new Boat(membershipModel.getSelectedBoat());
         try {
             String response = membershipModel.getHttpClient().postDataToGybe("update/boat", boat);
-            return processUpdateResponse(response);
+            BoatResponse boatResponse = httpClientUtil.getObjectMapper().readValue(response, BoatResponse.class);
+            if(boatResponse.isSuccess())
+            return MembershipMessage.SUCCESS;
+            else {
+                return setFailMessage("Boat update failure",0,boatResponse.getMessage());
+            }
         } catch (Exception e) {
             logger.error("Failed to update boat  {}: {}", boat.getBoatId(), e.getMessage(), e);
-            return MembershipMessage.FAIL;
+            return setFailMessage("Boat update failure",0,"");
         }
     }
 
@@ -171,8 +175,8 @@ public class MembershipInteractor implements SlipUser {
         try {
             BoatOwner boatOwnerDTO = new BoatOwner(membershipModel.membershipProperty().get().getMsId(), 0);
             String response = membershipModel.getHttpClient().postDataToGybe("insert/boat", boatOwnerDTO);
-            InsertBoatResponse insertBoatResponse = membershipModel.getHttpClient().getObjectMapper()
-                    .readValue(response, InsertBoatResponse.class);
+            BoatResponse insertBoatResponse = membershipModel.getHttpClient().getObjectMapper()
+                    .readValue(response, BoatResponse.class);
             if (insertBoatResponse.isSuccess()) {
                 membershipModel.getBoatTableView().getItems().add(new BoatDTOFx(insertBoatResponse.getBoat()));
                 membershipModel.getBoatTableView().refresh();
@@ -372,5 +376,18 @@ public class MembershipInteractor implements SlipUser {
 
     public void setExecutorService(ExecutorService executorService) {
         membershipModel.setExecutorService(executorService);
+    }
+
+    public MembershipMessage setFailMessage(String title, int id, String message) {
+        membershipModel.errorMessageProperty().set(title + ":" + id + ":" + message);
+        return MembershipMessage.FAIL;
+    }
+
+    public String[] getFailMessage() {
+        return membershipModel.errorMessageProperty().get().split(":");
+    }
+
+    public void logError(String message) {
+        logger.error(message);
     }
 }

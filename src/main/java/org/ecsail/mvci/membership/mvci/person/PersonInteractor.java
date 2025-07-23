@@ -220,7 +220,6 @@ public class PersonInteractor {
 
     public PersonMessage setFailMessage(String title, int id, String message) {
         personModel.errorMessageProperty().set(title + ":" + id + ":" + message);
-        System.out.println(title + ":" + id + ":" + message);
         return PersonMessage.FAIL;
     }
 

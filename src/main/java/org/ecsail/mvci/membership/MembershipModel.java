@@ -42,6 +42,7 @@ public class MembershipModel {
     private final SimpleObjectProperty<PaymentDTO> selectedPayment = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TextArea> textArea = new SimpleObjectProperty<>(new TextArea());
     private final StringProperty selectedString = new SimpleStringProperty("");
+    private final StringProperty errorMessage = new SimpleStringProperty();
     private final SimpleIntegerProperty selectedInvoiceCreateYear = new SimpleIntegerProperty(0);
     private final SimpleIntegerProperty selectedMembershipYear = new SimpleIntegerProperty(0);
     private final SimpleObjectProperty<Success> invoiceSaved = new SimpleObjectProperty<>(Success.NULL);
@@ -279,12 +280,13 @@ public class MembershipModel {
     public SimpleObjectProperty<TextArea> textAreaProperty() {
         return textArea;
     }
-
     public ExecutorService getExecutorService() {
         return executorService;
     }
-
     public void setExecutorService(ExecutorService executorService) {
         this.executorService = executorService;
+    }
+    public StringProperty errorMessageProperty() {
+        return errorMessage;
     }
 }

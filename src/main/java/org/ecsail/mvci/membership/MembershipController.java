@@ -5,6 +5,7 @@ import javafx.scene.layout.Region;
 import org.ecsail.fx.RosterFx;
 import org.ecsail.interfaces.Controller;
 import org.ecsail.mvci.main.MainController;
+import org.ecsail.widgetfx.DialogueFx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +21,7 @@ public class MembershipController extends Controller<MembershipMessage> {
 
     public MembershipController(MainController mc, RosterFx rosterDTOFxDTO, int selectedYear) {
         this.mainController = mc;
-        MembershipModel membershipModel = new MembershipModel(rosterDTOFxDTO, selectedYear,  mainController.getMainModel());
+        MembershipModel membershipModel = new MembershipModel(rosterDTOFxDTO, selectedYear, mainController.getMainModel());
         this.membershipInteractor = new MembershipInteractor(membershipModel);
         action(GET_DATA);
         setExecutorService();
@@ -30,29 +31,29 @@ public class MembershipController extends Controller<MembershipMessage> {
     @Override
     public void action(MembershipMessage type) {
         switch (type) {
-            case GET_DATA -> runSpinner(GET_DATA, 50,50, true);
+            case GET_DATA -> runSpinner(GET_DATA, 50, 50, true);
 //            case SELECT_INVOICES -> runSpinner(SELECT_INVOICES,-430, 150);
 //            case SELECT_IDS -> runSpinner(SELECT_IDS,-430, 150);
-            case SELECT_INVOICE -> runSpinner(SELECT_INVOICE,-430, 150, true);
-            case SELECT_FEES -> runSpinner(SELECT_FEES,-430, 150, true);
-            case UPDATE_INVOICE -> runSpinner(UPDATE_INVOICE,-430, 150, true);
-            case UPDATE_INVOICE_ONLY -> runSpinner(UPDATE_INVOICE_ONLY,-430, 150, true);
+            case SELECT_INVOICE -> runSpinner(SELECT_INVOICE, -430, 150, true);
+            case SELECT_FEES -> runSpinner(SELECT_FEES, -430, 150, true);
+            case UPDATE_INVOICE -> runSpinner(UPDATE_INVOICE, -430, 150, true);
+            case UPDATE_INVOICE_ONLY -> runSpinner(UPDATE_INVOICE_ONLY, -430, 150, true);
             case UPDATE_MEMBERSHIP_LIST -> runTask(UPDATE_MEMBERSHIP_LIST);
             case UPDATE_MEMBERSHIP_ID -> runTask(UPDATE_MEMBERSHIP_ID);
-            case UPDATE_BOAT -> runSpinner(UPDATE_BOAT,0,0,false);
-            case UPDATE_NOTE -> runSpinner(UPDATE_NOTE,0,0,false);
-            case UPDATE_PERSON -> runSpinner(UPDATE_PERSON,0,0,false);
+            case UPDATE_BOAT -> runTask(UPDATE_BOAT);
+            case UPDATE_NOTE -> runSpinner(UPDATE_NOTE, 0, 0, false);
+            case UPDATE_PERSON -> runSpinner(UPDATE_PERSON, 0, 0, false);
             case UPDATE_PAYMENT -> runTask(UPDATE_PAYMENT);
-            case INSERT_BOAT -> runSpinner(INSERT_BOAT,0,0,false);
+            case INSERT_BOAT -> runSpinner(INSERT_BOAT, 0, 0, false);
             case INSERT_MEMBERSHIP_ID -> runTask(INSERT_MEMBERSHIP_ID);
             case INSERT_NOTE -> runTask(INSERT_NOTE);
             case INSERT_INVOICE_NOTE -> runTask(INSERT_INVOICE_NOTE);
             case INSERT_PERSON -> runTask(INSERT_PERSON);
-            case INSERT_INVOICE -> runSpinner(INSERT_INVOICE,-430, 150, true);
+            case INSERT_INVOICE -> runSpinner(INSERT_INVOICE, -430, 150, true);
             case INSERT_PAYMENT -> runTask(INSERT_PAYMENT);
-            case DELETE_BOAT -> runSpinner(DELETE_BOAT,0,0,false);
+            case DELETE_BOAT -> runSpinner(DELETE_BOAT, 0, 0, false);
             case DELETE_MEMBERSHIP_ID -> runTask(DELETE_MEMBERSHIP_ID);
-            case DELETE_MEMBERSHIP -> runSpinner(DELETE_MEMBERSHIP,50, 50, true);
+            case DELETE_MEMBERSHIP -> runSpinner(DELETE_MEMBERSHIP, 50, 50, true);
             case DELETE_NOTE -> runTask(DELETE_NOTE);
             case DELETE_INVOICE -> runTask(DELETE_INVOICE);
             case DELETE_PAYMENT -> runTask(DELETE_PAYMENT);
@@ -63,7 +64,7 @@ public class MembershipController extends Controller<MembershipMessage> {
             case DELETE_MEMBER_FROM_DATABASE -> runTask(DELETE_MEMBER_FROM_DATABASE);
             case MOVE_MEMBER_TO_MEMBERSHIP -> runTask(MOVE_MEMBER_TO_MEMBERSHIP);
             case UPLOAD_MEMBER_PHOTO -> runTask(UPLOAD_MEMBER_PHOTO);
-            case SAVE_INVOICE -> runSpinner(SAVE_INVOICE,-430, 150, true);
+            case SAVE_INVOICE -> runSpinner(SAVE_INVOICE, -430, 150, true);
             case PRINT_ENVELOPE -> runTask(PRINT_ENVELOPE);
             case FAIL -> membershipInteractor.signalFail();
             case SUCCESS -> membershipInteractor.signalSuccess();
@@ -71,10 +72,13 @@ public class MembershipController extends Controller<MembershipMessage> {
     }
 
     private void runTask(MembershipMessage type) {
-        Task<Void> task = new Task<>() {
+        Task<MembershipMessage> task = new Task<>() {
             @Override
-            protected Void call() {
+            protected MembershipMessage call() {
                 switch (type) {
+                    case UPDATE_BOAT -> {
+                        return membershipInteractor.updateBoat();
+                    }
 //                    case UPDATE_MEMBERSHIP_LIST -> db.updateMembershipList();
 //                    case UPDATE_MEMBERSHIP_ID -> db.updateMembershipId();
 
@@ -101,9 +105,16 @@ public class MembershipController extends Controller<MembershipMessage> {
                 return null;
             }
         };
-        new Thread(task).start();
+        task.setOnSucceeded(e -> {
+            if (task.getValue() == SUCCESS)
+                membershipInteractor.signalSuccess();
+            else logFailure();
+        });
+        task.setOnFailed(e -> {
+            logFailure();
+        });
+        getExecutorService().submit(task);
     }
-
 
     private void runSpinner(MembershipMessage type, double x, double y, boolean runSpinner) {
         mainController.setSpinnerOffset(x, y);
@@ -113,10 +124,16 @@ public class MembershipController extends Controller<MembershipMessage> {
             protected MembershipMessage call() {
                 switch (type) {
                     case DELETE_BOAT -> membershipInteractor.deleteBoat();
-                    case GET_DATA -> { return membershipInteractor.convertPOJOsToFXProperties(membershipInteractor.getMembershiptoPOJO()); }
-                    case INSERT_BOAT -> { return membershipInteractor.insertBoat(); }
-                    case UPDATE_BOAT -> { return membershipInteractor.updateBoat();}
-                    case UPDATE_NOTE -> { return membershipInteractor.updateNotes();}
+                    case GET_DATA -> {
+                        return membershipInteractor.convertPOJOsToFXProperties(membershipInteractor.getMembershiptoPOJO());
+                    }
+                    case INSERT_BOAT -> {
+                        return membershipInteractor.insertBoat();
+                    }
+
+                    case UPDATE_NOTE -> {
+                        return membershipInteractor.updateNotes();
+                    }
 //                    case SELECT_INVOICES -> db.selectInvoices(); <- this has more pieces not in use
 //                    case SELECT_IDS -> db.selectIds(); <- this has more pieces not in use
 //                    case SELECT_INVOICE -> db.selectInvoice();
@@ -126,7 +143,9 @@ public class MembershipController extends Controller<MembershipMessage> {
 //                    case SAVE_INVOICE -> db.saveInvoice();
 //                    case INSERT_INVOICE -> db.insertInvoice();
 
-                    case DELETE_MEMBERSHIP -> { return membershipInteractor.deleteMembership(); }
+                    case DELETE_MEMBERSHIP -> {
+                        return membershipInteractor.deleteMembership();
+                    }
                 }
                 return null;
             }
@@ -134,17 +153,18 @@ public class MembershipController extends Controller<MembershipMessage> {
         task.setOnSucceeded(e -> {
             logger.info("Successfully performed task");
             if (runSpinner) mainController.showLoadingSpinner(false);
-            if(task.getValue() != null)
-            switch (task.getValue()) {
-                case DELETE_MEMBERSHIP_FROM_DATABASE_SUCCEED -> {
-                    membershipInteractor.removeMembershipFromList(mainController.getRosterController().getRosterTableView());
-                    mainController.closeTabByMsId(membershipInteractor.getMsId());
+            if (task.getValue() != null)
+                switch (task.getValue()) {
+                    case DELETE_MEMBERSHIP_FROM_DATABASE_SUCCEED -> {
+                        membershipInteractor.removeMembershipFromList(mainController.getRosterController().getRosterTableView());
+                        mainController.closeTabByMsId(membershipInteractor.getMsId());
+                    }
+                    case GET_DATA_SUCCESS -> membershipInteractor.setDataLoaded();
+                    case FAIL -> membershipInteractor.signalFail();
+                    case SUCCESS -> membershipInteractor.signalSuccess();
+                    default -> {
+                    }
                 }
-                case GET_DATA_SUCCESS -> membershipInteractor.setDataLoaded();
-                case FAIL -> membershipInteractor.signalFail();
-                case SUCCESS -> membershipInteractor.signalSuccess();
-                default -> {}
-            }
             else
                 logger.warn("task was null");
         });
@@ -161,6 +181,17 @@ public class MembershipController extends Controller<MembershipMessage> {
 
     public void setExecutorService() {
         membershipInteractor.setExecutorService(mainController.getExecutorService());
+    }
+
+    private void logFailure() {
+        String[] message = membershipInteractor.getFailMessage();
+        if (message[1].equals("0")) {
+            membershipInteractor.logError(message[0] + ": " + message[2]);
+        } else {
+            membershipInteractor.logError(message[0] + " with ID: " + message[1] + message[2]);
+        }
+        DialogueFx.errorAlert(message[0], message[2]);
+        membershipView.sendMessage().accept(MembershipMessage.FAIL);
     }
 
     @Override
