@@ -1,11 +1,12 @@
 package org.ecsail.mvci.membership;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Platform;
 import javafx.scene.control.TableView;
 import org.ecsail.fx.*;
 import org.ecsail.interfaces.SlipUser;
-import org.ecsail.mvci.membership.mvci.person.PersonMessage;
 import org.ecsail.pdf.PDF_Envelope;
 import org.ecsail.pojo.*;
 import org.ecsail.static_tools.HttpClientUtil;
@@ -37,61 +38,76 @@ public class MembershipInteractor implements SlipUser {
         Platform.runLater(() -> membershipModel.dataIsLoadedProperty().set(true));
     }
 
-    public void uploadMemberPhoto() {
-        System.out.println("uploading photo");
-    }
-
-    public void loadInvoices() {
-    }
-
-    public void printEnvelope() {
+    public MembershipMessage printEnvelope() {
         try {
             new PDF_Envelope(membershipModel);
+            return MembershipMessage.SUCCESS;
         } catch (IOException e1) {
             Platform.runLater(() -> DialogueFx.errorAlert("Unable to print envelope: {}", e1.getMessage()));
             logger.error(e1.getMessage());
+            return MembershipMessage.FAIL;
         } catch (Exception e2) {
             Platform.runLater(() -> DialogueFx.errorAlert("Unable to perform update", e2.getMessage()));
             logger.error(e2.getMessage());
+            return MembershipMessage.FAIL;
         }
     }
 
-    public Membership getMembershiptoPOJO() {
+    public MembershipMessage getMembership() {
+        MembershipResponse membershipResponse = getMembershipResponse();
+        return convertPOJOsToFXProperties(membershipResponse);
+    }
+
+    public MembershipResponse getMembershipResponse() {
+        MembershipResponse membershipResponse = new MembershipResponse();
         Logger logger = LoggerFactory.getLogger(getClass());
         StringBuilder endpoint = new StringBuilder("membership");
+        ObjectMapper mapper = membershipModel.getHttpClient().getObjectMapper();
         try {
             endpoint.append("?year=").append(membershipModel.selectedMembershipYearProperty().getValue());
             endpoint.append("&msId=").append(URLEncoder.encode(String.valueOf(membershipModel.getMembershipFromRosterList().getMsId()), StandardCharsets.UTF_8));
             logger.debug("Constructed endpoint: {}", endpoint);
-
             String jsonResponse = membershipModel.getHttpClient().fetchDataFromGybe(endpoint.toString());
             if (jsonResponse == null || jsonResponse.trim().isEmpty()) {
                 logger.warn("Received null or empty JSON response from endpoint: {}", endpoint);
-                System.out.println("No JSON response received from endpoint: " + endpoint);
+                membershipResponse.setMessage("Received null or empty JSON response from endpoint: " + endpoint);
+                return membershipResponse;
+            }
+            // Parse the JSON response to check the status
+            JsonNode rootNode = mapper.readTree(jsonResponse);
+            String status = rootNode.get("status").asText();
+            if ("success".equals(status)) {
+                // Deserialize the 'membership' field into Membership class
+                JsonNode membershipNode = rootNode.get("membership");
+                membershipResponse.setMembership(mapper.treeToValue(membershipNode, Membership.class));
+                membershipResponse.setSuccess(true);
+                return membershipResponse;
             } else {
-                logger.info("JSON Response: {}", jsonResponse);
-                // Deserialize JSON to Membership POJO
-                try {
-                    return membershipModel.getHttpClient().getObjectMapper().readValue(jsonResponse, Membership.class);
-                } catch (IOException e) {
-                    logger.error("Failed to deserialize JSON: {}", e.getMessage(), e);
-                    System.out.println("Deserialization error: " + e.getMessage());
-                }
+                // Log the error message and return null
+                String errorMessage = rootNode.get("message").asText();
+                logger.error("Server returned error: {}", errorMessage);
+                membershipResponse.setMessage("Server returned error: " + errorMessage);
+                return membershipResponse;
             }
         } catch (UnsupportedEncodingException e) {
             logger.error("Encoding error for endpoint: {}", e.getMessage(), e);
-            System.out.println("Encoding error: " + e.getMessage());
+            membershipResponse.setMessage("Encoding error for endpoint: " + e.getMessage());
+            return membershipResponse;
         } catch (IOException e) {
-            logger.error("IO error fetching data from endpoint {}: {}", endpoint, e.getMessage(), e);
-            System.out.println("IO error: " + e.getMessage());
+            logger.error("IO error fetching or parsing data from endpoint {}: {}", endpoint, e.getMessage(), e);
+            membershipResponse.setMessage("IO error fetching or parsing data from endpoint: " + e.getMessage());
+            return membershipResponse;
         } catch (Exception e) {
             logger.error("Unexpected error fetching data: {}", e.getMessage(), e);
-            System.out.println("Unexpected error: " + e.getMessage());
+            membershipResponse.setMessage("Unexpected error fetching data: " + e.getMessage());
+            return membershipResponse;
         }
-        return null;
     }
 
-    public MembershipMessage convertPOJOsToFXProperties(Membership membership) {
+
+    public MembershipMessage convertPOJOsToFXProperties(MembershipResponse membershipResponse) {
+        logger.info("Seeing what thread this is on");
+        Membership membership = membershipResponse.getMembership();
         try {
             MembershipFx membershipDTOFx = new MembershipFx(membership);
             membershipModel.membershipProperty().set(membershipDTOFx);
@@ -384,4 +400,6 @@ public class MembershipInteractor implements SlipUser {
     public void logError(String message) {
         logger.error(message);
     }
+
+
 }

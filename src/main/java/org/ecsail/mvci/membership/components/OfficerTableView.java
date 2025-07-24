@@ -49,51 +49,51 @@ public class OfficerTableView implements Builder<TableView<OfficerFx>> {
     }
 
     private TableColumn<OfficerFx, Integer> createColumn1() {
-        TableColumn<OfficerFx, Integer> col1 = TableColumnFx.editableIntegerTableColumn(OfficerFx::fiscalYearProperty, "Year");
-        col1.setSortType(TableColumn.SortType.DESCENDING);
-        col1.setOnEditCommit(
+        TableColumn<OfficerFx, Integer> col = TableColumnFx.editableIntegerTableColumn(OfficerFx::fiscalYearProperty, "Year");
+        col.setSortType(TableColumn.SortType.DESCENDING);
+        col.setOnEditCommit(
                 t -> {
-                    personView.getPersonModel().selectedPositionProperty().get().setBoardYear(t.getNewValue());
+                    personView.getPersonModel().selectedPositionProperty().get().fiscalYearProperty().set(t.getNewValue());
                     personView.sendMessage().accept(PersonMessage.UPDATE_POSITION);
                 }
         );
-        col1.setMaxWidth(1f * Integer.MAX_VALUE * 20);   // Phone
-        return col1;
+        col.setMaxWidth(1f * Integer.MAX_VALUE * 20);   // Phone
+        return col;
     }
 
     private TableColumn<OfficerFx, String> createColumn2() {
         ObservableList<BoardPositionDTO> boardPositions = FXCollections.observableArrayList(membershipModel.getBoardPositionDTOS());
         ObservableList<String> officerList = FXCollections.observableArrayList(boardPositions.stream().map(BoardPositionDTO::position).collect(Collectors.toList()));
-        final TableColumn<OfficerFx, String> col2 = new TableColumn<>("Officers, Chairs and Board");
-        col2.setCellValueFactory(param -> {
+        final TableColumn<OfficerFx, String> col = new TableColumn<>("Officers, Chairs and Board");
+        col.setCellValueFactory(param -> {
             OfficerFx officerDTO = param.getValue();
             String type = Officer.getByCode(officerDTO.getOfficerType(), boardPositions);
             return new SimpleObjectProperty<>(type);
         });
 
-        col2.setCellFactory(ComboBoxTableCell.forTableColumn(officerList));
+        col.setCellFactory(ComboBoxTableCell.forTableColumn(officerList));
 
-        col2.setOnEditCommit((TableColumn.CellEditEvent<OfficerFx, String> event) -> {
+        col.setOnEditCommit((TableColumn.CellEditEvent<OfficerFx, String> event) -> {
             TablePosition<OfficerFx, String> pos = event.getTablePosition();
             OfficerFx officerDTO = event.getTableView().getItems().get(pos.getRow());
             officerDTO.setOfficerType(Officer.getByName(event.getNewValue(), boardPositions));
             personView.getPersonModel().selectedPositionProperty().set(officerDTO);
             personView.sendMessage().accept(PersonMessage.UPDATE_POSITION);
         });
-        col2.setMaxWidth(1f * Integer.MAX_VALUE * 50);  // Type
-        return col2;
+        col.setMaxWidth(1f * Integer.MAX_VALUE * 50);  // Type
+        return col;
     }
 
     private TableColumn<OfficerFx, Integer> createColumn3() {
-        TableColumn<OfficerFx, Integer> col1 = TableColumnFx.editableIntegerTableColumn(OfficerFx::boardYearProperty, "Exp");
-        col1.setOnEditCommit(
+        TableColumn<OfficerFx, Integer> col = TableColumnFx.editableIntegerTableColumn(OfficerFx::boardYearProperty, "Exp");
+        col.setOnEditCommit(
                 t -> {
                     OfficerFx officerDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
                     officerDTO.setBoardYear(t.getNewValue());
                     personView.getPersonModel().selectedPositionProperty().set(officerDTO);
                     personView.sendMessage().accept(PersonMessage.UPDATE_POSITION);                }
         );
-        col1.setMaxWidth(1f * Integer.MAX_VALUE * 20);   // Phone
-        return col1;
+        col.setMaxWidth(1f * Integer.MAX_VALUE * 20);   // Phone
+        return col;
     }
 }
