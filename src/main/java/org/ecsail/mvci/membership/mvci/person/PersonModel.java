@@ -23,7 +23,7 @@ public class PersonModel {
     private final HashMap<String, HBox> personInfoHBoxMap = new HashMap<>();
     private Label ageLabel = new Label("Age: unknown");
     private final ObjectProperty<ImageView> imageViewProperty = new SimpleObjectProperty<>();
-    private final ObjectProperty<PictureDTO> picture = new SimpleObjectProperty<>();
+    private final ObjectProperty<Picture> picture = new SimpleObjectProperty<>();
     private final ObjectProperty<TableView<AwardFx>> awardTableViewProperty = new SimpleObjectProperty<>();
     private final ObjectProperty<TableView<EmailFx>> emailTableViewProperty = new SimpleObjectProperty<>();
     private final ObjectProperty<TableView<OfficerFx>> officerTableViewProperty = new SimpleObjectProperty<>();
@@ -82,11 +82,11 @@ public class PersonModel {
         return tab;
     }
 
-    public PictureDTO getPicture() {
+    public Picture getPicture() {
         return picture.get();
     }
 
-    public ObjectProperty<PictureDTO> pictureProperty() {
+    public ObjectProperty<Picture> pictureProperty() {
         return picture;
     }
 

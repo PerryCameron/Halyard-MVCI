@@ -1,46 +1,29 @@
 package org.ecsail.wrappers;
 
-import org.ecsail.fx.PictureDTO;
+import org.ecsail.abstractions.ResponseWrapper;
+import org.ecsail.fx.Picture;
 
-public class PictureResponse {
+public class PictureResponse extends ResponseWrapper<Picture> {
 
-    private boolean success;
-    private PictureDTO pictureDTO;
-    private String message;
-
-    public PictureResponse(boolean success, String message, PictureDTO pictureDTO) {
-        this.success = success;
-        this.message = message;
-        this.pictureDTO = pictureDTO;
+    public PictureResponse(Picture picture) {
+        super(picture);
     }
 
     public PictureResponse() {
+        super(null);
     }
 
-    // Getters and setters
-
-    public boolean isSuccess() {
-        return success;
+    @Override
+    protected Picture createDefaultInstance() {
+        return new Picture();
     }
 
-    public void setSuccess(boolean success) {
-        this.success = success;
+    public Picture getPicture() {
+        return getData();
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public PictureDTO getPictureDTO() {
-        return pictureDTO;
-    }
-
-    public void setPictureDTO(PictureDTO pictureDTO) {
-        this.pictureDTO = pictureDTO;
+    public void setPicture(Picture Picture) {
+        setData(Picture);
     }
 }
 

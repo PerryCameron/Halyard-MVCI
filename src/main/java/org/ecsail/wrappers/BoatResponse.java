@@ -29,7 +29,6 @@ public class BoatResponse extends ResponseWrapper<Boat> {
         this.boatOwner = boatOwner;
     }
 
-    // Optionally override getters/setters for boat to use a more specific name
     public Boat getBoat() {
         return getData(); // Use inherited data field
     }

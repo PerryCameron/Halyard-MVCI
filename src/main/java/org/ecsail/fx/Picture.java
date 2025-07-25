@@ -1,24 +1,24 @@
 package org.ecsail.fx;
 
-public class PictureDTO {
+public class Picture {
     private int id;
     private int pid;
     private boolean defaultPicture;
     private byte[] picture;
 
     // Default constructor
-    public PictureDTO() {
+    public Picture() {
     }
 
     // Constructor with all fields
-    public PictureDTO(int id, int pid, boolean defaultPicture, byte[] picture) {
+    public Picture(int id, int pid, boolean defaultPicture, byte[] picture) {
         this.id = id;
         this.pid = pid;
         this.defaultPicture = defaultPicture;
         this.picture = picture;
     }
 
-    public PictureDTO(int pid, byte[] picture) {
+    public Picture(int pid, byte[] picture) {
         this.id = 0;
         this.pid = pid;
         this.defaultPicture = true;
@@ -74,7 +74,7 @@ public class PictureDTO {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PictureDTO picture1 = (PictureDTO) o;
+        Picture picture1 = (Picture) o;
         return id == picture1.id &&
                 pid == picture1.pid &&
                 defaultPicture == picture1.defaultPicture &&

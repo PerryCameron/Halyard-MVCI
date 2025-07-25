@@ -1,49 +1,29 @@
 package org.ecsail.wrappers;
 
-
+import org.ecsail.abstractions.ResponseWrapper;
 import org.ecsail.pojo.Person;
 
-public class PersonResponse {
+public class PersonResponse extends ResponseWrapper<Person> {
 
-    private boolean success;
-    private Person position;
-    private String message;
-
-    public PersonResponse(boolean success, String message) {
-        this.success = success;
-        this.message = message;
-        this.position = new Person();
+    public PersonResponse(Person person) {
+        super(person);
     }
 
     public PersonResponse() {
+        super(null);
     }
 
-    public PersonResponse(Person person) {
-        this.success = false;
-        this.message = "Success";
-        this.position = person;
+    @Override
+    protected Person createDefaultInstance() {
+        return new Person();
     }
 
-    public boolean isSuccess() {
-        return success;
-    }
-    public void setSuccess(boolean success) {
-        this.success = success;
+    public Person getPerson() {
+        return getData();
     }
 
-    public Person getPosition() {
-        return position;
-    }
-
-    public void setPosition(Person position) {
-        this.position = position;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-    public void setMessage(String message) {
-        this.message = message;
+    public void setPerson(Person person) {
+        setData(person);
     }
 }
 

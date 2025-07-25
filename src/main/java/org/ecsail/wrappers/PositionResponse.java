@@ -1,38 +1,30 @@
 package org.ecsail.wrappers;
 
 
+import org.ecsail.abstractions.ResponseWrapper;
 import org.ecsail.pojo.Officer;
 
-public class PositionResponse {
+public class PositionResponse extends ResponseWrapper<Officer>{
 
-    private boolean success;
-//    @JsonProperty("officerDTO")  // this is to match server
-    private Officer position;
-    private String message;
-    public PositionResponse(boolean success, String message) {
-        this.success = success;
-        this.message = message;
-        this.position = new Officer();
+    public PositionResponse(Officer position) {
+        super(position);
     }
+
     public PositionResponse() {
+        super(null);
     }
-    public boolean isSuccess() {
-        return success;
+
+    @Override
+    protected Officer createDefaultInstance() {
+        return new Officer();
     }
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
+
     public Officer getPosition() {
-        return position;
+        return getData();
     }
+
     public void setPosition(Officer position) {
-        this.position = position;
-    }
-    public String getMessage() {
-        return message;
-    }
-    public void setMessage(String message) {
-        this.message = message;
+        setData(position);
     }
 }
 

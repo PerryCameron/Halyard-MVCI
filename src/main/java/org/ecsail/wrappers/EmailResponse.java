@@ -1,43 +1,30 @@
 package org.ecsail.wrappers;
 
+import org.ecsail.abstractions.ResponseWrapper;
+
 import org.ecsail.pojo.Email;
 
-public class EmailResponse {
+public class EmailResponse extends ResponseWrapper<Email> {
 
-    private boolean success;
-    //@JsonProperty("phoneDTO")  // this is to match server
-    private Email email;
-    private String message;
-
-    public EmailResponse(boolean success, String message) {
-        this.success = success;
-        this.message = message;
-        this.email = new Email();
+    public EmailResponse(Email email) {
+        super(email);
     }
 
     public EmailResponse() {
+        super(null);
     }
 
-    // Getters and setters
-
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
+    @Override
+    protected Email createDefaultInstance() {
+        return new Email();
     }
 
     public Email getEmail() {
-        return email;
+        return getData();
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
+    public void setEmail(Email email) {
+        setData(email);
     }
 }
 

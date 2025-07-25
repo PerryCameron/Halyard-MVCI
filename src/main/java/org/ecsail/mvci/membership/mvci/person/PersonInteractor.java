@@ -52,13 +52,13 @@ public class PersonInteractor {
                     // Resize image to 357x265 pixels
                     BufferedImage resizedImage = resizeImage(bufferedImage, 192, 222);
                     // create object to send via HTTP, add PID and Convert to PNG bytes (~100 KB)
-                    PictureDTO pictureDTO = new PictureDTO(personModel.getPersonDTO().getpId(), convertToPngBytes(resizedImage));
+                    Picture picture = new Picture(personModel.getPersonDTO().getpId(), convertToPngBytes(resizedImage));
                     // add to our model to sent HTTP via interactor
-                    personModel.pictureProperty().set(pictureDTO);
+                    personModel.pictureProperty().set(picture);
                     // write picture to database
                     if (insertOrUpdatePicture() == PersonMessage.SUCCESS) {
                         // send image so it can be added on success
-                        return new Image(new ByteArrayInputStream(pictureDTO.getPicture()));
+                        return new Image(new ByteArrayInputStream(picture.getPicture()));
                     }
                 } catch (Exception e) {
                     logger.error(e.getMessage(), e);
@@ -85,7 +85,7 @@ public class PersonInteractor {
                     try {
                         String response = httpClientUtil.postDataToGybe("get-picture", person);
                         PictureResponse pictureResponse = httpClientUtil.getObjectMapper().readValue(response, PictureResponse.class);
-                        if (pictureResponse.isSuccess()) return new Image(new ByteArrayInputStream(pictureResponse.getPictureDTO().getPicture()));
+                        if (pictureResponse.isSuccess()) return new Image(new ByteArrayInputStream(pictureResponse.getPicture().getPicture()));
                         else
                             return null;
                     } catch (Exception e) {
@@ -290,7 +290,8 @@ public class PersonInteractor {
             if (personResponse.isSuccess()) return PersonMessage.SUCCESS;
             else return setFailMessage("Failed to update person", person.getpId(), personResponse.getMessage());
         } catch (Exception e) {
-            return setFailMessage("aFailed to update person", person.getpId(), e.getMessage());
+            e.printStackTrace();
+            return setFailMessage("Unable to update person", person.getpId(), e.getMessage());
         }
     }
 

@@ -1,43 +1,29 @@
 package org.ecsail.wrappers;
 
+import org.ecsail.abstractions.ResponseWrapper;
 import org.ecsail.pojo.Phone;
 
-public class PhoneResponse {
+public class PhoneResponse extends ResponseWrapper<Phone> {
 
-    private boolean success;
-    //@JsonProperty("phoneDTO")  // this is to match server
-    private Phone phone;
-    private String message;
-
-    public PhoneResponse(boolean success, String message) {
-        this.success = success;
-        this.message = message;
-        this.phone = new Phone();
+    public PhoneResponse(Phone phone) {
+        super(phone);
     }
 
     public PhoneResponse() {
+        super(null);
     }
 
-    // Getters and setters
-
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
+    @Override
+    protected Phone createDefaultInstance() {
+        return new Phone();
     }
 
     public Phone getPhone() {
-        return phone;
+        return getData();
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
+    public void setPhone(Phone phone) {
+        setData(phone);
     }
 }
 
