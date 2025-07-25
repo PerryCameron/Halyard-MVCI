@@ -277,6 +277,7 @@ public class PersonInteractor {
             else
                 return setFailMessage("Failed to update position", officer.getOfficerId(), positionResponse.getMessage());
         } catch (Exception e) {
+            e.printStackTrace();
             return setFailMessage("Failed to update position", officer.getOfficerId(), e.getMessage());
         }
     }
@@ -285,7 +286,6 @@ public class PersonInteractor {
         Person person = new Person(personModel.getPersonDTO());
         try {
             String response = httpClientUtil.postDataToGybe("update/person", person);
-            System.out.println(response);
             PersonResponse personResponse = httpClientUtil.getObjectMapper().readValue(response, PersonResponse.class);
             if (personResponse.isSuccess()) return PersonMessage.SUCCESS;
             else return setFailMessage("Failed to update person", person.getpId(), personResponse.getMessage());
@@ -362,8 +362,10 @@ public class PersonInteractor {
         try {
             if (personModel.selectedEmailProperty().get() == null)
                 return setFailMessage("Failed to delete email", 0, "No email selected");
-            if (personModel.selectedEmailProperty().get().primaryUseProperty().get())
+            if (personModel.selectedEmailProperty().get().primaryUseProperty().get()) {
+                System.out.println(personModel.selectedEmailProperty().get() + "<-current ");
                 return setFailMessage("Failed to delete email", 0, "primary emails can not be deleted");
+            }
             String response = httpClientUtil.postDataToGybe("delete/email", personModel.selectedEmailProperty().get());
             if (response == null)
                 return setFailMessage("Failed to delete email", personModel.selectedEmailProperty().get().getEmailId(), "Null response from server");
@@ -432,6 +434,4 @@ public class PersonInteractor {
     public void logServerSideError() {
         logger.error("Task failed on server side");
     }
-
-
 }

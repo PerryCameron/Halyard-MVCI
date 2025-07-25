@@ -28,6 +28,7 @@ public class RadioButtonCell extends TableCell<EmailFx, Boolean> {
             isUserAction = true; // Mark as user action
             // Ensure the radio button is selected before processing
             if (radioButton.isSelected() && getTableRow() != null) {
+                // I want to auto select the row when this happens as well
                 processSelection();
             }
         });
@@ -46,10 +47,14 @@ public class RadioButtonCell extends TableCell<EmailFx, Boolean> {
     private void processSelection() {
         EmailFx emailDTOFx = getTableRow().getItem();
         if (emailDTOFx != null && selectedEmail.get().getEmailId() != emailDTOFx.getEmailId()) { // I added the second condition here and it works perfect
+            // Set all items' primaryUse to false
+            getTableRow().getTableView().getItems().forEach(item -> item.setPrimaryUse(false));
+            // I want to set all items as primaryUse= false before setting this one.
             emailDTOFx.setPrimaryUse(true);
             // set lastEmail to current selection
-            logger.info("Switched: " + emailDTOFx.getEmail());
-            selectedEmail.set(emailDTOFx);
+            logger.info("Switched: {}", emailDTOFx.getEmail());
+            // auto select the row, which also puts row in selectedEmail in the model
+            getTableRow().getTableView().getSelectionModel().select(getTableRow().getIndex());
             personView.sendMessage().accept(PersonMessage.UPDATE_EMAIL);
         }
     }

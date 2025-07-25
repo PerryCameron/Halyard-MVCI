@@ -110,9 +110,6 @@ public class PersonFx {
 		this.oldMsid = new SimpleIntegerProperty(p.getOldMsid());
 	}
 
-
-
-
 	public ObservableList<OfficerFx> getOfficers() {
 		return officer;
 	}

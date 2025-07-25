@@ -46,6 +46,7 @@ public class EmailTableView implements Builder<TableView<EmailFx>> {
         TableView.TableViewSelectionModel<EmailFx> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) personModel.selectedEmailProperty().set(newSelection);
+            //System.out.println("Email: " + newSelection.getEmailId() + " primary=" + newSelection.primaryUseProperty().get());
         });
         return tableView;
     }
@@ -61,13 +62,11 @@ public class EmailTableView implements Builder<TableView<EmailFx>> {
             if (!newValue.equals(oldValue) && StringTools.isValidEmail(newValue)) {
                 emailDTO.setEmail(newValue);
                 personModel.selectedEmailProperty().set(emailDTO);
-                System.out.println("col1: Updated email for Email_ID=" + emailId);
                 personView.sendMessage().accept(PersonMessage.UPDATE_EMAIL);
             } else if (!StringTools.isValidEmail(newValue)) {
                 person.getEmail().stream()
                         .filter(q -> q.getEmailId() == emailId)
                         .forEach(s -> s.setEmail("Bad Email"));
-                System.out.println("col1: Invalid email for Email_ID=" + emailId);
             }
         });
         col1.setMaxWidth(1f * Integer.MAX_VALUE * 50);
@@ -105,7 +104,6 @@ public class EmailTableView implements Builder<TableView<EmailFx>> {
             booleanProp.addListener((observable, oldValue, newValue) -> {
                 emailDTO.setListed(newValue);
                 personModel.selectedEmailProperty().set(emailDTO);
-                System.out.println("col1");
                 personView.sendMessage().accept(PersonMessage.UPDATE_EMAIL);
             });
             return booleanProp;
