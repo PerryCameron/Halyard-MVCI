@@ -1,6 +1,5 @@
 package org.ecsail.mvci.membership.components;
 
-import javafx.collections.FXCollections;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -12,7 +11,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
-import org.ecsail.fx.InvoiceDTOFx;
+import org.ecsail.fx.InvoiceFx;
 import org.ecsail.mvci.membership.MembershipMessage;
 import org.ecsail.mvci.membership.MembershipModel;
 import org.ecsail.mvci.membership.MembershipView;
@@ -93,9 +92,9 @@ public class InvoiceListView implements Builder<Tab> {
 
     private Node addTable() {
         HBox hBox = HBoxFx.hBoxOf(new Insets(5,5,5,5));
-        TableView<InvoiceDTOFx> tableView = TableViewFx.tableViewOf(InvoiceDTOFx.class);
+        TableView<InvoiceFx> tableView = TableViewFx.tableViewOf(InvoiceFx.class);
         tableView.getColumns().addAll(Arrays.asList(col1(),col2(),col3(),col4(),col5()));
-        TableView.TableViewSelectionModel<InvoiceDTOFx> selectionModel = tableView.getSelectionModel();
+        TableView.TableViewSelectionModel<InvoiceFx> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) membershipView.getMembershipModel().setSelectedInvoice(newSelection);
         });
@@ -110,39 +109,39 @@ public class InvoiceListView implements Builder<Tab> {
         return hBox;
     }
 
-    private TableColumn<InvoiceDTOFx,Integer> col1() { //
-        TableColumn<InvoiceDTOFx,Integer> col = new TableColumn<>("Year");
+    private TableColumn<InvoiceFx,Integer> col1() { //
+        TableColumn<InvoiceFx,Integer> col = new TableColumn<>("Year");
         col.setCellValueFactory(new PropertyValueFactory<>("year"));
         col.setMaxWidth( 1f * Integer.MAX_VALUE * 20 );
         return col;
     }
 
-    private TableColumn<InvoiceDTOFx,Integer> col2() { //
-        TableColumn<InvoiceDTOFx,Integer> col = new TableColumn<>("Fees");
+    private TableColumn<InvoiceFx,Integer> col2() { //
+        TableColumn<InvoiceFx,Integer> col = new TableColumn<>("Fees");
         col.setCellValueFactory(new PropertyValueFactory<>("total"));
         col.setMaxWidth( 1f * Integer.MAX_VALUE * 20 );
         col.setStyle( "-fx-alignment: CENTER-RIGHT;");
         return col;
     }
 
-    private TableColumn<InvoiceDTOFx,Integer> col3() { //
-        TableColumn<InvoiceDTOFx,Integer> col = new TableColumn<>("Credit");
+    private TableColumn<InvoiceFx,Integer> col3() { //
+        TableColumn<InvoiceFx,Integer> col = new TableColumn<>("Credit");
         col.setCellValueFactory(new PropertyValueFactory<>("credit"));
         col.setMaxWidth( 1f * Integer.MAX_VALUE * 20 );
         col.setStyle( "-fx-alignment: CENTER-RIGHT;");
         return col;
     }
 
-    private TableColumn<InvoiceDTOFx,Integer> col4() { //
-        TableColumn<InvoiceDTOFx,Integer> col = new TableColumn<>("Paid");
+    private TableColumn<InvoiceFx,Integer> col4() { //
+        TableColumn<InvoiceFx,Integer> col = new TableColumn<>("Paid");
         col.setCellValueFactory(new PropertyValueFactory<>("paid"));
         col.setMaxWidth( 1f * Integer.MAX_VALUE * 20 );
         col.setStyle( "-fx-alignment: CENTER-RIGHT;");
         return col;
     }
 
-    private TableColumn<InvoiceDTOFx,Integer> col5() { //
-        TableColumn<InvoiceDTOFx,Integer> col = new TableColumn<>("Balance");
+    private TableColumn<InvoiceFx,Integer> col5() { //
+        TableColumn<InvoiceFx,Integer> col = new TableColumn<>("Balance");
         col.setCellValueFactory(new PropertyValueFactory<>("balance"));
         col.setMaxWidth( 1f * Integer.MAX_VALUE * 20 );
         col.setStyle( "-fx-alignment: CENTER-RIGHT;");

@@ -5,7 +5,7 @@ import javafx.geometry.Pos;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import org.ecsail.fx.DbInvoiceDTO;
-import org.ecsail.fx.InvoiceDTOFx;
+import org.ecsail.fx.InvoiceFx;
 import org.ecsail.fx.InvoiceItemDTO;
 import org.ecsail.widgetfx.HBoxFx;
 import org.ecsail.widgetfx.LabelFx;
@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 
 public class InvoiceItemGroup extends HBox {
-    private final InvoiceDTOFx invoiceDTO;
+    private final InvoiceFx invoiceDTO;
     private final InvoiceView invoiceView;
     private final DbInvoiceDTO dbInvoiceDTO;
     private final InvoiceItemDTO invoiceItemDTO;
@@ -65,7 +65,7 @@ public class InvoiceItemGroup extends HBox {
                 .sum();
     }
 
-    public InvoiceDTOFx getInvoiceDTO() {
+    public InvoiceFx getInvoiceDTO() {
         return invoiceDTO;
     }
 

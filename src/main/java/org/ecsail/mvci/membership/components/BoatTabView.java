@@ -29,8 +29,7 @@ public class BoatTabView implements Builder<Tab> {
 
     @Override
     public Tab build() {
-        return
-                TabFx.tabOf("Boats", createTableViewAndButtonsBox());
+        return TabFx.tabOf("Boats", createTableViewAndButtonsBox());
     }
 
     private Node createTableViewAndButtonsBox() {

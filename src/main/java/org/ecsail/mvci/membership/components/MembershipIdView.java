@@ -17,7 +17,7 @@ import javafx.util.Builder;
 import javafx.util.converter.IntegerStringConverter;
 import org.ecsail.custom.CustomDatePicker;
 import org.ecsail.custom.CustomIntegerTableCell;
-import org.ecsail.fx.MembershipIdDTOFx;
+import org.ecsail.fx.MembershipIdFx;
 import org.ecsail.enums.MembershipType;
 import org.ecsail.mvci.membership.MembershipMessage;
 import org.ecsail.mvci.membership.MembershipModel;
@@ -109,9 +109,9 @@ public class MembershipIdView implements Builder<Tab> {
     }
 
     private Node addTable() {
-        TableView<MembershipIdDTOFx> tableView = TableViewFx.tableViewOf(MembershipIdDTOFx.class);
+        TableView<MembershipIdFx> tableView = TableViewFx.tableViewOf(MembershipIdFx.class);
         tableView.getColumns().addAll(Arrays.asList(col1(), col2(), col3(), col4(), col5()));
-        TableView.TableViewSelectionModel<MembershipIdDTOFx> selectionModel = tableView.getSelectionModel();
+        TableView.TableViewSelectionModel<MembershipIdFx> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) membershipModel.setSelectedMembershipId(newSelection);
         });
@@ -121,11 +121,11 @@ public class MembershipIdView implements Builder<Tab> {
         return tableView;
     }
 
-    private TableColumn<MembershipIdDTOFx, Boolean> col5() {
-        TableColumn<MembershipIdDTOFx, Boolean> col5 = new TableColumn<>("Renew Late");
+    private TableColumn<MembershipIdFx, Boolean> col5() {
+        TableColumn<MembershipIdFx, Boolean> col5 = new TableColumn<>("Renew Late");
         col5.setCellValueFactory(
                 param -> {
-                    MembershipIdDTOFx membershipIdDTO = param.getValue();
+                    MembershipIdFx membershipIdDTO = param.getValue();
                     SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(membershipIdDTO.isLateRenew());
                     booleanProp.addListener((observable, oldValue, newValue) -> {
                         membershipIdDTO.setIsLateRenew(newValue);
@@ -135,7 +135,7 @@ public class MembershipIdView implements Builder<Tab> {
                     return booleanProp;
                 });
         col5.setCellFactory(p -> {
-            CheckBoxTableCell<MembershipIdDTOFx, Boolean> cell = new CheckBoxTableCell<>();
+            CheckBoxTableCell<MembershipIdFx, Boolean> cell = new CheckBoxTableCell<>();
             cell.setAlignment(Pos.CENTER);
             return cell;
         });
@@ -143,11 +143,11 @@ public class MembershipIdView implements Builder<Tab> {
         return col5;
     }
 
-    private TableColumn<MembershipIdDTOFx, Boolean> col4() {
-        TableColumn<MembershipIdDTOFx, Boolean> col4 = new TableColumn<>("Renewed");
+    private TableColumn<MembershipIdFx, Boolean> col4() {
+        TableColumn<MembershipIdFx, Boolean> col4 = new TableColumn<>("Renewed");
         col4.setCellValueFactory(
                 param -> {
-                    MembershipIdDTOFx membershipIdDTO = param.getValue();
+                    MembershipIdFx membershipIdDTO = param.getValue();
                     SimpleBooleanProperty booleanProp = new SimpleBooleanProperty(membershipIdDTO.isRenew());
                     booleanProp.addListener((observable, oldValue, newValue) -> {
                         membershipIdDTO.setIsRenew(newValue);
@@ -157,7 +157,7 @@ public class MembershipIdView implements Builder<Tab> {
                     return booleanProp;
                 });
         col4.setCellFactory(p -> {
-            CheckBoxTableCell<MembershipIdDTOFx, Boolean> cell = new CheckBoxTableCell<>();
+            CheckBoxTableCell<MembershipIdFx, Boolean> cell = new CheckBoxTableCell<>();
             cell.setAlignment(Pos.CENTER);
             return cell;
         });
@@ -165,23 +165,23 @@ public class MembershipIdView implements Builder<Tab> {
         return col4;
     }
 
-    private TableColumn<MembershipIdDTOFx, MembershipType> col3() {
+    private TableColumn<MembershipIdFx, MembershipType> col3() {
         ObservableList<MembershipType> MembershipTypeList = FXCollections.observableArrayList(MembershipType.values());
-        TableColumn<MembershipIdDTOFx, MembershipType> col3 = new TableColumn<>("Mem Type");
+        TableColumn<MembershipIdFx, MembershipType> col3 = new TableColumn<>("Mem Type");
         col3.setCellValueFactory(
                 param -> {
-                    MembershipIdDTOFx thisId = param.getValue();
+                    MembershipIdFx thisId = param.getValue();
                     String membershipCode = thisId.getMemType();
                     /// careful with capitals
                     MembershipType membershipType = MembershipType.getByCode(membershipCode);
                     return new SimpleObjectProperty<>(membershipType);
                 });
         col3.setCellFactory(ComboBoxTableCell.forTableColumn(MembershipTypeList));
-        col3.setOnEditCommit((TableColumn.CellEditEvent<MembershipIdDTOFx, MembershipType> event) -> {
-            TablePosition<MembershipIdDTOFx, MembershipType> pos = event.getTablePosition();
+        col3.setOnEditCommit((TableColumn.CellEditEvent<MembershipIdFx, MembershipType> event) -> {
+            TablePosition<MembershipIdFx, MembershipType> pos = event.getTablePosition();
             MembershipType newMembershipType = event.getNewValue();
             int row = pos.getRow();
-            MembershipIdDTOFx membershipIdDTO = event.getTableView().getItems().get(row);
+            MembershipIdFx membershipIdDTO = event.getTableView().getItems().get(row);
             membershipIdDTO.setMemType(newMembershipType.getCode());
             membershipModel.setSelectedMembershipId(membershipIdDTO);
             membershipView.sendMessage().accept(MembershipMessage.UPDATE_MEMBERSHIP_ID);
@@ -190,13 +190,13 @@ public class MembershipIdView implements Builder<Tab> {
         return col3;
     }
 
-    private TableColumn<MembershipIdDTOFx, Integer> col2() {
-        TableColumn<MembershipIdDTOFx, Integer> col2 = TableColumnFx.editableIntegerTableColumn(MembershipIdDTOFx::membershipIdProperty, "Mem ID");
+    private TableColumn<MembershipIdFx, Integer> col2() {
+        TableColumn<MembershipIdFx, Integer> col2 = TableColumnFx.editableIntegerTableColumn(MembershipIdFx::membershipIdProperty, "Mem ID");
         col2.setEditable(true);  // Ensure the TableColumn is editable
 
         col2.setCellFactory(tc -> new CustomIntegerTableCell<>(new IntegerStringConverter()));
         col2.setOnEditCommit(t -> {
-            MembershipIdDTOFx membershipIdDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
+            MembershipIdFx membershipIdDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
             membershipIdDTO.setMembershipId(t.getNewValue());
             membershipModel.setSelectedMembershipId(membershipIdDTO);
             membershipView.sendMessage().accept(MembershipMessage.UPDATE_MEMBERSHIP_ID);
@@ -205,13 +205,13 @@ public class MembershipIdView implements Builder<Tab> {
         return col2;
     }
 
-    private TableColumn<MembershipIdDTOFx, Integer> col1() {
-        TableColumn<MembershipIdDTOFx, Integer> col1 = TableColumnFx.editableIntegerTableColumn(MembershipIdDTOFx::fiscalYearProperty, "Year");
+    private TableColumn<MembershipIdFx, Integer> col1() {
+        TableColumn<MembershipIdFx, Integer> col1 = TableColumnFx.editableIntegerTableColumn(MembershipIdFx::fiscalYearProperty, "Year");
         col1.setEditable(true);  // Ensure the TableColumn is editable
 
         col1.setCellFactory(tc -> new CustomIntegerTableCell<>(new IntegerStringConverter()));
         col1.setOnEditCommit(t -> {
-            MembershipIdDTOFx membershipIdDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
+            MembershipIdFx membershipIdDTO = t.getTableView().getItems().get(t.getTablePosition().getRow());
             membershipIdDTO.setFiscalYear(t.getNewValue());
             membershipModel.setSelectedMembershipId(membershipIdDTO);
             membershipView.sendMessage().accept(MembershipMessage.UPDATE_MEMBERSHIP_ID);

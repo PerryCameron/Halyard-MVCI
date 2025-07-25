@@ -10,7 +10,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
-import org.ecsail.fx.InvoiceDTOFx;
+import org.ecsail.fx.InvoiceFx;
 import org.ecsail.fx.InvoiceItemDTO;
 
 public class HBoxFx {
@@ -123,7 +123,7 @@ public class HBoxFx {
         return hBox;
     }
 
-    public static HBox customHBox(InvoiceDTOFx invoiceDTO) {  // used for committed invoice totals
+    public static HBox customHBox(InvoiceFx invoiceDTO) {  // used for committed invoice totals
         HBox hBox = HBoxFx.hBoxOf(new Insets(10, 0, 5, 20));
         VBox labels = new VBox(5);
         VBox amounts = new VBox(5);

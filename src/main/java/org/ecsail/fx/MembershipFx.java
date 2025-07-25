@@ -4,52 +4,30 @@ import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.ecsail.pojo.Membership;
-import org.ecsail.pojo.Slip;
 
-import java.util.List;
 import java.util.Objects;
 
 public class MembershipFx {
-    private SimpleIntegerProperty mid;
-    private SimpleIntegerProperty fiscalYear;
-    private SimpleIntegerProperty msId;
-    private SimpleIntegerProperty membershipId;
-    private SimpleBooleanProperty renew;
-    private SimpleStringProperty memType;
-    private SimpleBooleanProperty selected;
-    private SimpleBooleanProperty lateRenew;
-    private SimpleIntegerProperty pId;
-    private SimpleStringProperty joinDate;
-    private SimpleStringProperty address;
-    private SimpleStringProperty city;
-    private SimpleStringProperty state;
-    private SimpleStringProperty zip;
-    private ObjectProperty<SlipDTOFx> slip = new SimpleObjectProperty<>();
+    private final SimpleIntegerProperty mid;
+    private final SimpleIntegerProperty fiscalYear;
+    private final SimpleIntegerProperty msId;
+    private final SimpleIntegerProperty membershipId;
+    private final SimpleBooleanProperty renew;
+    private final SimpleStringProperty memType;
+    private final SimpleBooleanProperty selected;
+    private final SimpleBooleanProperty lateRenew;
+    private final SimpleIntegerProperty pId;
+    private final SimpleStringProperty joinDate;
+    private final SimpleStringProperty address;
+    private final SimpleStringProperty city;
+    private final SimpleStringProperty state;
+    private final SimpleStringProperty zip;
+    private final ObjectProperty<SlipFx> slip = new SimpleObjectProperty<>();
     private ObservableList<PersonFx> people = FXCollections.observableArrayList();
     private ObservableList<BoatFx> boats = FXCollections.observableArrayList();
-    private ObservableList<InvoiceDTOFx> invoices = FXCollections.observableArrayList();
-    private ObservableList<MembershipIdDTOFx> membershipIds = FXCollections.observableArrayList();
+    private ObservableList<InvoiceFx> invoices = FXCollections.observableArrayList();
+    private ObservableList<MembershipIdFx> membershipIds = FXCollections.observableArrayList();
     private ObservableList<NotesFx> memos = FXCollections.observableArrayList();
-
-    public MembershipFx(Integer mid, Integer fiscalYear, Integer msId, Integer membershipId,
-                        Boolean  renew, String memType, Boolean  selected, Boolean lateRenew,
-                        Integer pId, String joinDate, String address, String city,
-                        String state, String zip, Slip slip) {
-        this.mid = new SimpleIntegerProperty(mid);
-        this.fiscalYear = new SimpleIntegerProperty(fiscalYear);
-        this.msId = new SimpleIntegerProperty(msId);
-        this.membershipId = new SimpleIntegerProperty(membershipId);
-        this.renew = new SimpleBooleanProperty(renew);
-        this.memType = new SimpleStringProperty(memType);
-        this.selected = new SimpleBooleanProperty(selected);
-        this.lateRenew = new SimpleBooleanProperty(lateRenew);
-        this.pId = new SimpleIntegerProperty(pId);
-        this.joinDate = new SimpleStringProperty(joinDate);
-        this.address = new SimpleStringProperty(address);
-        this.city = new SimpleStringProperty(city);
-        this.state = new SimpleStringProperty(state);
-        this.zip = new SimpleStringProperty(zip);
-    }
 
     public MembershipFx(Membership membership) {
         this.mid = new SimpleIntegerProperty(membership.getMid());
@@ -157,7 +135,7 @@ public class MembershipFx {
         return zip;
     }
 
-    public ObjectProperty<SlipDTOFx> slipProperty() {
+    public ObjectProperty<SlipFx> slipProperty() {
         return slip;
     }
 
@@ -169,11 +147,11 @@ public class MembershipFx {
         return boats;
     }
 
-    public ObservableList<InvoiceDTOFx> getInvoices() {
+    public ObservableList<InvoiceFx> getInvoices() {
         return invoices;
     }
 
-    public ObservableList<MembershipIdDTOFx> getMembershipIds() {
+    public ObservableList<MembershipIdFx> getMembershipIds() {
         return membershipIds;
     }
 
@@ -189,11 +167,11 @@ public class MembershipFx {
         this.boats = boats;
     }
 
-    public void setInvoices(ObservableList<InvoiceDTOFx> invoices) {
+    public void setInvoices(ObservableList<InvoiceFx> invoices) {
         this.invoices = invoices;
     }
 
-    public void setMembershipIds(ObservableList<MembershipIdDTOFx> membershipIds) {
+    public void setMembershipIds(ObservableList<MembershipIdFx> membershipIds) {
         this.membershipIds = membershipIds;
     }
 
@@ -281,11 +259,11 @@ public class MembershipFx {
         this.zip.set(zip);
     }
 
-    public SlipDTOFx getSlip() {
+    public SlipFx getSlip() {
         return slip.get();
     }
 
-    public void setSlip(SlipDTOFx slip) {
+    public void setSlip(SlipFx slip) {
         this.slip.set(slip);
     }
 

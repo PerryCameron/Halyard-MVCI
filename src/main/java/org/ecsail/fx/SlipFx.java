@@ -6,7 +6,7 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.ecsail.pojo.Slip;
 
-public class SlipDTOFx {
+public class SlipFx {
 	
 	private IntegerProperty slip_id;
 	private IntegerProperty ms_id;
@@ -14,8 +14,8 @@ public class SlipDTOFx {
 	private IntegerProperty subleased_to;
 	private StringProperty altText;
 	
-	public SlipDTOFx(Integer slip_id, Integer ms_id, String slipNumber,
-					 Integer subleased_to, String altText) {
+	public SlipFx(Integer slip_id, Integer ms_id, String slipNumber,
+				  Integer subleased_to, String altText) {
 		super();
 		this.slip_id = new SimpleIntegerProperty(slip_id);
 		this.ms_id = new SimpleIntegerProperty(ms_id);
@@ -24,7 +24,7 @@ public class SlipDTOFx {
 		this.altText = new SimpleStringProperty(altText);
 	}
 
-	public SlipDTOFx() {
+	public SlipFx() {
 		super();
 		this.slip_id = new SimpleIntegerProperty(0);
 		this.ms_id = new SimpleIntegerProperty(0);
@@ -33,7 +33,7 @@ public class SlipDTOFx {
 		this.altText = new SimpleStringProperty("none");
 	}
 
-	public SlipDTOFx(Slip slip) {
+	public SlipFx(Slip slip) {
 		this.slip_id = new SimpleIntegerProperty(slip.getSlipId());
 		this.ms_id = new SimpleIntegerProperty(0);
 		this.slipNumber = new SimpleStringProperty(slip.getSlipNum() == null ? "none" : slip.getSlipNum());

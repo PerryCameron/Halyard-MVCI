@@ -110,7 +110,7 @@ public class MembershipInteractor implements SlipUser {
         try {
             MembershipFx membershipDTOFx = new MembershipFx(membership);
             membershipModel.membershipProperty().set(membershipDTOFx);
-            membershipDTOFx.slipProperty().set(new SlipDTOFx(membership.getSlip()));
+            membershipDTOFx.slipProperty().set(new SlipFx(membership.getSlip()));
             setSlipStatus();
             membershipDTOFx.getPeople().addAll(POJOtoFxConverter.copyPeople(membership.getPeople()));
             membershipDTOFx.getMembershipIds().addAll(POJOtoFxConverter.copyMembershipIds(membership.getMembershipIds()));

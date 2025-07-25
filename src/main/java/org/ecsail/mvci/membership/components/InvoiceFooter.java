@@ -16,8 +16,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
-import org.ecsail.fx.InvoiceDTOFx;
-import org.ecsail.fx.MembershipIdDTOFx;
+import org.ecsail.fx.InvoiceFx;
+import org.ecsail.fx.MembershipIdFx;
 import org.ecsail.fx.PaymentDTO;
 import org.ecsail.enums.PaymentType;
 import org.ecsail.enums.Success;
@@ -31,7 +31,7 @@ import java.util.Arrays;
 
 public class InvoiceFooter implements Builder<Region> {
     private InvoiceView invoiceView;
-    private InvoiceDTOFx invoiceDTO;
+    private InvoiceFx invoiceDTO;
     private TableView<PaymentDTO> tableView;
     BooleanProperty renew = new SimpleBooleanProperty(false);
 
@@ -72,7 +72,7 @@ public class InvoiceFooter implements Builder<Region> {
         return checkBox;
     }
 
-    private MembershipIdDTOFx getMembershipID() {
+    private MembershipIdFx getMembershipID() {
 //        MembershipIdDTOFx membershipIdDTO = invoiceView.getMembershipView().getMembershipModel().getMembership().getMembershipIdDTOS()
 //                .stream().filter(id -> id.getFiscalYear() == invoiceDTO.getYear())
 //                .findFirst().orElse(null);
@@ -101,7 +101,7 @@ public class InvoiceFooter implements Builder<Region> {
             invoiceView.successProperty().addListener(ListenerFx.createSingleUseEnumListener(() ->
                     viewMessaging(invoiceView.successProperty().get())));
             if(!invoiceDTO.isSupplemental()) { // no need to update an ID record if invoice is a supplemental record
-                MembershipIdDTOFx membershipIdDTO = getMembershipID();
+                MembershipIdFx membershipIdDTO = getMembershipID();
                 membershipIdDTO.setIsRenew(renew.get());
                 invoiceView.getMembershipView().getMembershipModel().setSelectedMembershipId(membershipIdDTO);
                 invoiceView.getMembershipView().sendMessage().accept(MembershipMessage.UPDATE_MEMBERSHIP_ID);

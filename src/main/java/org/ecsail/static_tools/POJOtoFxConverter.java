@@ -103,44 +103,44 @@ public class POJOtoFxConverter {
 
     /**
      * Converts a list of {@link MembershipId} objects to an {@link ObservableList} of
-     * {@link MembershipIdDTOFx} objects, sorted by fiscal year in descending order (newest first).
+     * {@link MembershipIdFx} objects, sorted by fiscal year in descending order (newest first).
      * The resulting list is suitable for JavaFX TableView binding.
      *
      * @param membershipIds the list of {@link MembershipId} objects to convert, typically deserialized from JSON
-     * @return an {@link ObservableList} of {@link MembershipIdDTOFx} objects, sorted by fiscal year,
+     * @return an {@link ObservableList} of {@link MembershipIdFx} objects, sorted by fiscal year,
      *         or an empty list if the input is null or empty
      * @throws NullPointerException if any {@link MembershipId} in the input list is null (filtered out internally)
      */
-    public static ObservableList<MembershipIdDTOFx> copyMembershipIds(List<MembershipId> membershipIds) {
+    public static ObservableList<MembershipIdFx> copyMembershipIds(List<MembershipId> membershipIds) {
         if (membershipIds == null || membershipIds.isEmpty()) {
             return FXCollections.observableArrayList();
         }
         return FXCollections.observableArrayList(membershipIds.stream()
                 .filter(Objects::nonNull)
-                .map(MembershipIdDTOFx::new)
+                .map(MembershipIdFx::new)
                 .sorted((a, b) -> Integer.compare(b.getFiscalYear(), a.getFiscalYear())) // Descending order
                 .collect(Collectors.toList())
         );
     }
 
     /**
-     * Converts a list of {@link Invoice} objects to an {@link ObservableList} of {@link InvoiceDTOFx}
+     * Converts a list of {@link Invoice} objects to an {@link ObservableList} of {@link InvoiceFx}
      * objects, sorted by year in descending order (newest first). The resulting list is suitable for
      * JavaFX TableView binding.
      *
      * @param invoices the list of {@link Invoice} objects to convert, typically deserialized from JSON
-     * @return an {@link ObservableList} of {@link InvoiceDTOFx} objects, sorted by year,
+     * @return an {@link ObservableList} of {@link InvoiceFx} objects, sorted by year,
      *         or an empty list if the input is null or empty
      * @throws NullPointerException if any {@link Invoice} in the input list is null (filtered out internally)
      */
-    public static ObservableList<InvoiceDTOFx> copyInvoices(List<Invoice> invoices) {
+    public static ObservableList<InvoiceFx> copyInvoices(List<Invoice> invoices) {
         if (invoices == null || invoices.isEmpty()) {
             return FXCollections.observableArrayList();
         }
         return FXCollections.observableArrayList(
                 invoices.stream()
                         .filter(Objects::nonNull)
-                        .map(InvoiceDTOFx::new)
+                        .map(InvoiceFx::new)
                         .sorted((a, b) -> Integer.compare(b.getYear(), a.getYear())) // Descending order
                         .collect(Collectors.toList())
         );

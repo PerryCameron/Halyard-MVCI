@@ -23,8 +23,8 @@ public class MembershipModel {
     private final SimpleObjectProperty<MembershipFx> membership = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TableView<BoatFx>> boatTableView = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TableView<NotesFx>> notesTableView = new SimpleObjectProperty<>();
-    private final SimpleObjectProperty<TableView<MembershipIdDTOFx>> idTableView = new SimpleObjectProperty<>();
-    private final SimpleObjectProperty<TableView<InvoiceDTOFx>> invoiceListTableView = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<TableView<MembershipIdFx>> idTableView = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<TableView<InvoiceFx>> invoiceListTableView = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TabPane> peopleTabPane = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TabPane> infoTabPane = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TabPane> extraTabPane = new SimpleObjectProperty<>();
@@ -36,9 +36,9 @@ public class MembershipModel {
     private ObservableMap<String,Control> slipControls = FXCollections.observableHashMap();
     private final SimpleObjectProperty<NotesFx> selectedNote = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<BoatFx> selectedBoat = new SimpleObjectProperty<>();
-    private final SimpleObjectProperty<MembershipIdDTOFx> selectedMembershipId = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<MembershipIdFx> selectedMembershipId = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<PersonFx> selectedPerson = new SimpleObjectProperty<>();
-    private final SimpleObjectProperty<InvoiceDTOFx> selectedInvoice = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<InvoiceFx> selectedInvoice = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<PaymentDTO> selectedPayment = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TextArea> textArea = new SimpleObjectProperty<>(new TextArea());
     private final StringProperty selectedString = new SimpleStringProperty("");
@@ -100,19 +100,19 @@ public class MembershipModel {
     public void setSelectedInvoiceCreateYear(int selectedInvoiceCreateYear) {
         this.selectedInvoiceCreateYear.set(selectedInvoiceCreateYear);
     }
-    public SimpleObjectProperty<TableView<InvoiceDTOFx>> invoiceListTableViewProperty() {
+    public SimpleObjectProperty<TableView<InvoiceFx>> invoiceListTableViewProperty() {
         return invoiceListTableView;
     }
-    public void setInvoiceListTableView(TableView<InvoiceDTOFx> invoiceListTableView) {
+    public void setInvoiceListTableView(TableView<InvoiceFx> invoiceListTableView) {
         this.invoiceListTableView.set(invoiceListTableView);
     }
-    public InvoiceDTOFx getSelectedInvoice() {
+    public InvoiceFx getSelectedInvoice() {
         return selectedInvoice.get();
     }
-    public SimpleObjectProperty<InvoiceDTOFx> selectedInvoiceProperty() {
+    public SimpleObjectProperty<InvoiceFx> selectedInvoiceProperty() {
         return selectedInvoice;
     }
-    public void setSelectedInvoice(InvoiceDTOFx selectedInvoice) {
+    public void setSelectedInvoice(InvoiceFx selectedInvoice) {
         this.selectedInvoice.set(selectedInvoice);
     }
     public StringProperty selectedStringProperty() {
@@ -121,13 +121,13 @@ public class MembershipModel {
     public void setSelectedString(String selectedString) {
         this.selectedString.set(selectedString);
     }
-    public MembershipIdDTOFx getSelectedMembershipId() {
+    public MembershipIdFx getSelectedMembershipId() {
         return selectedMembershipId.get();
     }
-    public SimpleObjectProperty<MembershipIdDTOFx> selectedMembershipIdProperty() {
+    public SimpleObjectProperty<MembershipIdFx> selectedMembershipIdProperty() {
         return selectedMembershipId;
     }
-    public void setSelectedMembershipId(MembershipIdDTOFx selectedMembershipId) {
+    public void setSelectedMembershipId(MembershipIdFx selectedMembershipId) {
         this.selectedMembershipId.set(selectedMembershipId);
     }
     public BoatFx getSelectedBoat() {
@@ -148,13 +148,13 @@ public class MembershipModel {
     public void setSelectedNote(NotesFx selectedNote) {
         this.selectedNote.set(selectedNote);
     }
-    public TableView<MembershipIdDTOFx> getIdTableView() {
+    public TableView<MembershipIdFx> getIdTableView() {
         return idTableView.get();
     }
-    public SimpleObjectProperty<TableView<MembershipIdDTOFx>> idTableViewProperty() {
+    public SimpleObjectProperty<TableView<MembershipIdFx>> idTableViewProperty() {
         return idTableView;
     }
-    public void setIdTableView(TableView<MembershipIdDTOFx> idTableView) {
+    public void setIdTableView(TableView<MembershipIdFx> idTableView) {
         this.idTableView.set(idTableView);
     }
     public TableView<NotesFx> getNotesTableView() {

@@ -9,7 +9,7 @@ import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import org.ecsail.fx.DbInvoiceDTO;
 import org.ecsail.fx.FeeDTO;
-import org.ecsail.fx.InvoiceDTOFx;
+import org.ecsail.fx.InvoiceFx;
 import org.ecsail.fx.InvoiceItemDTO;
 import org.ecsail.static_tools.StringTools;
 import org.ecsail.widgetfx.VBoxFx;
@@ -17,7 +17,7 @@ import org.ecsail.widgetfx.VBoxFx;
 import java.math.BigDecimal;
 
 public class InvoiceItemRow extends HBox {
-    private final InvoiceDTOFx invoiceDTO;
+    private final InvoiceFx invoiceDTO;
     private final DbInvoiceDTO dbInvoiceDTO; // LIST of these in InvoiceDTO, this one is relevant here
     private final InvoiceItemDTO invoiceItemDTO; // LIST of these in InvoiceDTO, this one is relevant here
     private InvoiceItemGroup invoiceItemGroup = null;
@@ -32,7 +32,7 @@ public class InvoiceItemRow extends HBox {
         buildRow();
     }
 
-    public InvoiceItemRow(InvoiceDTOFx invoiceDTO, DbInvoiceDTO dbInvoiceDTO, InvoiceView invoiceView) { // this is for individual items
+    public InvoiceItemRow(InvoiceFx invoiceDTO, DbInvoiceDTO dbInvoiceDTO, InvoiceView invoiceView) { // this is for individual items
         this.invoiceDTO = invoiceDTO;
         this.dbInvoiceDTO = dbInvoiceDTO;
         this.invoiceItemDTO = setItem();

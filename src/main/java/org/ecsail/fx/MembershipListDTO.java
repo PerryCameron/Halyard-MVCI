@@ -41,8 +41,8 @@ public class MembershipListDTO {
 	private final IntegerProperty selectedYearProperty = new SimpleIntegerProperty();
 	private final ObservableList<BoatFx> boatDTOS = FXCollections.observableArrayList();
 	private final ObservableList<NotesFx> notesDTOS = FXCollections.observableArrayList();
-	private final ObservableList<MembershipIdDTOFx> membershipIdDTOS = FXCollections.observableArrayList();
-	private final ObservableList<InvoiceDTOFx> invoiceDTOS = FXCollections.observableArrayList();
+	private final ObservableList<MembershipIdFx> membershipIdDTOS = FXCollections.observableArrayList();
+	private final ObservableList<InvoiceFx> invoiceDTOS = FXCollections.observableArrayList();
 
 	public MembershipListDTO() {}
 
@@ -189,19 +189,19 @@ public class MembershipListDTO {
 		this.notesDTOS.setAll(notesDTOs != null ? notesDTOs : new ArrayList<>());
 	}
 
-	public List<MembershipIdDTOFx> getMembershipIdDTOs() {
+	public List<MembershipIdFx> getMembershipIdDTOs() {
 		return new ArrayList<>(membershipIdDTOS);
 	}
 
-	public void setMembershipIdDTOs(List<MembershipIdDTOFx> membershipIdDTOs) {
+	public void setMembershipIdDTOs(List<MembershipIdFx> membershipIdDTOs) {
 		this.membershipIdDTOS.setAll(membershipIdDTOs != null ? membershipIdDTOs : new ArrayList<>());
 	}
 
-	public List<InvoiceDTOFx> getInvoiceDTOs() {
+	public List<InvoiceFx> getInvoiceDTOs() {
 		return new ArrayList<>(invoiceDTOS);
 	}
 
-	public void setInvoiceDTOs(List<InvoiceDTOFx> invoiceDTOs) {
+	public void setInvoiceDTOs(List<InvoiceFx> invoiceDTOs) {
 		this.invoiceDTOS.setAll(invoiceDTOs != null ? invoiceDTOs : new ArrayList<>());
 	}
 
@@ -270,11 +270,11 @@ public class MembershipListDTO {
 		return notesDTOS;
 	}
 
-	public ObservableList<MembershipIdDTOFx> getMembershipIdDTOS() {
+	public ObservableList<MembershipIdFx> getMembershipIdDTOS() {
 		return membershipIdDTOS;
 	}
 
-	public ObservableList<InvoiceDTOFx> getInvoiceDTOS() {
+	public ObservableList<InvoiceFx> getInvoiceDTOS() {
 		return invoiceDTOS;
 	}
 }

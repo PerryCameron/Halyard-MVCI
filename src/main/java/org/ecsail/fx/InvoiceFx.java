@@ -10,7 +10,7 @@ import java.text.NumberFormat;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class InvoiceDTOFx {
+public class InvoiceFx {
     private final IntegerProperty id;
     private final IntegerProperty msId;
     private final IntegerProperty year;
@@ -30,8 +30,8 @@ public class InvoiceDTOFx {
     private ObservableList<FeeDTO> feeDTOS = FXCollections.observableArrayList();
     private ObservableList<InvoiceItemDTO> invoiceItemDTOS = FXCollections.observableArrayList();
 
-    public InvoiceDTOFx(Integer id, Integer msId, Integer year, String paid, String total, String credit, String balance,
-                        Integer batch, Boolean committed, Boolean closed, Boolean supplemental, String maxCredit) {
+    public InvoiceFx(Integer id, Integer msId, Integer year, String paid, String total, String credit, String balance,
+                     Integer batch, Boolean committed, Boolean closed, Boolean supplemental, String maxCredit) {
         this.id = new SimpleIntegerProperty(id);
         this.msId = new SimpleIntegerProperty(msId);
         this.year = new SimpleIntegerProperty(year);
@@ -46,7 +46,7 @@ public class InvoiceDTOFx {
         this.maxCredit = new SimpleStringProperty(maxCredit);
     }
 
-    public InvoiceDTOFx(Integer msId, Integer year) {
+    public InvoiceFx(Integer msId, Integer year) {
 //        this.id = new SimpleIntegerProperty(SqlSelect.getNextAvailablePrimaryKey("invoice","id"));
         this.id = new SimpleIntegerProperty(0);
         this.msId = new SimpleIntegerProperty(msId);
@@ -62,7 +62,7 @@ public class InvoiceDTOFx {
         this.maxCredit = new SimpleStringProperty("0.00");
     }
 
-    public InvoiceDTOFx() {  // used for mock invoice
+    public InvoiceFx() {  // used for mock invoice
         this.id = new SimpleIntegerProperty(0);
         this.msId = new SimpleIntegerProperty(0);
         this.year = new SimpleIntegerProperty(0);
@@ -77,7 +77,7 @@ public class InvoiceDTOFx {
         this.maxCredit = new SimpleStringProperty("");
     }
 
-    public InvoiceDTOFx(Invoice invoice) {
+    public InvoiceFx(Invoice invoice) {
         this.id = new SimpleIntegerProperty(invoice.getInvoiceId());
         this.msId = new SimpleIntegerProperty(0);
         this.year = new SimpleIntegerProperty(invoice.getFiscalYear());

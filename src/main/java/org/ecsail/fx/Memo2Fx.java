@@ -6,18 +6,18 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import org.ecsail.pojo.Note;
 
-public class Memo2DTOFx {
+public class Memo2Fx {
 
-	private SimpleStringProperty membershipId;
-	private IntegerProperty memo_id;
-	private IntegerProperty msid;
-	private StringProperty memo_date;
-	private StringProperty memo;
-	private IntegerProperty invoice_id;
-	private StringProperty category;
+	private final SimpleStringProperty membershipId;
+	private final IntegerProperty memo_id;
+	private final IntegerProperty msid;
+	private final StringProperty memo_date;
+	private final StringProperty memo;
+	private final IntegerProperty invoice_id;
+	private final StringProperty category;
 
-	public Memo2DTOFx(String membershipId, Integer memo_id, Integer msid, String memo_date,
-					  String memo, Integer invoice_id, String category) {
+	public Memo2Fx(String membershipId, Integer memo_id, Integer msid, String memo_date,
+				   String memo, Integer invoice_id, String category) {
 		super();
 		this.membershipId = new SimpleStringProperty(membershipId);
 		this.memo_id = new SimpleIntegerProperty(memo_id);
@@ -28,7 +28,7 @@ public class Memo2DTOFx {
 		this.category = new SimpleStringProperty(category);
 	}
 
-    public Memo2DTOFx(Note memo) {
+    public Memo2Fx(Note memo) {
 		this.membershipId = new SimpleStringProperty("0");
 		this.memo_id = new SimpleIntegerProperty(memo.getMemoId());
 		this.msid = new SimpleIntegerProperty(memo.getMsId());

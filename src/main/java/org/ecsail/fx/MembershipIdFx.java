@@ -6,7 +6,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import org.ecsail.pojo.MembershipId;
 
-public class MembershipIdDTOFx {
+public class MembershipIdFx {
 	private IntegerProperty mId;
 	private IntegerProperty fiscalYear;
 	private IntegerProperty msId;
@@ -16,8 +16,8 @@ public class MembershipIdDTOFx {
 	private SimpleBooleanProperty selected;
 	private SimpleBooleanProperty lateRenew;
 
-	public MembershipIdDTOFx(Integer mId, int fiscalYear, Integer msId, int membershipId,
-							 Boolean renew, String memType, Boolean selected, Boolean lateRenew) {
+	public MembershipIdFx(Integer mId, int fiscalYear, Integer msId, int membershipId,
+						  Boolean renew, String memType, Boolean selected, Boolean lateRenew) {
 		this.mId = new SimpleIntegerProperty(mId);
 		this.fiscalYear = new SimpleIntegerProperty(fiscalYear);
 		this.msId = new SimpleIntegerProperty(msId);
@@ -28,7 +28,7 @@ public class MembershipIdDTOFx {
 		this.lateRenew = new SimpleBooleanProperty(lateRenew);
 	}
 
-	public MembershipIdDTOFx(int fiscalYear, Integer msId, int membershipId, String memType) {
+	public MembershipIdFx(int fiscalYear, Integer msId, int membershipId, String memType) {
 		this.mId = new SimpleIntegerProperty(0);
 		this.fiscalYear = new SimpleIntegerProperty(fiscalYear);
 		this.msId = new SimpleIntegerProperty(msId);
@@ -39,7 +39,7 @@ public class MembershipIdDTOFx {
 		this.lateRenew = new SimpleBooleanProperty(false);
 	}
 
-	public MembershipIdDTOFx() {
+	public MembershipIdFx() {
 		this.mId = new SimpleIntegerProperty(0);
 		this.fiscalYear = new SimpleIntegerProperty(0);
 		this.msId = new SimpleIntegerProperty(0);
@@ -50,7 +50,7 @@ public class MembershipIdDTOFx {
 		this.lateRenew = new SimpleBooleanProperty(false);
 	}
 
-	public MembershipIdDTOFx(MembershipId membershipId) {
+	public MembershipIdFx(MembershipId membershipId) {
 		this.mId = new SimpleIntegerProperty(membershipId.getmId());
 		this.fiscalYear = new SimpleIntegerProperty(membershipId.getFiscalYear());
 		this.msId = new SimpleIntegerProperty(membershipId.getMsId());
