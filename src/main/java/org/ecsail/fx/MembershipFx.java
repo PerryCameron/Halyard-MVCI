@@ -27,7 +27,7 @@ public class MembershipFx {
     private ObservableList<BoatFx> boats = FXCollections.observableArrayList();
     private ObservableList<InvoiceFx> invoices = FXCollections.observableArrayList();
     private ObservableList<MembershipIdFx> membershipIds = FXCollections.observableArrayList();
-    private ObservableList<NotesFx> memos = FXCollections.observableArrayList();
+    private ObservableList<NoteFx> memos = FXCollections.observableArrayList();
 
     public MembershipFx(Membership membership) {
         this.mid = new SimpleIntegerProperty(membership.getMid());
@@ -155,7 +155,7 @@ public class MembershipFx {
         return membershipIds;
     }
 
-    public ObservableList<NotesFx> getMemos() {
+    public ObservableList<NoteFx> getMemos() {
         return memos;
     }
 
@@ -175,7 +175,7 @@ public class MembershipFx {
         this.membershipIds = membershipIds;
     }
 
-    public void setMemos(ObservableList<NotesFx> memos) {
+    public void setMemos(ObservableList<NoteFx> memos) {
         this.memos = memos;
     }
 

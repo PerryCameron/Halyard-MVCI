@@ -22,7 +22,7 @@ public class MembershipModel {
     private final SimpleObjectProperty<RosterFx> membershipFromRosterList = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<MembershipFx> membership = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TableView<BoatFx>> boatTableView = new SimpleObjectProperty<>();
-    private final SimpleObjectProperty<TableView<NotesFx>> notesTableView = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<TableView<NoteFx>> notesTableView = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TableView<MembershipIdFx>> idTableView = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TableView<InvoiceFx>> invoiceListTableView = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TabPane> peopleTabPane = new SimpleObjectProperty<>();
@@ -34,7 +34,7 @@ public class MembershipModel {
     private final StringProperty membershipId = new SimpleStringProperty("");
     private final HttpClientUtil httpClient;
     private ObservableMap<String,Control> slipControls = FXCollections.observableHashMap();
-    private final SimpleObjectProperty<NotesFx> selectedNote = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<NoteFx> selectedNote = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<BoatFx> selectedBoat = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<MembershipIdFx> selectedMembershipId = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<PersonFx> selectedPerson = new SimpleObjectProperty<>();
@@ -139,13 +139,13 @@ public class MembershipModel {
     public void setSelectedBoat(BoatFx selectedBoat) {
         this.selectedBoat.set(selectedBoat);
     }
-    public NotesFx getSelectedNote() {
+    public NoteFx getSelectedNote() {
         return selectedNote.get();
     }
-    public SimpleObjectProperty<NotesFx> selectedNoteProperty() {
+    public SimpleObjectProperty<NoteFx> selectedNoteProperty() {
         return selectedNote;
     }
-    public void setSelectedNote(NotesFx selectedNote) {
+    public void setSelectedNote(NoteFx selectedNote) {
         this.selectedNote.set(selectedNote);
     }
     public TableView<MembershipIdFx> getIdTableView() {
@@ -157,13 +157,13 @@ public class MembershipModel {
     public void setIdTableView(TableView<MembershipIdFx> idTableView) {
         this.idTableView.set(idTableView);
     }
-    public TableView<NotesFx> getNotesTableView() {
+    public TableView<NoteFx> getNotesTableView() {
         return notesTableView.get();
     }
-    public SimpleObjectProperty<TableView<NotesFx>> notesTableViewProperty() {
+    public SimpleObjectProperty<TableView<NoteFx>> notesTableViewProperty() {
         return notesTableView;
     }
-    public void setNotesTableView(TableView<NotesFx> notesTableView) {
+    public void setNotesTableView(TableView<NoteFx> notesTableView) {
         this.notesTableView.set(notesTableView);
     }
     public TableView<BoatFx> getBoatTableView() {

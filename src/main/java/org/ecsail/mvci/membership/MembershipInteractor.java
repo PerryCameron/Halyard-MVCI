@@ -1,6 +1,5 @@
 package org.ecsail.mvci.membership;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Platform;
@@ -81,14 +80,13 @@ public class MembershipInteractor implements SlipUser {
                 JsonNode membershipNode = rootNode.get("membership");
                 membershipResponse.setMembership(mapper.treeToValue(membershipNode, Membership.class));
                 membershipResponse.setSuccess(true);
-                return membershipResponse;
             } else {
                 // Log the error message and return null
                 String errorMessage = rootNode.get("message").asText();
                 logger.error("Server returned error: {}", errorMessage);
                 membershipResponse.setMessage("Server returned error: " + errorMessage);
-                return membershipResponse;
             }
+            return membershipResponse;
         } catch (UnsupportedEncodingException e) {
             logger.error("Encoding error for endpoint: {}", e.getMessage(), e);
             membershipResponse.setMessage("Encoding error for endpoint: " + e.getMessage());
@@ -177,32 +175,22 @@ public class MembershipInteractor implements SlipUser {
     /**
      * Inserts a boat row by sending a POST request to the halyard/update/boat endpoint.
      *
-     * @param // Boat the boat data to update
      * @return the JSON response from the server
      */
     public MembershipMessage insertBoat() {
         try {
             BoatOwner boatOwnerDTO = new BoatOwner(membershipModel.membershipProperty().get().getMsId(), 0);
             String response = membershipModel.getHttpClient().postDataToGybe("insert/boat", boatOwnerDTO);
-            System.out.println(response);
-            BoatResponse insertBoatResponse = membershipModel.getHttpClient().getObjectMapper()
+            BoatResponse boatResponse = membershipModel.getHttpClient().getObjectMapper()
                     .readValue(response, BoatResponse.class);
-            if (insertBoatResponse.isSuccess()) {
-                System.out.println("Boat ID: " + insertBoatResponse.getBoat().getBoatId());
-                membershipModel.getBoatTableView().getItems().add(new BoatFx(insertBoatResponse.getBoat()));  // <- this one works when I insert a bot
+            if (boatResponse.isSuccess()) {
+                membershipModel.getBoatTableView().getItems().addFirst(new BoatFx(boatResponse.getBoat()));  // <- this one works when I insert a bot
                 //membershipModel.membershipProperty().get().getBoats().add(new BoatDTOFx(insertBoatResponse.getBoat()));  // <- this is the array list and doesn't work when I insert a new boat
-                if (membershipModel.getBoatTableView().getItems() != membershipModel.membershipProperty().get().getBoats()) {
-                    System.out.println("The two lists are not the same");
-                    System.out.println("getItems() size: " + membershipModel.getBoatTableView().getItems().size());
-                    System.out.println("getBoats() size: " + membershipModel.membershipProperty().get().getBoats());
-                } else {
-                    System.out.println("The lists are the same");
-                }
                 membershipModel.getBoatTableView().refresh();
                 return MembershipMessage.SUCCESS;
             } else {
-                Platform.runLater(() -> DialogueFx.errorAlert("Unable add boat: ", insertBoatResponse.getMessage()));
-                logger.error(insertBoatResponse.getMessage());
+                Platform.runLater(() -> DialogueFx.errorAlert("Unable add boat: ", boatResponse.getMessage()));
+                logger.error(boatResponse.getMessage());
                 return MembershipMessage.FAIL;
             }
         } catch (Exception e) {
@@ -210,7 +198,27 @@ public class MembershipInteractor implements SlipUser {
             Platform.runLater(() -> DialogueFx.errorAlert("Unable add boat: ", e.getMessage()));
             return MembershipMessage.FAIL;
         }
-    }  // problem is that putting a boat using the items works, but not the list
+    }
+
+
+    public MembershipMessage insertNote() {
+        try {
+            Note note = new Note(membershipModel.membershipProperty().get().getMsId());
+            String response = membershipModel.getHttpClient().postDataToGybe("insert/note", note);
+            NoteResponse noteResponse = membershipModel.getHttpClient().getObjectMapper()
+                    .readValue(response, NoteResponse.class);
+            if (noteResponse.isSuccess()) {
+                membershipModel.getNotesTableView().getItems().addFirst(new NoteFx(noteResponse.getNote()));
+                membershipModel.getBoatTableView().refresh();
+                return MembershipMessage.SUCCESS;
+            } else {
+                return setFailMessage("Unable add boat",0,noteResponse.getMessage());
+            }
+        } catch (Exception e) {
+            return setFailMessage("Failed to add new boat",0,e.getMessage());
+        }
+    }
+
 
     /**
      * Deletes the currently selected membership from the server and returns a status message.
@@ -291,7 +299,7 @@ public class MembershipInteractor implements SlipUser {
             if (membershipModel.membershipProperty().get() == null) {
                 return setFailMessage("Delete Boat failed",0,"No membership selected");
             }
-            Integer boatId = membershipModel.getSelectedBoat().getBoatId();
+            int boatId = membershipModel.getSelectedBoat().getBoatId();
             Integer msId = membershipModel.membershipProperty().get().getMsId();
             BoatOwner boatOwnerDTO = new BoatOwner(msId, boatId);
             // Send delete request to server
@@ -320,41 +328,9 @@ public class MembershipInteractor implements SlipUser {
                 return setFailMessage("Delete Boat failed",0,errorMessage);
             }
         } catch (Exception e) {
-            Integer boatId = membershipModel.getSelectedBoat() != null ?
-                    membershipModel.getSelectedBoat().getBoatId() : null;
+            int boatId = membershipModel.getSelectedBoat() != null ?
+                    membershipModel.getSelectedBoat().getBoatId() : 0;
             return setFailMessage("Delete Boat failed for ID: ",boatId,e.getMessage());
-        }
-    }
-
-
-
-    /**
-     * Processes the server response from an update operation and determines its success or failure.
-     * <p>
-     * This method deserializes the provided JSON response into an {@link UpdateResponse} object
-     * using the HTTP client's object mapper. If the response indicates success, a success message
-     * is logged, and {@link MembershipMessage#SUCCESS} is returned. If the response indicates
-     * failure, an error alert is displayed on the JavaFX UI thread, the error message is logged,
-     * and {@link MembershipMessage#FAIL} is returned.
-     * </p>
-     *
-     * @param response the JSON response string from the server
-     * @return {@link MembershipMessage#SUCCESS} if the update was successful,
-     *         {@link MembershipMessage#FAIL} if the update failed
-     * @throws JsonProcessingException if an error occurs while parsing the JSON response
-     */
-    private MembershipMessage processUpdateResponse(String response) throws JsonProcessingException {
-        logger.debug("Update response: {}", response);
-        UpdateResponse updateResponse = membershipModel.getHttpClient()
-                .getObjectMapper().readValue(response, UpdateResponse.class);
-        // Toggle the appropriate light based on the success field
-        if (updateResponse.isSuccess()) {
-            logger.info(updateResponse.getMessage());
-            return MembershipMessage.SUCCESS;
-        } else {
-            Platform.runLater(() -> DialogueFx.errorAlert("Unable to perform update", updateResponse.getMessage()));
-            logger.error(updateResponse.getMessage());
-            return MembershipMessage.FAIL;
         }
     }
 
@@ -397,5 +373,6 @@ public class MembershipInteractor implements SlipUser {
     public void logError(String message) {
         logger.error(message);
     }
+
 
 }

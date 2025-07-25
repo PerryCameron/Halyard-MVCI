@@ -2,7 +2,10 @@ package org.ecsail.pojo;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.ecsail.fx.NotesFx;
+import org.ecsail.fx.NoteFx;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Note {
@@ -30,7 +33,16 @@ public class Note {
     public Note() {
     }
 
-    public Note(NotesFx notesDTOFx) {
+    public Note(int msId) {
+        this.memoId = 0;
+        this.msId = msId;
+        this.memoDate = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        this.memo = "";
+        this.category = "N";
+        this.boatId = 0;
+    }
+
+    public Note(NoteFx notesDTOFx) {
         this.memoId = notesDTOFx.getMemoId();
         this.msId = notesDTOFx.getMsId();
         this.memoDate = notesDTOFx.getMemoDate().toString();

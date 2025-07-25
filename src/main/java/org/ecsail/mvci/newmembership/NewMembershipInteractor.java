@@ -2,7 +2,7 @@ package org.ecsail.mvci.newmembership;
 
 import javafx.application.Platform;
 import org.ecsail.fx.MembershipListDTO;
-import org.ecsail.fx.NotesFx;
+import org.ecsail.fx.NoteFx;
 import org.ecsail.fx.PersonFx;
 import org.ecsail.interfaces.ConfigFilePaths;
 import org.slf4j.Logger;
@@ -133,7 +133,7 @@ public class NewMembershipInteractor implements ConfigFilePaths {
 
     public void createMemoToDocument() {
         try {
-            NotesFx notesDTO = new NotesFx("N", newMembershipModel.getMembership().getMsId());
+            NoteFx notesDTO = new NoteFx("N", newMembershipModel.getMembership().getMsId());
             notesDTO.setMemoDate(LocalDate.now());
             notesDTO.setMemo("Created new membership record " + LocalDateTime.now());
 //            int ok = notesRepo.insertNote(notesDTO);

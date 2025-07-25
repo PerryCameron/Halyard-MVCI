@@ -168,24 +168,24 @@ public class POJOtoFxConverter {
     }
 
     /**
-     * Converts a list of {@link Note} objects to an {@link ObservableList} of {@link NotesFx}
+     * Converts a list of {@link Note} objects to an {@link ObservableList} of {@link NoteFx}
      * objects, sorted by memo date in descending order (newest first). The resulting list is suitable
      * for JavaFX TableView binding.
      *
      * @param memos the list of {@link Note} objects to convert, typically deserialized from JSON
-     * @return an {@link ObservableList} of {@link NotesFx} objects, sorted by memo date,
+     * @return an {@link ObservableList} of {@link NoteFx} objects, sorted by memo date,
      *         or an empty list if the input is null or empty
      * @throws NullPointerException if any {@link Note} or its memo date in the input list is null
      *         (filtered out internally)
      */
-    public static ObservableList<NotesFx> copyNotes(List<Note> memos) {
+    public static ObservableList<NoteFx> copyNotes(List<Note> memos) {
         if (memos == null || memos.isEmpty()) {
             return FXCollections.observableArrayList();
         }
         return FXCollections.observableArrayList(
                 memos.stream()
                         .filter(Objects::nonNull)
-                        .map(NotesFx::new)
+                        .map(NoteFx::new)
                         .filter(note -> note.getMemoDate() != null) // Ensure memoDate is not null
                         .sorted((a, b) -> b.getMemoDate().compareTo(a.getMemoDate())) // Descending order
                         .collect(Collectors.toList())

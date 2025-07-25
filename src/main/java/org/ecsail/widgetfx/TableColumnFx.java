@@ -3,11 +3,7 @@ package org.ecsail.widgetfx;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.util.converter.IntegerStringConverter;
-import org.ecsail.fx.NotesFx;
 
-import java.time.LocalDate;
 import java.util.function.Function;
 
 public class TableColumnFx {

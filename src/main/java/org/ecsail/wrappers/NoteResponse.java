@@ -21,7 +21,7 @@ public class NoteResponse extends ResponseWrapper<Note> {
         return getData(); // Use inherited data field
     }
 
-    public void setBoat(Note note) {
+    public void setNote(Note note) {
         setData(note); // Use inherited data field
     }
 }

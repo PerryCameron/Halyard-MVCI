@@ -148,7 +148,7 @@ public class PersonInteractor {
             AwardResponse insertAwardResponse = httpClientUtil.getObjectMapper()
                     .readValue(response, AwardResponse.class);
             if (insertAwardResponse.isSuccess()) {
-                personModel.awardTableViewProperty().get().getItems().add(new AwardFx(insertAwardResponse.getAward()));
+                personModel.awardTableViewProperty().get().getItems().addFirst(new AwardFx(insertAwardResponse.getAward()));
                 personModel.awardTableViewProperty().get().refresh();
                 return PersonMessage.SUCCESS;
             } else {
@@ -166,7 +166,7 @@ public class PersonInteractor {
             PhoneResponse insertPhoneResponse = httpClientUtil.getObjectMapper()
                     .readValue(response, PhoneResponse.class);
             if (insertPhoneResponse.isSuccess()) {
-                personModel.phoneTableViewProperty().get().getItems().add(new PhoneFx(insertPhoneResponse.getPhone()));
+                personModel.phoneTableViewProperty().get().getItems().addFirst(new PhoneFx(insertPhoneResponse.getPhone()));
                 personModel.phoneTableViewProperty().get().refresh();
                 return PersonMessage.SUCCESS;
             } else {
@@ -184,7 +184,7 @@ public class PersonInteractor {
             EmailResponse emailResponse = httpClientUtil.getObjectMapper()
                     .readValue(response, EmailResponse.class);
             if (emailResponse.isSuccess()) {
-                personModel.emailTableViewProperty().get().getItems().add(new EmailFx(emailResponse.getEmail()));
+                personModel.emailTableViewProperty().get().getItems().addFirst(new EmailFx(emailResponse.getEmail()));
                 personModel.emailTableViewProperty().get().refresh();
                 return PersonMessage.SUCCESS;
             } else {
@@ -202,11 +202,10 @@ public class PersonInteractor {
             PositionResponse positionResponse = httpClientUtil.getObjectMapper()
                     .readValue(response, PositionResponse.class);
             if (positionResponse.isSuccess()) {
-                personModel.officerTableViewProperty().get().getItems().add(new OfficerFx(officer));
+                personModel.officerTableViewProperty().get().getItems().addFirst(new OfficerFx(officer));
                 personModel.emailTableViewProperty().get().refresh();
                 return PersonMessage.SUCCESS;
             } else {
-                System.out.println("This is the path I went down");
                 return setFailMessage("Failed to insert position"
                         , 0
                         , positionResponse.getMessage());

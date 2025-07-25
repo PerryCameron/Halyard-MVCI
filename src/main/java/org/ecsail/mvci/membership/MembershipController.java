@@ -37,6 +37,7 @@ public class MembershipController extends Controller<MembershipMessage> {
             case UPDATE_NOTE -> runTask(membershipInteractor::updateNotes);
             case INSERT_BOAT -> runTask(membershipInteractor::insertBoat);
             case DELETE_BOAT -> runTask(membershipInteractor::deleteBoat);
+            case INSERT_NOTE -> runTask(membershipInteractor::insertNote);
             case DELETE_MEMBERSHIP -> runTask(membershipInteractor::deleteMembership);
             case FAIL -> membershipInteractor.signalFail();
             case SUCCESS -> membershipInteractor.signalSuccess();
