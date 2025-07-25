@@ -4,7 +4,7 @@ import javafx.beans.property.*;
 import org.ecsail.annotation.ColumnName;
 import org.ecsail.pojo.Boat;
 
-public class BoatDTOFx {
+public class BoatFx {
 	@ColumnName(value = "BOAT_ID")
 	protected IntegerProperty boatId;
 	// this is here to carry value when passing object, not saved in db
@@ -40,10 +40,10 @@ public class BoatDTOFx {
 	@ColumnName(value = "AUX")
 	protected BooleanProperty aux;
 	
-	public BoatDTOFx(Integer boatId, Integer msId, String manufacturer, String manufactureYear,
-					 String registrationNum, String model, String boatName, String sailNumber,
-					 Boolean hasTrailer, String loa, String displacement, String keel, String phrf,
-					 String draft, String beam, String lwl, Boolean aux) {
+	public BoatFx(Integer boatId, Integer msId, String manufacturer, String manufactureYear,
+				  String registrationNum, String model, String boatName, String sailNumber,
+				  Boolean hasTrailer, String loa, String displacement, String keel, String phrf,
+				  String draft, String beam, String lwl, Boolean aux) {
 
 		this.boatId = new SimpleIntegerProperty(boatId);
 		this.msId = new SimpleIntegerProperty(msId);
@@ -64,7 +64,7 @@ public class BoatDTOFx {
 		this.aux = new SimpleBooleanProperty(aux);
 	}
 
-	public BoatDTOFx(int msId) {
+	public BoatFx(int msId) {
 		this.boatId = new SimpleIntegerProperty(0);
 		this.msId = new SimpleIntegerProperty(msId);
 		this.manufacturer = new SimpleStringProperty("");
@@ -84,7 +84,7 @@ public class BoatDTOFx {
 		this.aux = new SimpleBooleanProperty(false);
 	}
 
-    public BoatDTOFx(Boat boat) {
+    public BoatFx(Boat boat) {
 		this.boatId = new SimpleIntegerProperty(boat.getBoatId());
 		this.msId = new SimpleIntegerProperty(0);
 		this.manufacturer = new SimpleStringProperty(boat.getManufacturer());

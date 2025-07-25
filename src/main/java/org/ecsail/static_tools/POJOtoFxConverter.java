@@ -147,22 +147,22 @@ public class POJOtoFxConverter {
     }
 
     /**
-     * Converts a list of {@link Boat} objects to an {@link ObservableList} of {@link BoatDTOFx}
+     * Converts a list of {@link Boat} objects to an {@link ObservableList} of {@link BoatFx}
      * objects. The resulting list is suitable for JavaFX TableView binding and maintains the input order
      * without sorting.
      *
      * @param boats the list of {@link Boat} objects to convert, typically deserialized from JSON
-     * @return an {@link ObservableList} of {@link BoatDTOFx} objects, or an empty list if the input is null or empty
+     * @return an {@link ObservableList} of {@link BoatFx} objects, or an empty list if the input is null or empty
      * @throws NullPointerException if any {@link Boat} in the input list is null (filtered out internally)
      */
-    public static ObservableList<BoatDTOFx> copyBoats(List<Boat> boats) {
+    public static ObservableList<BoatFx> copyBoats(List<Boat> boats) {
         if (boats == null || boats.isEmpty()) {
             return FXCollections.observableArrayList();
         }
         return FXCollections.observableArrayList(
                 boats.stream()
                         .filter(Objects::nonNull)
-                        .map(BoatDTOFx::new)
+                        .map(BoatFx::new)
                         .collect(Collectors.toList())
         );
     }

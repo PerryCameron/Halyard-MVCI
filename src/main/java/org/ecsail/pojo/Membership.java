@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.ecsail.fx.MembershipFx;
 
 import java.util.List;
+import java.util.Objects;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Membership {
@@ -246,5 +247,12 @@ public class Membership {
 
     public void setMemos(List<Note> memos) {
         this.memos = memos;
+    }
+
+    public Boat getBoatById(int id) {
+        return boats.stream()
+                .filter(boat -> Objects.equals(boat.getBoatId(), id))
+                .findFirst()
+                .orElse(null);
     }
 }

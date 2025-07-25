@@ -21,7 +21,7 @@ public class MembershipModel {
 
     private final SimpleObjectProperty<RosterFx> membershipFromRosterList = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<MembershipFx> membership = new SimpleObjectProperty<>();
-    private final SimpleObjectProperty<TableView<BoatDTOFx>> boatTableView = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<TableView<BoatFx>> boatTableView = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TableView<NotesFx>> notesTableView = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TableView<MembershipIdDTOFx>> idTableView = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TableView<InvoiceDTOFx>> invoiceListTableView = new SimpleObjectProperty<>();
@@ -35,7 +35,7 @@ public class MembershipModel {
     private final HttpClientUtil httpClient;
     private ObservableMap<String,Control> slipControls = FXCollections.observableHashMap();
     private final SimpleObjectProperty<NotesFx> selectedNote = new SimpleObjectProperty<>();
-    private final SimpleObjectProperty<BoatDTOFx> selectedBoat = new SimpleObjectProperty<>();
+    private final SimpleObjectProperty<BoatFx> selectedBoat = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<MembershipIdDTOFx> selectedMembershipId = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<PersonFx> selectedPerson = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<InvoiceDTOFx> selectedInvoice = new SimpleObjectProperty<>();
@@ -58,7 +58,7 @@ public class MembershipModel {
         this.selectedMembershipYear.set(selectedYear);
         this.mainModel = mainModel;
     }
-    public BoatDTOFx getBoatById(int id) {
+    public BoatFx getBoatById(int id) {
         return membership.get().getBoats().stream()
                 .filter(boatDTOFx -> Objects.equals(boatDTOFx.getBoatId(), id))
                 .findFirst()
@@ -130,13 +130,13 @@ public class MembershipModel {
     public void setSelectedMembershipId(MembershipIdDTOFx selectedMembershipId) {
         this.selectedMembershipId.set(selectedMembershipId);
     }
-    public BoatDTOFx getSelectedBoat() {
+    public BoatFx getSelectedBoat() {
         return selectedBoat.get();
     }
-    public SimpleObjectProperty<BoatDTOFx> selectedBoatProperty() {
+    public SimpleObjectProperty<BoatFx> selectedBoatProperty() {
         return selectedBoat;
     }
-    public void setSelectedBoat(BoatDTOFx selectedBoat) {
+    public void setSelectedBoat(BoatFx selectedBoat) {
         this.selectedBoat.set(selectedBoat);
     }
     public NotesFx getSelectedNote() {
@@ -166,13 +166,13 @@ public class MembershipModel {
     public void setNotesTableView(TableView<NotesFx> notesTableView) {
         this.notesTableView.set(notesTableView);
     }
-    public TableView<BoatDTOFx> getBoatTableView() {
+    public TableView<BoatFx> getBoatTableView() {
         return boatTableView.get();
     }
-    public SimpleObjectProperty<TableView<BoatDTOFx>> boatTableViewProperty() {
+    public SimpleObjectProperty<TableView<BoatFx>> boatTableViewProperty() {
         return boatTableView;
     }
-    public void setBoatTableView(TableView<BoatDTOFx> boatTableView) {
+    public void setBoatTableView(TableView<BoatFx> boatTableView) {
         this.boatTableView.set(boatTableView);
     }
     public TabPane getExtraTabPane() {

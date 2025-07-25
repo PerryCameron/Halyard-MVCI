@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 
-public class DataBaseService {
+public class DataBaseServiceForDelete {
     private final MembershipModel membershipModel;
 //    private final PersonRepository peopleRepo;
 //    private final PhoneRepository phoneRepo;
@@ -19,10 +19,10 @@ public class DataBaseService {
 //    private final NotesRepository notesRepo;
 //    private final MembershipRepository membershipRepo;
 //    private final InvoiceRepository invoiceRepo;
-    private static final Logger logger = LoggerFactory.getLogger(DataBaseService.class);
+    private static final Logger logger = LoggerFactory.getLogger(DataBaseServiceForDelete.class);
 
 
-    public DataBaseService(DataSource dataSource, MembershipModel membershipModel) {
+    public DataBaseServiceForDelete(DataSource dataSource, MembershipModel membershipModel) {
         this.membershipModel = membershipModel;
 //        peopleRepo = new PersonRepositoryImpl(dataSource);
 //        phoneRepo = new PhoneRepositoryImpl(dataSource);

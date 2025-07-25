@@ -5,7 +5,6 @@ import javafx.scene.layout.Region;
 import org.ecsail.fx.RosterFx;
 import org.ecsail.interfaces.Controller;
 import org.ecsail.mvci.main.MainController;
-import org.ecsail.mvci.membership.mvci.person.PersonMessage;
 import org.ecsail.widgetfx.DialogueFx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,10 +32,11 @@ public class MembershipController extends Controller<MembershipMessage> {
     @Override
     public void action(MembershipMessage type) {
         switch (type) {
-            case GET_DATA -> runSpinner(membershipInteractor::getMembership, 50, 50, true);
+            case GET_DATA -> runSpinner(membershipInteractor::getMembership, 50, 50);
             case UPDATE_BOAT -> runTask(membershipInteractor::updateBoat);
             case UPDATE_NOTE -> runTask(membershipInteractor::updateNotes);
             case INSERT_BOAT -> runTask(membershipInteractor::insertBoat);
+            case DELETE_BOAT -> runTask(membershipInteractor::deleteBoat);
             case DELETE_MEMBERSHIP -> runTask(membershipInteractor::deleteMembership);
             case FAIL -> membershipInteractor.signalFail();
             case SUCCESS -> membershipInteractor.signalSuccess();
@@ -56,15 +56,13 @@ public class MembershipController extends Controller<MembershipMessage> {
                 membershipInteractor.signalSuccess();
             else logFailure();
         });
-        task.setOnFailed(e -> {
-            logFailure();
-        });
+        task.setOnFailed(e -> logFailure());
         getExecutorService().submit(task);
     }
 
-    private void runSpinner(Supplier<MembershipMessage> method, double x, double y, boolean runSpinner) {
+    private void runSpinner(Supplier<MembershipMessage> method, double x, double y) {
         mainController.setSpinnerOffset(x, y);
-        if (runSpinner) mainController.showLoadingSpinner(true);
+        mainController.showLoadingSpinner(true);
         Task<MembershipMessage> task = new Task<>() {
             @Override
             protected MembershipMessage call() {
@@ -84,13 +82,11 @@ public class MembershipController extends Controller<MembershipMessage> {
                     default -> {
                     }
                 }
-            if (runSpinner) mainController.showLoadingSpinner(false);
-            else
-                logger.warn("task was null");
+            mainController.showLoadingSpinner(false);
         });
         task.setOnFailed(e -> {
             logger.error("Failed to perform task");
-            if (runSpinner) mainController.showLoadingSpinner(false);
+            mainController.showLoadingSpinner(false);
         });
         getExecutorService().submit(task);
     }

@@ -2,10 +2,12 @@ package org.ecsail.fx;
 
 import javafx.beans.property.*;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.ecsail.pojo.Membership;
 import org.ecsail.pojo.Slip;
 
 import java.util.List;
+import java.util.Objects;
 
 public class MembershipFx {
     private SimpleIntegerProperty mid;
@@ -24,7 +26,7 @@ public class MembershipFx {
     private SimpleStringProperty zip;
     private ObjectProperty<SlipDTOFx> slip = new SimpleObjectProperty<>();
     private List<PersonFx> people = FXCollections.observableArrayList();
-    private List<BoatDTOFx> boats = FXCollections.observableArrayList();
+    private ObservableList<BoatFx> boats = FXCollections.observableArrayList();
     private List<InvoiceDTOFx> invoices = FXCollections.observableArrayList();
     private List<MembershipIdDTOFx> membershipIds = FXCollections.observableArrayList();
     private List<NotesFx> memos = FXCollections.observableArrayList();
@@ -163,7 +165,7 @@ public class MembershipFx {
         return people;
     }
 
-    public List<BoatDTOFx> getBoats() {
+    public ObservableList<BoatFx> getBoats() {
         return boats;
     }
 
@@ -183,7 +185,7 @@ public class MembershipFx {
         this.people = people;
     }
 
-    public void setBoats(List<BoatDTOFx> boats) {
+    public void setBoats(ObservableList<BoatFx> boats) {
         this.boats = boats;
     }
 
@@ -285,5 +287,12 @@ public class MembershipFx {
 
     public void setSlip(SlipDTOFx slip) {
         this.slip.set(slip);
+    }
+
+    public BoatFx getBoatById(int id) {
+        return boats.stream()
+                .filter(boatDTOFx -> Objects.equals(boatDTOFx.getBoatId(), id))
+                .findFirst()
+                .orElse(null);
     }
 }

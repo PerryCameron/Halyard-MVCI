@@ -104,7 +104,6 @@ public class MembershipInteractor implements SlipUser {
         }
     }
 
-
     public MembershipMessage convertPOJOsToFXProperties(MembershipResponse membershipResponse) {
         logger.info("Seeing what thread this is on");
         Membership membership = membershipResponse.getMembership();
@@ -185,10 +184,20 @@ public class MembershipInteractor implements SlipUser {
         try {
             BoatOwner boatOwnerDTO = new BoatOwner(membershipModel.membershipProperty().get().getMsId(), 0);
             String response = membershipModel.getHttpClient().postDataToGybe("insert/boat", boatOwnerDTO);
+            System.out.println(response);
             BoatResponse insertBoatResponse = membershipModel.getHttpClient().getObjectMapper()
                     .readValue(response, BoatResponse.class);
             if (insertBoatResponse.isSuccess()) {
-                membershipModel.getBoatTableView().getItems().add(new BoatDTOFx(insertBoatResponse.getBoat()));
+                System.out.println("Boat ID: " + insertBoatResponse.getBoat().getBoatId());
+                membershipModel.getBoatTableView().getItems().add(new BoatFx(insertBoatResponse.getBoat()));  // <- this one works when I insert a bot
+                //membershipModel.membershipProperty().get().getBoats().add(new BoatDTOFx(insertBoatResponse.getBoat()));  // <- this is the array list and doesn't work when I insert a new boat
+                if (membershipModel.getBoatTableView().getItems() != membershipModel.membershipProperty().get().getBoats()) {
+                    System.out.println("The two lists are not the same");
+                    System.out.println("getItems() size: " + membershipModel.getBoatTableView().getItems().size());
+                    System.out.println("getBoats() size: " + membershipModel.membershipProperty().get().getBoats());
+                } else {
+                    System.out.println("The lists are the same");
+                }
                 membershipModel.getBoatTableView().refresh();
                 return MembershipMessage.SUCCESS;
             } else {
@@ -201,7 +210,7 @@ public class MembershipInteractor implements SlipUser {
             Platform.runLater(() -> DialogueFx.errorAlert("Unable add boat: ", e.getMessage()));
             return MembershipMessage.FAIL;
         }
-    }
+    }  // problem is that putting a boat using the items works, but not the list
 
     /**
      * Deletes the currently selected membership from the server and returns a status message.
@@ -263,7 +272,7 @@ public class MembershipInteractor implements SlipUser {
      * This method validates that a boat and membership are selected, constructs a {@link BoatOwner} DTO
      * with the membership ID and boat ID, and sends a POST request to the server’s "delete/boat" endpoint.
      * Upon receiving a response, it deserializes it into an {@link UpdateResponse} object. If the server
-     * indicates success, the method removes the corresponding {@link BoatDTOFx} from the
+     * indicates success, the method removes the corresponding {@link BoatFx} from the
      * {@link TableView} in the UI and refreshes the table if necessary. If the operation fails (e.g., due
      * to invalid inputs, server errors, or deserialization issues), an error is logged, and an error alert
      * is displayed to the user on the JavaFX Application Thread.
@@ -273,18 +282,14 @@ public class MembershipInteractor implements SlipUser {
      * </p>
      *
      */
-    public void deleteBoat() {
+    public MembershipMessage deleteBoat() {
         try {
             // Validate inputs
             if (membershipModel.getSelectedBoat() == null) {
-                logger.error("Failed to delete boat: No boat selected");
-                Platform.runLater(() -> DialogueFx.errorAlert("Delete Boat Failed", "No boat selected"));
-                return;
+                return setFailMessage("Delete Boat failed",0,"Selected boat has a null value");
             }
             if (membershipModel.membershipProperty().get() == null) {
-                logger.error("Failed to delete boat: No membership selected");
-                Platform.runLater(() -> DialogueFx.errorAlert("Delete Boat Failed", "No membership selected"));
-                return;
+                return setFailMessage("Delete Boat failed",0,"No membership selected");
             }
             Integer boatId = membershipModel.getSelectedBoat().getBoatId();
             Integer msId = membershipModel.membershipProperty().get().getMsId();
@@ -292,40 +297,32 @@ public class MembershipInteractor implements SlipUser {
             // Send delete request to server
             String response = membershipModel.getHttpClient().postDataToGybe("delete/boat", boatOwnerDTO);
             if (response == null) {
-                logger.error("Failed to delete boat {}: Null response from server", boatId);
-                Platform.runLater(() -> DialogueFx.errorAlert("Delete Boat Failed", "Null response from server"));
-                return;
+                return setFailMessage("Delete Boat failed",0,"Null response from server");
             }
-            UpdateResponse updateResponse = membershipModel.getHttpClient().getObjectMapper()
-                    .readValue(response, UpdateResponse.class);
-            if (updateResponse == null) {
-                logger.error("Failed to delete boat {}: Invalid response from server", boatId);
-                Platform.runLater(() -> DialogueFx.errorAlert("Delete Boat Failed", "Invalid response from server"));
-                return;
+            BoatResponse boatResponse = httpClientUtil.getObjectMapper().readValue(response, BoatResponse.class);
+            if (boatResponse == null) {
+                return setFailMessage("Delete Boat failed",0,"Invalid response from server");
             }
-            if (updateResponse.isSuccess()) {
+            if (boatResponse.isSuccess()) {
                 logger.info("Successfully deleted boat {}", boatId);
-                BoatDTOFx boatDTOFx = membershipModel.getBoatById(boatId);
-                if (boatDTOFx != null) {
-                    Platform.runLater(() -> {
-                        membershipModel.getBoatTableView().getItems().remove(boatDTOFx);
-                        // Refresh table only if necessary
-                        membershipModel.getBoatTableView().refresh();
-                    });
+                //BoatDTOFx boatDTOFx = membershipModel.getBoatById(boatId);
+                BoatFx boatFx = membershipModel.membershipProperty().get().getBoatById(boatId);
+                if (boatFx != null) {
+                    //membershipModel.getBoatTableView().getItems().remove(membershipModel.getSelectedBoat());
+                    membershipModel.getBoatTableView().getItems().remove(boatFx);
+                    membershipModel.getBoatTableView().refresh();
+                    return MembershipMessage.SUCCESS;
                 } else {
-                    // Log warning but don’t show error alert, as deletion succeeded
-                    logger.warn("Boat {} deleted on server but not found in membership list", boatId);
+                    return setFailMessage("Delete Boat failed",boatId," deleted on server but boat not found for membership");  // this happens when I create a boat then delete it
                 }
             } else {
-                String errorMessage = updateResponse.getMessage() != null ? updateResponse.getMessage() : "Unknown error";
-                logger.error("Failed to delete boat {}: {}", boatId, errorMessage);
-                Platform.runLater(() -> DialogueFx.errorAlert("Delete Boat Failed", errorMessage));
+                String errorMessage = boatResponse.getMessage() != null ? boatResponse.getMessage() : "Unknown error";
+                return setFailMessage("Delete Boat failed",0,errorMessage);
             }
         } catch (Exception e) {
             Integer boatId = membershipModel.getSelectedBoat() != null ?
                     membershipModel.getSelectedBoat().getBoatId() : null;
-            logger.error("Failed to delete boat {}: {}", boatId, e.getMessage(), e);
-            Platform.runLater(() -> DialogueFx.errorAlert("Delete Boat Failed", e.getMessage()));
+            return setFailMessage("Delete Boat failed for ID: ",boatId,e.getMessage());
         }
     }
 
@@ -400,6 +397,5 @@ public class MembershipInteractor implements SlipUser {
     public void logError(String message) {
         logger.error(message);
     }
-
 
 }

@@ -63,5 +63,5 @@ public enum MembershipMessage {
     GET_DATA_SUCCESS,
     FAIL,
     SUCCESS,
-    GET_DATA
+    DELETE_BOAT_SUCCESS, GET_DATA
 }
