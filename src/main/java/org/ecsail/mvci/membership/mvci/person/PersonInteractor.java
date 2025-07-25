@@ -149,7 +149,8 @@ public class PersonInteractor {
                     .readValue(response, AwardResponse.class);
             if (insertAwardResponse.isSuccess()) {
                 personModel.awardTableViewProperty().get().getItems().addFirst(new AwardFx(insertAwardResponse.getAward()));
-                personModel.awardTableViewProperty().get().refresh();
+                //personModel.awardTableViewProperty().get().refresh();
+                personModel.awardTableViewProperty().get().getSelectionModel().selectFirst();
                 return PersonMessage.SUCCESS;
             } else {
                 return setFailMessage("Unable to insert award", 0, insertAwardResponse.getMessage());
@@ -167,7 +168,8 @@ public class PersonInteractor {
                     .readValue(response, PhoneResponse.class);
             if (insertPhoneResponse.isSuccess()) {
                 personModel.phoneTableViewProperty().get().getItems().addFirst(new PhoneFx(insertPhoneResponse.getPhone()));
-                personModel.phoneTableViewProperty().get().refresh();
+                //personModel.phoneTableViewProperty().get().refresh();
+                personModel.phoneTableViewProperty().get().getSelectionModel().selectFirst();
                 return PersonMessage.SUCCESS;
             } else {
                 return setFailMessage("Unable to insert phone", 0, insertPhoneResponse.getMessage());
@@ -185,7 +187,8 @@ public class PersonInteractor {
                     .readValue(response, EmailResponse.class);
             if (emailResponse.isSuccess()) {
                 personModel.emailTableViewProperty().get().getItems().addFirst(new EmailFx(emailResponse.getEmail()));
-                personModel.emailTableViewProperty().get().refresh();
+                //personModel.emailTableViewProperty().get().refresh();
+                personModel.emailTableViewProperty().get().getSelectionModel().selectFirst();
                 return PersonMessage.SUCCESS;
             } else {
                 return setFailMessage("Unable to create email entry", 0, emailResponse.getMessage());
@@ -203,7 +206,8 @@ public class PersonInteractor {
                     .readValue(response, PositionResponse.class);
             if (positionResponse.isSuccess()) {
                 personModel.officerTableViewProperty().get().getItems().addFirst(new OfficerFx(officer));
-                personModel.emailTableViewProperty().get().refresh();
+                //personModel.officerTableViewProperty().get().refresh();
+                personModel.officerTableViewProperty().get().getSelectionModel().selectFirst();
                 return PersonMessage.SUCCESS;
             } else {
                 return setFailMessage("Failed to insert position"

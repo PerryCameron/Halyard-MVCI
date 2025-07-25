@@ -185,8 +185,8 @@ public class MembershipInteractor implements SlipUser {
                     .readValue(response, BoatResponse.class);
             if (boatResponse.isSuccess()) {
                 membershipModel.getBoatTableView().getItems().addFirst(new BoatFx(boatResponse.getBoat()));  // <- this one works when I insert a bot
-                //membershipModel.membershipProperty().get().getBoats().add(new BoatDTOFx(insertBoatResponse.getBoat()));  // <- this is the array list and doesn't work when I insert a new boat
-                membershipModel.getBoatTableView().refresh();
+                //membershipModel.getBoatTableView().refresh();
+                membershipModel.getNotesTableView().getSelectionModel().selectFirst();
                 return MembershipMessage.SUCCESS;
             } else {
                 Platform.runLater(() -> DialogueFx.errorAlert("Unable add boat: ", boatResponse.getMessage()));
@@ -209,7 +209,8 @@ public class MembershipInteractor implements SlipUser {
                     .readValue(response, NoteResponse.class);
             if (noteResponse.isSuccess()) {
                 membershipModel.getNotesTableView().getItems().addFirst(new NoteFx(noteResponse.getNote()));
-                membershipModel.getBoatTableView().refresh();
+                //membershipModel.getBoatTableView().refresh();
+                membershipModel.getNotesTableView().getSelectionModel().selectFirst();
                 return MembershipMessage.SUCCESS;
             } else {
                 return setFailMessage("Unable add boat",0,noteResponse.getMessage());

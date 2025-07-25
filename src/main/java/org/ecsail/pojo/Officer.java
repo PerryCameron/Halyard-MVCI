@@ -37,7 +37,7 @@ public class Officer {
     public Officer(int pId) {
         this.officerId = 0;
         this.pId = pId;
-        this.boardYear = Year.now().getValue();
+        this.boardYear = 0;
         this.officerType = "BM";
         this.fiscalYear = Year.now().getValue();
     }
