@@ -105,7 +105,7 @@ public class InvoiceListView implements Builder<Tab> {
             }
         });
         membershipView.getMembershipModel().setInvoiceListTableView(tableView);
-        tableView.setItems(FXCollections.observableArrayList(membershipModel.membershipProperty().get().getInvoices()));
+        tableView.setItems(membershipModel.membershipProperty().get().getInvoices());
         hBox.getChildren().add(tableView);
         return hBox;
     }

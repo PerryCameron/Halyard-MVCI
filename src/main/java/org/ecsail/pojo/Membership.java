@@ -249,10 +249,4 @@ public class Membership {
         this.memos = memos;
     }
 
-    public Boat getBoatById(int id) {
-        return boats.stream()
-                .filter(boat -> Objects.equals(boat.getBoatId(), id))
-                .findFirst()
-                .orElse(null);
-    }
 }

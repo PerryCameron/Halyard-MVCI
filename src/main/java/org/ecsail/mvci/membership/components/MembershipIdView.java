@@ -117,7 +117,7 @@ public class MembershipIdView implements Builder<Tab> {
         });
         membershipModel.setIdTableView(tableView);
         // this was set somewhere else but I have no idea
-        tableView.setItems(FXCollections.observableArrayList(membershipModel.membershipProperty().get().getMembershipIds()));
+        tableView.setItems(membershipModel.membershipProperty().get().getMembershipIds());
         return tableView;
     }
 

@@ -25,11 +25,11 @@ public class MembershipFx {
     private SimpleStringProperty state;
     private SimpleStringProperty zip;
     private ObjectProperty<SlipDTOFx> slip = new SimpleObjectProperty<>();
-    private List<PersonFx> people = FXCollections.observableArrayList();
+    private ObservableList<PersonFx> people = FXCollections.observableArrayList();
     private ObservableList<BoatFx> boats = FXCollections.observableArrayList();
-    private List<InvoiceDTOFx> invoices = FXCollections.observableArrayList();
-    private List<MembershipIdDTOFx> membershipIds = FXCollections.observableArrayList();
-    private List<NotesFx> memos = FXCollections.observableArrayList();
+    private ObservableList<InvoiceDTOFx> invoices = FXCollections.observableArrayList();
+    private ObservableList<MembershipIdDTOFx> membershipIds = FXCollections.observableArrayList();
+    private ObservableList<NotesFx> memos = FXCollections.observableArrayList();
 
     public MembershipFx(Integer mid, Integer fiscalYear, Integer msId, Integer membershipId,
                         Boolean  renew, String memType, Boolean  selected, Boolean lateRenew,
@@ -161,7 +161,7 @@ public class MembershipFx {
         return slip;
     }
 
-    public List<PersonFx> getPeople() {
+    public ObservableList<PersonFx> getPeople() {
         return people;
     }
 
@@ -169,19 +169,19 @@ public class MembershipFx {
         return boats;
     }
 
-    public List<InvoiceDTOFx> getInvoices() {
+    public ObservableList<InvoiceDTOFx> getInvoices() {
         return invoices;
     }
 
-    public List<MembershipIdDTOFx> getMembershipIds() {
+    public ObservableList<MembershipIdDTOFx> getMembershipIds() {
         return membershipIds;
     }
 
-    public List<NotesFx> getMemos() {
+    public ObservableList<NotesFx> getMemos() {
         return memos;
     }
 
-    public void setPeople(List<PersonFx> people) {
+    public void setPeople(ObservableList<PersonFx> people) {
         this.people = people;
     }
 
@@ -189,15 +189,15 @@ public class MembershipFx {
         this.boats = boats;
     }
 
-    public void setInvoices(List<InvoiceDTOFx> invoices) {
+    public void setInvoices(ObservableList<InvoiceDTOFx> invoices) {
         this.invoices = invoices;
     }
 
-    public void setMembershipIds(List<MembershipIdDTOFx> membershipIds) {
+    public void setMembershipIds(ObservableList<MembershipIdDTOFx> membershipIds) {
         this.membershipIds = membershipIds;
     }
 
-    public void setMemos(List<NotesFx> memos) {
+    public void setMemos(ObservableList<NotesFx> memos) {
         this.memos = memos;
     }
 

@@ -118,7 +118,7 @@ public class NotesTabView implements Builder<Tab> {
 
     private Node addTable() {
         this.tableView = TableViewFx.tableViewOf(200,false);
-        tableView.setItems(FXCollections.observableArrayList(membershipView.getMembershipModel().membershipProperty().get().getMemos()));
+        tableView.setItems(membershipView.getMembershipModel().membershipProperty().get().getMemos());
         tableView.getColumns().addAll(Arrays.asList(col1(), col2()));
         TableView.TableViewSelectionModel<NotesFx> selectionModel = tableView.getSelectionModel();
         selectionModel.selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
