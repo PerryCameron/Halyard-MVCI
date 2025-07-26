@@ -1,12 +1,13 @@
 package org.ecsail.mvci.membership.components;
 
-import javafx.beans.property.SimpleStringProperty;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Builder;
 import org.ecsail.fx.NoteFx;
@@ -26,6 +27,7 @@ public class NotesTabView implements Builder<Tab> {
     private Button saveButton;
     private Button cancelButton;
     private TableView<NoteFx> tableView;
+    private DatePicker datePicker;
 
     public NotesTabView(MembershipView membershipView) {
         this.membershipView = membershipView;
@@ -40,7 +42,7 @@ public class NotesTabView implements Builder<Tab> {
     private Node createTableAndButtonsBox() {
         HBox hBox = HBoxFx.hBoxOf(new Insets(5, 5, 5, 5), "box-background-light", true);
         hBox.setSpacing(5);
-        hBox.getChildren().addAll(addTable(), addTextArea(), getButtonControls());
+        hBox.getChildren().addAll(createTableStackPane(), addTextArea(), getButtonControls());
         return hBox;
     }
 
@@ -64,31 +66,35 @@ public class NotesTabView implements Builder<Tab> {
 
     private void cancelEdit() {
         membershipModel.getTextArea().setEditable(false);
+        membershipModel.setTableInEditMode(false); // Exit edit mode
+        tableView.setVisible(true); // Show TableView
+        datePicker.setVisible(false); // Hide DatePicker
         ButtonFx.buttonVisible(editButton, true);
         ButtonFx.buttonVisible(saveButton, false);
         ButtonFx.buttonVisible(cancelButton, false);
-        tableView.getColumns().removeFirst();
-        tableView.getColumns().addFirst(col1());
     }
 
     private void saveNote() {
         membershipView.sendMessage().accept(MembershipMessage.UPDATE_NOTE);
         membershipModel.getSelectedNote().setMemo(membershipModel.getTextArea().getText());
-        membershipModel.getTextArea().setEditable(false);
-        ButtonFx.buttonVisible(editButton, true);
-        ButtonFx.buttonVisible(saveButton, false);
-        ButtonFx.buttonVisible(cancelButton, false);
-        tableView.getColumns().removeFirst();
-        tableView.getColumns().addFirst(col1());
+        if (datePicker.getValue() != null) {
+            membershipModel.getSelectedNote().setMemoDate(datePicker.getValue());
+        }
+        cancelEdit();
+        tableView.refresh(); // Refresh to update date in TableView
     }
 
     private void editNote() {
-        membershipModel.getTextArea().setEditable(true);
-        ButtonFx.buttonVisible(editButton, false);
-        ButtonFx.buttonVisible(saveButton, true);
-        ButtonFx.buttonVisible(cancelButton, true);
-        tableView.getColumns().removeFirst();
-        tableView.getColumns().addFirst(editCol());
+        if (membershipModel.getSelectedNote() != null) {
+            membershipModel.getTextArea().setEditable(true);
+            membershipModel.setTableInEditMode(true); // Enter edit mode
+            tableView.setVisible(false); // Hide TableView
+            datePicker.setVisible(true); // Show DatePicker
+            datePicker.setValue(membershipModel.getSelectedNote().getMemoDate()); // Set current date
+            ButtonFx.buttonVisible(editButton, false);
+            ButtonFx.buttonVisible(saveButton, true);
+            ButtonFx.buttonVisible(cancelButton, true);
+        }
     }
 
     private void insertNote() {
@@ -114,8 +120,25 @@ public class NotesTabView implements Builder<Tab> {
         return textArea;
     }
 
+    private Node createTableStackPane() {
+        StackPane stackPane = new StackPane();
+        stackPane.getChildren().addAll(addTable(), createDatePicker());
+        tableView.setVisible(true); // TableView visible by default
+        datePicker.setVisible(false); // DatePicker hidden by default
+        StackPane.setAlignment(datePicker, Pos.TOP_CENTER); // Align DatePicker to top-center
+        StackPane.setMargin(datePicker, new Insets(10, 0, 0, 0)); // Optional: Add top margin for spacing
+        stackPane.setPrefWidth(210); // Match TableView width
+        return stackPane;
+    }
+
+    private Node createDatePicker() {
+        this.datePicker = new DatePicker();
+        datePicker.setPrefWidth(150); // Match date column width
+        return datePicker;
+    }
+
     private Node addTable() {
-        this.tableView = TableViewFx.tableViewOf(200,false);
+        this.tableView = TableViewFx.tableViewOf(200, false);
         tableView.setItems(membershipView.getMembershipModel().membershipProperty().get().getMemos());
         tableView.getColumns().addAll(Arrays.asList(col1(), col2()));
         TableView.TableViewSelectionModel<NoteFx> selectionModel = tableView.getSelectionModel();
@@ -126,8 +149,8 @@ public class NotesTabView implements Builder<Tab> {
             }
         });
         tableView.setPrefWidth(210);
-        // if there are notes in the List then select the first
-        if(!tableView.getItems().isEmpty()) {
+        // If there are notes in the list, select the first
+        if (!tableView.getItems().isEmpty()) {
             membershipModel.setSelectedNote(tableView.getItems().getFirst());
             membershipModel.textAreaProperty().get().setText(tableView.getItems().getFirst().getMemo());
             tableView.getSelectionModel().select(tableView.getItems().getFirst());
@@ -139,29 +162,27 @@ public class NotesTabView implements Builder<Tab> {
     private TableColumn<NoteFx, String> col2() {
         TableColumn<NoteFx, String> col = new TableColumn<>("Type");
         col.setCellValueFactory(new PropertyValueFactory<>("category"));
-        col.setPrefWidth(60); // Reasonable preferred width
-        col.setMaxWidth(60); // Type
+        col.setPrefWidth(60);
+        col.setMaxWidth(60);
         return col;
     }
 
-    private TableColumn<NoteFx, String> col1() {
-        TableColumn<NoteFx, String> col = new TableColumn<>("Date");
-        col.setCellValueFactory(cellData -> {
-            LocalDate date = cellData.getValue().getMemoDate();
-            return new SimpleStringProperty(date != null ? date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) : "");
-        });
-        col.setPrefWidth(150); // Reasonable preferred width
-        col.setMaxWidth(150);  // Reasonable max width
-        return col;
-    }
-
-    // when edit button is pressed this is the row that shows
-    private TableColumn<NoteFx, LocalDate> editCol() {
+    private TableColumn<NoteFx, LocalDate> col1() {
         TableColumn<NoteFx, LocalDate> col = new TableColumn<>("Date");
         col.setCellValueFactory(cellData -> cellData.getValue().memoDateProperty());
-        col.setCellFactory(CallBackFX.createDatePickerCellFactory(membershipModel::setSelectedNote));
-        col.setPrefWidth(150); // Reasonable preferred width
-        col.setMaxWidth(150);  // Reasonable max width
+        col.setCellFactory(column -> new TableCell<>() {
+            @Override
+            protected void updateItem(LocalDate date, boolean empty) {
+                super.updateItem(date, empty);
+                if (empty || date == null) {
+                    setText(null);
+                } else {
+                    setText(date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                }
+            }
+        });
+        col.setPrefWidth(150);
+        col.setMaxWidth(150);
         return col;
     }
 }

@@ -139,7 +139,7 @@ public class MembershipInteractor implements SlipUser {
      *
      * @return the JSON response from the server
      */
-    public MembershipMessage updateNotes() {
+    public MembershipMessage updateNote() {
         logger.debug("Updating position with pId: {}", membershipModel.getSelectedNote().getMemoId());
         Note note = new Note(membershipModel.getSelectedNote());
         try {
@@ -184,9 +184,8 @@ public class MembershipInteractor implements SlipUser {
             BoatResponse boatResponse = membershipModel.getHttpClient().getObjectMapper()
                     .readValue(response, BoatResponse.class);
             if (boatResponse.isSuccess()) {
-                membershipModel.getBoatTableView().getItems().addFirst(new BoatFx(boatResponse.getBoat()));  // <- this one works when I insert a bot
-                //membershipModel.getBoatTableView().refresh();
-                membershipModel.getNotesTableView().getSelectionModel().selectFirst();
+                membershipModel.getBoatTableView().getItems().addFirst(new BoatFx(boatResponse.getBoat())); // this correctly inserts a new row at the top
+                membershipModel.getBoatTableView().getSelectionModel().selectFirst();  // why is this not selecting the row I just put in?
                 return MembershipMessage.SUCCESS;
             } else {
                 Platform.runLater(() -> DialogueFx.errorAlert("Unable add boat: ", boatResponse.getMessage()));
@@ -209,7 +208,6 @@ public class MembershipInteractor implements SlipUser {
                     .readValue(response, NoteResponse.class);
             if (noteResponse.isSuccess()) {
                 membershipModel.getNotesTableView().getItems().addFirst(new NoteFx(noteResponse.getNote()));
-                //membershipModel.getBoatTableView().refresh();
                 membershipModel.getNotesTableView().getSelectionModel().selectFirst();
                 return MembershipMessage.SUCCESS;
             } else {

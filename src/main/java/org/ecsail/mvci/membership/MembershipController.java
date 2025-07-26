@@ -34,7 +34,7 @@ public class MembershipController extends Controller<MembershipMessage> {
         switch (type) {
             case GET_DATA -> runSpinner(membershipInteractor::getMembership, 50, 50);
             case UPDATE_BOAT -> runTask(membershipInteractor::updateBoat);
-            case UPDATE_NOTE -> runTask(membershipInteractor::updateNotes);
+            case UPDATE_NOTE -> runTask(membershipInteractor::updateNote);
             case INSERT_BOAT -> runTask(membershipInteractor::insertBoat);
             case DELETE_BOAT -> runTask(membershipInteractor::deleteBoat);
             case INSERT_NOTE -> runTask(membershipInteractor::insertNote);

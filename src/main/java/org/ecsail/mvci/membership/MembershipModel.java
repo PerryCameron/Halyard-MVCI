@@ -30,6 +30,8 @@ public class MembershipModel {
     private final SimpleObjectProperty<TabPane> extraTabPane = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<SlipUser.slip> slipRelationStatus = new SimpleObjectProperty<>();
     private final SimpleBooleanProperty dataIsLoaded = new SimpleBooleanProperty(false);
+    private final BooleanProperty tableInEditMode = new SimpleBooleanProperty(false);
+
     private final StringProperty sublease = new SimpleStringProperty("");
     private final StringProperty membershipId = new SimpleStringProperty("");
     private final HttpClientUtil httpClient;
@@ -288,5 +290,18 @@ public class MembershipModel {
     }
     public StringProperty errorMessageProperty() {
         return errorMessage;
+    }
+
+
+    public boolean isTableInEditMode() {
+        return tableInEditMode.get();
+    }
+
+    public BooleanProperty tableInEditModeProperty() {
+        return tableInEditMode;
+    }
+
+    public void setTableInEditMode(boolean inEditMode) {
+        this.tableInEditMode.set(inEditMode);
     }
 }
