@@ -204,33 +204,27 @@ public class MembershipInteractor implements SlipUser {
 
     public MembershipMessage deleteMembership() {
         logger.info("Deleting Membership MSID: {}", membershipModel.membershipProperty().get().msIdProperty().get());
+        int membershipId = membershipModel.membershipProperty().get().getMembershipId();
         try {
             String response = membershipModel.getHttpClient().postDataToGybe("delete/membership", new Membership(membershipModel.membershipProperty().get()));
             if (response == null) {
-                logger.error("Failed to delete membership {}: Null response from server", membershipModel.membershipProperty().get().getMembershipId());
-                Platform.runLater(() -> DialogueFx.errorAlert("Delete Membership Failed", "Null response from server"));
-                return MembershipMessage.DELETE_MEMBERSHIP_FROM_DATABASE_FAIL;
+                return setFailMessage("Failed to delete membership", 0, "Null response from server");
             }
-            UpdateResponse updateResponse = membershipModel.getHttpClient().getObjectMapper()
-                    .readValue(response, UpdateResponse.class);
-            if (updateResponse == null) {
-                logger.error("Failed to delete membership {}: Invalid response from server", membershipModel.membershipProperty().get().getMembershipId());
-                Platform.runLater(() -> DialogueFx.errorAlert("Delete Membership Failed", "Invalid response from server"));
-                return MembershipMessage.DELETE_MEMBERSHIP_FROM_DATABASE_FAIL;
+            MembershipResponse membershipResponse = membershipModel.getHttpClient().getObjectMapper()
+                    .readValue(response, MembershipResponse.class);
+            if (membershipResponse == null) {
+                return setFailMessage("Failed to delete membership",0,"Invalid response from server");
             }
-            if (updateResponse.isSuccess()) {
-                logger.info("Successfully deleted membership {}", membershipModel.membershipProperty().get().getMembershipId());
+            if (membershipResponse.isSuccess()) {
+                membershipModel.errorMessageProperty().set("Successfully deleted Membership #" + membershipId);
+                logger.info(membershipResponse.getMessage());
                 return MembershipMessage.DELETE_MEMBERSHIP_FROM_DATABASE_SUCCEED;
             } else {
-                String errorMessage = updateResponse.getMessage() != null ? updateResponse.getMessage() : "Unknown error";
-                logger.error("Failed to delete membership {}: {}", membershipModel.membershipProperty().get().getMembershipId(), errorMessage);
-                Platform.runLater(() -> DialogueFx.errorAlert("Delete Membership Failed", errorMessage));
-                return MembershipMessage.DELETE_MEMBERSHIP_FROM_DATABASE_FAIL;
+                String errorMessage = membershipResponse.getMessage() != null ? membershipResponse.getMessage() : "Unknown error";
+                return setFailMessage("Failed to delete membership",0,errorMessage);
             }
         } catch (Exception e) {
-            logger.error("Failed to delete membership {}: {}", membershipModel.membershipProperty().get().getMembershipId(), e.getMessage(), e);
-            Platform.runLater(() -> DialogueFx.errorAlert("Delete Membership Failed", e.getMessage()));
-            return MembershipMessage.DELETE_MEMBERSHIP_FROM_DATABASE_FAIL;
+            return setFailMessage("Failed to delete membership",0,"e.getMessage()");
         }
     }
 
@@ -340,11 +334,20 @@ public class MembershipInteractor implements SlipUser {
         return MembershipMessage.FAIL;
     }
 
+    public MembershipMessage setCustomFailMessage(MembershipMessage membershipMessage, String title, int id, String message) {
+        membershipModel.errorMessageProperty().set(title + ":" + id + ":" + message);
+        return membershipMessage;
+    }
+
     public String[] getFailMessage() {
         return membershipModel.errorMessageProperty().get().split(":");
     }
 
     public void logError(String message) {
         logger.error(message);
+    }
+
+    public String getCustomMessage() {
+        return membershipModel.errorMessageProperty().get();
     }
 }

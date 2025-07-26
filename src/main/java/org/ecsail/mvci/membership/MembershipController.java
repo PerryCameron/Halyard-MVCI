@@ -39,7 +39,7 @@ public class MembershipController extends Controller<MembershipMessage> {
             case INSERT_BOAT -> runTask(membershipInteractor::insertBoat);
             case UPDATE_BOAT -> runTask(membershipInteractor::updateBoat);
             case DELETE_BOAT -> runTask(membershipInteractor::deleteBoat);
-            case DELETE_MEMBERSHIP -> runTask(membershipInteractor::deleteMembership);
+            case DELETE_MEMBERSHIP -> runSpinner(membershipInteractor::deleteMembership, 50, 50);
             case FAIL -> membershipInteractor.signalFail();
             case SUCCESS -> membershipInteractor.signalSuccess();
             case PRINT_ENVELOPE -> runTask(membershipInteractor::printEnvelope);
@@ -74,23 +74,25 @@ public class MembershipController extends Controller<MembershipMessage> {
         task.setOnSucceeded(e -> {
             if (task.getValue() != null)
                 switch (task.getValue()) {
-                    case DELETE_MEMBERSHIP_FROM_DATABASE_SUCCEED -> {
-                        membershipInteractor.removeMembershipFromList(mainController.getRosterController().getRosterTableView());
-                        mainController.closeTabByMsId(membershipInteractor.getMsId());
-                    }
+                    case DELETE_MEMBERSHIP_FROM_DATABASE_SUCCEED -> handleSuccessfulMembershipDelete();
                     case GET_DATA_SUCCESS -> membershipInteractor.setDataLoaded();
                     case FAIL -> membershipInteractor.signalFail();
                     case SUCCESS -> membershipInteractor.signalSuccess();
-                    default -> {
-                    }
                 }
             mainController.showLoadingSpinner(false);
         });
         task.setOnFailed(e -> {
-            logger.error("Failed to perform task");
+            logFailure();
             mainController.showLoadingSpinner(false);
         });
         getExecutorService().submit(task);
+    }
+
+    private void handleSuccessfulMembershipDelete() {
+        membershipInteractor.removeMembershipFromList(mainController.getRosterController().getRosterTableView());
+        mainController.closeTabByMsId(membershipInteractor.getMsId());
+        mainController.showLoadingSpinner(false);
+        DialogueFx.infoAlert("Deletion.Successful", membershipInteractor.getCustomMessage());
     }
 
     public ExecutorService getExecutorService() {
