@@ -4,6 +4,7 @@ package org.ecsail.mvci.membership.mvci.person;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.input.Clipboard;
 import org.ecsail.fx.*;
@@ -305,11 +306,11 @@ public class PersonInteractor {
             String response = httpClientUtil.postDataToGybe("delete/award", personModel.selectedAwardProperty().get());
             if (response == null)
                 return setFailMessage("Failed to delete award", personModel.selectedAwardProperty().get().getAwardId(), "Null response from server");
-            UpdateResponse updateResponse = httpClientUtil.getObjectMapper().readValue(response, UpdateResponse.class);
-            if (updateResponse == null)
+            AwardResponse awardResponse = httpClientUtil.getObjectMapper().readValue(response, AwardResponse.class);
+            if (awardResponse == null)
                 return setFailMessage("Failed to delete award", personModel.selectedAwardProperty().get().getAwardId(), "Invalid response from server");
-            if (updateResponse.isSuccess()) {
-                logger.info("Successfully deleted award {}", personModel.selectedAwardProperty().get().getAwardId());
+            if (awardResponse.isSuccess()) {
+                logger.info(awardResponse.getMessage());
                 AwardFx awardDTOFx = personModel.selectedAwardProperty().get();
                 if (awardDTOFx != null) {
                     Platform.runLater(() -> {
@@ -321,7 +322,7 @@ public class PersonInteractor {
                     return setFailMessage("Failed to delete award: ", personModel.selectedAwardProperty().get().getAwardId(), "Null response from server");
                 }
             } else {
-                String errorMessage = updateResponse.getMessage() != null ? updateResponse.getMessage() : "Unknown error";
+                String errorMessage = awardResponse.getMessage() != null ? awardResponse.getMessage() : "Unknown error";
                 return setFailMessage("Failed to delete award", personModel.selectedAwardProperty().get().getAwardId(), errorMessage);
             }
         } catch (Exception e) {
@@ -331,7 +332,6 @@ public class PersonInteractor {
 
     public PersonMessage deletePhone() {
         try {
-            // Validate inputs
             if (personModel.selectedPhoneProperty().get() == null)
                 return setFailMessage("Failed to delete phone", 0, "No valid phone selected");
             String response = httpClientUtil.postDataToGybe("delete/phone", personModel.selectedPhoneProperty().get());
@@ -372,11 +372,11 @@ public class PersonInteractor {
             String response = httpClientUtil.postDataToGybe("delete/email", personModel.selectedEmailProperty().get());
             if (response == null)
                 return setFailMessage("Failed to delete email", personModel.selectedEmailProperty().get().getEmailId(), "Null response from server");
-            UpdateResponse updateResponse = httpClientUtil.getObjectMapper().readValue(response, UpdateResponse.class);
-            if (updateResponse == null)
+            EmailResponse emailResponse = httpClientUtil.getObjectMapper().readValue(response, EmailResponse.class);
+            if (emailResponse == null)
                 return setFailMessage("Failed to delete email", personModel.selectedEmailProperty().get().getEmailId(), "Invalid response from server");
-            if (updateResponse.isSuccess()) {
-                logger.info("Successfully deleted email {}", personModel.selectedEmailProperty().get().getEmailId());
+            if (emailResponse.isSuccess()) {
+                logger.info(emailResponse.getMessage());
                 EmailFx emailFx = personModel.selectedEmailProperty().get();
                 if (emailFx != null) {
                     Platform.runLater(() -> {
@@ -387,7 +387,7 @@ public class PersonInteractor {
                 } else
                     return setFailMessage("Email", personModel.selectedEmailProperty().get().getEmailId(), "deleted on server but not found in membership list");
             } else {
-                String errorMessage = updateResponse.getMessage() != null ? updateResponse.getMessage() : "Unknown error";
+                String errorMessage = emailResponse.getMessage() != null ? emailResponse.getMessage() : "Unknown error";
                 return setFailMessage("Unable to delete email", personModel.selectedEmailProperty().get().getEmailId(), errorMessage);
             }
         } catch (Exception e) {
@@ -399,15 +399,14 @@ public class PersonInteractor {
         try {
             if (personModel.selectedPositionProperty().get() == null)
                 return setFailMessage("Failed to delete position", 0, "No valid position selected");
-            // Send delete request to server
             String response = httpClientUtil.postDataToGybe("delete/position", personModel.selectedPositionProperty().get());
             if (response == null)
                 return setFailMessage("Failed to delete position", 0, "Null response from server");
-            UpdateResponse updateResponse = httpClientUtil.getObjectMapper().readValue(response, UpdateResponse.class);
-            if (updateResponse == null)
+            PositionResponse positionResponse = httpClientUtil.getObjectMapper().readValue(response, PositionResponse.class);
+            if (positionResponse == null)
                 return setFailMessage("Failed to delete position", 0, "Invalid response from server");
-            if (updateResponse.isSuccess()) {
-                logger.info("Successfully deleted position {}", personModel.selectedPositionProperty().get().getOfficerId());
+            if (positionResponse.isSuccess()) {
+                logger.info(positionResponse.getMessage());
                 OfficerFx officerFx = personModel.selectedPositionProperty().get();
                 if (officerFx != null) {
                     Platform.runLater(() -> {
@@ -418,7 +417,7 @@ public class PersonInteractor {
                 } else
                     return setFailMessage("Position", personModel.selectedPositionProperty().get().getOfficerId(), "deleted on server but not found in membership list");
             } else {
-                String errorMessage = updateResponse.getMessage() != null ? updateResponse.getMessage() : "Unknown error";
+                String errorMessage = positionResponse.getMessage() != null ? positionResponse.getMessage() : "Unknown error";
                 return setFailMessage("Unable to delete position", personModel.selectedPositionProperty().get().getOfficerId(), errorMessage);
             }
         } catch (Exception e) {

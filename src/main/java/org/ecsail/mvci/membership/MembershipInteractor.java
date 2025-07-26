@@ -42,13 +42,9 @@ public class MembershipInteractor implements SlipUser {
             new PDF_Envelope(membershipModel);
             return MembershipMessage.SUCCESS;
         } catch (IOException e1) {
-            Platform.runLater(() -> DialogueFx.errorAlert("Unable to print envelope: {}", e1.getMessage()));
-            logger.error(e1.getMessage());
-            return MembershipMessage.FAIL;
+            return setFailMessage("Unable to print envelope",0,e1.getMessage());
         } catch (Exception e2) {
-            Platform.runLater(() -> DialogueFx.errorAlert("Unable to perform update", e2.getMessage()));
-            logger.error(e2.getMessage());
-            return MembershipMessage.FAIL;
+            return setFailMessage("Unable to perform update",0, e2.getMessage());
         }
     }
 
@@ -134,11 +130,6 @@ public class MembershipInteractor implements SlipUser {
         // we are not looking for subleases yet.
     }
 
-    /**
-     * Updates a membership's notes data by sending a POST request to the halyard/update/notes endpoint.
-     *
-     * @return the JSON response from the server
-     */
     public MembershipMessage updateNote() {
         logger.debug("Updating position with pId: {}", membershipModel.getSelectedNote().getMemoId());
         Note note = new Note(membershipModel.getSelectedNote());
@@ -171,12 +162,6 @@ public class MembershipInteractor implements SlipUser {
         }
     }
 
-
-    /**
-     * Inserts a boat row by sending a POST request to the halyard/update/boat endpoint.
-     *
-     * @return the JSON response from the server
-     */
     public MembershipMessage insertBoat() {
         try {
             BoatOwner boatOwnerDTO = new BoatOwner(membershipModel.membershipProperty().get().getMsId(), 0);
@@ -199,7 +184,6 @@ public class MembershipInteractor implements SlipUser {
         }
     }
 
-
     public MembershipMessage insertNote() {
         try {
             Note note = new Note(membershipModel.membershipProperty().get().getMsId());
@@ -218,29 +202,6 @@ public class MembershipInteractor implements SlipUser {
         }
     }
 
-
-    /**
-     * Deletes the currently selected membership from the server and returns a status message.
-     * <p>
-     * This method retrieves the selected membership from the {@link MembershipModel#membershipProperty()}
-     * and sends a POST request to the server's "delete/membership" endpoint with a {@link Membership}
-     * object constructed from the selected membership. The server’s response is deserialized into an
-     * {@link UpdateResponse} object. If the deletion is successful, it logs the success and returns
-     * {@link MembershipMessage#DELETE_MEMBERSHIP_FROM_DATABASE_SUCCEED}. If the operation fails (e.g.,
-     * due to a null response, invalid response, or server error), it logs the error, displays an error
-     * alert on the JavaFX Application Thread using {@link DialogueFx#errorAlert(String, String)}, and
-     * returns {@link MembershipMessage#DELETE_MEMBERSHIP_FROM_DATABASE_FAIL}.
-     * </p>
-     * <p>
-     * The method ensures thread safety by performing UI updates (error alerts) using
-     * {@link Platform#runLater(Runnable)}. It assumes the selected membership is non-null and its MSID
-     * is valid, as enforced by the application’s state.
-     * </p>
-     *
-     * @return {@link MembershipMessage#DELETE_MEMBERSHIP_FROM_DATABASE_SUCCEED} if the membership is
-     * successfully deleted, or {@link MembershipMessage#DELETE_MEMBERSHIP_FROM_DATABASE_FAIL}
-     * if the deletion fails due to server issues or deserialization problems.
-     */
     public MembershipMessage deleteMembership() {
         logger.info("Deleting Membership MSID: {}", membershipModel.membershipProperty().get().msIdProperty().get());
         try {
@@ -273,22 +234,6 @@ public class MembershipInteractor implements SlipUser {
         }
     }
 
-    /**
-     * Deletes a selected boat associated with a membership from the server and updates the local UI.
-     * <p>
-     * This method validates that a boat and membership are selected, constructs a {@link BoatOwner} DTO
-     * with the membership ID and boat ID, and sends a POST request to the server’s "delete/boat" endpoint.
-     * Upon receiving a response, it deserializes it into an {@link UpdateResponse} object. If the server
-     * indicates success, the method removes the corresponding {@link BoatFx} from the
-     * {@link TableView} in the UI and refreshes the table if necessary. If the operation fails (e.g., due
-     * to invalid inputs, server errors, or deserialization issues), an error is logged, and an error alert
-     * is displayed to the user on the JavaFX Application Thread.
-     * </p>
-     * <p>
-     * The method ensures thread safety by performing UI updates using {@link Platform#runLater(Runnable)}.
-     * </p>
-     *
-     */
     public MembershipMessage deleteBoat() {
         try {
             // Validate inputs
@@ -333,6 +278,37 @@ public class MembershipInteractor implements SlipUser {
         }
     }
 
+    public MembershipMessage deleteNote() {
+        try {
+            if (membershipModel.selectedNoteProperty().get() == null)
+                return setFailMessage("Failed to delete note", 0, "No note selected");
+            String response = httpClientUtil.postDataToGybe("delete/note", new Note(membershipModel.selectedNoteProperty().get()));
+            if (response == null)
+                return setFailMessage("Failed to delete note", membershipModel.selectedNoteProperty().get().getMemoId(), "Null response from server");
+            NoteResponse noteResponse = httpClientUtil.getObjectMapper().readValue(response, NoteResponse.class);
+            if (noteResponse == null)
+                return setFailMessage("Failed to delete note", membershipModel.selectedNoteProperty().get().getMemoId(), "Invalid response from server");
+            if (noteResponse.isSuccess()) {
+                logger.info("Successfully deleted note {}", membershipModel.selectedNoteProperty().get().getMemoId());
+                NoteFx noteFx = membershipModel.selectedNoteProperty().get();
+                if (noteFx != null) {
+                    Platform.runLater(() -> {
+                        membershipModel.notesTableViewProperty().get().getItems().remove(noteFx);
+                        membershipModel.notesTableViewProperty().get().refresh();
+                    });
+                    return MembershipMessage.SUCCESS;
+                } else {
+                    return setFailMessage("Failed to delete note: ", membershipModel.selectedNoteProperty().get().getMemoId(), "Null response from server");
+                }
+            } else {
+                String errorMessage = noteResponse.getMessage() != null ? noteResponse.getMessage() : "Unknown error";
+                return setFailMessage("Failed to delete note", membershipModel.selectedNoteProperty().get().getMemoId(), errorMessage);
+            }
+        } catch (Exception e) {
+            return setFailMessage("Failed to delete note", membershipModel.selectedNoteProperty().get().getMemoId(), e.getMessage());
+        }
+    }
+
     protected void signalSuccess() {
         membershipModel.getMainModel().toggleRxSuccess();
     }
@@ -341,7 +317,6 @@ public class MembershipInteractor implements SlipUser {
         membershipModel.getMainModel().toggleRxFail();
     }
 
-    // removes selected membership row from roster list
     public void removeMembershipFromList(TableView<RosterFx> rosterTableView) {
         Optional<RosterFx> rosterFx = rosterTableView.getItems().stream()
                 .filter(roster -> roster.getMsId() == membershipModel.membershipProperty()
@@ -372,6 +347,4 @@ public class MembershipInteractor implements SlipUser {
     public void logError(String message) {
         logger.error(message);
     }
-
-
 }
