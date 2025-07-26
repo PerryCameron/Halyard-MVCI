@@ -123,39 +123,6 @@ public class MainView implements Builder<Region> {
         return hBox;
     }
 
-    //    private Node statusLights() {
-//        HBox hBox = HBoxFx.hBoxOf(new Insets(0,15,0,0), Pos.CENTER_RIGHT, 3.0);
-//        Rectangle receive = RectangleFX.rectangleOf(14,14);
-//        Rectangle transmit = RectangleFX.rectangleOf(14,14);
-//        mainModel.getLightAnimationMap().put("receiveError", createTimeLine(Color.RED, receive,5000));
-//        mainModel.getLightAnimationMap().put("receiveSuccess", createTimeLine(Color.LIGHTGREEN, receive,5000));
-//        mainModel.getLightAnimationMap().put("transmitError", createTimeLine(Color.RED, transmit,100));
-//        mainModel.getLightAnimationMap().put("transmitSuccess", createTimeLine(Color.LIGHTGREEN, transmit,100));
-//        mainModel.lightStatusPropertyProperty()
-//                .addListener((observable, oldValue, newValue) -> updateStatusLights(newValue));
-//        HBox.setHgrow(hBox, Priority.ALWAYS);
-//        hBox.getChildren().addAll(transmit, receive);
-//        return hBox;
-//    }
-//
-//    private Timeline createTimeLine(Color color, Rectangle rect, double speed) {
-//        Timeline timeline = new Timeline(
-//                new KeyFrame(Duration.ZERO, new KeyValue(rect.fillProperty(), Color.GRAY)),
-//                new KeyFrame(Duration.millis(10), new KeyValue(rect.fillProperty(), color)),
-//                new KeyFrame(Duration.millis(speed), new KeyValue(rect.fillProperty(), Color.GRAY))
-//        );
-//        return timeline;
-//    }
-//
-//    private void updateStatusLights(Status.light status) {
-//        switch (status) {
-//            case TX_GREEN -> mainModel.getLightAnimationMap().get("transmitSuccess").playFromStart();
-//            case RX_GREEN -> mainModel.getLightAnimationMap().get("receiveSuccess").playFromStart();
-//            case TX_RED -> mainModel.getLightAnimationMap().get("transmitError").playFromStart();
-//            case RX_RED -> mainModel.getLightAnimationMap().get("receiveError").playFromStart();
-//        }
-//    }
-
     private Node statusLights() {
         HBox hBox = HBoxFx.hBoxOf(new Insets(0, 15, 0, 0), Pos.CENTER_RIGHT, 3.0);
         Rectangle receive = RectangleFX.rectangleOf(14, 14);
@@ -276,7 +243,8 @@ public class MainView implements Builder<Region> {
     private Menu createFileMenu() {
         Menu menu = new Menu("File");
         MenuItem close = MenuFx.menuItemOf("Close Connection", x -> action.accept(MainMessage.CLOSE_ALL_CONNECTIONS), null);
-        menu.getItems().addAll(close);
+        MenuItem directory = MenuFx.menuItemOf("Render Directory", x -> action.accept(MainMessage.FETCH_DIRECTORY), null);
+        menu.getItems().addAll(close, directory);
         return menu;
     }
 

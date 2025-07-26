@@ -210,11 +210,6 @@ public class RosterInteractor {
         rosterModel.numberOfRecordsProperty().set(String.valueOf(size));
     }
 
-//    public void search() {
-//    logger.info("making search");
-//        logger.info("Search made: {}", rosterModel.getTextFieldString());
-//    }
-
     public int getSelectedYear() {
         return rosterModel.getSelectedYear();
     }

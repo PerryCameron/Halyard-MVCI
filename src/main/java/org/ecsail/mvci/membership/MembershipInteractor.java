@@ -202,6 +202,8 @@ public class MembershipInteractor implements SlipUser {
         }
     }
 
+
+
     public MembershipMessage deleteMembership() {
         logger.info("Deleting Membership MSID: {}", membershipModel.membershipProperty().get().msIdProperty().get());
         int membershipId = membershipModel.membershipProperty().get().getMembershipId();

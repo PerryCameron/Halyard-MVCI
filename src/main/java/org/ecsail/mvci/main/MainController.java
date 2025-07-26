@@ -31,6 +31,9 @@ import org.slf4j.LoggerFactory;
 import java.awt.*;
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
+import java.util.function.Supplier;
+
+import static org.ecsail.mvci.membership.MembershipMessage.SUCCESS;
 
 public class MainController extends Controller<MainMessage> implements Status {
 
@@ -58,8 +61,25 @@ public class MainController extends Controller<MainMessage> implements Status {
             case SHOW_LOG -> showDebugLog();
             case STOP_SPINNER -> showLoadingSpinner(false);
             case SET_CONNECT_ERROR_FALSE -> mainInteractor.setConnectError(false);
-//            case SET_CONNECT_ERROR_TRUE -> mainInteractor.setConnectError(true);
+            case FETCH_DIRECTORY -> runTask(mainInteractor::getDirectory);
         }
+    }
+
+    private void runTask(Supplier<MainMessage> method) {
+        Task<MainMessage> task = new Task<>() {
+            @Override
+            protected MainMessage call() {
+                return method.get();
+            }
+        };
+        task.setOnSucceeded(e -> {
+            if (task.getValue() == MainMessage.SUCCESS) {
+                mainInteractor.setSuccess();
+            }
+            else logFailure();
+        });
+        task.setOnFailed(e -> logFailure());
+        getExecutorService().submit(task);
     }
 
     public void getGlobalData() {
@@ -86,9 +106,6 @@ public class MainController extends Controller<MainMessage> implements Status {
             logger.error("Failed to fetch global data for email: {}, error: {}", email, exception.getMessage());
             Platform.runLater(() -> DialogueFx.errorAlert("Error", "Failed to fetch global data: " + exception.getMessage()));
         });
-//        Thread thread = new Thread(fetchGlobalDataTask);
-//        thread.setDaemon(true); // Ensure thread doesn't prevent app shutdown
-//        thread.start();
         getExecutorService().submit(fetchGlobalDataTask);
     }
 
@@ -236,5 +253,20 @@ public class MainController extends Controller<MainMessage> implements Status {
 
     public RosterController getRosterController() {
         return rosterController;
+    }
+
+    public void signalSuccess() {
+        getMainModel().lightRxSuccessProperty().set(true);
+    }
+
+    private void logFailure() {
+        String[] message = mainInteractor.getFailMessage();
+        if (message[1].equals("0")) {
+            mainInteractor.logError(message[0] + ": " + message[2]);
+        } else {
+            mainInteractor.logError(message[0] + " with ID: " + message[1] + message[2]);
+        }
+        DialogueFx.errorAlert(message[0], message[2]);
+        //mainInteractor.sendMessage().accept(MembershipMessage.FAIL);
     }
 }
