@@ -363,13 +363,15 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
         }
     }
 
+    // had to change this when remove people directly from membership model
     private boolean hasMemberType(MemberType memberType) {
-        return personModel.getMembershipModel().getPeople().stream()
+        return personModel.getMembershipModel().membershipProperty().get().getPeople().stream()
                 .anyMatch(p -> p.getMemberType() == MemberType.getCode(memberType));
     }
 
+    // had to change this when remove people directly from membership model
     private boolean hasOtherMembers() {
-        return personModel.getMembershipModel().getPeople().size() > 1;
+        return personModel.getMembershipModel().membershipProperty().get().getPeople().size() > 1;
     }
 
     private Button createCopyButton(ObjectType.Dto type) {

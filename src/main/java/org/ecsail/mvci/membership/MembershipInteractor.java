@@ -6,6 +6,7 @@ import javafx.application.Platform;
 import javafx.scene.control.TableView;
 import org.ecsail.fx.*;
 import org.ecsail.interfaces.SlipUser;
+import org.ecsail.mvci.membership.mvci.person.PersonController;
 import org.ecsail.pdf.PDF_Envelope;
 import org.ecsail.pojo.*;
 import org.ecsail.static_tools.HttpClientUtil;
@@ -203,12 +204,24 @@ public class MembershipInteractor implements SlipUser {
     }
 
     public MembershipMessage insertPerson() {
-        System.out.println("name= " + membershipModel.selectedPersonProperty().get().getFullName());
-        System.out.println("occupation= " + membershipModel.selectedPersonProperty().get().getOccupation());
-        System.out.println("business= " + membershipModel.selectedPersonProperty().get().getBusiness());
-        System.out.println("birthday= " + membershipModel.selectedPersonProperty().get().getBirthday());
-        System.out.println("member type= " + membershipModel.selectedPersonProperty().get().getMemberType());
-        return MembershipMessage.SUCCESS;
+        try {
+            Person person = new Person(membershipModel.selectedPersonProperty().get());
+            String response = membershipModel.getHttpClient().postDataToGybe("insert/person", person);
+            PersonResponse personResponse = membershipModel.getHttpClient().getObjectMapper()
+                    .readValue(response, PersonResponse.class);
+            if (personResponse.isSuccess()) {
+                PersonFx personFx = new PersonFx(personResponse.getPerson());
+                membershipModel.membershipProperty().get().getPeople().add(personFx);
+                membershipModel.selectedPersonProperty().set(personFx);
+                membershipModel.togglePersonAdded();
+                return MembershipMessage.SUCCESS;
+            } else {
+                return setFailMessage("Unable add person",0,personResponse.getMessage());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return setFailMessage("Failed to add new person",0,e.getMessage());
+        }
     }
 
     public MembershipMessage deleteMembership() {

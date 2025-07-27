@@ -20,7 +20,6 @@ public class MembershipModel {
 
     // TODO i don't think I need this, it is located in the membership object
     private ObservableList<PersonFx> people = FXCollections.observableArrayList();
-
     private final SimpleObjectProperty<RosterFx> membershipFromRosterList = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<MembershipFx> membership = new SimpleObjectProperty<>();
     private final SimpleObjectProperty<TableView<BoatFx>> boatTableView = new SimpleObjectProperty<>();
@@ -33,7 +32,6 @@ public class MembershipModel {
     private final SimpleObjectProperty<SlipUser.slip> slipRelationStatus = new SimpleObjectProperty<>();
     private final SimpleBooleanProperty dataIsLoaded = new SimpleBooleanProperty(false);
     private final BooleanProperty tableInEditMode = new SimpleBooleanProperty(false);
-
     private final StringProperty sublease = new SimpleStringProperty("");
     private final StringProperty membershipId = new SimpleStringProperty("");
     private final HttpClientUtil httpClient;
@@ -50,7 +48,8 @@ public class MembershipModel {
     private final SimpleIntegerProperty selectedInvoiceCreateYear = new SimpleIntegerProperty(0);
     private final SimpleIntegerProperty selectedMembershipYear = new SimpleIntegerProperty(0);
     private final SimpleObjectProperty<Success> invoiceSaved = new SimpleObjectProperty<>(Success.NULL);
-    private final SimpleBooleanProperty envelopeIsCatalogue = new SimpleBooleanProperty(false);
+    private final BooleanProperty envelopeIsCatalogue = new SimpleBooleanProperty(false);
+    private final BooleanProperty personAdded = new SimpleBooleanProperty(false);
     private int[] success = new int[16];
     private ExecutorService executorService = null;
 
@@ -77,7 +76,7 @@ public class MembershipModel {
     public boolean isEnvelopeIsCatalogue() {
         return envelopeIsCatalogue.get();
     }
-    public SimpleBooleanProperty envelopeIsCatalogueProperty() {
+    public BooleanProperty envelopeIsCatalogueProperty() {
         return envelopeIsCatalogue;
     }
     public void setEnvelopeIsCatalogue(boolean envelopeIsCatalogue) {
@@ -248,12 +247,12 @@ public class MembershipModel {
     public void setSelectedPerson(PersonFx selectedPerson) {
         this.selectedPerson.set(selectedPerson);
     }
-    public ObservableList<PersonFx> getPeople() {
-        return people;
-    }
-    public void setPeople(ObservableList<PersonFx> people) {
-        this.people = people;
-    }
+//    public ObservableList<PersonFx> getPeople() {
+//        return people;
+//    }
+//    public void setPeople(ObservableList<PersonFx> people) {
+//        this.people = people;
+//    }
     public SimpleObjectProperty<MembershipFx> membershipProperty() {
         return membership;
     }
@@ -293,17 +292,20 @@ public class MembershipModel {
     public StringProperty errorMessageProperty() {
         return errorMessage;
     }
-
-
     public boolean isTableInEditMode() {
         return tableInEditMode.get();
     }
-
     public BooleanProperty tableInEditModeProperty() {
         return tableInEditMode;
     }
-
     public void setTableInEditMode(boolean inEditMode) {
         this.tableInEditMode.set(inEditMode);
+    }
+    public BooleanProperty personAddedProperty() {
+        return personAdded;
+    }
+    public void togglePersonAdded() {
+        personAddedProperty().set(true);
+        personAddedProperty().set(false);
     }
 }

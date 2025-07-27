@@ -108,7 +108,8 @@ public class PropertiesTabView implements Builder<Tab> {
         button.setOnAction((actionEvent -> {
             ArrayList<LabelDTO> labels = new ArrayList<>();
             LabelDTO label;
-            for (PersonFx person : membershipView.getMembershipModel().getPeople()) {
+            // had to change this to people inside membership object
+            for (PersonFx person : membershipView.getMembershipModel().membershipProperty().get().getPeople()) {
                 if (person.getMemberType() == 2) {
                     label = new LabelDTO();
                     label.setCity("Indianapolis, Indiana");
@@ -129,7 +130,8 @@ public class PropertiesTabView implements Builder<Tab> {
         button.setOnAction((actionEvent -> {
             ArrayList<LabelDTO> labels = new ArrayList<>();
             LabelDTO label;
-            for (PersonFx person : membershipView.getMembershipModel().getPeople()) {
+            // had to change this to people inside membership object
+            for (PersonFx person : membershipView.getMembershipModel().membershipProperty().get().getPeople()) {
                 if (person.getMemberType() == 1) {
                     label = new LabelDTO();
                     label.setCity("Indianapolis, Indiana");

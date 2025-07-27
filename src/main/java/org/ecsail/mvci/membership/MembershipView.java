@@ -1,8 +1,10 @@
 package org.ecsail.mvci.membership;
 
+import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.Property;
+import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -64,11 +66,11 @@ public class MembershipView implements Builder<Region> {
         membershipModel.membershipProperty().get().getPeople().forEach(personDTO -> membershipModel.getPeopleTabPane().getTabs()
                       .add(new PersonController(this, personDTO).getView()));
         membershipModel.getPeopleTabPane().getTabs().add(new AddPersonTabView(this).build());
-//        membershipModel.getPeopleTabPane().getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-//            if (newValue != null) {
-//                System.out.println(newValue.getUserData());
-//            }
-//        });
+        membershipModel.personAddedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                Platform.runLater(() -> membershipModel.getPeopleTabPane().getTabs().add(new PersonController(this, membershipModel.getSelectedPerson()).getView()));
+            }
+        });
     }
 
     private Node creteDivider() {
@@ -84,7 +86,7 @@ public class MembershipView implements Builder<Region> {
                 case DELETE_MEMBER_FROM_DATABASE_SUCCEED -> removePersonTab();
                 case DELETE_PRIMARY_MEMBER_FROM_DATABASE_SUCCEED -> afterPrimaryMemberRemoved();
                 case MOVE_SECONDARY_TO_PRIMARY_SUCCEED -> changeTabName("Secondary", "Primary");
-                case INSERT_PERSON_SUCCEED -> addPerson();
+//                case INSERT_PERSON_SUCCEED -> addPerson();
                 case DELETE_MEMBERSHIP_FROM_DATABASE_SUCCEED, DELETE_MEMBERSHIP_FROM_DATABASE_FAIL ->
                         displayDeleteTab();
             }
@@ -126,16 +128,16 @@ public class MembershipView implements Builder<Region> {
 //        }
     }
 
-    private void addPerson() {
-        membershipModel.getPeople().add(membershipModel.getSelectedPerson());
-        //Tab newTab = new PersonTabView(this, new PersonFx(membershipModel.getSelectedPerson())).build();
-        Tab newTab = new PersonController(this, new PersonFx(membershipModel.getSelectedPerson())).getView();
-        membershipModel.getPeopleTabPane().getTabs().add(newTab);
-        // Select the newly added tab
-        membershipModel.getPeopleTabPane().getSelectionModel().select(newTab);
-        getAddPersonTab().clearPersonDTO(); // clears PersonDTO that is part of this tab.
-        selectExtraTabByName("Notes"); // open notes tab after creating entry
-    }
+//    private void addPerson() {
+//        membershipModel.getPeople().add(membershipModel.getSelectedPerson());
+//        //Tab newTab = new PersonTabView(this, new PersonFx(membershipModel.getSelectedPerson())).build();
+//        Tab newTab = new PersonController(this, new PersonFx(membershipModel.getSelectedPerson())).getView();
+//        membershipModel.getPeopleTabPane().getTabs().add(newTab);
+//        // Select the newly added tab
+//        membershipModel.getPeopleTabPane().getSelectionModel().select(newTab);
+//        getAddPersonTab().clearPersonDTO(); // clears PersonDTO that is part of this tab.
+//        selectExtraTabByName("Notes"); // open notes tab after creating entry
+//    }
 
     private void afterPrimaryMemberRemoved() { // gets called with message after primary removed
         removePersonTab();
@@ -149,9 +151,10 @@ public class MembershipView implements Builder<Region> {
         action.accept(MembershipMessage.MOVE_SECONDARY_TO_PRIMARY);
     }
 
+    // had to change this to use people in membership
     private PersonFx getSecondaryMember() {
         System.out.println("getSecondaryMember()  (PersonTabView)");
-        return membershipModel.getPeople().stream()
+        return membershipModel.membershipProperty().get().getPeople().stream()
                 .filter(p -> p.getMemberType() == MemberType.SECONDARY.getCode())
                 .findFirst()
                 .orElse(null);

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.ecsail.fx.PersonFx;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -66,7 +67,7 @@ public class Person {
         this.lastName = fx.getLastName();
         this.occupation = fx.getOccupation();
         this.business = fx.getBusiness();
-        this.birthday = fx.getBirthday().toString();
+        this.birthday = fx.getBirthday() != null ? fx.getBirthday().format(DateTimeFormatter.ISO_LOCAL_DATE) : "1900-01-01";
         this.active = fx.isActive();
         this.nickName = fx.getNickName();
         this.oldMsid = fx.getOldMsid();

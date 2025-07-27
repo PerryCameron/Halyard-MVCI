@@ -37,7 +37,7 @@ public class HalyardPaths {
 	public static void checkPath(String path) {
 		File recordsDir = new File(path);
 		if (!recordsDir.exists()) {
-			logger.info("Creating dir: " + path);
+            logger.info("Creating dir: {}", path);
 		    recordsDir.mkdirs();
 		}
 	}
