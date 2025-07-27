@@ -247,12 +247,6 @@ public class MembershipModel {
     public void setSelectedPerson(PersonFx selectedPerson) {
         this.selectedPerson.set(selectedPerson);
     }
-//    public ObservableList<PersonFx> getPeople() {
-//        return people;
-//    }
-//    public void setPeople(ObservableList<PersonFx> people) {
-//        this.people = people;
-//    }
     public SimpleObjectProperty<MembershipFx> membershipProperty() {
         return membership;
     }

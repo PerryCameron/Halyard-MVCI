@@ -15,10 +15,7 @@ public class SlipController extends Controller<SlipMessage> {
         mainController = mc;
         SlipModel slipModel = new SlipModel(mainController.getMainModel());
         slipInteractor = new SlipInteractor(slipModel);
-//        slipInteractor = new SlipInteractor(slipModel, mainController.getConnections());
-        System.out.println("getting DATA");
         action(SlipMessage.GET_DATA); // moved this last, we will see if it works
-        System.out.println("Getting slipView");
         slipView = new SlipView(slipModel, this::action);
     }
 

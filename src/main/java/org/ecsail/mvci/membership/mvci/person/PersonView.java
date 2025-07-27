@@ -2,7 +2,6 @@ package org.ecsail.mvci.membership.mvci.person;
 
 
 import javafx.beans.property.Property;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -188,16 +187,11 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
     private Node bottomControlBox() {
         HBox hBox = HBoxFx.hBoxOf(new Insets(5, 5, 5, 5), 30);
         TextField textField = TextFieldFx.textFieldOf(120, "MSID");
-        //personModel.getMembershipModel().getPersonTextField().put(personModel.getPersonDTO(), textField);
-        // what am I looking for here?
-        //StackPane personStackPane = personModel.getMembershipModel().getStackPaneMap().get(personModel.getPersonDTO());
         if (personModel.stackPaneProperty().get() != null) {
             personModel.stackPaneProperty().get().getChildren().addAll(createComboBox(), textField, createRegion());
         } else {
             System.out.println("Stackpane is null for " + personModel.getPersonDTO());  // Grok the stackPane is null here, can you see why?
         }
-
-        //personModel.getMembershipModel().getStackPaneMap().get(personModel.getPersonDTO()).getChildren().addAll(createComboBox(), textField, createRegion());
         hBox.getChildren().addAll(personModel.stackPaneProperty().get(), createSubmit());
         return hBox;
     }
@@ -210,8 +204,6 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
     }
 
     private Node createComboBox() {
-        //final ComboBox<String> comboBox = new ComboBox<>();
-        //personModel.getMembershipModel().getPersonComboBox().put(personModel.getPersonDTO(), comboBox);
         personModel.comboBoxProperty().get().setPrefWidth(120);
         personModel.comboBoxProperty().get().getItems().clear();
         switch (personModel.getPersonDTO().getMemberType()) {
@@ -229,7 +221,6 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
         radioButton.selectedProperty().addListener((obs, wasPreviouslySelected, isNowSelected) -> {
             if (isNowSelected) {
                 changeStackPane(mapStringToEnum(name));
-                //personModel.getMembershipModel().getSelectedRadioForPerson().put(personModel.getPersonDTO(), radioButton);
                 personModel.radioButtonProperty().set(radioButton);
             }
         });
@@ -323,7 +314,6 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
         } else {
             changeDependentToType(type);
         }
-        //        return MembershipMessage.CHANGE_MEMBER_TYPE;
     }
 
     private void changeDependentToType(String type) {
@@ -544,7 +534,6 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
 
     private Node createFieldDetails() {
         VBox vBox = VBoxFx.vBoxOf(new Insets(20, 0, 0, 20));
-        // vBox.setStyle("-fx-background-color: lightblue;");
         vBox.getChildren().add(fieldBox(personModel.getPersonDTO().firstNameProperty(), "First Name"));
         vBox.getChildren().add(fieldBox(personModel.getPersonDTO().lastNameProperty(), "Last Name"));
         vBox.getChildren().add(fieldBox(personModel.getPersonDTO().nickNameProperty(), "Nickname"));

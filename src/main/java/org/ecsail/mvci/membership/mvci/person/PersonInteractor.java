@@ -366,7 +366,6 @@ public class PersonInteractor {
             if (personModel.selectedEmailProperty().get() == null)
                 return setFailMessage("Failed to delete email", 0, "No email selected");
             if (personModel.selectedEmailProperty().get().primaryUseProperty().get()) {
-                System.out.println(personModel.selectedEmailProperty().get() + "<-current ");
                 return setFailMessage("Failed to delete email", 0, "primary emails can not be deleted");
             }
             String response = httpClientUtil.postDataToGybe("delete/email", personModel.selectedEmailProperty().get());

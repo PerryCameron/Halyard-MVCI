@@ -274,18 +274,6 @@ public class ConnectInteractor implements ConfigFilePaths {
         logger.info("{} saved", LOGIN_FILE);
     }
 
-//    public void printLoginObjects() {
-//        System.out.println("---Printing login objects");
-//        connectModel.getLoginDTOS().forEach(loginDTO -> {
-//            System.out.println(loginDTO);
-//        });
-//        System.out.println("---Printing current object");
-//        System.out.println(connectModel.currentLoginProperty().userProperty().getValue());
-//        System.out.println(connectModel.currentLoginProperty().hostProperty().getValue());
-//        System.out.println(connectModel.currentLoginProperty().passwdProperty().getValue());
-//        System.out.println("");
-//    }
-
     private int findNextIndex() {
         return connectModel.getLoginDTOS().stream()
                 .mapToInt(Login::getId)

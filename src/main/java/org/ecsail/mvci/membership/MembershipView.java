@@ -4,7 +4,6 @@ import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.Property;
-import javafx.collections.ListChangeListener;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -68,7 +67,12 @@ public class MembershipView implements Builder<Region> {
         membershipModel.getPeopleTabPane().getTabs().add(new AddPersonTabView(this).build());
         membershipModel.personAddedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
-                Platform.runLater(() -> membershipModel.getPeopleTabPane().getTabs().add(new PersonController(this, membershipModel.getSelectedPerson()).getView()));
+                Platform.runLater(() -> {
+                    Tab tab = new PersonController(this, membershipModel.getSelectedPerson()).getView();
+                    membershipModel.getPeopleTabPane().getTabs().add(tab);
+                    membershipModel.getPeopleTabPane().getSelectionModel().select(tab);
+                });
+
             }
         });
     }
@@ -197,7 +201,7 @@ public class MembershipView implements Builder<Region> {
         membershipModel.getPeopleTabPane().getSelectionModel().selectedItemProperty().addListener((observable, oldTab, newTab) -> {
             if (newTab.getText().equals("Add")) {
                 AddPersonTabView addPersonTabView = (AddPersonTabView) newTab.getUserData();
-                membershipModel.setSelectedPerson(addPersonTabView.getPersonDTO());
+                membershipModel.setSelectedPerson(addPersonTabView.getPersonFx());
                 logger.debug("Showing Add tab: {}", membershipModel.getSelectedPerson());
             } else {
                 PersonView personView = (PersonView) newTab.getUserData(); // Cast to PersonView
