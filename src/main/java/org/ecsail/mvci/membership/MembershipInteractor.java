@@ -202,7 +202,14 @@ public class MembershipInteractor implements SlipUser {
         }
     }
 
-
+    public MembershipMessage insertPerson() {
+        System.out.println("name= " + membershipModel.selectedPersonProperty().get().getFullName());
+        System.out.println("occupation= " + membershipModel.selectedPersonProperty().get().getOccupation());
+        System.out.println("business= " + membershipModel.selectedPersonProperty().get().getBusiness());
+        System.out.println("birthday= " + membershipModel.selectedPersonProperty().get().getBirthday());
+        System.out.println("member type= " + membershipModel.selectedPersonProperty().get().getMemberType());
+        return MembershipMessage.SUCCESS;
+    }
 
     public MembershipMessage deleteMembership() {
         logger.info("Deleting Membership MSID: {}", membershipModel.membershipProperty().get().msIdProperty().get());
@@ -352,4 +359,10 @@ public class MembershipInteractor implements SlipUser {
     public String getCustomMessage() {
         return membershipModel.errorMessageProperty().get();
     }
+
+    public void showErrorDialogue() {
+        DialogueFx.errorAlert("Error", membershipModel.errorMessageProperty().get());
+    }
+
+
 }

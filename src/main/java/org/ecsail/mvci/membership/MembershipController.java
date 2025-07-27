@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import java.util.concurrent.ExecutorService;
 import java.util.function.Supplier;
 
+import static javax.swing.JOptionPane.ERROR_MESSAGE;
 import static org.ecsail.mvci.membership.MembershipMessage.*;
 
 public class MembershipController extends Controller<MembershipMessage> {
@@ -40,7 +41,9 @@ public class MembershipController extends Controller<MembershipMessage> {
             case UPDATE_BOAT -> runTask(membershipInteractor::updateBoat);
             case DELETE_BOAT -> runTask(membershipInteractor::deleteBoat);
             case DELETE_MEMBERSHIP -> runSpinner(membershipInteractor::deleteMembership, 50, 50);
+            case INSERT_PERSON -> runTask(membershipInteractor::insertPerson);
             case FAIL -> membershipInteractor.signalFail();
+            case ERROR_DIALOGUE -> membershipInteractor.showErrorDialogue();
             case SUCCESS -> membershipInteractor.signalSuccess();
             case PRINT_ENVELOPE -> runTask(membershipInteractor::printEnvelope);
         }

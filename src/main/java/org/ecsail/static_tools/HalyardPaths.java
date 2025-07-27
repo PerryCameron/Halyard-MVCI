@@ -16,12 +16,6 @@ public class HalyardPaths {
 	public static final String ECSC_HOME = System.getProperty("user.home") + "/Documents/ECSC";
 	public static final String LOGFILEDIR = System.getProperty("user.home") + "/.ecsc/logs";
 
-
-// 	private static boolean isDirEmpty(final Path directory) throws IOException {
-// 	    try(DirectoryStream<Path> dirStream = Files.newDirectoryStream(directory)) {
-// 	        return !dirStream.iterator().hasNext();
-// 	    }
-// 	}
  	
  	public static String getFileExtension(File file) {
  	    String name = file.getName();
@@ -35,12 +29,7 @@ public class HalyardPaths {
 	public static ArrayList<String> listFilesForFolder(final File folder) {
 		ArrayList<String> imageFiles = new ArrayList<String>();
 	    for (final File fileEntry : folder.listFiles()) {
-	      //  if (fileEntry.isDirectory()) {
-	      //      listFilesForFolder(fileEntry);
-	      //  } else {
 	        	imageFiles.add(fileEntry.getName());
-	      //      System.out.println(fileEntry.getName());
-	      //  }
 	    }
 		return imageFiles;    
 	}
@@ -89,4 +78,3 @@ public class HalyardPaths {
 	}
 	
 }
-//Documents

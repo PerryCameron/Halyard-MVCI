@@ -17,6 +17,8 @@ import java.util.concurrent.ExecutorService;
 public class MembershipModel {
     private final MainModel mainModel;
     private final ObservableList<BoardPositionDTO> boardPositionDTOS;
+
+    // TODO i don't think I need this, it is located in the membership object
     private ObservableList<PersonFx> people = FXCollections.observableArrayList();
 
     private final SimpleObjectProperty<RosterFx> membershipFromRosterList = new SimpleObjectProperty<>();

@@ -26,18 +26,18 @@ import java.util.HashMap;
 
 public class AddPersonTabView extends Tab implements Builder<Tab> {
 
-
-    private HashMap<String, TextField> textFieldHashMap = new HashMap<>();
-    private CustomDatePicker datePicker = new CustomDatePicker();
+    private final HashMap<String, TextField> textFieldHashMap = new HashMap<>();
+    private final CustomDatePicker datePicker = new CustomDatePicker();
     private final MembershipView membershipView;
     private final MembershipModel membershipModel;
-    private ComboBox<MemberType> comboBox = new ComboBox<>();
+    private final ComboBox<MemberType> comboBox = new ComboBox<>();
     private static final Logger logger = LoggerFactory.getLogger(AddPersonTabView.class);
     private final PersonFx personDTO;
+
     public AddPersonTabView(MembershipView membershipView) {
         this.membershipView = membershipView;
         this.membershipModel = membershipView.getMembershipModel();
-        this.personDTO = new PersonFx(membershipModel.membershipProperty().get().membershipIdProperty().get());
+        this.personDTO = new PersonFx(membershipModel.membershipProperty().get().msIdProperty().get());
     }
 
     @Override
@@ -90,9 +90,7 @@ public class AddPersonTabView extends Tab implements Builder<Tab> {
         comboBox.getItems().setAll(MemberType.values());
         comboBox.setValue(MemberType.getByCode(1)); // sets to primary
         comboBox.setPrefWidth(230);
-        comboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
-            personDTO.setMemberType(newValue.getCode());
-        });
+        comboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> personDTO.setMemberType(newValue.getCode()));
         return labeledField(label, comboBox);
     }
 
@@ -109,51 +107,48 @@ public class AddPersonTabView extends Tab implements Builder<Tab> {
     }
 
     private boolean isConsistent() {
-        if(!memberTypeAcceptable()) {
-            DialogueFx.customAlertWithShow("Can not add " + membershipModel.getSelectedPerson().getFullName(),
-                    "You cannot have two " + comboBox.getValue()
-                            + " members for the same membership!",
-                    Alert.AlertType.ERROR);
-            return false;
+        if(memberTypeAcceptable()) {
+            return displayErrorMessage("Can not add person: "
+                    + "You cannot have two " + comboBox.getValue() + " members for the same membership!");
         }
-        if(!firstNamePresent()) {
-            DialogueFx.customAlertWithShow("Can not add this person",
-                    "You must fill out the first name!",
-                    Alert.AlertType.ERROR);
-            return false;
-        }
-        if(!lastNamePresent()) {
-            DialogueFx.customAlertWithShow("Can not add this person",
-                    "You must fill out the last name!",
-                    Alert.AlertType.ERROR);
-            return false;
+        if(!firstNamePresent() || !lastNamePresent()) {
+            return displayErrorMessage("Can not add this person you must fill out both the first and last name");
         }
         return true;
     }
 
+    private boolean displayErrorMessage(String message) {
+        membershipModel.errorMessageProperty().set(message);
+        membershipView.sendMessage().accept(MembershipMessage.ERROR_DIALOGUE);
+        return false;
+    }
+
     private boolean lastNamePresent() {
-        return !textFieldHashMap.get("Last Name").getText().equals("");
+        return !textFieldHashMap.get("Last Name").getText().isEmpty();
     }
 
     private boolean firstNamePresent() {
-        return !textFieldHashMap.get("First Name").getText().equals("");
+        return !textFieldHashMap.get("First Name").getText().isEmpty();
     }
 
     private boolean memberTypeAcceptable() {
         switch (comboBox.getValue()) {
-            case PRIMARY -> { return !primaryExists(); }
-            case SECONDARY -> { return !secondaryExists(); }
-            case DEPENDANT -> { return true; }
+            case PRIMARY -> {
+                return primaryExists(); }
+            case SECONDARY -> {
+                return secondaryExists(); }
+            case DEPENDANT -> {
+                return true; }
         }
         return false;
     }
 
     private boolean primaryExists() {
-        return membershipModel.getPeople().stream().anyMatch(p -> p.getMemberType() == 1);
+        return membershipModel.membershipProperty().get().getPeople().stream().anyMatch(p -> p.getMemberType() == 1);
     }
 
     private boolean secondaryExists() {
-        return membershipModel.getPeople().stream().anyMatch(p -> p.getMemberType() == 2);
+        return membershipModel.membershipProperty().get().getPeople().stream().anyMatch(p -> p.getMemberType() == 2);
     }
 
     private Node fieldBox(Property<?> property, String label) {
