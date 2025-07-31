@@ -21,7 +21,7 @@ import org.ecsail.fx.EmailFx;
 import org.ecsail.fx.PersonFx;
 import org.ecsail.interfaces.ConfigFilePaths;
 import org.ecsail.interfaces.ObjectType;
-import org.ecsail.mvci.membership.MembershipMessage;
+//import org.ecsail.mvci.membership.MembershipMessage;
 import org.ecsail.mvci.membership.components.*;
 import org.ecsail.static_tools.DateTools;
 import org.ecsail.widgetfx.*;
@@ -165,23 +165,23 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
         return vBox;
     }
 
-    private MembershipMessage mapStringToEnum(String input) {
+    private PersonMessage mapStringToEnum(String input) {
         personModel.getMembershipModel().setSelectedPerson(personModel.getPersonDTO());
         switch (input.split(" ")[0]) { // Split the string and get the first word
             case "Change" -> {
-                return MembershipMessage.CHANGE_MEMBER_TYPE;
+                return PersonMessage.CHANGE_MEMBER_TYPE;
             }
             case "Remove" -> {
-                return MembershipMessage.DETACH_MEMBER_FROM_MEMBERSHIP;
+                return PersonMessage.DETACH_MEMBER_FROM_MEMBERSHIP;
             }
             case "Delete" -> {
-                return MembershipMessage.DELETE_MEMBER_FROM_DATABASE;
+                return PersonMessage.DELETE_MEMBER_FROM_DATABASE;
             }
             case "Move" -> {
-                return MembershipMessage.MOVE_MEMBER_TO_MEMBERSHIP;
+                return PersonMessage.MOVE_MEMBER_TO_MEMBERSHIP;
             }
         }
-        return MembershipMessage.NONE;
+        return PersonMessage.NONE;
     }
 
     private Node bottomControlBox() {
@@ -227,17 +227,17 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
         return radioButton;
     }
 
-    private void changeStackPane(MembershipMessage action) {
+    private void changeStackPane(PersonMessage action) {
         personModel.stackPaneProperty().get().getChildren().forEach(child -> {
             if (child instanceof ComboBox) {
-                child.setVisible(action == MembershipMessage.CHANGE_MEMBER_TYPE);
-                child.setManaged(action == MembershipMessage.CHANGE_MEMBER_TYPE);
+                child.setVisible(action == PersonMessage.CHANGE_MEMBER_TYPE);
+                child.setManaged(action == PersonMessage.CHANGE_MEMBER_TYPE);
             } else if (child instanceof TextField) {
-                child.setVisible(action == MembershipMessage.MOVE_MEMBER_TO_MEMBERSHIP);
-                child.setManaged(action == MembershipMessage.MOVE_MEMBER_TO_MEMBERSHIP);
+                child.setVisible(action == PersonMessage.MOVE_MEMBER_TO_MEMBERSHIP);
+                child.setManaged(action == PersonMessage.MOVE_MEMBER_TO_MEMBERSHIP);
             } else if (child instanceof Region) {
-                child.setVisible(action == MembershipMessage.DELETE_MEMBER_FROM_DATABASE || action == MembershipMessage.DETACH_MEMBER_FROM_MEMBERSHIP);
-                child.setManaged(action == MembershipMessage.DELETE_MEMBER_FROM_DATABASE || action == MembershipMessage.DETACH_MEMBER_FROM_MEMBERSHIP);
+                child.setVisible(action == PersonMessage.DELETE_MEMBER_FROM_DATABASE || action == PersonMessage.DETACH_MEMBER_FROM_MEMBERSHIP);
+                child.setManaged(action == PersonMessage.DELETE_MEMBER_FROM_DATABASE || action == PersonMessage.DETACH_MEMBER_FROM_MEMBERSHIP);
             }
         });
     }
@@ -269,36 +269,27 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
     }
 
     private void movePersonToMembership() {
-//        // TODO move to another msid
-//        int oldMsid = person.getMs_id();
-//        // set memberType to 3 as default
-//        person.setMemberType(3);
-//        person.setOldMsid(oldMsid);
-//        // TODO make sure it is an integer and that this membership exists
-//        person.setMs_id(Integer.parseInt(msidTextField.getText()));
-//        SqlUpdate.updatePerson(person);
-//        // TODO error check to make sure we are in membership view
-//        removeThisTab(personTabPane);
-        //                case "Move" -> { return MembershipMessage.MOVE_MEMBER_TO_MEMBERSHIP; }
+        action.accept(PersonMessage.MOVE_MEMBER_TO_MEMBERSHIP);
+        // need to place MSID
     }
 
     private void removeMemberFromMembership() {
         if (isMemberType(MemberType.PRIMARY)) {
             if (hasMemberType(MemberType.SECONDARY)) {
-                removePersonFromMembership(MembershipMessage.DETACH_PRIMARY_MEMBER_FROM_MEMBERSHIP);
+                removePersonFromMembership(PersonMessage.DETACH_PRIMARY_MEMBER_FROM_MEMBERSHIP);
                 // secondary gets changed after return message to membershipView
             } else
                 DialogueFx.errorAlert("Can not remove " + personModel.getMembershipModel().getSelectedPerson().getFullName()
                         , "Can not remove primary without secondary to replace them");
-        } else removePersonFromMembership(MembershipMessage.DETACH_MEMBER_FROM_MEMBERSHIP);
+        } else removePersonFromMembership(PersonMessage.DETACH_MEMBER_FROM_MEMBERSHIP);
     }
 
-    private void removePersonFromMembership(MembershipMessage message) {
+    private void removePersonFromMembership(PersonMessage message) {
         personModel.getPersonDTO().setOldMsid(personModel.getPersonDTO().getMsId());
         personModel.getPersonDTO().setMsId(0);
         personModel.getPersonDTO().setMemberType(0);
         personModel.getMembershipModel().setSelectedPerson(personModel.getPersonDTO());
-        personModel.getMembershipView().sendMessage().accept(message);
+        action.accept(message);
     }
 
     private boolean isMemberType(MemberType memberType) {
@@ -319,38 +310,40 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
     private void changeDependentToType(String type) {
         switch (type) {
             case "Primary" -> {
-                if (hasMemberType(MemberType.PRIMARY)) System.out.println("Swap primary and dependent");
+                if (hasMemberType(MemberType.PRIMARY)) personModel.messageProperty().set(PersonMessage.SWAP_DEPENDENT_WITH_PRIMARY);
             }
             case "Secondary" -> {
-                if (hasMemberType(MemberType.SECONDARY)) System.out.println("Swap secondary and dependent");
-                else System.out.println("Make Dependent secondary");
+                if (hasMemberType(MemberType.SECONDARY)) personModel.messageProperty().set(PersonMessage.SWAP_DEPENDENT_WITH_SECONDARY);
             }
         }
+        action.accept(PersonMessage.CHANGE_MEMBER_TYPE);
     }
 
     private void changeSecondaryToType(String type) {
         switch (type) {
             case "Primary" -> {
-                if (hasMemberType(MemberType.PRIMARY)) System.out.println("Swap primary and secondary");
+                if (hasMemberType(MemberType.PRIMARY)) personModel.messageProperty().set(PersonMessage.SWAP_PRIMARY_AND_SECONDARY);// System.out.println("Swap primary and secondary");
             }
-            case "Dependent" -> System.out.println("make secondary a dependant");
+            case "Dependent" -> personModel.messageProperty().set(PersonMessage.MOVE_SECONDARY_TO_DEPENDENT);//System.out.println("make secondary a dependant");
         }
+        action.accept(PersonMessage.CHANGE_MEMBER_TYPE);
     }
 
     private void changePrimaryToType(String type) {
         switch (type) {
             case "Secondary" -> {
-                if (hasMemberType(MemberType.SECONDARY)) System.out.println("Swap primary and secondary");
+                if (hasMemberType(MemberType.SECONDARY)) personModel.messageProperty().set(PersonMessage.SWAP_PRIMARY_AND_SECONDARY); //System.out.println("Swap primary and secondary");
             }
             case "Dependent" -> {
                 if (hasMemberType(MemberType.SECONDARY)) {
-                    System.out.println("make primary dependant, make secondary primary");
+                    personModel.messageProperty().set(PersonMessage.MAKE_PRIMARY_DEPENDENT_AND_SECONDARY_PRIMARY);
                 } else {
                     DialogueFx.errorAlert("Can not move " + personModel.getMembershipModel().getSelectedPerson().getFullName()
                             , "Can not move primary without secondary to replace them");
                 }
             }
         }
+        action.accept(PersonMessage.CHANGE_MEMBER_TYPE);
     }
 
     // had to change this when remove people directly from membership model
@@ -410,7 +403,7 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
                 "Missing Selection",
                 "You need to select a person first"};
         if (DialogueFx.verifyAction(strings, personModel.getMembershipModel().getSelectedPerson()))
-            personModel.getMembershipView().sendMessage().accept(MembershipMessage.DELETE_MEMBER_FROM_DATABASE);
+            action.accept(PersonMessage.DELETE_MEMBER_FROM_DATABASE);
     }
 
     private void deleteAward() {

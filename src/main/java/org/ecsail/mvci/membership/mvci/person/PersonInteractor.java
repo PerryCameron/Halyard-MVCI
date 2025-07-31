@@ -150,7 +150,6 @@ public class PersonInteractor {
                     .readValue(response, AwardResponse.class);
             if (insertAwardResponse.isSuccess()) {
                 personModel.awardTableViewProperty().get().getItems().addFirst(new AwardFx(insertAwardResponse.getAward()));
-                //personModel.awardTableViewProperty().get().refresh();
                 personModel.awardTableViewProperty().get().getSelectionModel().selectFirst();
                 return PersonMessage.SUCCESS;
             } else {
@@ -169,7 +168,6 @@ public class PersonInteractor {
                     .readValue(response, PhoneResponse.class);
             if (insertPhoneResponse.isSuccess()) {
                 personModel.phoneTableViewProperty().get().getItems().addFirst(new PhoneFx(insertPhoneResponse.getPhone()));
-                //personModel.phoneTableViewProperty().get().refresh();
                 personModel.phoneTableViewProperty().get().getSelectionModel().selectFirst();
                 return PersonMessage.SUCCESS;
             } else {
@@ -422,6 +420,31 @@ public class PersonInteractor {
         } catch (Exception e) {
             return setFailMessage("Unable to delete position", personModel.selectedPositionProperty().get().getOfficerId(), e.getMessage());
         }
+    }
+
+    public PersonMessage moveMemberToMembership() {
+        System.out.println("Move member to membership");
+        return PersonMessage.SUCCESS;
+    }
+
+    public PersonMessage changeMemberType() {
+        System.out.println("Change member type: " + personModel.messageProperty().get());
+        return PersonMessage.SUCCESS;
+    }
+
+    public PersonMessage detachMemberFromMembership() {
+        System.out.println("Detach Member from membership: " + personModel.getPersonDTO().getFullName());
+        return PersonMessage.SUCCESS;
+    }
+
+    public PersonMessage deleteMemberFromDatabase() {
+        System.out.println("Delete Member from database: " + personModel.getPersonDTO().getFullName());
+        return PersonMessage.SUCCESS;
+    }
+
+    public PersonMessage detachPrimaryMemberFromMembership() {
+        System.out.println("Delete Primary Member from database: " + personModel.getPersonDTO().getFullName());
+        return PersonMessage.SUCCESS;
     }
 
     public String[] getErrorMessage() {

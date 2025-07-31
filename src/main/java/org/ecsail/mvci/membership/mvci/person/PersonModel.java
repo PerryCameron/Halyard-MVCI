@@ -37,6 +37,7 @@ public class PersonModel {
     private final ObjectProperty<OfficerFx> selectedPosition = new SimpleObjectProperty<>();
     private final StringProperty errorMessage = new SimpleStringProperty();
     private final BooleanProperty imageLoaded = new SimpleBooleanProperty(false);
+    private final ObjectProperty<PersonMessage> messageProperty = new SimpleObjectProperty<>();
 
     private final ObjectProperty<HBox> awardHbox = new SimpleObjectProperty<>();
 
@@ -49,96 +50,74 @@ public class PersonModel {
     public PersonFx getPersonDTO() {
         return personDTO;
     }
-
     public MembershipModel getMembershipModel() {
         return membershipModel;
     }
-
     public MembershipView getMembershipView() {
         return membershipView;
     }
-
     public HashMap<String, HBox> getPersonInfoHBoxMap() {
         return personInfoHBoxMap;
     }
-
     public Label getAgeLabel() {
         return ageLabel;
     }
-
     public void setAgeLabel(Label ageLabel) {
         this.ageLabel = ageLabel;
     }
-
     public ImageView getImageViewProperty() {
         return imageViewProperty.get();
     }
-
     public ObjectProperty<ImageView> imageViewPropertyProperty() {
         return imageViewProperty;
     }
-
     public Tab getTab() {
         return tab;
     }
-
     public Picture getPicture() {
         return picture.get();
     }
-
     public ObjectProperty<Picture> pictureProperty() {
         return picture;
     }
-
     public ObjectProperty<TableView<AwardFx>> awardTableViewProperty() {
         return awardTableViewProperty;
     }
-
     public ObjectProperty<TableView<EmailFx>> emailTableViewProperty() {
         return emailTableViewProperty;
     }
-
     public ObjectProperty<TableView<OfficerFx>> officerTableViewProperty() {
         return officerTableViewProperty;
     }
-
     public ObjectProperty<TableView<PhoneFx>> phoneTableViewProperty() {
         return phoneTableViewProperty;
     }
-
     public ObjectProperty<StackPane> stackPaneProperty() {
         return stackPaneProperty;
     }
-
     public ObjectProperty<RadioButton>  radioButtonProperty() {
         return radioButtonProperty;
     }
-
     public ObjectProperty<ComboBox<String>> comboBoxProperty() {
         return comboBoxProperty;
     }
-
     public ObjectProperty<AwardFx> selectedAwardProperty() {
         return selectedAward;
     }
-
     public ObjectProperty<PhoneFx> selectedPhoneProperty() {
         return selectedPhone;
     }
-
     public ObjectProperty<EmailFx> selectedEmailProperty() {
         return selectedEmail;
     }
-
     public ObjectProperty<OfficerFx> selectedPositionProperty() {
         return selectedPosition;
     }
-
     public StringProperty errorMessageProperty() {
         return errorMessage;
     }
-
     public BooleanProperty imageLoadedProperty() {
         return imageLoaded;
     }
+    public ObjectProperty<PersonMessage> messageProperty() { return messageProperty; }
 }

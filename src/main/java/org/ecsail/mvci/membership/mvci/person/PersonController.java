@@ -52,6 +52,11 @@ public class PersonController extends TabController<PersonMessage> {
                     case UPDATE_POSITION -> runInTask(personInteractor::updatePosition);
                     case DELETE_POSITION -> runInTask(personInteractor::deletePosition);
                     case UPDATE_PERSON -> runInTask(personInteractor::updatePerson);
+                    case MOVE_MEMBER_TO_MEMBERSHIP -> runInTask(personInteractor::moveMemberToMembership);
+                    case DETACH_MEMBER_FROM_MEMBERSHIP -> runInTask(personInteractor::detachMemberFromMembership);
+                    case DETACH_PRIMARY_MEMBER_FROM_MEMBERSHIP -> runInTask(personInteractor::detachPrimaryMemberFromMembership);
+                    case DELETE_MEMBER_FROM_DATABASE -> runInTask(personInteractor::deleteMemberFromDatabase);
+                    case CHANGE_MEMBER_TYPE -> runInTask(personInteractor::changeMemberType);
                 }
     }
 
