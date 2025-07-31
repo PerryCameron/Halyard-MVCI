@@ -38,15 +38,16 @@ public class PersonModel {
     private final StringProperty errorMessage = new SimpleStringProperty();
     private final BooleanProperty imageLoaded = new SimpleBooleanProperty(false);
     private final ObjectProperty<PersonMessage> messageProperty = new SimpleObjectProperty<>();
-
+    private final StringProperty moveToMSIDProperty = new SimpleStringProperty("0");
     private final ObjectProperty<HBox> awardHbox = new SimpleObjectProperty<>();
+
+
 
     public PersonModel(MembershipView membershipView, PersonFx personDTO) {
         this.membershipView = membershipView;
         this.membershipModel = membershipView.getMembershipModel();
         this.personDTO = personDTO;
     }
-
     public PersonFx getPersonDTO() {
         return personDTO;
     }
@@ -120,4 +121,5 @@ public class PersonModel {
         return imageLoaded;
     }
     public ObjectProperty<PersonMessage> messageProperty() { return messageProperty; }
+    public StringProperty moveToMSIDProperty() { return moveToMSIDProperty; }
 }

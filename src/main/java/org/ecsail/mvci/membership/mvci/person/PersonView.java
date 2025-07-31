@@ -24,6 +24,7 @@ import org.ecsail.interfaces.ObjectType;
 //import org.ecsail.mvci.membership.MembershipMessage;
 import org.ecsail.mvci.membership.components.*;
 import org.ecsail.static_tools.DateTools;
+import org.ecsail.static_tools.StringTools;
 import org.ecsail.widgetfx.*;
 
 import java.time.LocalDate;
@@ -187,10 +188,9 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
     private Node bottomControlBox() {
         HBox hBox = HBoxFx.hBoxOf(new Insets(5, 5, 5, 5), 30);
         TextField textField = TextFieldFx.textFieldOf(120, "MSID");
+        personModel.moveToMSIDProperty().bind(textField.textProperty());
         if (personModel.stackPaneProperty().get() != null) {
             personModel.stackPaneProperty().get().getChildren().addAll(createComboBox(), textField, createRegion());
-        } else {
-            System.out.println("Stackpane is null for " + personModel.getPersonDTO());  // Grok the stackPane is null here, can you see why?
         }
         hBox.getChildren().addAll(personModel.stackPaneProperty().get(), createSubmit());
         return hBox;
@@ -269,8 +269,11 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
     }
 
     private void movePersonToMembership() {
-        action.accept(PersonMessage.MOVE_MEMBER_TO_MEMBERSHIP);
-        // need to place MSID
+        if(StringTools.isInteger(personModel.moveToMSIDProperty().get())) {
+            action.accept(PersonMessage.MOVE_MEMBER_TO_MEMBERSHIP);
+        } else {
+            DialogueFx.errorAlert("Input Error", "MSID field must be an integer");
+        }
     }
 
     private void removeMemberFromMembership() {

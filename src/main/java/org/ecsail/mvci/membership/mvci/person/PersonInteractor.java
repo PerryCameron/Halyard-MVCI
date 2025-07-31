@@ -423,7 +423,7 @@ public class PersonInteractor {
     }
 
     public PersonMessage moveMemberToMembership() {
-        System.out.println("Move member to membership");
+        System.out.println("Move member to membership: " + personModel.moveToMSIDProperty().get());
         return PersonMessage.SUCCESS;
     }
 
