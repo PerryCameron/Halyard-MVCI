@@ -4,7 +4,8 @@ package org.ecsail.mvci.membership.mvci.person;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.geometry.Pos;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.scene.input.Clipboard;
 import org.ecsail.fx.*;
@@ -422,23 +423,131 @@ public class PersonInteractor {
         }
     }
 
+    public PersonMessage deleteMemberFromDatabase() {
+        try {
+            String response = httpClientUtil.postDataToGybe("delete/person", new Person(personModel.getPersonDTO()));
+            if (response == null)
+                return setFailMessage("Failed to delete person", 0, "Null response from server");
+            PersonResponse personResponse = httpClientUtil.getObjectMapper().readValue(response, PersonResponse.class);
+            if (personResponse == null)
+                return setFailMessage("Failed to delete person", 0, "Invalid response from server");
+            if (personResponse.isSuccess()) {
+                logger.info(personResponse.getMessage());
+                if (personModel.getPersonDTO() != null) {
+                    Platform.runLater(() -> {
+                        TabPane tabPane = personModel.getMembershipModel().getPeopleTabPane();
+                        tabPane.getTabs().remove(tabPane.getSelectionModel().getSelectedIndex());
+                    });
+                    return PersonMessage.SUCCESS;
+                } else
+                    return setFailMessage("Position", personModel.selectedPositionProperty().get().getOfficerId(), "deleted on server but not found in membership list");
+            } else {
+                String errorMessage = personResponse.getMessage() != null ? personResponse.getMessage() : "Unknown error";
+                return setFailMessage("Unable to delete person", personModel.getPersonDTO().pIdProperty().get(), errorMessage);
+            }
+        } catch (Exception e) {
+            return setFailMessage("Unable to delete person", personModel.getPersonDTO().pIdProperty().get(), e.getMessage());
+        }
+    }
+
     public PersonMessage moveMemberToMembership() {
         System.out.println("Move member to membership: " + personModel.moveToMSIDProperty().get());
-        return PersonMessage.SUCCESS;
+        PersonResponse personResponse = new PersonResponse(new Person(personModel.getPersonDTO()));
+        personResponse.setMessage("move:" + personModel.moveToMSIDProperty().get());
+        try {
+            String response = httpClientUtil.postDataToGybe("update/person/memtype", personResponse);
+            PersonResponse returnPersonResponse = httpClientUtil.getObjectMapper().readValue(response, PersonResponse.class);
+            if (returnPersonResponse.isSuccess()) return PersonMessage.SUCCESS;
+            else return setFailMessage("Failed to update person", personModel.getPersonDTO().getpId(), returnPersonResponse.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return setFailMessage("Unable to update person", personModel.getPersonDTO().getpId(), e.getMessage());
+        }
     }
 
     public PersonMessage changeMemberType() {
         System.out.println("Change member type: " + personModel.messageProperty().get());
-        return PersonMessage.SUCCESS;
+        PersonResponse personResponse = new PersonResponse(new Person(personModel.getPersonDTO()));
+        //personResponse.setMessage("change:" + personModel.messageProperty().get().toString());
+        personResponse.setMessage(personModel.messageProperty().get().toString());
+        try {
+            String response = httpClientUtil.postDataToGybe("update/person/change-mem-type", personResponse);
+            PersonResponse returnPersonResponse = httpClientUtil.getObjectMapper().readValue(response, PersonResponse.class);
+            if (returnPersonResponse.isSuccess()) {
+                System.out.println(personResponse.getMessage());
+                setUItoMatchChange(personResponse.getMessage());
+                return PersonMessage.SUCCESS;
+            }
+            else return setFailMessage("Failed to update person's memtype", personModel.getPersonDTO().getpId(), returnPersonResponse.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return setFailMessage("Unable to update person's memtype", personModel.getPersonDTO().getpId(), e.getMessage());
+        }
+    }
+
+    private void setUItoMatchChange(String message) {
+        TabPane tabPane = personModel.getMembershipModel().getPeopleTabPane();
+        Tab primary = null;
+        Tab secondary = null;
+        // Find Primary and Secondary tabs
+        for (Tab tab : tabPane.getTabs()) {
+            if (tab.getText().equals("Primary")) {
+                primary = tab;
+            } else if (tab.getText().equals("Secondary")) {
+                secondary = tab;
+            }
+        }
+        Optional<PersonFx> primaryFX = getPersonWithType(1);
+        Optional<PersonFx> secondaryFX = getPersonWithType(2);
+        switch (message) {
+            case "SWAP_PRIMARY_AND_SECONDARY" -> {
+                // Ensure both tabs are found before updating
+                if (primary != null && secondary != null) {
+                    Tab finalSecondary = secondary;
+                    Tab finalPrimary = primary;
+                    Platform.runLater(() -> {
+                        finalSecondary.setText("Primary");
+                        finalPrimary.setText("Secondary");
+                    });
+                    if(primaryFX.isPresent()) {
+                        primaryFX.get().setMemberType(2);
+                    }
+                    if(secondaryFX.isPresent()) {
+                        secondaryFX.get().setMemberType(1);
+                    }
+                } else {
+                    logger.error("Primary or Secondary tab not found");
+                }
+            }
+            case "MAKE_PRIMARY_DEPENDENT_AND_SECONDARY_PRIMARY" -> {
+                if (primary != null && secondary != null) {
+                    Tab finalSecondary = secondary;
+                    Tab finalPrimary = primary;
+                    Platform.runLater(() -> {
+                        finalSecondary.setText("Primary");
+                        finalPrimary.setText("Dependent");
+                    });
+                    if(primaryFX.isPresent()) { primaryFX.get().setMemberType(3); }
+                    if(secondaryFX.isPresent()) { primaryFX.get().setMemberType(1); }
+                } else {
+                    logger.error("Primary or Secondary tab not found");
+                }
+            }
+        }
+    }
+
+    public Optional<PersonFx> getPersonWithType(int type) {
+        return personModel.getMembershipModel()
+                .membershipProperty()
+                .get()
+                .getPeople()
+                .stream()
+                .filter(personFx -> personFx.getMemberType() == type)
+                .findFirst();
     }
 
     public PersonMessage detachMemberFromMembership() {
         System.out.println("Detach Member from membership: " + personModel.getPersonDTO().getFullName());
-        return PersonMessage.SUCCESS;
-    }
-
-    public PersonMessage deleteMemberFromDatabase() {
-        System.out.println("Delete Member from database: " + personModel.getPersonDTO().getFullName());
         return PersonMessage.SUCCESS;
     }
 

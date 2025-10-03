@@ -61,7 +61,7 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
         personModel.getTab().selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
                 if(!personModel.imageLoadedProperty().get())
-                action.accept(PersonMessage.GET_IMAGE);
+                    action.accept(PersonMessage.GET_IMAGE);
             }
         });
         if(personModel.getPersonDTO().memberTypeProperty().get() == 1) action.accept(PersonMessage.GET_IMAGE);
@@ -326,6 +326,7 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
         switch (type) {
             case "Primary" -> {
                 if (hasMemberType(MemberType.PRIMARY)) personModel.messageProperty().set(PersonMessage.SWAP_PRIMARY_AND_SECONDARY);// System.out.println("Swap primary and secondary");
+                else personModel.messageProperty().set(PersonMessage.CHANGE_TO_PRIMARY);
             }
             case "Dependent" -> personModel.messageProperty().set(PersonMessage.MOVE_SECONDARY_TO_DEPENDENT);//System.out.println("make secondary a dependant");
         }
@@ -356,9 +357,9 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
     }
 
     // had to change this when remove people directly from membership model
-    private boolean hasOtherMembers() {
-        return personModel.getMembershipModel().membershipProperty().get().getPeople().size() > 1;
-    }
+//    private boolean hasOtherMembers() {
+//        return personModel.getMembershipModel().membershipProperty().get().getPeople().size() > 1;
+//    }
 
     private Button createCopyButton(ObjectType.Dto type) {
         Clipboard clipboard = Clipboard.getSystemClipboard();
@@ -535,24 +536,24 @@ public class PersonView implements Builder<Tab>, ConfigFilePaths, ObjectType {
         vBox.getChildren().add(fieldBox(personModel.getPersonDTO().nickNameProperty(), "Nickname"));
         vBox.getChildren().add(fieldBox(personModel.getPersonDTO().occupationProperty(), "Occupation"));
         vBox.getChildren().add(fieldBox(personModel.getPersonDTO().businessProperty(), "Business"));
-        vBox.getChildren().add(fieldDateBox(personModel.getPersonDTO().birthdayProperty(), "Birthday"));
+        vBox.getChildren().add(fieldDateBox(personModel.getPersonDTO().birthdayProperty()));
         return vBox;
     }
 
-    private Node fieldDateBox(Property<?> property, String label) {
+    private Node fieldDateBox(Property<?> property) {
         CustomDatePicker datePicker = new CustomDatePicker();
         datePicker.setPrefWidth(150);
         datePicker.setValue((LocalDate) property.getValue());
         datePicker.focusedProperty().addListener((observable, wasFocused, isFocused) -> {
             if (!isFocused) {
                 datePicker.updateValue();
-                updatePersonDTO(label, datePicker.getValue().toString());
+                updatePersonDTO("Birthday", datePicker.getValue().toString());
                 personModel.getAgeLabel().setText("Age: " + DateTools.calculateAge(datePicker.getValue()));
                 personModel.getMembershipModel().setSelectedPerson(personModel.getPersonDTO());
                 action.accept(PersonMessage.UPDATE_PERSON);
             }
         });
-        return labeledField(label, datePicker);
+        return labeledField("Birthday", datePicker);
     }
 
     private Node fieldBox(Property<?> property, String label) {
